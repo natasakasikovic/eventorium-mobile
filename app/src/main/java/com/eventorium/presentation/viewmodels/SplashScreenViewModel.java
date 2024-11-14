@@ -1,4 +1,4 @@
-package com.eventorium.main.presentation;
+package com.eventorium.presentation.viewmodels;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
