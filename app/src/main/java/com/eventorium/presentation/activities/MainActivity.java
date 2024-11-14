@@ -1,10 +1,12 @@
-package com.eventorium.main.presentation;
+package com.eventorium.presentation.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.eventorium.presentation.viewmodels.SplashScreenViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
