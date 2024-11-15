@@ -39,4 +39,13 @@
     <string name="ok_button">OK</string>
     <string name="service_and_product_provider">Service and Product Provider</string>
     <string name="event_organizer">Event Organizer</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="notifications">Notifications</string>
+    <string name="messages">Messages</string>
+    <string name="booking_calendar">Booking calendar</string>
+    <string name="log_out">Log out</string>
+    <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
+    <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
+
 </resources>

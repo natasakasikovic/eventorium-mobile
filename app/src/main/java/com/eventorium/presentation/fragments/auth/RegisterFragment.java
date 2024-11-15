@@ -1,6 +1,7 @@
 package com.eventorium.presentation.fragments.auth;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 
 import com.eventorium.R;
 import com.eventorium.databinding.FragmentRegisterBinding;
+import com.eventorium.presentation.activities.MainActivity;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
@@ -103,7 +105,14 @@ public class RegisterFragment extends Fragment {
         button.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage(getString(R.string.activation_dialog_message));
-            builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss());
+            builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
+                dialog.dismiss();
+
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                getActivity().finish();
+            });
             builder.create().show();
         });
     }
