@@ -1,4 +1,4 @@
-package com.eventorium.presentation.fragments;
+package com.eventorium.presentation.fragments.auth;
 
 import android.os.Bundle;
 
