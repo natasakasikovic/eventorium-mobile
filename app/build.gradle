@@ -40,6 +40,8 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.core.splashscreen
     implementation libs.lifecycle.viewmodel.android
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
