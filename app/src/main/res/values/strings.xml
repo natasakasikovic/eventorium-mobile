@@ -2,8 +2,10 @@
     <string name="app_name">Eventorium</string>
     <string name="top_events_title">Top five events</string>
     <string name="top_products_title">Top five products</string>
+    <string name="top_services_title">Top five services</string>
     <string name="prompt_more_options_events">Would you like to see more content or search for a specific event?</string>
     <string name="prompt_more_options_products">Would you like to see more content or search for a specific product?</string>
+    <string name="prompt_more_options_services">Would you like to see more content or search for a specific service?</string>
     <string name="see_more">See more..</string>
     <string name="email">Email</string>
     <string name="password">Password</string>

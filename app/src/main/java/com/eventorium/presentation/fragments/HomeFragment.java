@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import com.eventorium.R;
 import com.eventorium.data.models.Event;
 import com.eventorium.data.models.Product;
+import com.eventorium.data.models.Service;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.adapters.EventsAdapter;
 import com.eventorium.presentation.adapters.ProductsAdapter;
+import com.eventorium.presentation.adapters.ServiceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private static List<Event> events = new ArrayList<>();
     private static List<Product> products = new ArrayList<>();
+    private static List<Service> services = new ArrayList<>();
+
 
     public HomeFragment() { }
 
@@ -40,14 +44,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         prepareEventData();
         prepareProductData();
+        prepareServiceData();
 
         attachSnapHelpers();
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
+        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
     }
 
     public void attachSnapHelpers() {
@@ -56,6 +61,9 @@ public class HomeFragment extends Fragment {
 
         SnapHelper snapHelperProducts = new LinearSnapHelper();
         snapHelperProducts.attachToRecyclerView(binding.productsRecycleView);
+
+        SnapHelper snapHelperServices = new LinearSnapHelper();
+        snapHelperServices.attachToRecyclerView(binding.servicesRecycleView);
     }
 
     public void prepareEventData() {
@@ -74,5 +82,14 @@ public class HomeFragment extends Fragment {
         products.add(new Product("LED String Lights", 100.0, R.drawable.conference));
         products.add(new Product("Photo Booth Props", 20.0, R.drawable.baloons));
         products.add(new Product("Custom Banner", 25.0, R.drawable.conference));
+    }
+
+    private void prepareServiceData(){
+        services.clear();
+        services.add(new Service("Catering", 500.0, R.drawable.catering));
+        services.add(new Service("Photography", 300.0,  R.drawable.catering));
+        services.add(new Service("Venue Setup", 200.0,  R.drawable.catering));
+        services.add(new Service("DJ Service", 250.0,  R.drawable.catering));
+        services.add(new Service("Florist", 150.0,  R.drawable.catering));
     }
 }
