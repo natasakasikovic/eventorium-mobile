@@ -30,10 +30,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_18
         targetCompatibility JavaVersion.VERSION_18
     }
-
-    buildFeatures {
-        dataBinding true
-    }
 }
 
 dependencies {
