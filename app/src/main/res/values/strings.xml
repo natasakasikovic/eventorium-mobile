@@ -12,4 +12,29 @@
     <string name="back">Back</string>
     <string name="sign_in">Sign in</string>
     <string name="logo">logo</string>
+    <string name="city">City</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register_as">Register as</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="upload">Upload</string>
+    <string name="role_info_message">   If you would like to organize an event, please register as an "Event Organizer".
+                       If you wish to offer your services or products, choose the option to Register as a "Service and Product Provider".
+                    As a service provider, you will be prompted to enter information about your company or organization in the next step.
+    </string>
+    <string name="welcome">WELCOME</string>
+    <string name="activation_dialog_title">Info</string>
+    <string name="activation_dialog_message">
+        Account Activation Required\n\n
+        Thank you for signing up!\n\n
+        To complete your registration, please follow these steps:\n\n
+        1. Check your email: We’ve sent an activation link to the email address you provided.\n
+        2. Activate your account: Click the link within 24 hours to confirm your email and activate your account.\n\n
+        Important: Your activation link will expire after 24 hours. If you do not activate your account within this time, you will need to repeat the registration process.\n\n
+        Thank you for choosing Eventorium!
+    </string>
+    <string name="ok_button">OK</string>
+    <string name="service_and_product_provider">Service and Product Provider</string>
+    <string name="event_organizer">Event Organizer</string>
 </resources>
