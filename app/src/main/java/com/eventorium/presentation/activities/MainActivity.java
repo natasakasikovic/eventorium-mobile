@@ -4,11 +4,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.eventorium.R;
-import com.eventorium.presentation.fragments.LoginFragment;
 import com.eventorium.presentation.viewmodels.SplashScreenViewModel;
 
 public class MainActivity extends AppCompatActivity {

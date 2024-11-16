@@ -40,7 +40,7 @@ public class Service implements Parcelable {
     @Override
     public int describeContents() { return 0; }
 
-    public static final Creator<Service> CREATOR = new Creator<Service>() {
+    public static final Creator<Service> CREATOR = new Creator<>() {
         @Override
         public Service createFromParcel(Parcel in) { return new Service(in); }
 
