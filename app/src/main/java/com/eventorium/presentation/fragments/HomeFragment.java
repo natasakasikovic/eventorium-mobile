@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services, false));
+        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
     }
 
     public void attachSnapHelpers() {

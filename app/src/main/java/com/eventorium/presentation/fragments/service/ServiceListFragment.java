@@ -17,6 +17,7 @@ import com.eventorium.R;
 import com.eventorium.data.models.Service;
 import com.eventorium.databinding.FragmentServiceListBinding;
 import com.eventorium.presentation.adapters.ServiceAdapter;
+import com.eventorium.presentation.adapters.service.ManageableServiceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class ServiceListFragment extends Fragment {
         prepareServiceData();
 
         attachSnapHelpers();
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services, isManageable));
+        binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(services));
     }
 
     public void attachSnapHelpers() {

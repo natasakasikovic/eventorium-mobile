@@ -52,4 +52,23 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="services">Services</string>
+    <string name="edit_service">Edit service</string>
+    <string name="visibility">Visibility</string>
+    <string name="availability">Availability</string>
+    <string name="manual">Manual</string>
+    <string name="automatic">Automatic</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="visibility_and_availability">Visibility and Availability</string>
+    <string name="duration">Duration</string>
+    <string name="deadlines">Deadlines</string>
+    <string name="price_and_discount">Price and Discount</string>
+    <string name="general">General</string>
+    <string name="specificities">Specificities</string>
+    <string name="price">Price</string>
+    <string name="discount">Discount</string>
+    <string name="reservation_deadline">Reservation deadline</string>
+    <string name="cancellation_deadline">Cancellation deadline</string>
+    <string name="minimum_duration">Minimum duration</string>
+    <string name="maximum_duration">Maximum duration</string>
+    <string name="save">Save</string>
 </resources>

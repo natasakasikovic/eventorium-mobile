@@ -10,29 +10,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.databinding.FragmentServiceDetailsBinding;
-import com.eventorium.databinding.FragmentServiceListBinding;
+import com.eventorium.data.models.Service;
+import com.eventorium.databinding.FragmentManageServiceBinding;
 
 public class ServiceDetailsFragment extends Fragment {
 
-    private FragmentServiceDetailsBinding binding;
+    private FragmentManageServiceBinding binding;
+
+    public static final String ARG_SERVICE = "service";
+    private Service service;
 
     public ServiceDetailsFragment() {
     }
 
-    public static ServiceDetailsFragment newInstance(String param1, String param2) {
-        return new ServiceDetailsFragment();
+    public static ServiceDetailsFragment newInstance(Service service) {
+        ServiceDetailsFragment fragment = new ServiceDetailsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_SERVICE, service);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            service = getArguments().getParcelable(ARG_SERVICE);
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
+        binding = FragmentManageServiceBinding.inflate(inflater, container, false);
         return inflater.inflate(R.layout.fragment_service_details, container, false);
     }
 

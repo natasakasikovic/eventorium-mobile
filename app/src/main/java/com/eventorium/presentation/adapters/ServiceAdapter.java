@@ -18,21 +18,14 @@ import java.util.List;
 public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceViewHolder>{
 
     private final List<Service> services;
-    private final boolean isManageable;
-
-    public ServiceAdapter (List<Service> services, boolean isManageable) {
+    public ServiceAdapter (List<Service> services) {
         this.services = services;
-        this.isManageable = isManageable;
     }
 
     @NonNull
     @Override
     public ServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_card, parent, false);
-        if(!isManageable) {
-            view.findViewById(R.id.deleteButton).setVisibility(View.INVISIBLE);
-            view.findViewById(R.id.editButton).setVisibility(View.INVISIBLE);
-        }
         return new ServiceViewHolder(view);
     }
 
