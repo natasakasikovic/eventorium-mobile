@@ -8,51 +8,39 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.models.Service;
-import com.eventorium.databinding.FragmentServiceListBinding;
-import com.eventorium.presentation.adapters.ServiceAdapter;
+import com.eventorium.databinding.FragmentManageServiceBinding;
 import com.eventorium.presentation.adapters.service.ManageableServiceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ServiceListFragment extends Fragment {
+public class ManageServiceFragment extends Fragment {
 
-    private FragmentServiceListBinding binding;
+    private FragmentManageServiceBinding binding;
     private static final List<Service> services = new ArrayList<>();
-    private boolean isManageable;
-    private static final String MANAGEABLE_PARAM = "manageable";
 
-    public ServiceListFragment() {
+    public ManageServiceFragment() {
     }
-    public static ServiceListFragment newInstance(boolean isManageable) {
-        ServiceListFragment fragment = new ServiceListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public static ManageServiceFragment newInstance() {
+        return new ManageServiceFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isManageable = getArguments() != null && getArguments().getBoolean(MANAGEABLE_PARAM);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentServiceListBinding.inflate(
-                inflater,
-                container,
-                isManageable
-        );
+        binding = FragmentManageServiceBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -61,13 +49,7 @@ public class ServiceListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prepareServiceData();
 
-        attachSnapHelpers();
         binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(services));
-    }
-
-    public void attachSnapHelpers() {
-        SnapHelper snapHelperServices = new LinearSnapHelper();
-        snapHelperServices.attachToRecyclerView(binding.servicesRecycleView);
     }
 
     @Override

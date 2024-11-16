@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/servicesFragment"
-        android:name="com.eventorium.presentation.fragments.service.ServiceListFragment"
+        android:name="com.eventorium.presentation.fragments.service.ManageServiceFragment"
         android:label="fragment_manage_service"
         tools:layout="@layout/fragment_service_list" />
 
