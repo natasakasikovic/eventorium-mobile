@@ -12,6 +12,11 @@
         android:icon="@drawable/ic_account" />
 
     <item
+        android:id="@+id/nav_services"
+        android:title="@string/services"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_notification"
         android:title="@string/notifications"
         android:icon="@drawable/ic_notifications" />

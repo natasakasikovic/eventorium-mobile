@@ -7,6 +7,13 @@
     app:startDestination="@id/homepageFragment">
 
     <fragment
+        android:id="@+id/servicesFragment"
+        android:name="com.eventorium.presentation.fragments.service.ServiceListFragment"
+        android:label="fragment_manage_service"
+        tools:layout="@layout/fragment_service_list" />
+
+
+    <fragment
         android:id="@+id/homepageFragment"
         android:name="com.eventorium.presentation.fragments.HomeFragment"
         android:label="fragment_homepage"

@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.databinding.FragmentManageServiceBinding;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
+import com.eventorium.databinding.FragmentServiceListBinding;
 
 public class ServiceDetailsFragment extends Fragment {
 
-    private FragmentManageServiceBinding binding;
+    private FragmentServiceDetailsBinding binding;
 
     public ServiceDetailsFragment() {
     }
@@ -32,7 +32,7 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentManageServiceBinding.inflate(inflater, container, false);
+        binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         return inflater.inflate(R.layout.fragment_service_details, container, false);
     }
 

@@ -3,6 +3,7 @@ package com.eventorium.presentation.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
 import com.eventorium.databinding.ActivityMainBinding;
+import com.eventorium.presentation.fragments.service.ServiceListFragment;
 import com.eventorium.presentation.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -125,7 +127,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
-        } else {
+        } else if (id == R.id.nav_services) {
+            navController.navigate(R.id.servicesFragment);
+            hideBottomNavigation();
+        }
+        else {
             showBottomNavigation();
             return false;
         }
@@ -133,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean handleBottomNavigationSelection(MenuItem item) {
-        // TODO: add fav, account, create event/service/product
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             navController.navigate(R.id.homepageFragment);

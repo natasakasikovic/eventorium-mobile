@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.fragments.service.ServiceListFragment">
+
+
+    <LinearLayout
+        android:id="@+id/linear_layout_services"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_primaryContainer"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="0dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jejumyeongjo"
+            android:layout_gravity="center_horizontal"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="24dp"
+            android:text="@string/services"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/servicesRecycleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_gravity="center" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
