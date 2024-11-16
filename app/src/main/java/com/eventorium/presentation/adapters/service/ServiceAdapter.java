@@ -1,5 +1,6 @@
 package com.eventorium.presentation.adapters.service;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
@@ -50,14 +53,11 @@ public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceVie
             nameTextView.setText(service.getName());
             priceTextView.setText(service.getPrice().toString());
             photoImageview.setImageResource(service.getPhoto());
+            Log.i("NAVIGATION", "BINDING?");
             seeMoreButton.setOnClickListener(v -> {
-                ServiceDetailsFragment serviceDetailsFragment = ServiceDetailsFragment.newInstance(service);
-
-                FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, serviceDetailsFragment)
-                        .addToBackStack(null)
-                        .commit();
+                NavController navController = Navigation.findNavController(itemView);
+                navController.navigate(R.id.action_home_to_service_details,
+                        ServiceDetailsFragment.newInstance(service).getArguments());
             });
         }
     }

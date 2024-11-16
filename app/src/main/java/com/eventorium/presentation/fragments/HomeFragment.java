@@ -18,7 +18,7 @@ import com.eventorium.data.models.Service;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.adapters.EventsAdapter;
 import com.eventorium.presentation.adapters.ProductsAdapter;
-import com.eventorium.presentation.adapters.ServiceAdapter;
+import com.eventorium.presentation.adapters.service.ServiceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
