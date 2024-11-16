@@ -71,6 +71,14 @@
                     android:text="4.9"
                     android:textSize="12sp" />
 
+                <TextView
+                    android:id="@+id/servicePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:layout_marginStart="20dp"
+                    android:textSize="12sp" />
+
 
             </LinearLayout>
 
@@ -87,20 +95,22 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/serviceName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/jejumyeongjo"
                     android:layout_marginStart="20dp"
-                    android:text="Service Name"
                     android:textSize="32sp" />
                 <TextView
-                    android:text="Category"
+                    android:id="@+id/serviceCategory"
+                    android:text="@string/category"
                     android:layout_marginStart="20dp"
                     android:fontFamily="@font/jejumyeongjo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
                 <TextView
+                    android:id="@+id/serviceDescription"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="@string/description"

@@ -1,5 +1,6 @@
 package com.eventorium.presentation.fragments.service;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
 import com.eventorium.data.models.Service;
-import com.eventorium.databinding.FragmentManageServiceBinding;
+import com.eventorium.databinding.FragmentServiceDetailsBinding;
 
 public class ServiceDetailsFragment extends Fragment {
 
-    private FragmentManageServiceBinding binding;
+    private FragmentServiceDetailsBinding binding;
 
     public static final String ARG_SERVICE = "service";
     private Service service;
@@ -37,13 +37,17 @@ public class ServiceDetailsFragment extends Fragment {
         if(getArguments() != null) {
             service = getArguments().getParcelable(ARG_SERVICE);
         }
+
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentManageServiceBinding.inflate(inflater, container, false);
-        return inflater.inflate(R.layout.fragment_service_details, container, false);
+        binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
+        binding.serviceName.setText(service.getName());
+        binding.servicePrice.setText(service.getPrice().toString());
+        return binding.getRoot();
     }
 
     @Override
