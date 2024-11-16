@@ -47,5 +47,6 @@
     <string name="log_out">Log out</string>
     <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
     <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
-
+    <string name="information_about_company">Enter information about your company</string>
+    <string name="description">Description</string>
 </resources>

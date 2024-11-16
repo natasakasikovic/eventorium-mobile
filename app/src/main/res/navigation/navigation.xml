@@ -24,4 +24,14 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
 
+    <fragment
+        android:id="@+id/companyRegisterFragment"
+        android:name="com.eventorium.presentation.fragments.auth.CompanyRegisterFragment"
+        android:label="fragment_company_register"
+        tools:layout="@layout/fragment_company_register" />
+
+    <action
+        android:id="@+id/user_register_to_company_register"
+        app:destination="@id/companyRegisterFragment" />
+
 </navigation>

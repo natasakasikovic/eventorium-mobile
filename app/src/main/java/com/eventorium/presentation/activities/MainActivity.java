@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,13 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     private SplashScreenViewModel viewModel;
     private ActivityMainBinding binding;
-    private AppBarConfiguration appBarConfiguration;
     private DrawerLayout drawer;
     private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private NavigationView navigationView;
     private NavController navController;
-    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-        appBarConfiguration = new AppBarConfiguration.Builder(
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_favourite, R.id.nav_login, R.id.nav_new, R.id.nav_signup)
                 .setOpenableLayout(drawer)
                 .build();
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupBottomNavigationVisibility() {
         navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
-            if (id == R.id.nav_login || id == R.id.nav_signup) {
+            if (id == R.id.nav_login || id == R.id.nav_signup || id == R.id.companyRegisterFragment) {
                 hideBottomNavigation();
             } else {
                 showBottomNavigation();
