@@ -71,4 +71,7 @@
     <string name="minimum_duration">Minimum duration</string>
     <string name="maximum_duration">Maximum duration</string>
     <string name="save">Save</string>
+    <string name="service">Service</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis ultrices arcu. Maecenas rhoncus hendrerit lacus a vehicula. Donec finibus tincidunt urna, sed mattis ex dictum quis.</string>
+    <string name="photos">Photos</string>
 </resources>
