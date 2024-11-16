@@ -125,7 +125,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
-        } else if (id == R.id.nav_services) {
+        } else if (id == R.id.nav_create_service){
+            navController.navigate(R.id.createServiceFragment);
+            hideBottomNavigation();
+        }
+        else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
             hideBottomNavigation();
         }

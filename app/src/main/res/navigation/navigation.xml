@@ -32,6 +32,12 @@
         tools:layout="@layout/fragment_edit_service" />
 
     <fragment
+        android:id="@+id/createServiceFragment"
+        android:name="com.eventorium.presentation.fragments.service.CreateServiceFragment"
+        android:label="fragment_create_service"
+        tools:layout="@layout/fragment_create_service" />
+
+    <fragment
         android:id="@+id/homepageFragment"
         android:name="com.eventorium.presentation.fragments.HomeFragment"
         android:label="fragment_homepage"
