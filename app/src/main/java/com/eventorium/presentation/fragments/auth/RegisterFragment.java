@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import java.util.List;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
+    private AutoCompleteTextView roleDropdown;
+    private List<String> roleNames;
 
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
@@ -64,9 +68,9 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setupRoleDropdown() {
-        AutoCompleteTextView roleDropdown = binding.roleDropdown;
+        roleDropdown = binding.roleDropdown;
 
-        List<String> roleNames = Arrays.asList(
+        roleNames = Arrays.asList(
                 getString(R.string.service_and_product_provider),
                 getString(R.string.event_organizer)
         );
@@ -81,9 +85,7 @@ public class RegisterFragment extends Fragment {
 
         roleDropdown.setKeyListener(null);
         roleDropdown.setFocusable(false);
-        roleDropdown.setFocusableInTouchMode(true);
     }
-
 
     private void showRoleInfoDialog() {
 
@@ -99,21 +101,26 @@ public class RegisterFragment extends Fragment {
 
     private void setupNextButton() {
         ImageButton button = binding.arrowButton;
-        // TODO:
-        // Add a check to see if the user has selected to be a provider.
-        // If they have, redirect them to the company registration page once it is implemented.
-        button.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage(getString(R.string.activation_dialog_message));
-            builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
-                dialog.dismiss();
 
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                getActivity().finish();
-            });
-            builder.create().show();
+        button.setOnClickListener(v -> {
+            String selectedRole = roleDropdown.getText().toString();
+            if (selectedRole.equals(getString(R.string.service_and_product_provider))) {
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.user_register_to_company_register);
+            }
+            else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(getString(R.string.activation_dialog_message));
+                builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
+                    dialog.dismiss();
+
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    getActivity().finish();
+                });
+                builder.create().show();
+            }
         });
     }
 
