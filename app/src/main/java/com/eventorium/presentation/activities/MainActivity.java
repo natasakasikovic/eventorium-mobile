@@ -125,13 +125,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
-        } else if (id == R.id.nav_create_service){
-            navController.navigate(R.id.createServiceFragment);
-            hideBottomNavigation();
-        }
-        else if (id == R.id.nav_services) {
+        } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
-            hideBottomNavigation();
         }
         else {
             showBottomNavigation();
@@ -144,7 +139,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             navController.navigate(R.id.homepageFragment);
-        } else {
+        } else if(id == R.id.nav_new) {
+            navController.navigate(R.id.createServiceFragment);
+        }
+        else {
             return false;
         }
         return true;
@@ -195,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_messages).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_create_service).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {
