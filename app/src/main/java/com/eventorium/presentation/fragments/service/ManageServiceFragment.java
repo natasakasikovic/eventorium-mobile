@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.eventorium.R;
 import com.eventorium.data.models.Service;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.adapters.service.ManageableServiceAdapter;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,13 @@ public class ManageServiceFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prepareServiceData();
+
+        binding.filterButton.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+            View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
+            bottomSheetDialog.setContentView(dialogView);
+            bottomSheetDialog.show();
+        });
 
         binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(services));
     }
