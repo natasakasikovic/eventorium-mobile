@@ -194,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_notification).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_messages).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_create_service).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {

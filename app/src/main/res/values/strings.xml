@@ -78,4 +78,5 @@
     <string name="create_service">Create service</string>
     <string name="select_category">Select category</string>
     <string name="suggest_category">Suggest category</string>
+    <string name="event_types">Event types</string>
 </resources>

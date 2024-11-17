@@ -13,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.eventorium.R;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
+import com.eventorium.presentation.adapters.ChecklistAdapter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +39,20 @@ public class CreateServiceFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateServiceBinding.inflate(inflater, container, false);
         setupCategoryAutoCompleteAdapter();
+
+        binding.categoryRecycleView.setAdapter(new ChecklistAdapter(List.of(
+                "Wedding",
+                "Birthday Party",
+                "Conference",
+                "Concert",
+                "Corporate Event",
+                "Workshop",
+                "Fundraiser",
+                "Networking Event",
+                "Exhibition",
+                "Festival",
+                "Sports Event"
+        )));
         return binding.getRoot();
     }
 
@@ -46,7 +61,6 @@ public class CreateServiceFragment extends Fragment {
         super.onDestroy();
         binding = null;
     }
-
 
     private void setupCategoryAutoCompleteAdapter() {
         // TODO: Replace the hardcoded list of cities with a dynamic list
