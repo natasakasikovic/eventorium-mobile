@@ -82,4 +82,7 @@
     <string name="visible">Visible</string>
     <string name="available">Available</string>
     <string name="create">Create</string>
+    <string name="filter_services">Filter services</string>
+    <string name="minimum_price">Minimum price</string>
+    <string name="maximum_price">Maximum price</string>
 </resources>
