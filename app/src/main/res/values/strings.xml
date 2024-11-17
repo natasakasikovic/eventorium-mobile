@@ -51,6 +51,7 @@
     <string name="description">Description</string>
     <string name="services">Services</string>
     <string name="events">Events</string>
+    <string name="products">Products</string>
     <string name="edit_service">Edit service</string>
     <string name="visibility">Visibility</string>
     <string name="availability">Availability</string>

@@ -75,6 +75,12 @@ public class HomeFragment extends Fragment {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_homepage_to_events_overview);
         });
+
+        binding.arrowButtonProducts.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homepage_to_products_overview);
+        });
+
     }
 
     public void prepareEventData() {
