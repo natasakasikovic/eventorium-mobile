@@ -90,7 +90,11 @@
         android:id="@+id/serviceOverviewFragment"
         android:name="com.eventorium.presentation.fragments.service.ServiceOverviewFragment"
         android:label="fragment_service_overview"
-        tools:layout="@layout/fragment_service_overview" />
+        tools:layout="@layout/fragment_service_overview">
+        <action
+            android:id="@+id/action_serviceOverview_to_service_details"
+            app:destination="@id/serviceDetailsFragment"/>
+    </fragment>
 
     <action
         android:id="@+id/user_register_to_company_register"
