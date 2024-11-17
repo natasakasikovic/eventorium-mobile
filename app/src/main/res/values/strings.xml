@@ -79,4 +79,7 @@
     <string name="select_category">Select category</string>
     <string name="suggest_category">Suggest category</string>
     <string name="event_types">Event types</string>
+    <string name="visible">Visible</string>
+    <string name="available">Available</string>
+    <string name="create">Create</string>
 </resources>

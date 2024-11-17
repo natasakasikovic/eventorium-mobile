@@ -14,8 +14,12 @@ import android.widget.AutoCompleteTextView;
 import com.eventorium.R;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.adapters.ChecklistAdapter;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class CreateServiceFragment extends Fragment {
@@ -39,7 +43,7 @@ public class CreateServiceFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateServiceBinding.inflate(inflater, container, false);
         setupCategoryAutoCompleteAdapter();
-
+        createDatePickers();
         binding.categoryRecycleView.setAdapter(new ChecklistAdapter(List.of(
                 "Wedding",
                 "Birthday Party",
@@ -54,6 +58,39 @@ public class CreateServiceFragment extends Fragment {
                 "Sports Event"
         )));
         return binding.getRoot();
+    }
+
+    private TextInputEditText reservationDate;
+    private TextInputEditText cancellationDate;
+    private void createDatePickers() {
+        reservationDate = binding.serviceReservationDeadlineText;
+        cancellationDate = binding.serviceCancellationDeadlineText;
+
+        MaterialDatePicker<Long> reservationPicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a Date")
+                .build();
+        MaterialDatePicker<Long> cancellationPicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a Date")
+                .build();
+
+
+        reservationDate.setOnClickListener(v ->
+                reservationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
+
+        cancellationDate.setOnClickListener(v ->
+                cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
+
+        reservationPicker.addOnPositiveButtonClickListener(selection -> {
+            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
+                    .format(new Date(selection));
+            reservationDate.setText(selectedDate);
+        });
+
+        cancellationPicker.addOnPositiveButtonClickListener(selection -> {
+            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
+                    .format(new Date(selection));
+            cancellationDate.setText(selectedDate);
+        });
     }
 
     @Override
