@@ -125,7 +125,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
-        } else {
+        } else if (id == R.id.nav_services) {
+            navController.navigate(R.id.manageServicesFragment);
+            hideBottomNavigation();
+        }
+        else {
             showBottomNavigation();
             return false;
         }
@@ -133,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean handleBottomNavigationSelection(MenuItem item) {
-        // TODO: add fav, account, create event/service/product
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             navController.navigate(R.id.homepageFragment);
@@ -187,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_notification).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_messages).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {
