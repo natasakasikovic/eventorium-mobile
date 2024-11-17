@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.SnapHelper;
 
@@ -53,6 +55,8 @@ public class HomeFragment extends Fragment {
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
         binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
+
+        setUpListeners();
     }
 
     public void attachSnapHelpers() {
@@ -64,6 +68,13 @@ public class HomeFragment extends Fragment {
 
         SnapHelper snapHelperServices = new LinearSnapHelper();
         snapHelperServices.attachToRecyclerView(binding.servicesRecycleView);
+    }
+
+    private void setUpListeners(){
+        binding.arrowButtonEvents.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homepage_to_events_overview);
+        });
     }
 
     public void prepareEventData() {

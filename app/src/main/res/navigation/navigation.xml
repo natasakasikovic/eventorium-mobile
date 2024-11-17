@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_home_to_service_details"
             app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_homepage_to_events_overview"
+            app:destination="@id/eventsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -52,6 +55,12 @@
         android:name="com.eventorium.presentation.fragments.auth.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/eventsOverviewFragment"
+        android:name="com.eventorium.presentation.fragments.event.EventOverviewFragment"
+        android:label="fragment_event_overview"
+        tools:layout="@layout/fragment_event_overview" />
 
     <fragment
         android:id="@+id/companyRegisterFragment"
