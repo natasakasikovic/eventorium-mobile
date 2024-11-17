@@ -1,33 +1,31 @@
 package com.eventorium.presentation.fragments.service;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.eventorium.R;
 import com.eventorium.data.models.Service;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
-import com.eventorium.presentation.adapters.service.ManageableServiceAdapter;
+import com.eventorium.presentation.adapters.service.ServiceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class ManageServiceFragment extends Fragment {
+public class ServiceOverviewFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
     private static final List<Service> services = new ArrayList<>();
 
-    public ManageServiceFragment() {
-    }
-    public static ManageServiceFragment newInstance() {
-        return new ManageServiceFragment();
+    public ServiceOverviewFragment() {}
+
+    public static ServiceOverviewFragment newInstance() {
+        return new ServiceOverviewFragment();
     }
 
     @Override
@@ -47,7 +45,7 @@ public class ManageServiceFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prepareServiceData();
 
-        binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(services));
+        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
     }
 
     @Override
@@ -62,13 +60,6 @@ public class ManageServiceFragment extends Fragment {
         services.add(new Service("Photography", 300.0, R.drawable.catering));
         services.add(new Service("Venue Setup", 200.0, R.drawable.catering));
         services.add(new Service("DJ Service", 250.0, R.drawable.catering));
-        services.add(new Service("Florist", 150.0, R.drawable.catering));
-        services.add(new Service("Transportation", 400.0, R.drawable.catering));
-        services.add(new Service("Videography", 350.0, R.drawable.catering));
-        services.add(new Service("Cake Design", 100.0, R.drawable.catering));
-        services.add(new Service("Hair and Makeup", 200.0, R.drawable.catering));
-        services.add(new Service("Security", 300.0, R.drawable.catering));
-        services.add(new Service("Guest Coordination", 250.0, R.drawable.catering));
-        services.add(new Service("Bar Service", 200.0, R.drawable.catering));
     }
+
 }

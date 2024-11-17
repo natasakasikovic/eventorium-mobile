@@ -10,7 +10,7 @@
         android:id="@+id/manageServicesFragment"
         android:name="com.eventorium.presentation.fragments.service.ManageServiceFragment"
         android:label="fragment_manage_service"
-        tools:layout="@layout/fragment_manage_service">
+        tools:layout="@layout/fragment_service_overview">
         <action
             android:id="@+id/action_manageService_to_serviceDetailsFragment"
             app:destination="@id/serviceDetailsFragment" />
@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_home_to_service_details"
             app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_homepage_to_services_overview"
+            app:destination="@id/serviceOverviewFragment" />
     </fragment>
 
     <fragment
@@ -59,8 +62,13 @@
         android:label="fragment_company_register"
         tools:layout="@layout/fragment_company_register" />
 
+    <fragment
+        android:id="@+id/serviceOverviewFragment"
+        android:name="com.eventorium.presentation.fragments.service.ServiceOverviewFragment"
+        android:label="fragment_service_overview"
+        tools:layout="@layout/fragment_service_overview" />
+
     <action
         android:id="@+id/user_register_to_company_register"
         app:destination="@id/companyRegisterFragment" />
-
 </navigation>
