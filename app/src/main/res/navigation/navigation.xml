@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_homepage_to_events_overview"
             app:destination="@id/eventsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_products_overview"
+            app:destination="@id/productsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -61,6 +64,12 @@
         android:name="com.eventorium.presentation.fragments.event.EventOverviewFragment"
         android:label="fragment_event_overview"
         tools:layout="@layout/fragment_event_overview" />
+
+    <fragment
+        android:id="@+id/productsOverviewFragment"
+        android:name="com.eventorium.presentation.fragments.product.ProductOverviewFragment"
+        android:label="fragment_product_overview"
+        tools:layout="@layout/fragment_product_overview" />
 
     <fragment
         android:id="@+id/companyRegisterFragment"
