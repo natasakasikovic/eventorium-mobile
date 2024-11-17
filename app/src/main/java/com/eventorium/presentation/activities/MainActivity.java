@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             logOutUser();
         } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
-            hideBottomNavigation();
         }
         else {
             showBottomNavigation();
@@ -140,7 +139,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             navController.navigate(R.id.homepageFragment);
-        } else {
+        } else if(id == R.id.nav_new) {
+            navController.navigate(R.id.createServiceFragment);
+        }
+        else {
             return false;
         }
         return true;
