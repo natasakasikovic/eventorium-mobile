@@ -21,6 +21,7 @@ import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.adapters.EventsAdapter;
 import com.eventorium.presentation.adapters.ProductsAdapter;
 import com.eventorium.presentation.adapters.service.ServiceAdapter;
+import com.eventorium.presentation.fragments.service.ServiceOverviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,12 +76,14 @@ public class HomeFragment extends Fragment {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_homepage_to_events_overview);
         });
-
+        binding.arrowButtonServices.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homepage_to_services_overview);
+        });
         binding.arrowButtonProducts.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_homepage_to_products_overview);
         });
-
     }
 
     public void prepareEventData() {
