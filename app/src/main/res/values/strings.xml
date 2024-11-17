@@ -1,3 +1,88 @@
 <resources>
-    <string name="app_name">eventorium</string>
+    <string name="app_name">Eventorium</string>
+    <string name="top_events_title">Top five events</string>
+    <string name="top_products_title">Top five products</string>
+    <string name="top_services_title">Top five services</string>
+    <string name="prompt_more_options_events">Would you like to see more content or search for a specific event?</string>
+    <string name="prompt_more_options_products">Would you like to see more content or search for a specific product?</string>
+    <string name="prompt_more_options_services">Would you like to see more content or search for a specific service?</string>
+    <string name="see_more">See more..</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="lastname">Lastname</string>
+    <string name="back">Back</string>
+    <string name="sign_in">Sign in</string>
+    <string name="logo">logo</string>
+    <string name="city">City</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone number</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register_as">Register as</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="upload">Upload</string>
+    <string name="role_info_message">   If you would like to organize an event, please register as an "Event Organizer".
+                       If you wish to offer your services or products, choose the option to Register as a "Service and Product Provider".
+                    As a service provider, you will be prompted to enter information about your company or organization in the next step.
+    </string>
+    <string name="welcome">WELCOME</string>
+    <string name="activation_dialog_title">Info</string>
+    <string name="activation_dialog_message">
+        Account Activation Required\n\n
+        Thank you for signing up!\n\n
+        To complete your registration, please follow these steps:\n\n
+        1. Check your email: We’ve sent an activation link to the email address you provided.\n
+        2. Activate your account: Click the link within 24 hours to confirm your email and activate your account.\n\n
+        Important: Your activation link will expire after 24 hours. If you do not activate your account within this time, you will need to repeat the registration process.\n\n
+        Thank you for choosing Eventorium!
+    </string>
+    <string name="ok_button">OK</string>
+    <string name="service_and_product_provider">Service and Product Provider</string>
+    <string name="event_organizer">Event Organizer</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="notifications">Notifications</string>
+    <string name="messages">Messages</string>
+    <string name="booking_calendar">Booking calendar</string>
+    <string name="log_out">Log out</string>
+    <string name="navigation_drawer_open" translatable="false">Navigation Drawer Open</string>
+    <string name="navigation_drawer_close" translatable="false">Navigation Drawer Close</string>
+    <string name="information_about_company">Enter information about your company</string>
+    <string name="description">Description</string>
+    <string name="services">Services</string>
+    <string name="events">Events</string>
+    <string name="products">Products</string>
+    <string name="edit_service">Edit service</string>
+    <string name="visibility">Visibility</string>
+    <string name="availability">Availability</string>
+    <string name="manual">Manual</string>
+    <string name="automatic">Automatic</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="visibility_and_availability">Visibility and Availability</string>
+    <string name="duration">Duration</string>
+    <string name="deadlines">Deadlines</string>
+    <string name="price_and_discount">Price and Discount</string>
+    <string name="general">General</string>
+    <string name="specificities">Specificities</string>
+    <string name="price">Price</string>
+    <string name="discount">Discount</string>
+    <string name="reservation_deadline">Reservation deadline</string>
+    <string name="cancellation_deadline">Cancellation deadline</string>
+    <string name="minimum_duration">Minimum duration</string>
+    <string name="maximum_duration">Maximum duration</string>
+    <string name="save">Save</string>
+    <string name="service">Service</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis ultrices arcu. Maecenas rhoncus hendrerit lacus a vehicula. Donec finibus tincidunt urna, sed mattis ex dictum quis.</string>
+    <string name="photos">Photos</string>
+    <string name="category">Category</string>
+    <string name="create_service">Create service</string>
+    <string name="select_category">Select category</string>
+    <string name="suggest_category">Suggest category</string>
+    <string name="event_types">Event types</string>
+    <string name="visible">Visible</string>
+    <string name="available">Available</string>
+    <string name="create">Create</string>
+    <string name="filter_services">Filter services</string>
+    <string name="minimum_price">Minimum price</string>
+    <string name="maximum_price">Maximum price</string>
 </resources>
