@@ -72,9 +72,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void setUpListeners(){
+        binding.arrowButtonEvents.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homepage_to_events_overview);
+        });
         binding.arrowButtonServices.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(v);
             navController.navigate(R.id.action_homepage_to_services_overview);
+        });
+        binding.arrowButtonProducts.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homepage_to_products_overview);
         });
     }
 
