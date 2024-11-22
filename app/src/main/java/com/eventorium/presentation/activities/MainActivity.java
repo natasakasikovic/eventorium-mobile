@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
             logOutUser();
         } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
+        } else if (id == R.id.nav_categories) {
+            navController.navigate(R.id.categoryOverviewFragment);
         }
         else {
             showBottomNavigation();
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_messages).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_categories).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {
