@@ -1,12 +1,16 @@
 package com.eventorium.presentation.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
@@ -42,14 +46,46 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         return categories.size();
     }
 
-    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
+    public class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView descriptionTextView;
+        Button editButton;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.category_name);
             descriptionTextView = itemView.findViewById(R.id.category_description);
+            editButton = itemView.findViewById(R.id.editButton);
+
+            editButton.setOnClickListener(v -> {
+                Category category = categories.get(getAdapterPosition());
+
+                if (category != null) {
+                    final View dialogView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.dialog_edit_category, null);
+
+                    EditText nameEditText = dialogView.findViewById(R.id.categoryNameEditText);
+                    EditText descriptionEditText = dialogView.findViewById(R.id.categoryDescriptionEditText);
+
+                    nameEditText.setText(category.getName());
+                    descriptionEditText.setText(category.getDescription());
+
+                    new AlertDialog.Builder(itemView.getContext(), R.style.DialogTheme)
+                            .setView(dialogView)
+                            .setPositiveButton("Save", (dialog, which) -> {
+                                String newName = nameEditText.getText().toString();
+                                String newDescription = descriptionEditText.getText().toString();
+
+                                category.setName(newName);
+                                category.setDescription(newDescription);
+
+                                nameTextView.setText(newName);
+                                descriptionTextView.setText(newDescription);
+
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            });
         }
     }
 }

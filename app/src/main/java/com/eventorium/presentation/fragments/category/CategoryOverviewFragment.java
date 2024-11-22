@@ -52,6 +52,7 @@ public class CategoryOverviewFragment extends Fragment {
         binding.categoriesRecycleView.setAdapter(new CategoriesAdapter(categories));
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
