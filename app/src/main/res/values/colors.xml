@@ -7,4 +7,6 @@
     <color name="md_theme_primary">#35422F</color>
     <color name="selected_menu_item">#FFFFFF</color>
     <color name="gold">#FFD700</color>
+    <color name="decline">#B53939</color>
+    <color name="approve">#8B8BDA</color>
 </resources>

@@ -1,6 +1,5 @@
 package com.eventorium.presentation.fragments.category;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,26 +16,21 @@ import android.widget.EditText;
 import com.eventorium.R;
 import com.eventorium.data.models.Category;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
-import com.eventorium.databinding.FragmentServiceOverviewBinding;
-import com.eventorium.presentation.adapters.CategoriesAdapter;
+import com.eventorium.presentation.adapters.category.CategoriesAdapter;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
 public class CategoryOverviewFragment extends Fragment {
 
     private FragmentCategoryOverviewBinding binding;
-    private final List<Category> categories = new ArrayList<>();
-
     private CategoryViewModel categoryViewModel;
 
     public CategoryOverviewFragment() {
     }
 
-    public static CategoryOverviewFragment newInstance(String param1, String param2) {
+    public static CategoryOverviewFragment newInstance() {
         return new CategoryOverviewFragment();
     }
 

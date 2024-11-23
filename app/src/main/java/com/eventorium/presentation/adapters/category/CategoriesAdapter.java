@@ -1,15 +1,12 @@
-package com.eventorium.presentation.adapters;
+package com.eventorium.presentation.adapters.category;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
@@ -17,7 +14,6 @@ import com.eventorium.data.models.Category;
 import com.eventorium.presentation.util.OnEditClickListener;
 
 import java.util.List;
-import java.util.Objects;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
 
