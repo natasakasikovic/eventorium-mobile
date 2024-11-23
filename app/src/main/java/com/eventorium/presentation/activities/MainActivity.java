@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.homepageFragment);
         } else if(id == R.id.nav_new) {
             navController.navigate(R.id.createServiceFragment);
+        } else if (id == R.id.nav_account) {
+            navController.navigate(R.id.accountDetailsFragment);
         }
         else {
             return false;
