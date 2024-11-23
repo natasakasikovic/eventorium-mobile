@@ -35,4 +35,11 @@
         android:id="@+id/nav_logout"
         android:title="@string/log_out"
         android:icon="@drawable/ic_logout" />
+
+<!--    TODO: delete later, below is just for testing -->
+    <item
+        android:id="@+id/nav_invitations"
+        android:title="Event invitations"
+        android:icon="@drawable/ic_fav"/>
+
 </menu>

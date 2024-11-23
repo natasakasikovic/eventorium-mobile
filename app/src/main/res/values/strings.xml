@@ -85,4 +85,6 @@
     <string name="filter_services">Filter services</string>
     <string name="minimum_price">Minimum price</string>
     <string name="maximum_price">Maximum price</string>
+    <string name="enter_invitations">Please enter the email addresses of the special people you’d like to invite to your event</string>
+    <string name="send_invitations">Send invititations and create event</string>
 </resources>

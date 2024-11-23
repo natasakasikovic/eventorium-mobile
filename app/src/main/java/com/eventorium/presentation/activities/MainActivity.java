@@ -127,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
             logOutUser();
         } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
+        } else if (id == R.id.nav_invitations){ // TODO: delete later - just for testing purposes (until budget and agenda are created)!
+            navController.navigate(R.id.invitationsFragment);
         }
         else {
             showBottomNavigation();

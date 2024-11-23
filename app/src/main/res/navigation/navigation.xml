@@ -63,6 +63,12 @@
         tools:layout="@layout/fragment_register" />
 
     <fragment
+        android:id="@+id/invitationsFragment"
+        android:name="com.eventorium.presentation.fragments.event.EventInvitationFragment"
+        android:label="event_invitation_fragment"
+        tools:layout="@layout/fragment_event_invitation" />
+
+    <fragment
         android:id="@+id/loginFragment"
         android:name="com.eventorium.presentation.fragments.auth.LoginFragment"
         android:label="fragment_login"
