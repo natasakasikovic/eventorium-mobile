@@ -1,30 +1,39 @@
 package com.eventorium.presentation.fragments.user;
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.eventorium.R;
-import com.eventorium.databinding.FragmentAccountEditBinding;
 import com.eventorium.databinding.FragmentPasswordEditBinding;
 
-public class AccountEditFragment extends Fragment {
+public class PasswordEditFragment extends DialogFragment {
 
-    private FragmentAccountEditBinding binding;
+    private FragmentPasswordEditBinding binding;
 
-    public AccountEditFragment () { }
+    public PasswordEditFragment() { }
 
-    public static AccountEditFragment newInstance(String param1, String param2) { return new AccountEditFragment(); }
+    public static PasswordEditFragment newInstance() { return new PasswordEditFragment(); }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +43,7 @@ public class AccountEditFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = binding.inflate(inflater, container, false);
+        binding = FragmentPasswordEditBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -42,14 +51,10 @@ public class AccountEditFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.changePasswordButton.setOnClickListener(v -> {
-            showChangePasswordDialog();
-        });
-    }
+        // TODO: Refine the function when connected to the backend
+//        binding.changePasswordButton.setOnClickListener(v -> {
+//            saveNewPassword();
+//        });
 
-    public void showChangePasswordDialog() {
-        PasswordEditFragment dialogFragment = PasswordEditFragment.newInstance();
-        dialogFragment.show(getParentFragmentManager(), "PasswordEditDialog");
     }
-
 }
