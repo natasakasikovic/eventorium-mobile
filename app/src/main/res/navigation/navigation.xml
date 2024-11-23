@@ -26,6 +26,12 @@
         tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/categoryOverviewFragment"
+        android:name="com.eventorium.presentation.fragments.category.CategoryOverviewFragment"
+        android:label="fragment_category_overview"
+        tools:layout="@layout/fragment_category_overview" />
+
+    <fragment
         android:id="@+id/editServiceFragment"
         android:name="com.eventorium.presentation.fragments.service.EditServiceFragment"
         android:label="fragment_edit_service"
@@ -101,6 +107,22 @@
             android:id="@+id/action_serviceOverview_to_service_details"
             app:destination="@id/serviceDetailsFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/accountDetailsFragment"
+        android:name="com.eventorium.presentation.fragments.user.AccountDetails"
+        android:label="fragment_account_details"
+        tools:layout="@layout/fragment_account_details">
+        <action
+            android:id="@+id/action_accountDetails_to_editAccountFragment"
+            app:destination="@id/accountEditFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountEditFragment"
+        android:name="com.eventorium.presentation.fragments.user.AccountEditFragment"
+        android:label="fragment_account_edit"
+        tools:layout="@layout/fragment_account_edit" />
 
     <action
         android:id="@+id/user_register_to_company_register"

@@ -4,4 +4,7 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    <style name="DialogTheme" parent="@style/Base.Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/card_background</item>
+    </style>
 </resources>

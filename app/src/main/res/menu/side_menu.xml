@@ -17,6 +17,11 @@
         android:icon="@drawable/ic_info" />
 
     <item
+        android:id="@+id/nav_categories"
+        android:title="@string/existing_categories"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_notification"
         android:title="@string/notifications"
         android:icon="@drawable/ic_notifications" />
