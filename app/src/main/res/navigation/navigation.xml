@@ -26,6 +26,12 @@
         tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/categoryOverviewFragment"
+        android:name="com.eventorium.presentation.fragments.category.CategoryOverviewFragment"
+        android:label="fragment_category_overview"
+        tools:layout="@layout/fragment_category_overview" />
+
+    <fragment
         android:id="@+id/editServiceFragment"
         android:name="com.eventorium.presentation.fragments.service.EditServiceFragment"
         android:label="fragment_edit_service"
