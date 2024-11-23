@@ -25,14 +25,17 @@
 
     <Button
         android:id="@+id/editAccountButton"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:iconSize="32dp"
+        app:icon="@drawable/ic_edit"
+        app:iconTint="@color/md_theme_primary"
+        app:backgroundTint="@color/md_theme_primaryContainer"
         android:contentDescription="Edit"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:paddingStart="40dp"
         android:onClick="navigateToEditAccount"/>
 
     <TextView
