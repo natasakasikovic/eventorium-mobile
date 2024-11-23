@@ -100,7 +100,17 @@
         android:id="@+id/accountDetailsFragment"
         android:name="com.eventorium.presentation.fragments.user.AccountDetails"
         android:label="fragment_account_details"
-        tools:layout="@layout/fragment_account_details" />
+        tools:layout="@layout/fragment_account_details">
+        <action
+            android:id="@+id/action_accountDetails_to_editAccountFragment"
+            app:destination="@id/accountEditFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountEditFragment"
+        android:name="com.eventorium.presentation.fragments.user.AccountEditFragment"
+        android:label="fragment_account_edit"
+        tools:layout="@layout/fragment_account_edit" />
 
     <action
         android:id="@+id/user_register_to_company_register"
