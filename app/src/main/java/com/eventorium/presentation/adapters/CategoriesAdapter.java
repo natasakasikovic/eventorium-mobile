@@ -1,12 +1,18 @@
 package com.eventorium.presentation.adapters;
 
+import android.app.Activity;
+import android.graphics.Insets;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +23,7 @@ import com.eventorium.R;
 import com.eventorium.data.models.Category;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
 
@@ -69,7 +76,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                     nameEditText.setText(category.getName());
                     descriptionEditText.setText(category.getDescription());
 
-                    new AlertDialog.Builder(itemView.getContext(), R.style.DialogTheme)
+                    AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext(), R.style.DialogTheme)
                             .setView(dialogView)
                             .setPositiveButton("Save", (dialog, which) -> {
                                 String newName = nameEditText.getText().toString();
@@ -83,7 +90,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
                             })
                             .setNegativeButton("Cancel", null)
-                            .show();
+                            .create();
+                    alertDialog.show();
+
+                    int width = ((Activity) itemView.getContext())
+                            .getWindowManager()
+                            .getCurrentWindowMetrics()
+                            .getBounds()
+                            .width();
+                    Objects.requireNonNull(alertDialog.getWindow()).setLayout((int) (width*0.9), ViewGroup.LayoutParams.WRAP_CONTENT);
                 }
             });
         }

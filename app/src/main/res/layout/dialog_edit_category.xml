@@ -44,6 +44,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/categoryDescriptionInputLayout"
         android:layout_width="0dp"
@@ -52,7 +53,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="12dp"
         android:hint="@string/description"
-        android:minHeight="56dp"
         app:boxBackgroundMode="outline"
         app:layout_constraintTop_toBottomOf="@id/categoryNameInputLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,10 +60,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/categoryDescriptionEditText"
+            android:minLines="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:importantForAccessibility="yes"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:textColor="@android:color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
