@@ -22,6 +22,11 @@
         android:icon="@drawable/ic_info" />
 
     <item
+        android:id="@+id/nav_category_proposals"
+        android:title="@string/category_proposals"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_notification"
         android:title="@string/notifications"
         android:icon="@drawable/ic_notifications" />
