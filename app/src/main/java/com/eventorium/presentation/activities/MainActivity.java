@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.invitationsFragment);
         } else if (id == R.id.nav_categories) {
             navController.navigate(R.id.categoryOverviewFragment);
+        } else if (id == R.id.nav_category_proposals) { // TODO: delete later - just for testing purposes (until sessions are added)!
+            navController.navigate(R.id.categoryProposalsFragment);
         }
         else {
             showBottomNavigation();
