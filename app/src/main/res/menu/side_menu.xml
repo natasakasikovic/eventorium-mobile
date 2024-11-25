@@ -27,6 +27,11 @@
         android:icon="@drawable/ic_info" />
 
     <item
+        android:id="@+id/nav_create_category"
+        android:title="@string/create_category"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_notification"
         android:title="@string/notifications"
         android:icon="@drawable/ic_notifications" />
