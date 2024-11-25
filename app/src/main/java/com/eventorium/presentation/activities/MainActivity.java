@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.invitationsFragment);
         } else if (id == R.id.nav_categories) {
             navController.navigate(R.id.categoryOverviewFragment);
+        } else if (id == R.id.nav_company) {
+            navController.navigate(R.id.companyDetailsFragment);
         }
         else {
             showBottomNavigation();
@@ -200,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_categories).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_company).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {
