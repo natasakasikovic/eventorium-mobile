@@ -130,7 +130,17 @@
         android:label="fragment_account_edit"
         tools:layout="@layout/fragment_account_edit" />
 
+    <fragment
+        android:id="@+id/companyEditFragment"
+        android:name="com.eventorium.presentation.fragments.company.EditCompanyFragment"
+        android:label="fragment_edit_company"
+        tools:layout="@layout/fragment_edit_company"/>
+
     <action
         android:id="@+id/user_register_to_company_register"
         app:destination="@id/companyRegisterFragment" />
+
+    <action
+        android:id="@+id/action_companyDetails_to_editCompanyFragment"
+        app:destination="@id/companyEditFragment" />
 </navigation>
