@@ -44,5 +44,10 @@ public class CompanyDetailsFragment extends Fragment {
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.action_companyDetails_to_editCompanyFragment);
         });
+
+        binding.manageCategories.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_companyDetails_to_manageCategoriesFragment);
+        });
     }
 }

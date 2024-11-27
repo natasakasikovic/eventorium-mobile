@@ -136,6 +136,12 @@
         android:label="fragment_edit_company"
         tools:layout="@layout/fragment_edit_company"/>
 
+    <fragment
+        android:id="@+id/company_categories_fragment"
+        android:name="com.eventorium.presentation.fragments.company.ManageCategoriesFragment"
+        android:label="company_categories_fragment"
+        tools:layout="@layout/fragment_manage_categories"/>
+
     <action
         android:id="@+id/user_register_to_company_register"
         app:destination="@id/companyRegisterFragment" />
@@ -143,4 +149,8 @@
     <action
         android:id="@+id/action_companyDetails_to_editCompanyFragment"
         app:destination="@id/companyEditFragment" />
+
+    <action
+        android:id="@+id/action_companyDetails_to_manageCategoriesFragment"
+        app:destination="@id/company_categories_fragment" />
 </navigation>
