@@ -32,10 +32,23 @@
         tools:layout="@layout/fragment_category_overview" />
 
     <fragment
+        android:id="@+id/categoryProposalsFragment"
+        android:name="com.eventorium.presentation.fragments.category.CategoryProposalsFragment"
+        android:label="fragment_category_proposals"
+        tools:layout="@layout/fragment_category_proposals" />
+
+
+    <fragment
         android:id="@+id/editServiceFragment"
         android:name="com.eventorium.presentation.fragments.service.EditServiceFragment"
         android:label="fragment_edit_service"
         tools:layout="@layout/fragment_edit_service" />
+
+    <fragment
+        android:id="@+id/createCategoryFragment"
+        android:name="com.eventorium.presentation.fragments.category.CreateCategoryFragment"
+        android:label="fragment_create_category"
+        tools:layout="@layout/fragment_create_category" />
 
     <fragment
         android:id="@+id/createServiceFragment"
