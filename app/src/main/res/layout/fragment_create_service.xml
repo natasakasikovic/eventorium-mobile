@@ -500,7 +500,7 @@
                 android:layout_marginTop="16dp"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/see_more_button"
+                android:id="@+id/createServiceButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -510,7 +510,7 @@
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/uploadButton" />
+                app:layout_constraintTop_toBottomOf="@id/uploadButton"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

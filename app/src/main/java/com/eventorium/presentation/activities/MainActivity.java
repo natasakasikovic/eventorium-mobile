@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
+        } else if (id == R.id.nav_calendar) {
+            navController.navigate(R.id.bookingCalendarFragment);
         } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
         } else if (id == R.id.nav_invitations) { // TODO: delete later - just for testing purposes (until budget and agenda are created)!
@@ -133,8 +135,13 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryOverviewFragment);
         } else if (id == R.id.nav_booking){
             navController.navigate(R.id.bookingFragment);
-        }
-        else {
+        } else if (id == R.id.nav_company) {
+            navController.navigate(R.id.companyDetailsFragment);
+        } else if (id == R.id.nav_category_proposals) { // TODO: delete later - just for testing purposes (until sessions are added)!
+            navController.navigate(R.id.categoryProposalsFragment);
+        } else if (id == R.id.nav_create_category) {
+            navController.navigate(R.id.createCategoryFragment); // TODO: delete later - just for testing purposes (until sessions are added)!
+        } else {
             showBottomNavigation();
             return false;
         }
@@ -149,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.createServiceFragment);
         } else if (id == R.id.nav_account) {
             navController.navigate(R.id.accountDetailsFragment);
-        }
-        else {
+        } else if (id == R.id.nav_favourite) {
+            navController.navigate(R.id.favourites);
+        } else {
             return false;
         }
         return true;
@@ -202,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
         navMenu.findItem(R.id.nav_categories).setVisible(isLoggedIn);
+        navMenu.findItem(R.id.nav_company).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {

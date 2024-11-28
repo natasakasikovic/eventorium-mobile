@@ -98,4 +98,12 @@
     <string name="date">Date: </string>
     <string name="book_service">Book a service</string>
     <string name="select_date">Select date</string>
+    <string name="category_proposals">Category proposals</string>
+    <string name="update_category_proposal">Update category proposal</string>
+    <string name="similar_category_exists">A similar category could already exist. You can either update your proposal with this category or choose an existing one from the list.</string>
+    <string name="select_existing_category">Select existing category</string>
+    <string name="create_category">Create category</string>
+    <string name="your_fav_events">Your fav♥ events</string>
+    <string name="your_fav_services">Your fav♥ services</string>
+    <string name="your_fav_products">Your fav♥ products</string>
 </resources>

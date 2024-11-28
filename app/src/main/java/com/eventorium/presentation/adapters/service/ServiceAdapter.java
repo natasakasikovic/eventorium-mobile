@@ -64,10 +64,12 @@ public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceVie
                 int currentId = Objects.requireNonNull(navController.getCurrentDestination()).getId();
                 int actionId = 0;
 
-                if(currentId == R.id.homepageFragment) {
+                if (currentId == R.id.homepageFragment) {
                     actionId = R.id.action_home_to_service_details;
                 } else if (currentId == R.id.serviceOverviewFragment) {
                     actionId = R.id.action_serviceOverview_to_service_details;
+                } else if (currentId == R.id.favourites) {
+                    actionId = R.id.action_favServices_to_serviceDetailsFragment;
                 } else {
                     throw new IllegalStateException("Unreachable...");
                 }

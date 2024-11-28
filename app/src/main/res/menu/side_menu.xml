@@ -22,6 +22,16 @@
         android:icon="@drawable/ic_info" />
 
     <item
+        android:id="@+id/nav_category_proposals"
+        android:title="@string/category_proposals"
+        android:icon="@drawable/ic_info" />
+
+    <item
+        android:id="@+id/nav_create_category"
+        android:title="@string/create_category"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_notification"
         android:title="@string/notifications"
         android:icon="@drawable/ic_notifications" />
@@ -51,5 +61,10 @@
         android:id="@+id/nav_booking"
         android:title="Service booking"
         android:icon="@drawable/ic_fav"/>
+
+    <item
+        android:id="@+id/nav_company"
+        android:title="Your company"
+        android:icon="@drawable/ic_company"/>
 
 </menu>
