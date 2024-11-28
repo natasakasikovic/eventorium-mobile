@@ -93,8 +93,6 @@
     <string name="categories">Categories</string>
     <string name="existing_categories">Existing categories</string>
     <string name="edit_category">Edit category</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="category_proposals">Category proposals</string>
     <string name="update_category_proposal">Update category proposal</string>
     <string name="similar_category_exists">A similar category could already exist. You can either update your proposal with this category or choose an existing one from the list.</string>
