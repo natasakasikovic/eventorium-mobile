@@ -32,6 +32,12 @@
         android:label="fragment_booking_calendar" />
 
     <fragment
+        android:id="@+id/favourites"
+        android:name="com.eventorium.presentation.fragments.user.FavouritesFragment"
+        tools:layout="@layout/fragment_favourites"
+        android:label="fragment_favourites" />
+
+    <fragment
         android:id="@+id/categoryOverviewFragment"
         android:name="com.eventorium.presentation.fragments.category.CategoryOverviewFragment"
         android:label="fragment_category_overview"
