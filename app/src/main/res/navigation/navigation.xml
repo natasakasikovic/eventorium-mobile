@@ -20,6 +20,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/favourites"
+        android:name="com.eventorium.presentation.fragments.user.FavouritesFragment"
+        tools:layout="@layout/fragment_favourites"
+        android:label="fragment_favourites">
+        <action
+            android:id="@+id/action_favServices_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
@@ -30,12 +40,6 @@
         android:name="com.eventorium.presentation.fragments.user.BookingCalendarFragment"
         tools:layout="@layout/fragment_booking_calendar"
         android:label="fragment_booking_calendar" />
-
-    <fragment
-        android:id="@+id/favourites"
-        android:name="com.eventorium.presentation.fragments.user.FavouritesFragment"
-        tools:layout="@layout/fragment_favourites"
-        android:label="fragment_favourites" />
 
     <fragment
         android:id="@+id/categoryOverviewFragment"
