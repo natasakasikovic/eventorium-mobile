@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.fragments.service.ServiceBookingFragment">
+
+    <TextView
+        android:id="@+id/service_booking_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/book_service"
+        android:textSize="28sp"
+        android:textColor="@color/md_theme_primary"
+        android:fontFamily="@font/jejumyeongjo"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:textSize="22sp"
+        android:textColor="@color/md_theme_primary"
+        android:fontFamily="@font/jejumyeongjo"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@id/service_booking_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/serviceDateInputLayout" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/serviceDateInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="25dp"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintTop_toBottomOf="@id/service_booking_title"
+        app:layout_constraintStart_toEndOf="@id/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.6">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/serviceDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/from"
+        android:textSize="22sp"
+        android:textColor="@color/md_theme_primary"
+        android:fontFamily="@font/jejumyeongjo"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@id/serviceDateInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/timePickerInputLayoutFrom" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timePickerInputLayoutFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="25dp"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintTop_toBottomOf="@id/serviceDateInputLayout"
+        app:layout_constraintStart_toEndOf="@id/from"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.6">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timePickerTextFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/to"
+        android:textSize="22sp"
+        android:textColor="@color/md_theme_primary"
+        android:fontFamily="@font/jejumyeongjo"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@id/timePickerInputLayoutFrom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/timePickerInputLayoutTo" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/timePickerInputLayoutTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="25dp"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintTop_toBottomOf="@id/timePickerInputLayoutFrom"
+        app:layout_constraintStart_toEndOf="@id/to"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.6">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/timePickerTextTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:inputType="none"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/bookServiceButton"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:text="@string/book_service"
+        android:importantForAccessibility="yes"
+        android:backgroundTint="@color/md_theme_primary"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@id/timePickerInputLayoutTo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

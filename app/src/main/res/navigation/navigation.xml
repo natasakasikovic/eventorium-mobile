@@ -119,6 +119,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/bookingFragment"
+        android:name="com.eventorium.presentation.fragments.service.ServiceBookingFragment"
+        android:label="service_booking_fragment"
+        tools:layout="@layout/fragment_service_booking" />
+
+    <fragment
         android:id="@+id/accountEditFragment"
         android:name="com.eventorium.presentation.fragments.user.AccountEditFragment"
         android:label="fragment_account_edit"
