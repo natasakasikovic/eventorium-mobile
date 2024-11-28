@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
 import com.eventorium.databinding.FragmentFavouritesBinding;
 import com.eventorium.presentation.adapters.FavouritesPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
