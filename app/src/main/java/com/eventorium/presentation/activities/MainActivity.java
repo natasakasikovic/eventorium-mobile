@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_logout) {
             navController.navigate(R.id.homepageFragment);
             logOutUser();
+        } else if (id == R.id.nav_calendar) {
+            navController.navigate(R.id.bookingCalendarFragment);
         } else if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
         } else if (id == R.id.nav_invitations) { // TODO: delete later - just for testing purposes (until budget and agenda are created)!
@@ -137,8 +139,7 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_create_category) {
             navController.navigate(R.id.createCategoryFragment); // TODO: delete later - just for testing purposes (until sessions are added)!
-        }
-        else {
+        }        else {
             showBottomNavigation();
             return false;
         }

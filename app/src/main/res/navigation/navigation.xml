@@ -26,6 +26,12 @@
         tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/bookingCalendarFragment"
+        android:name="com.eventorium.presentation.fragments.user.BookingCalendarFragment"
+        tools:layout="@layout/fragment_booking_calendar"
+        android:label="fragment_booking_calendar" />
+
+    <fragment
         android:id="@+id/categoryOverviewFragment"
         android:name="com.eventorium.presentation.fragments.category.CategoryOverviewFragment"
         android:label="fragment_category_overview"
