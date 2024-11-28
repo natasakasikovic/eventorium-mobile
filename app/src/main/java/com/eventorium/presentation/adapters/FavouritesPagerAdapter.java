@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.eventorium.presentation.fragments.event.FavouriteEventsFragment;
+import com.eventorium.presentation.fragments.service.FavouriteServicesFragment;
 
 public class FavouritesPagerAdapter extends FragmentStateAdapter {
 
@@ -15,16 +16,13 @@ public class FavouritesPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position) {
-            case 0:
-                return new FavouriteEventsFragment(); // Fragment za događaje
-//            case 1:
-//                return new ServicesFragment(); // Fragment za usluge
+        return switch (position) {
+            case 0 -> FavouriteEventsFragment.newInstance();
+            case 1 -> FavouriteServicesFragment.newInstance();
 //            case 2:
-//                return new ProductsFragment(); // Fragment za proizvode
-            default:
-                return new FavouriteEventsFragment();
-        }
+//                return new FavouriteProductsFragment.newInstance();
+            default -> new FavouriteEventsFragment();
+        };
     }
 
     @Override
