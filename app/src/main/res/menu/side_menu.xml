@@ -58,6 +58,11 @@
         android:icon="@drawable/ic_fav"/>
 
     <item
+        android:id="@+id/nav_booking"
+        android:title="Service booking"
+        android:icon="@drawable/ic_fav"/>
+
+    <item
         android:id="@+id/nav_company"
         android:title="Your company"
         android:icon="@drawable/ic_company"/>
