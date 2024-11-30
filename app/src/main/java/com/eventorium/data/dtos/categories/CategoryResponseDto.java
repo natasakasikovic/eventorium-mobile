@@ -1,4 +1,4 @@
-package com.eventorium.data.models;
+package com.eventorium.data.dtos.categories;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

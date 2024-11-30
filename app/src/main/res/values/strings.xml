@@ -108,4 +108,7 @@
     <string name="your_fav_products">Your fav♥ products</string>
     <string name="category_updated_successfully">Category updated successfully!</string>
     <string name="failed_to_update_category">Failed to update category.</string>
+    <string name="please_fill_in_all_fields">Please fill in all fields</string>
+    <string name="category_created_successfully">Category created successfully</string>
+    <string name="failed_to_create_category">Failed to create category</string>
 </resources>

@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.mappers.CategoryMapper;
 import com.eventorium.data.models.Category;
 import com.eventorium.data.repositories.CategoryRepositoryImpl;
 import com.eventorium.data.util.RetrofitApi;
@@ -104,7 +105,7 @@ public class CategoryOverviewFragment extends Fragment {
                     category.setName(newName);
                     category.setDescription(newDescription);
 
-                    categoryViewModel.updateCategory(category.getId(), category)
+                    categoryViewModel.updateCategory(category.getId(), CategoryMapper.toRequest(category))
                             .observe(getViewLifecycleOwner(), updatedCategory -> {
                                 if(updatedCategory != null) {
                                     Toast.makeText(
