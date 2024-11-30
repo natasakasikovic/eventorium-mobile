@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.models.Category;
@@ -29,7 +30,6 @@ import java.util.Objects;
 
 
 public class CategoryOverviewFragment extends Fragment {
-
     private FragmentCategoryOverviewBinding binding;
     private CategoryViewModel categoryViewModel;
     private CategoriesAdapter adapter;
@@ -66,6 +66,10 @@ public class CategoryOverviewFragment extends Fragment {
                 .get(CategoryViewModel.class);
         binding.categoriesRecycleView.setAdapter(adapter);
 
+        loadCategories();
+    }
+
+    private void loadCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             if(categories != null && !categories.isEmpty()) {
                 adapter.setCategories(categories);
@@ -74,7 +78,6 @@ public class CategoryOverviewFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onDestroy() {
@@ -101,7 +104,24 @@ public class CategoryOverviewFragment extends Fragment {
                     category.setName(newName);
                     category.setDescription(newDescription);
 
-                    categoryViewModel.updateCategory(category);
+                    categoryViewModel.updateCategory(category.getId(), category)
+                            .observe(getViewLifecycleOwner(), updatedCategory -> {
+                                if(updatedCategory != null) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.category_updated_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    //TODO: Ask assistant about this
+                                    loadCategories();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.failed_to_update_category,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
                 })
                 .setNegativeButton("Cancel", null)
                 .create();

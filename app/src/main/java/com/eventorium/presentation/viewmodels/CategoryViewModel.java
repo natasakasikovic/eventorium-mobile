@@ -1,10 +1,5 @@
 package com.eventorium.presentation.viewmodels;
 
-import static java.util.stream.Collectors.toList;
-
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -33,8 +28,8 @@ public class CategoryViewModel extends ViewModel {
         return selectedCategory;
     }
 
-    public void updateCategory(Category updateCategory) {
-
+    public LiveData<Category> updateCategory(Long id, Category category) {
+        return categoryRepository.updateCategory(id, category);
     }
 
     private void fetchCategories() {

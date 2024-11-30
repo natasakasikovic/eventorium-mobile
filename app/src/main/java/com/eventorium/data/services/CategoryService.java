@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface CategoryService {
 
@@ -16,5 +17,5 @@ public interface CategoryService {
     Call<List<CategoryResponseDto>> getCategories();
 
     @PUT("categories/{id}")
-    Call<CategoryResponseDto> updateCategory(@Body CategoryRequestDto dto);
+    Call<CategoryResponseDto> updateCategory(@Path("id") Long id, @Body CategoryRequestDto dto);
 }

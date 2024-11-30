@@ -106,4 +106,6 @@
     <string name="your_fav_events">Your fav♥ events</string>
     <string name="your_fav_services">Your fav♥ services</string>
     <string name="your_fav_products">Your fav♥ products</string>
+    <string name="category_updated_successfully">Category updated successfully!</string>
+    <string name="failed_to_update_category">Failed to update category.</string>
 </resources>
