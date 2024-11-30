@@ -15,10 +15,14 @@ import android.widget.EditText;
 
 import com.eventorium.R;
 import com.eventorium.data.models.Category;
+import com.eventorium.data.repositories.CategoryRepositoryImpl;
+import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.adapters.category.CategoriesAdapter;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.viewmodels.ViewModelFactory;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -26,6 +30,7 @@ public class CategoryOverviewFragment extends Fragment {
 
     private FragmentCategoryOverviewBinding binding;
     private CategoryViewModel categoryViewModel;
+    private CategoriesAdapter adapter;
 
     public CategoryOverviewFragment() {
     }
@@ -49,14 +54,18 @@ public class CategoryOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        adapter = new CategoriesAdapter(new ArrayList<>(), category -> {
+            categoryViewModel.setSelectedCategory(category);
+            showEditDialog(category);
+        });
+
+        categoryViewModel = new ViewModelProvider(this,
+                new ViewModelFactory(new CategoryRepositoryImpl(RetrofitApi.categoryService)))
+                .get(CategoryViewModel.class);
+        binding.categoriesRecycleView.setAdapter(adapter);
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            CategoriesAdapter adapter = new CategoriesAdapter(categories, category -> {
-               categoryViewModel.setSelectedCategory(category);
-               showEditDialog(category);
-            });
-            binding.categoriesRecycleView.setAdapter(adapter);
+            adapter.setCategories(categories);
         });
     }
 

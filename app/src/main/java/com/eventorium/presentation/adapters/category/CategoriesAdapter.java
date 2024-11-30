@@ -17,7 +17,7 @@ import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
 
-    private final List<Category> categories;
+    private List<Category> categories;
     private final OnEditClickListener<Category> onEditClick;
 
     public CategoriesAdapter(List<Category> categories, OnEditClickListener<Category> onEditClick) {
@@ -45,6 +45,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         return categories.size();
     }
 
+    public void setCategories(List<Category> newCategories) {
+        categories = newCategories;
+        notifyDataSetChanged();
+    }
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView descriptionTextView;

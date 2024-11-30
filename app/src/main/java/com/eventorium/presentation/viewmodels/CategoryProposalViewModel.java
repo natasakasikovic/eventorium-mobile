@@ -19,20 +19,20 @@ public class CategoryProposalViewModel extends ViewModel {
 
     public CategoryProposalViewModel() {
         categoryProposals.setValue(List.of(
-                new Category("Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
-                new Category("Clothing", "Apparel and fashion items for men, women, and children."),
-                new Category("Food & Beverages", "Groceries, packaged foods, and drinks."),
-                new Category("Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
-                new Category("Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
-                new Category("Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
+                new Category(1L, "Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
+                new Category(2L, "Clothing", "Apparel and fashion items for men, women, and children."),
+                new Category(3L, "Food & Beverages", "Groceries, packaged foods, and drinks."),
+                new Category(4L, "Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
+                new Category(5L, "Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
+                new Category(6L, "Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
         ));
         existingCategories.setValue(List.of(
-                new Category("Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
-                new Category("Clothing", "Apparel and fashion items for men, women, and children."),
-                new Category("Food & Beverages", "Groceries, packaged foods, and drinks."),
-                new Category("Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
-                new Category("Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
-                new Category("Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
+                new Category(1L, "Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
+                new Category(2L,"Clothing", "Apparel and fashion items for men, women, and children."),
+                new Category(3L,"Food & Beverages", "Groceries, packaged foods, and drinks."),
+                new Category(4L,"Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
+                new Category(5L,"Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
+                new Category(6L, "Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
         ));
     }
 
