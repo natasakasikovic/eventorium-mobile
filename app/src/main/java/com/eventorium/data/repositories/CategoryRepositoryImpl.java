@@ -2,7 +2,9 @@ package com.eventorium.data.repositories;
 
 import static java.util.stream.Collectors.toList;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.mappers.CategoryMapper;
 import com.eventorium.data.models.Category;
@@ -14,6 +16,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final CategoryService categoryService;
@@ -23,16 +29,34 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public List<Category> getCategories() throws IOException {
-        List<CategoryResponseDto> dtos = categoryService.getCategories().execute().body();
+    public LiveData<List<Category>> getCategories() {
+        MutableLiveData<List<Category>> liveData = new MutableLiveData<>();
 
-        Log.i("IS_NULL", String.valueOf(dtos == null));
+        categoryService.getCategories().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<CategoryResponseDto>> call,
+                    @NonNull Response<List<CategoryResponseDto>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Category> categories = response.body()
+                            .stream().map(CategoryMapper::fromResponse)
+                            .collect(toList());
+                    liveData.postValue(categories);
+                } else {
+                    liveData.postValue(Collections.emptyList());
+                }
+            }
 
-        if (dtos != null) {
-            return dtos.stream()
-                    .map(CategoryMapper::fromResponse)
-                    .collect(toList());
-        }
-        return Collections.emptyList();
+            @Override
+            public void onFailure(
+                    @NonNull Call<List<CategoryResponseDto>> call,
+                    @NonNull Throwable t
+            ) {
+                liveData.postValue(Collections.emptyList());
+            }
+        });
+
+        return liveData;
     }
 }

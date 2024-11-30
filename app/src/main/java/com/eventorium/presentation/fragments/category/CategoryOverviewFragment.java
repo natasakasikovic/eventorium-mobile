@@ -23,6 +23,8 @@ import com.eventorium.presentation.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.viewmodels.ViewModelFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -65,7 +67,11 @@ public class CategoryOverviewFragment extends Fragment {
         binding.categoriesRecycleView.setAdapter(adapter);
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            adapter.setCategories(categories);
+            if(categories != null && !categories.isEmpty()) {
+                adapter.setCategories(categories);
+            } else {
+                adapter.setCategories(Collections.EMPTY_LIST);
+            }
         });
     }
 
