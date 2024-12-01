@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,14 @@ import com.eventorium.data.repositories.CategoryRepositoryImpl;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.adapters.category.CategoriesAdapter;
+import com.eventorium.presentation.util.OnEditClickListener;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.viewmodels.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -57,9 +60,18 @@ public class CategoryOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new CategoriesAdapter(new ArrayList<>(), category -> {
-            categoryViewModel.setSelectedCategory(category);
-            showEditDialog(category);
+        adapter = new CategoriesAdapter(new ArrayList<>(), new OnEditClickListener<>() {
+            @Override
+            public void onEditClick(Category category) {
+                categoryViewModel.setSelectedCategory(category);
+                showEditDialog(category);
+            }
+
+            @Override
+            public void onDeleteClick(Category category) {
+                categoryViewModel.setSelectedCategory(category);
+                showDeleteDialog(category);
+            }
         });
 
         categoryViewModel = new ViewModelProvider(this,
@@ -73,6 +85,7 @@ public class CategoryOverviewFragment extends Fragment {
     private void loadCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             if(categories != null && !categories.isEmpty()) {
+                Log.i("SIZE", String.valueOf(categories.size()));
                 adapter.setCategories(categories);
             } else {
                 adapter.setCategories(Collections.EMPTY_LIST);
@@ -84,6 +97,34 @@ public class CategoryOverviewFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    private void showDeleteDialog(Category category) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Category")
+                .setMessage("Are you sure you want to delete " + category.getName() + "?" )
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    categoryViewModel.deleteCategory(category.getId())
+                        .observe(getViewLifecycleOwner(), success -> {
+                                if(success) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.category_deleted_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    categoryViewModel.resetList();
+                                    categoryViewModel.getCategories();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.failed_to_delete_category,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                        });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showEditDialog(Category category) {
@@ -134,5 +175,4 @@ public class CategoryOverviewFragment extends Fragment {
         Objects.requireNonNull(alertDialog.getWindow())
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
-
 }

@@ -12,4 +12,5 @@ public interface CategoryRepository {
     LiveData<List<Category>> getCategories();
     LiveData<Category> updateCategory(Long id, CategoryRequestDto category);
     LiveData<Category> createCategory(CategoryRequestDto category);
+    LiveData<Boolean> deleteCategory(Long id);
 }

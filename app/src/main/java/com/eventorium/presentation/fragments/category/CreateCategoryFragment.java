@@ -38,7 +38,7 @@ public class CreateCategoryFragment extends Fragment {
     public CreateCategoryFragment() {
     }
 
-    public static CreateCategoryFragment newInstance(String param1, String param2) {
+    public static CreateCategoryFragment newInstance() {
         return new CreateCategoryFragment();
     }
 

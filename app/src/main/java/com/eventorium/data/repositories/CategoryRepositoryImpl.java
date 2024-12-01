@@ -121,4 +121,31 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
         return liveData;
     }
+
+    @Override
+    public LiveData<Boolean> deleteCategory(Long id) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>(true);
+        categoryService.deleteCategory(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Void> call,
+                    @NonNull Response<Void> response
+            ) {
+                if (!response.isSuccessful()) {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    liveData.postValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<Void> call,
+                    @NonNull Throwable t
+            ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                liveData.postValue(false);
+            }
+        });
+        return liveData;
+    }
 }

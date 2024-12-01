@@ -53,12 +53,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         TextView nameTextView;
         TextView descriptionTextView;
         Button editButton;
+        Button deleteButton;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.category_name);
             descriptionTextView = itemView.findViewById(R.id.category_description);
             editButton = itemView.findViewById(R.id.editButton);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
 
             editButton.setOnClickListener(v -> {
                 Category category = categories.get(getAdapterPosition());
@@ -66,6 +68,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                     onEditClick.onEditClick(category);
                 }
             });
+
+            deleteButton.setOnClickListener(v -> {
+                Category category = categories.get(getAdapterPosition());
+                if(category != null) {
+                    onEditClick.onDeleteClick(category);
+                }
+            });
+
         }
     }
 }
