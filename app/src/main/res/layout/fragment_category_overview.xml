@@ -69,7 +69,6 @@
                 android:id="@+id/linear_layout_events"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/md_theme_tertiaryContainer"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:layout_marginTop="20dp"
@@ -80,6 +79,7 @@
                 <TextView
                     android:id="@+id/noCategoriesText"
                     android:layout_width="wrap_content"
+                    android:background="@color/md_theme_tertiaryContainer"
                     android:layout_height="wrap_content"
                     android:text="@string/no_categories_found"
                     android:textSize="16sp"
@@ -91,6 +91,7 @@
                     android:id="@+id/categoriesRecycleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@color/md_theme_tertiaryContainer"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_gravity="center"
                     android:visibility="gone"/>
