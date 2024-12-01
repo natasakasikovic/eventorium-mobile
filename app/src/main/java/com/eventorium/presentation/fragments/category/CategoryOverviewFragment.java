@@ -7,12 +7,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -25,11 +26,10 @@ import com.eventorium.presentation.adapters.category.CategoriesAdapter;
 import com.eventorium.presentation.util.OnEditClickListener;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.viewmodels.ViewModelFactory;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Locale;
 import java.util.Objects;
 
 
@@ -37,6 +37,10 @@ public class CategoryOverviewFragment extends Fragment {
     private FragmentCategoryOverviewBinding binding;
     private CategoryViewModel categoryViewModel;
     private CategoriesAdapter adapter;
+
+    private CircularProgressIndicator loadingIndicator;
+    private RecyclerView recyclerView;
+    private TextView noCategoriesText;
 
     public CategoryOverviewFragment() {
     }
@@ -77,18 +81,32 @@ public class CategoryOverviewFragment extends Fragment {
         categoryViewModel = new ViewModelProvider(this,
                 new ViewModelFactory(new CategoryRepositoryImpl(RetrofitApi.categoryService)))
                 .get(CategoryViewModel.class);
-        binding.categoriesRecycleView.setAdapter(adapter);
+        recyclerView = binding.categoriesRecycleView;
+        recyclerView.setAdapter(adapter);
+
+        loadingIndicator = binding.loadingIndicator;
+        noCategoriesText = binding.noCategoriesText;
 
         loadCategories();
+        showLoadingIndicator();
+    }
+
+    private void showLoadingIndicator() {
+        categoryViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
     }
 
     private void loadCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             if(categories != null && !categories.isEmpty()) {
-                Log.i("SIZE", String.valueOf(categories.size()));
+                recyclerView.setVisibility(View.VISIBLE);
+                noCategoriesText.setVisibility(View.GONE);
                 adapter.setCategories(categories);
             } else {
                 adapter.setCategories(Collections.EMPTY_LIST);
+                recyclerView.setVisibility(View.GONE);
+                noCategoriesText.setVisibility(View.VISIBLE);
             }
         });
     }

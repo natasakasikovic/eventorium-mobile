@@ -22,6 +22,7 @@ public class CategoryViewModel extends ViewModel {
 
     private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
     private final MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final CategoryRepository categoryRepository;
 
     public CategoryViewModel(CategoryRepository categoryRepository) {
@@ -35,6 +36,10 @@ public class CategoryViewModel extends ViewModel {
 
     public LiveData<Category> getSelectedCategory() {
         return selectedCategory;
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 
     public LiveData<Boolean> deleteCategory(Long id) {
@@ -57,7 +62,11 @@ public class CategoryViewModel extends ViewModel {
     }
 
     private void fetchCategories() {
-        categoryRepository.getCategories().observeForever(categories::postValue);
+        isLoading.setValue(true);
+        categoryRepository.getCategories().observeForever(categories -> {
+            this.categories.postValue(categories);
+            isLoading.postValue(false);
+        });
     }
 
     public void setSelectedCategory(Category category) {
