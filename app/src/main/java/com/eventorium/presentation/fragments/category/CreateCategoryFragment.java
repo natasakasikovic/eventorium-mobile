@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -87,7 +88,9 @@ public class CreateCategoryFragment extends Fragment {
                         Toast.LENGTH_SHORT
                 ).show();
                 NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_create_to_categoryOverview);
+                navController.navigate(R.id.action_create_to_categoryOverview, null, new NavOptions.Builder()
+                        .setPopUpTo(R.id.createCategoryFragment, true)
+                        .build());
             } else {
                 Toast.makeText(
                         requireContext(),
