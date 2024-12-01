@@ -118,7 +118,7 @@ public class CategoryOverviewFragment extends Fragment {
     }
 
     private void showDeleteDialog(Category category) {
-        new AlertDialog.Builder(requireContext())
+        new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
                 .setTitle("Delete Category")
                 .setMessage("Are you sure you want to delete " + category.getName() + "?" )
                 .setPositiveButton("Delete", (dialog, which) -> {
