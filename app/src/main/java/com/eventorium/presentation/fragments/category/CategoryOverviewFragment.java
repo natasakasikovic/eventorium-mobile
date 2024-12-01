@@ -112,8 +112,6 @@ public class CategoryOverviewFragment extends Fragment {
                                             R.string.category_deleted_successfully,
                                             Toast.LENGTH_SHORT
                                     ).show();
-                                    categoryViewModel.resetList();
-                                    categoryViewModel.getCategories();
                                 } else {
                                     Toast.makeText(
                                             requireContext(),

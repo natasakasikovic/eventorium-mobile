@@ -1,5 +1,7 @@
 package com.eventorium.presentation.viewmodels;
 
+import static java.util.stream.Collectors.toList;
+
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -13,6 +15,8 @@ import com.eventorium.domain.repositories.CategoryRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CategoryViewModel extends ViewModel {
 
@@ -26,7 +30,6 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public LiveData<List<Category>> getCategories() {
-        Log.i("FETCHING", "Loading categories..");
         return categories;
     }
 
@@ -34,12 +37,15 @@ public class CategoryViewModel extends ViewModel {
         return selectedCategory;
     }
 
-    public void resetList() {
-        categories.setValue(Collections.EMPTY_LIST);
-    }
-
     public LiveData<Boolean> deleteCategory(Long id) {
-        return categoryRepository.deleteCategory(id);
+        LiveData<Boolean> result =  categoryRepository.deleteCategory(id);
+        if(result != null && Boolean.TRUE.equals(result.getValue())) {
+            categories.postValue(Objects.requireNonNull(categories.getValue())
+                    .stream()
+                    .filter(category -> !Objects.equals(category.getId(), id))
+                    .collect(toList()));
+        }
+        return result;
     }
 
     public LiveData<Category> createCategory(CategoryRequestDto category) {
