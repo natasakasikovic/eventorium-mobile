@@ -2,9 +2,21 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def getIpAddress() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty('ip_addr')
+}
+
 android {
     namespace 'com.eventorium'
     compileSdk 34
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
 
     defaultConfig {
         applicationId "com.eventorium"
@@ -12,12 +24,9 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "IP_ADDR", "\""+getIpAddress()+"\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    viewBinding {
-        enabled = true
+        multiDexEnabled = true
     }
 
     buildTypes {

@@ -1,5 +1,6 @@
 package com.eventorium.data.util;
 
+import com.eventorium.BuildConfig;
 import com.eventorium.data.services.CategoryService;
 
 import java.util.concurrent.TimeUnit;
@@ -10,7 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitApi {
-    private static final String SERVICE_API_PATH = "http://192.168.1.67:8080/api/v1/";
+    private static final String SERVICE_API_PATH = "http://" + BuildConfig.IP_ADDR + ":8080/api/v1/";
     public static OkHttpClient test(){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
