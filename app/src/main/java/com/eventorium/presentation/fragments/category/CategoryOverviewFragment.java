@@ -7,25 +7,40 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.mappers.CategoryMapper;
 import com.eventorium.data.models.Category;
+import com.eventorium.data.repositories.CategoryRepository;
+import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.adapters.category.CategoriesAdapter;
+import com.eventorium.presentation.util.OnEditClickListener;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.viewmodels.ViewModelFactory;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 
 public class CategoryOverviewFragment extends Fragment {
-
     private FragmentCategoryOverviewBinding binding;
     private CategoryViewModel categoryViewModel;
+    private CategoriesAdapter adapter;
+
+    private CircularProgressIndicator loadingIndicator;
+    private RecyclerView recyclerView;
+    private TextView noCategoriesText;
 
     public CategoryOverviewFragment() {
     }
@@ -49,22 +64,83 @@ public class CategoryOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        adapter = new CategoriesAdapter(new ArrayList<>(), new OnEditClickListener<>() {
+            @Override
+            public void onEditClick(Category category) {
+                categoryViewModel.setSelectedCategory(category);
+                showEditDialog(category);
+            }
 
-        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            CategoriesAdapter adapter = new CategoriesAdapter(categories, category -> {
-               categoryViewModel.setSelectedCategory(category);
-               showEditDialog(category);
-            });
-            binding.categoriesRecycleView.setAdapter(adapter);
+            @Override
+            public void onDeleteClick(Category category) {
+                categoryViewModel.setSelectedCategory(category);
+                showDeleteDialog(category);
+            }
+        });
+
+        categoryViewModel = new ViewModelProvider(this,
+                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
+                .get(CategoryViewModel.class);
+        recyclerView = binding.categoriesRecycleView;
+        recyclerView.setAdapter(adapter);
+
+        loadingIndicator = binding.loadingIndicator;
+        noCategoriesText = binding.noCategoriesText;
+
+        loadCategories();
+        showLoadingIndicator();
+    }
+
+    private void showLoadingIndicator() {
+        categoryViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
     }
 
+    private void loadCategories() {
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            if(categories != null && !categories.isEmpty()) {
+                recyclerView.setVisibility(View.VISIBLE);
+                noCategoriesText.setVisibility(View.GONE);
+                adapter.setCategories(categories);
+            } else {
+                adapter.setCategories(Collections.EMPTY_LIST);
+                recyclerView.setVisibility(View.GONE);
+                noCategoriesText.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    private void showDeleteDialog(Category category) {
+        new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+                .setTitle("Delete Category")
+                .setMessage("Are you sure you want to delete " + category.getName() + "?" )
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    categoryViewModel.deleteCategory(category.getId())
+                        .observe(getViewLifecycleOwner(), success -> {
+                                if(success) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.category_deleted_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.failed_to_delete_category,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                        });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showEditDialog(Category category) {
@@ -86,7 +162,23 @@ public class CategoryOverviewFragment extends Fragment {
                     category.setName(newName);
                     category.setDescription(newDescription);
 
-                    categoryViewModel.updateCategory(category);
+                    categoryViewModel.updateCategory(category.getId(), CategoryMapper.toRequest(category))
+                            .observe(getViewLifecycleOwner(), updatedCategory -> {
+                                if(updatedCategory != null) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.category_updated_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    loadCategories();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.failed_to_update_category,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
@@ -98,5 +190,4 @@ public class CategoryOverviewFragment extends Fragment {
         Objects.requireNonNull(alertDialog.getWindow())
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
-
 }

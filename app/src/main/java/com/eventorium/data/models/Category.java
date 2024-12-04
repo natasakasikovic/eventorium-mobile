@@ -5,26 +5,25 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Category implements Parcelable {
 
+    private Long id;
     private String name;
     private String description;
 
-    public String getName() { return name; }
-
-    public String getDescription() { return description; }
-
-    public void setName(String name) { this.name = name; }
-
-    public void setDescription(String description) { this.description = description; }
-
-    public Category() {}
-    public Category(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
     protected Category(Parcel in) {
+        this.id = in.readLong();
         this.name = in.readString();
         this.description = in.readString();
     }
@@ -44,6 +43,7 @@ public class Category implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(description);
     }

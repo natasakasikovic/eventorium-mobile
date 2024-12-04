@@ -1,43 +1,77 @@
 package com.eventorium.presentation.viewmodels;
 
+import static java.util.stream.Collectors.toList;
+
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.eventorium.data.models.Category;
+import com.eventorium.data.dtos.categories.CategoryRequestDto;
+import com.eventorium.data.repositories.CategoryRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CategoryViewModel extends ViewModel {
+
     private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
     private final MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final CategoryRepository categoryRepository;
 
-    public CategoryViewModel() {
-        categories.setValue(List.of(
-            new Category("Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
-            new Category("Clothing", "Apparel and fashion items for men, women, and children."),
-            new Category("Food & Beverages", "Groceries, packaged foods, and drinks."),
-            new Category("Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
-            new Category("Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
-            new Category("Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
-        ));
+    public CategoryViewModel(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+        fetchCategories();
     }
 
-    public MutableLiveData<List<Category>> getCategories() {
+    public LiveData<List<Category>> getCategories() {
         return categories;
     }
 
-    public MutableLiveData<Category> getSelectedCategory() {
+    public LiveData<Category> getSelectedCategory() {
         return selectedCategory;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories.setValue(categories);
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public LiveData<Boolean> deleteCategory(Long id) {
+        LiveData<Boolean> result =  categoryRepository.deleteCategory(id);
+        if(result != null && Boolean.TRUE.equals(result.getValue())) {
+            categories.postValue(Objects.requireNonNull(categories.getValue())
+                    .stream()
+                    .filter(category -> !Objects.equals(category.getId(), id))
+                    .collect(toList()));
+        }
+        return result;
+    }
+
+    public LiveData<Category> createCategory(CategoryRequestDto category) {
+        return categoryRepository.createCategory(category);
+    }
+
+    public LiveData<Category> updateCategory(Long id, CategoryRequestDto category) {
+        return categoryRepository.updateCategory(id, category);
+    }
+
+    private void fetchCategories() {
+        isLoading.setValue(true);
+        categoryRepository.getCategories().observeForever(categories -> {
+            this.categories.postValue(categories);
+            isLoading.postValue(false);
+        });
     }
 
     public void setSelectedCategory(Category category) {
         selectedCategory.setValue(category);
     }
 
-    public void updateCategory(Category updateCategory) {
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        categoryRepository.getCategories().removeObserver(categories::postValue);
     }
 }

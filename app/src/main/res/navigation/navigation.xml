@@ -53,7 +53,6 @@
         android:label="fragment_category_proposals"
         tools:layout="@layout/fragment_category_proposals" />
 
-
     <fragment
         android:id="@+id/editServiceFragment"
         android:name="com.eventorium.presentation.fragments.service.EditServiceFragment"
@@ -64,7 +63,11 @@
         android:id="@+id/createCategoryFragment"
         android:name="com.eventorium.presentation.fragments.category.CreateCategoryFragment"
         android:label="fragment_create_category"
-        tools:layout="@layout/fragment_create_category" />
+        tools:layout="@layout/fragment_create_category" >
+        <action
+            android:id="@+id/action_create_to_categoryOverview"
+            app:destination="@+id/categoryOverviewFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/createServiceFragment"
