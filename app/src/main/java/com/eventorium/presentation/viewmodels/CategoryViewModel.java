@@ -2,21 +2,17 @@ package com.eventorium.presentation.viewmodels;
 
 import static java.util.stream.Collectors.toList;
 
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
 import com.eventorium.data.models.Category;
 import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.domain.repositories.CategoryRepository;
+import com.eventorium.data.repositories.CategoryRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class CategoryViewModel extends ViewModel {
 

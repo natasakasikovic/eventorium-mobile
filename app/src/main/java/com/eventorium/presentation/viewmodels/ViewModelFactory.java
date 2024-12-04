@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.eventorium.domain.repositories.CategoryRepository;
+import com.eventorium.data.repositories.CategoryRepository;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 

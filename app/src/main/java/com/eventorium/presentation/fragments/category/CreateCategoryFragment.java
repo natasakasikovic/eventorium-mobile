@@ -12,14 +12,11 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
-import com.eventorium.data.mappers.CategoryMapper;
-import com.eventorium.data.repositories.CategoryRepositoryImpl;
+import com.eventorium.data.repositories.CategoryRepository;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCreateCategoryBinding;
 import com.eventorium.presentation.viewmodels.CategoryViewModel;
@@ -53,7 +50,7 @@ public class CreateCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCreateCategoryBinding.inflate(inflater, container, false);
         categoryViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new CategoryRepositoryImpl(RetrofitApi.categoryService)))
+                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
                 .get(CategoryViewModel.class);
 
         nameTextEdit = binding.categoryNameEditText;

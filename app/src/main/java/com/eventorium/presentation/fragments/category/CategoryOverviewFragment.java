@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.mappers.CategoryMapper;
 import com.eventorium.data.models.Category;
-import com.eventorium.data.repositories.CategoryRepositoryImpl;
+import com.eventorium.data.repositories.CategoryRepository;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.adapters.category.CategoriesAdapter;
@@ -79,7 +79,7 @@ public class CategoryOverviewFragment extends Fragment {
         });
 
         categoryViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new CategoryRepositoryImpl(RetrofitApi.categoryService)))
+                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
                 .get(CategoryViewModel.class);
         recyclerView = binding.categoriesRecycleView;
         recyclerView.setAdapter(adapter);
@@ -170,7 +170,6 @@ public class CategoryOverviewFragment extends Fragment {
                                             R.string.category_updated_successfully,
                                             Toast.LENGTH_SHORT
                                     ).show();
-                                    //TODO: Ask assistant about this
                                     loadCategories();
                                 } else {
                                     Toast.makeText(

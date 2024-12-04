@@ -13,7 +13,6 @@ import com.eventorium.data.models.Category;
 import com.eventorium.data.dtos.categories.CategoryRequestDto;
 import com.eventorium.data.dtos.categories.CategoryResponseDto;
 import com.eventorium.data.services.CategoryService;
-import com.eventorium.domain.repositories.CategoryRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,15 +21,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryRepositoryImpl implements CategoryRepository {
+public class CategoryRepository {
 
     private final CategoryService categoryService;
 
-    public CategoryRepositoryImpl(CategoryService categoryService) {
+    public CategoryRepository(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-    @Override
     public LiveData<List<Category>> getCategories() {
         MutableLiveData<List<Category>> liveData = new MutableLiveData<>();
 
@@ -63,7 +61,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return liveData;
     }
 
-    @Override
     public LiveData<Category> updateCategory(Long id, CategoryRequestDto category) {
         MutableLiveData<Category> liveData = new MutableLiveData<>();
 
@@ -93,7 +90,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return liveData;
     }
 
-    @Override
     public LiveData<Category> createCategory(CategoryRequestDto dto) {
         MutableLiveData<Category> liveData = new MutableLiveData<>();
         categoryService.createCategory(dto).enqueue(new Callback<>() {
@@ -122,7 +118,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         return liveData;
     }
 
-    @Override
     public LiveData<Boolean> deleteCategory(Long id) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>(true);
         categoryService.deleteCategory(id).enqueue(new Callback<>() {
