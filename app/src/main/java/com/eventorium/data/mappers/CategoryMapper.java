@@ -13,4 +13,8 @@ public class CategoryMapper {
     public static CategoryRequestDto toRequest(Category category) {
         return new CategoryRequestDto(category.getName(), category.getDescription());
     }
+
+    public static CategoryResponseDto toResponse(Category c) {
+        return new CategoryResponseDto(c.getId(), c.getName(), c.getDescription());
+    }
 }

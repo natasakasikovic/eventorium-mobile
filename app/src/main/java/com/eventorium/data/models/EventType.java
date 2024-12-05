@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,24 +18,30 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Category implements Parcelable {
+public class EventType implements Parcelable {
 
     private Long id;
     private String name;
     private String description;
+    private List<Category> suggestedCategories;
 
-    protected Category(Parcel in) {
+    protected EventType(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
         this.description = in.readString();
+        this.suggestedCategories = in.createTypedArrayList(Category.CREATOR);
     }
 
-    public static final Creator<Category> CREATOR = new Creator<Category>() {
+    public static final Creator<EventType> CREATOR = new Creator<EventType>() {
         @Override
-        public Category createFromParcel(Parcel in) { return new Category(in); }
+        public EventType createFromParcel(Parcel in) {
+            return new EventType(in);
+        }
 
         @Override
-        public Category[] newArray(int size) { return new Category[size]; }
+        public EventType[] newArray(int size) {
+            return new EventType[size];
+        }
     };
 
     @Override
@@ -43,14 +51,14 @@ public class Category implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(id);
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
         dest.writeString(name);
         dest.writeString(description);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return name;
+        dest.writeTypedList(suggestedCategories);
     }
 }
