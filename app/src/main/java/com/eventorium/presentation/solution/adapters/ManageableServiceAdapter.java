@@ -13,7 +13,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Service;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 
 import java.util.List;

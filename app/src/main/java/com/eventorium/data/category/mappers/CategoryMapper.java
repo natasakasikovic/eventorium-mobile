@@ -1,8 +1,8 @@
-package com.eventorium.data.mappers;
+package com.eventorium.data.category.mappers;
 
-import com.eventorium.data.models.Category;
-import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
 
 public class CategoryMapper {
 

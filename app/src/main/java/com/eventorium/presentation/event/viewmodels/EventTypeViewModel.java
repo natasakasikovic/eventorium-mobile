@@ -3,9 +3,9 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.dtos.eventtypes.EventTypeRequestDto;
-import com.eventorium.data.models.EventType;
-import com.eventorium.data.repositories.EventTypeRepository;
+import com.eventorium.data.event.dtos.EventTypeRequestDto;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.repositories.EventTypeRepository;
 
 public class EventTypeViewModel extends ViewModel {
     private final EventTypeRepository eventTypeRepository;

@@ -1,7 +1,7 @@
-package com.eventorium.data.services;
+package com.eventorium.data.category.services;
 
-import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
 
 import java.util.List;
 

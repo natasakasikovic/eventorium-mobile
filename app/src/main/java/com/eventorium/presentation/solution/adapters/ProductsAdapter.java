@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Product;
+import com.eventorium.data.solution.models.Product;
 
 import java.util.List;
 

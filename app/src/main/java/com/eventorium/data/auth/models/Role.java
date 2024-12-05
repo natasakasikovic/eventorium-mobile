@@ -1,4 +1,4 @@
-package com.eventorium.data.models;
+package com.eventorium.data.auth.models;
 
 public enum Role {
     PROVIDER,

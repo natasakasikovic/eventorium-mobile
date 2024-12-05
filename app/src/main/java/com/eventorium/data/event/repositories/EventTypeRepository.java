@@ -1,4 +1,4 @@
-package com.eventorium.data.repositories;
+package com.eventorium.data.event.repositories;
 
 import android.util.Log;
 
@@ -6,11 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.dtos.eventtypes.EventTypeRequestDto;
-import com.eventorium.data.dtos.eventtypes.EventTypeResponseDto;
-import com.eventorium.data.mappers.EventTypeMapper;
-import com.eventorium.data.models.EventType;
-import com.eventorium.data.services.EventTypeService;
+import com.eventorium.data.event.dtos.EventTypeRequestDto;
+import com.eventorium.data.event.dtos.EventTypeResponseDto;
+import com.eventorium.data.event.mappers.EventTypeMapper;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.services.EventTypeService;
 
 import retrofit2.Call;
 import retrofit2.Callback;

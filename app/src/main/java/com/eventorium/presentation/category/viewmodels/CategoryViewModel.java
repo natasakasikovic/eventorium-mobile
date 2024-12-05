@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.models.Category;
-import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.repositories.CategoryRepository;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.repositories.CategoryRepository;
 
 import java.util.List;
 import java.util.Objects;

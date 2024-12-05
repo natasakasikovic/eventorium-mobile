@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.mappers.CategoryMapper;
-import com.eventorium.data.models.Category;
-import com.eventorium.data.repositories.CategoryRepository;
+import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.category.adapters.CategoriesAdapter;

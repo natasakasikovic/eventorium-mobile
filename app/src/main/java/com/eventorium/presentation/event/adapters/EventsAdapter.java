@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Event;
+import com.eventorium.data.event.models.Event;
 
 import java.util.List;
 

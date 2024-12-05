@@ -1,8 +1,8 @@
 package com.eventorium.data.util;
 
 import com.eventorium.BuildConfig;
-import com.eventorium.data.services.CategoryService;
-import com.eventorium.data.services.EventTypeService;
+import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.event.services.EventTypeService;
 
 import java.util.concurrent.TimeUnit;
 

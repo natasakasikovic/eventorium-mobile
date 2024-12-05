@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Category;
+import com.eventorium.data.category.models.Category;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
 import com.eventorium.presentation.category.adapters.CategoryProposalsAdapter;
 import com.eventorium.presentation.util.listeners.OnReviewProposalListener;

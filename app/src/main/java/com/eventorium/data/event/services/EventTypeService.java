@@ -1,7 +1,7 @@
-package com.eventorium.data.services;
+package com.eventorium.data.event.services;
 
-import com.eventorium.data.dtos.eventtypes.EventTypeRequestDto;
-import com.eventorium.data.dtos.eventtypes.EventTypeResponseDto;
+import com.eventorium.data.event.dtos.EventTypeRequestDto;
+import com.eventorium.data.event.dtos.EventTypeResponseDto;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

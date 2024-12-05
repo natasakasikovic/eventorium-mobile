@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.eventorium.data.repositories.CategoryRepository;
-import com.eventorium.data.repositories.EventTypeRepository;
+import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 

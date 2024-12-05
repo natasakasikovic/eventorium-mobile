@@ -1,4 +1,4 @@
-package com.eventorium.data.repositories;
+package com.eventorium.data.category.repositories;
 
 import static java.util.stream.Collectors.toList;
 
@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.mappers.CategoryMapper;
-import com.eventorium.data.models.Category;
-import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
-import com.eventorium.data.services.CategoryService;
+import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.services.CategoryService;
 
 import java.util.Collections;
 import java.util.List;

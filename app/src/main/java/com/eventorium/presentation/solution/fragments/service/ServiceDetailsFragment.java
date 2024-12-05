@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.data.models.Service;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 
 public class ServiceDetailsFragment extends Fragment {

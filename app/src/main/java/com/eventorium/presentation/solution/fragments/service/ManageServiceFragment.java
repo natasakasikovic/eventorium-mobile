@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Service;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;

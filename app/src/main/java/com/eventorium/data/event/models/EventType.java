@@ -1,9 +1,11 @@
-package com.eventorium.data.models;
+package com.eventorium.data.event.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+
+import com.eventorium.data.category.models.Category;
 
 import java.util.List;
 

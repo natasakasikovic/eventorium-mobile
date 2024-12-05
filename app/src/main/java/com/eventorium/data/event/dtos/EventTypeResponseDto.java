@@ -1,6 +1,6 @@
-package com.eventorium.data.dtos.eventtypes;
+package com.eventorium.data.event.dtos;
 
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

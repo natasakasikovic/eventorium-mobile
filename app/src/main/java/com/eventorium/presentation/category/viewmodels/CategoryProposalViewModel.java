@@ -5,7 +5,7 @@ import android.os.Build;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.models.Category;
+import com.eventorium.data.category.models.Category;
 
 import java.util.ArrayList;
 import java.util.List;

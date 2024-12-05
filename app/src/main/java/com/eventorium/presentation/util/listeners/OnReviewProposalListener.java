@@ -1,6 +1,6 @@
 package com.eventorium.presentation.util.listeners;
 
-import com.eventorium.data.models.Category;
+import com.eventorium.data.category.models.Category;
 
 public interface OnReviewProposalListener {
     void acceptCategory(Category category);

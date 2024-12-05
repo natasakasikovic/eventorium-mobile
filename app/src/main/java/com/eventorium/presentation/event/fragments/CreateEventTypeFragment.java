@@ -20,12 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.dtos.categories.CategoryResponseDto;
-import com.eventorium.data.dtos.eventtypes.EventTypeRequestDto;
-import com.eventorium.data.mappers.CategoryMapper;
-import com.eventorium.data.models.Category;
-import com.eventorium.data.repositories.CategoryRepository;
-import com.eventorium.data.repositories.EventTypeRepository;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.event.dtos.EventTypeRequestDto;
+import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCreateEventTypeBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;

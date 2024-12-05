@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Event;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 

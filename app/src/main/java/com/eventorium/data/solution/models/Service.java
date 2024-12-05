@@ -1,29 +1,30 @@
-package com.eventorium.data.models;
+package com.eventorium.data.solution.models;
+
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public class Product implements Parcelable {
+public class Service implements Parcelable {
 
     private String name;
     private Double price;
-    public Integer photo;
+    private Integer photo;
 
-    public String getName() { return name; }
-    public Double getPrice() { return price; }
-    public Integer getPhoto() { return photo; }
-
-    public Product(String name, Double price, Integer photo) {
+    public Service(String name, Double price, Integer photo) {
         this.name = name;
         this.price = price;
         this.photo = photo;
     }
 
-    public Product() {  }
+    public Service() { }
 
-    protected Product(Parcel in) {
+    public String getName() { return name; }
+    public Double getPrice() { return price; }
+    public Integer getPhoto(){ return photo; }
+
+    protected Service(Parcel in) {
         name = in.readString();
         price = in.readDouble();
         photo = in.readInt();
@@ -39,12 +40,12 @@ public class Product implements Parcelable {
     @Override
     public int describeContents() { return 0; }
 
-    public static final Creator<Product> CREATOR = new Creator<Product>() {
+    public static final Creator<Service> CREATOR = new Creator<>() {
         @Override
-        public Product createFromParcel(Parcel in) { return new Product(in); }
+        public Service createFromParcel(Parcel in) { return new Service(in); }
 
         @Override
-        public Product[] newArray(int size) { return new Product[size]; }
+        public Service[] newArray(int size) { return new Service[size]; }
     };
-}
 
+}

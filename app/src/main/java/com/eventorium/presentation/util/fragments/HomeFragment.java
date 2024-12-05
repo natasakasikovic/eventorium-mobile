@@ -14,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.models.Event;
-import com.eventorium.data.models.Product;
-import com.eventorium.data.models.Service;
+import com.eventorium.data.event.models.Event;
+import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;

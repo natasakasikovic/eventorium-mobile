@@ -1,4 +1,4 @@
-package com.eventorium.data.models;
+package com.eventorium.data.category.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

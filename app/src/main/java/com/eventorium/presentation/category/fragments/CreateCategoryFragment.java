@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.dtos.categories.CategoryRequestDto;
-import com.eventorium.data.repositories.CategoryRepository;
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCreateCategoryBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;

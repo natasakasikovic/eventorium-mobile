@@ -1,8 +1,9 @@
-package com.eventorium.data.mappers;
+package com.eventorium.data.event.mappers;
 
-import com.eventorium.data.dtos.eventtypes.EventTypeResponseDto;
-import com.eventorium.data.models.Category;
-import com.eventorium.data.models.EventType;
+import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.event.dtos.EventTypeResponseDto;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
 
 import java.util.List;
 import java.util.stream.Collectors;
