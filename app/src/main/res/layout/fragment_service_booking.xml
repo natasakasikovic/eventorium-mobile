@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.fragments.service.ServiceBookingFragment">
+    tools:context=".presentation.solution.fragments.service.ServiceBookingFragment">
 
     <TextView
         android:id="@+id/service_booking_title"
