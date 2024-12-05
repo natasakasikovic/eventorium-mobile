@@ -68,13 +68,9 @@ public class CreateEventTypeFragment extends Fragment {
         nameTextEdit = binding.etEventTypeName;
         descriptionTextEdit = binding.etEventTypeDescription;
 
-        categoryViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
-                .get(CategoryViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
 
-        eventTypeViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new EventTypeRepository(RetrofitApi.eventTypeService)))
-                .get(EventTypeViewModel.class);
+        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             allCategories = categories;

@@ -30,6 +30,4 @@ public class RetrofitApi {
             .client(test())
             .build();
 
-    public static CategoryService categoryService = retrofit.create(CategoryService.class);
-    public static EventTypeService eventTypeService = retrofit.create(EventTypeService.class);
 }

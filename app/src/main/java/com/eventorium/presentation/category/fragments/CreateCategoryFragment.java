@@ -25,11 +25,14 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CreateCategoryFragment extends Fragment {
 
     private FragmentCreateCategoryBinding binding;
     private CategoryViewModel categoryViewModel;
+
     private TextInputEditText nameTextEdit;
     private TextInputEditText descriptionTextEdit;
 
@@ -43,19 +46,16 @@ public class CreateCategoryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateCategoryBinding.inflate(inflater, container, false);
-        categoryViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
-                .get(CategoryViewModel.class);
 
         nameTextEdit = binding.categoryNameEditText;
         descriptionTextEdit = binding.categoryDescriptionEditText;
-
         binding.createCategoryButton.setOnClickListener(v -> createCategory());
 
 

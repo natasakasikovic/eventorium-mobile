@@ -27,6 +27,9 @@ import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private SplashScreenViewModel viewModel;

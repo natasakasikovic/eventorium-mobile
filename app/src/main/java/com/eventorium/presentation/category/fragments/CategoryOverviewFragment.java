@@ -32,7 +32,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CategoryOverviewFragment extends Fragment {
     private FragmentCategoryOverviewBinding binding;
     private CategoryViewModel categoryViewModel;
@@ -52,6 +54,7 @@ public class CategoryOverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
     }
 
     @Override
@@ -78,9 +81,6 @@ public class CategoryOverviewFragment extends Fragment {
             }
         });
 
-        categoryViewModel = new ViewModelProvider(this,
-                new ViewModelFactory(new CategoryRepository(RetrofitApi.categoryService)))
-                .get(CategoryViewModel.class);
         recyclerView = binding.categoriesRecycleView;
         recyclerView.setAdapter(adapter);
 

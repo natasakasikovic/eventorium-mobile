@@ -17,6 +17,8 @@ import com.eventorium.data.category.services.CategoryService;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +27,7 @@ public class CategoryRepository {
 
     private final CategoryService categoryService;
 
+    @Inject
     public CategoryRepository(CategoryService categoryService) {
         this.categoryService = categoryService;
     }

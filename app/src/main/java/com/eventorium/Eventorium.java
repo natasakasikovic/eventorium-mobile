@@ -2,6 +2,8 @@ package com.eventorium;
 
 import android.app.Application;
 
+import dagger.hilt.android.HiltAndroidApp;
 
-public class App extends Application {
+@HiltAndroidApp
+public class Eventorium extends Application {
 }

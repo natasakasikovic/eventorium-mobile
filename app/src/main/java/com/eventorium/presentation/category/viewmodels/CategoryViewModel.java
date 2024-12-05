@@ -14,6 +14,11 @@ import com.eventorium.data.category.repositories.CategoryRepository;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class CategoryViewModel extends ViewModel {
 
     private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
@@ -21,6 +26,7 @@ public class CategoryViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final CategoryRepository categoryRepository;
 
+    @Inject
     public CategoryViewModel(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
         fetchCategories();
