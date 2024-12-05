@@ -35,6 +35,9 @@ import com.eventorium.presentation.util.viewmodels.ViewModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CreateEventTypeFragment extends Fragment {
 
     private FragmentCreateEventTypeBinding binding;
@@ -58,6 +61,8 @@ public class CreateEventTypeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
     }
 
     @Override
@@ -67,10 +72,6 @@ public class CreateEventTypeFragment extends Fragment {
 
         nameTextEdit = binding.etEventTypeName;
         descriptionTextEdit = binding.etEventTypeDescription;
-
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-
-        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             allCategories = categories;
