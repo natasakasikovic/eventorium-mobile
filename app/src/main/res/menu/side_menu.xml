@@ -67,4 +67,9 @@
         android:title="Your company"
         android:icon="@drawable/ic_company"/>
 
+    <item
+        android:id="@+id/nav_create_event_type"
+        android:title="Create event type"
+        android:icon="@drawable/ic_add" />
+
 </menu>

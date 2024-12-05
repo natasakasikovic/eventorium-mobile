@@ -2,6 +2,7 @@ package com.eventorium.data.util;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.data.services.CategoryService;
+import com.eventorium.data.services.EventTypeService;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,5 +31,5 @@ public class RetrofitApi {
             .build();
 
     public static CategoryService categoryService = retrofit.create(CategoryService.class);
-
+    public static EventTypeService eventTypeService = retrofit.create(EventTypeService.class);
 }

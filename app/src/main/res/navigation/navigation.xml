@@ -191,4 +191,10 @@
     <action
         android:id="@+id/action_companyDetails_to_manageCategoriesFragment"
         app:destination="@id/company_categories_fragment" />
+
+    <fragment
+        android:id="@+id/createEventTypeFragment"
+        android:name="com.eventorium.presentation.fragments.event.CreateEventTypeFragment"
+        android:label="create_event_type"
+        tools:layout="@layout/fragment_create_event_type"/>
 </navigation>
