@@ -27,7 +27,9 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -105,14 +107,16 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void loadCategories() {
-        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    categories.stream().map(Category::getName).toArray(String[]::new)
-            );
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
             binding.categorySelector.setAdapter(adapter);
         });
     }
