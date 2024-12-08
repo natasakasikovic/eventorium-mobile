@@ -30,10 +30,10 @@ public class ServiceRepository {
         serviceService.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<ServiceResponseDto>> call,
-                    @NonNull Response<List<ServiceResponseDto>> response
+                    @NonNull Call<ServiceResponseDto> call,
+                    @NonNull Response<ServiceResponseDto> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
+                if(response.isSuccessful()) {
                     result.postValue(true);
                 } else {
                     result.postValue(false);
@@ -42,7 +42,7 @@ public class ServiceRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<ServiceResponseDto>> call,
+                    @NonNull Call<ServiceResponseDto> call,
                     @NonNull Throwable t
             ) {
                 result.postValue(false);

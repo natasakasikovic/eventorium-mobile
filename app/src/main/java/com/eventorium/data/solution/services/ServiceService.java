@@ -17,7 +17,7 @@ import retrofit2.http.Path;
 public interface ServiceService {
 
     @POST("services")
-    Call<List<ServiceResponseDto>> createService(@Body CreateServiceRequestDto dto);
+    Call<ServiceResponseDto> createService(@Body CreateServiceRequestDto dto);
 
     @Multipart
     @POST("service/{id}/images")

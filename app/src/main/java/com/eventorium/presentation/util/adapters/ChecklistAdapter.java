@@ -10,14 +10,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder> {
+public class ChecklistAdapter<T> extends RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder> {
 
-    private final List<String> items;
+    private final List<T> items;
+    private final List<Boolean> selected = new ArrayList<>();
 
-    public ChecklistAdapter(List<String> items) {
+    public ChecklistAdapter(List<T> items) {
         this.items = items;
+        for (int i = 0; i < items.size(); i++) {
+            selected.add(false); 
+        }
     }
 
     @NonNull
@@ -30,13 +38,24 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
 
     @Override
     public void onBindViewHolder(@NonNull ChecklistViewHolder holder, int position) {
-        String item = items.get(position);
-        holder.itemText.setText(item);
+        T item = items.get(position);
+        holder.itemText.setText(item.toString());
+        holder.checkBox.setChecked(selected.get(position));
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked)
+                -> selected.set(position, isChecked));
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public List<T> getSelectedItems() {
+        return IntStream.range(0, items.size())
+                .filter(selected::get)
+                .mapToObj(items::get)
+                .collect(Collectors.toList());
     }
 
     public static class ChecklistViewHolder extends RecyclerView.ViewHolder {
