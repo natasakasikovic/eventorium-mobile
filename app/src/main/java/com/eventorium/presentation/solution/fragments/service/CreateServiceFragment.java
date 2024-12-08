@@ -1,9 +1,14 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import static java.util.stream.Collectors.toList;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ListAdapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +16,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
+import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CreateServiceFragment extends Fragment {
 
     private FragmentCreateServiceBinding binding;
+    private ServiceViewModel serviceViewModel;
+    private EventTypeViewModel eventTypeViewModel;
+    private CategoryViewModel categoryViewModel;
 
     public CreateServiceFragment() {
     }
@@ -34,27 +49,19 @@ public class CreateServiceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        serviceViewModel = provider.get(ServiceViewModel.class);
+        categoryViewModel = provider.get(CategoryViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateServiceBinding.inflate(inflater, container, false);
-        setupCategoryAutoCompleteAdapter();
         createDatePickers();
-        binding.categoryRecycleView.setAdapter(new ChecklistAdapter(List.of(
-                "Wedding",
-                "Birthday Party",
-                "Conference",
-                "Concert",
-                "Corporate Event",
-                "Workshop",
-                "Fundraiser",
-                "Networking Event",
-                "Exhibition",
-                "Festival",
-                "Sports Event"
-        )));
+        loadCategories();
+        loadEventTypes();
         return binding.getRoot();
     }
 
@@ -97,25 +104,27 @@ public class CreateServiceFragment extends Fragment {
         binding = null;
     }
 
-    private void setupCategoryAutoCompleteAdapter() {
-        // TODO: Replace the hardcoded list of cities with a dynamic list
-        List<String> serviceCategories = List.of(
-                "Venue Services",
-                "Catering and Food Services",
-                "Entertainment",
-                "Music",
-                "Audio-Visual and Lighting",
-                "Photography and Videography",
-                "Planning and Coordination"
-        );
+    private void loadCategories() {
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    categories.stream().map(Category::getName).toArray(String[]::new)
+            );
 
-        AutoCompleteTextView categoryAutocomplete = binding.categorySelector;
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                serviceCategories);
-        categoryAutocomplete.setAdapter(adapter);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            binding.categorySelector.setAdapter(adapter);
+        });
+    }
 
-        categoryAutocomplete.setThreshold(0);
+    private void loadEventTypes() {
+        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            binding.eventTypeRecycleView.setAdapter(
+                    new ChecklistAdapter(eventTypes.stream()
+                            .map(EventType::getName)
+                            .collect(toList())
+                    )
+            );
+        });
     }
 }

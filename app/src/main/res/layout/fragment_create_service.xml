@@ -126,7 +126,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/serviceSpecificitiesInputLayout">
 
-                <AutoCompleteTextView
+                <Spinner
                     android:id="@+id/categorySelector"
                     android:layout_width="match_parent"
                     android:textColor="@android:color/black"
@@ -416,7 +416,7 @@
                 app:layout_constraintTop_toBottomOf="@id/confirmationGroup" />
 
             <LinearLayout
-                android:id="@+id/categoryCheckboxList"
+                android:id="@+id/eventTypeCheckboxList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_goneMarginTop="20dp"
@@ -429,7 +429,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 >
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/categoryRecycleView"
+                    android:id="@+id/eventTypeRecycleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scrollbars="vertical"
@@ -448,7 +448,7 @@
                 android:text="@string/photos"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/categoryCheckboxList" />
+                app:layout_constraintTop_toBottomOf="@id/eventTypeCheckboxList" />
 
             <HorizontalScrollView
                 android:id="@+id/photos"
