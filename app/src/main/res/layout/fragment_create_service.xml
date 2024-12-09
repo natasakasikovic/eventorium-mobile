@@ -480,25 +480,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
-
-                    <!-- TODO: delete when uploading images is implemented -->
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
                 </LinearLayout>
             </HorizontalScrollView>
             <Button

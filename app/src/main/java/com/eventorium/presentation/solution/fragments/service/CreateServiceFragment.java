@@ -2,6 +2,7 @@ package com.eventorium.presentation.solution.fragments.service;
 
 import static java.util.stream.Collectors.toList;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -32,6 +35,7 @@ import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
+import com.eventorium.presentation.util.ImageUpload;
 import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
@@ -52,6 +56,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CreateServiceFragment extends Fragment {
     private FragmentCreateServiceBinding binding;
+    private List<Uri> imageUris = new ArrayList<>();
+    private ImageUpload imageUpload;
+    private LinearLayout imageContainer;
     private ServiceViewModel serviceViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
@@ -70,6 +77,19 @@ public class CreateServiceFragment extends Fragment {
         serviceViewModel = provider.get(ServiceViewModel.class);
         categoryViewModel = provider.get(CategoryViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
+        imageUpload = new ImageUpload(this, imageUris -> {
+            imageContainer.removeAllViews();
+            for (Uri uri : imageUris) {
+                ImageView imageView = new ImageView(requireContext());
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                imageView.setPadding(50, 0, 50, 0);
+                imageView.setImageURI(uri);
+                imageContainer.addView(imageView);
+            }
+            this.imageUris.addAll(imageUris);
+        });
     }
 
     @Override
@@ -80,7 +100,7 @@ public class CreateServiceFragment extends Fragment {
         loadCategories();
         loadEventTypes();
         binding.manualChecked.setChecked(true);
-
+        setupImagePicker();
         binding.createServiceButton.setOnClickListener(v -> createService());
         return binding.getRoot();
     }
@@ -126,6 +146,11 @@ public class CreateServiceFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    private void setupImagePicker() {
+        imageContainer = binding.photosContainer;
+        binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
     }
 
     private void loadCategories() {
@@ -198,17 +223,13 @@ public class CreateServiceFragment extends Fragment {
                 .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
                 .build();
 
-        serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), success -> {
-            if(success) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.service_created_successfully,
-                        Toast.LENGTH_SHORT
-                ).show();
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_create_to_serviceOverview, null, new NavOptions.Builder()
-                        .setPopUpTo(R.id.createServiceFragment, true)
-                        .build());
+        serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
+            if(serviceId != null) {
+                if(!imageUris.isEmpty()) {
+                    serviceViewModel
+                            .uploadImages(serviceId, getContext(), imageUris)
+                            .observe(getViewLifecycleOwner(), this::handleUpload);
+                }
             } else {
                 Toast.makeText(
                         requireContext(),
@@ -218,4 +239,25 @@ public class CreateServiceFragment extends Fragment {
             }
         });
     }
+
+    private void handleUpload(boolean successfulUpload) {
+        if(successfulUpload) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.service_created_successfully,
+                    Toast.LENGTH_SHORT
+            ).show();
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_create_to_serviceOverview, null, new NavOptions.Builder()
+                    .setPopUpTo(R.id.createServiceFragment, true)
+                    .build());
+        } else {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.failed_to_create_service,
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
 }

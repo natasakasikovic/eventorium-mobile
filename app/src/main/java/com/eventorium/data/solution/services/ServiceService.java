@@ -7,6 +7,7 @@ import com.eventorium.data.solution.models.Service;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Multipart;
@@ -20,6 +21,6 @@ public interface ServiceService {
     Call<ServiceResponseDto> createService(@Body CreateServiceRequestDto dto);
 
     @Multipart
-    @POST("service/{id}/images")
-    Call<String> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
+    @POST("services/{id}/images")
+    Call<ResponseBody> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
 }
