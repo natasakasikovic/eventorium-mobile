@@ -23,7 +23,9 @@ import com.eventorium.presentation.category.viewmodels.CategoryProposalViewModel
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CategoryProposalsFragment extends Fragment {
 
     private FragmentCategoryProposalsBinding binding;
@@ -39,13 +41,13 @@ public class CategoryProposalsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        proposalViewModel = new ViewModelProvider(this).get(CategoryProposalViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCategoryProposalsBinding.inflate(inflater, container, false);
-        proposalViewModel = new ViewModelProvider(this).get(CategoryProposalViewModel.class);
         setupRecycleView();
 
         return binding.getRoot();
@@ -54,7 +56,8 @@ public class CategoryProposalsFragment extends Fragment {
     private void setupRecycleView() {
 
         proposalViewModel.getCategoryProposals().observe(getViewLifecycleOwner(), categories -> {
-            CategoryProposalsAdapter adapter = new CategoryProposalsAdapter(categories, new OnReviewProposalListener() {
+            CategoryProposalsAdapter adapter
+                    = new CategoryProposalsAdapter(categories, new OnReviewProposalListener() {
                 @Override
                 public void acceptCategory(Category category) {
 
@@ -114,10 +117,6 @@ public class CategoryProposalsFragment extends Fragment {
         int width = (int) (requireContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         Objects.requireNonNull(alertDialog.getWindow())
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-    }
-
-    private void setupExistingCategorySpinner() {
 
     }
 

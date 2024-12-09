@@ -1,6 +1,8 @@
 package com.eventorium.di;
 
+import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
@@ -38,6 +40,20 @@ public class AppModule {
     @Singleton
     public static EventTypeRepository provideEventTypeRepository(EventTypeService service) {
         return new EventTypeRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public static CategoryProposalService provideCategoryProposalService() {
+        return RetrofitApi.retrofit.create(CategoryProposalService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static CategoryProposalRepository provideCategoryProposalRepository(
+            CategoryProposalService service
+    ) {
+        return new CategoryProposalRepository(service);
     }
 
 
