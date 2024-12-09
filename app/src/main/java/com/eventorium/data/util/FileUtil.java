@@ -24,7 +24,7 @@ public class FileUtil {
             RequestBody requestBody = RequestBody.create(file, MediaType.parse("image/*"));
             return MultipartBody.Part.createFormData("images", file.getName(), requestBody);
         }
-        return null;
+        throw new IOException("Error getting file from uri");
     }
 
     public static List<MultipartBody.Part> getImagesFromUris(Context context, List<Uri> uris) throws IOException {
