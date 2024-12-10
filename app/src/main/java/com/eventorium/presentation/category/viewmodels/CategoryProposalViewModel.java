@@ -2,20 +2,18 @@ package com.eventorium.presentation.category.viewmodels;
 
 import static java.util.stream.Collectors.toList;
 
-import android.os.Build;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,7 +24,6 @@ import lombok.Getter;
 @HiltViewModel
 public class CategoryProposalViewModel extends ViewModel {
     private final MutableLiveData<List<Category>> categoryProposals = new MutableLiveData<>();
-    private final MutableLiveData<List<Category>> existingCategories = new MutableLiveData<>();
     private final MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
@@ -63,19 +60,22 @@ public class CategoryProposalViewModel extends ViewModel {
         selectedCategory.setValue(category);
     }
 
-    public void updateCategory(Category updateCategory) {
-
+    public void refreshProposals(Long id) {
+        categoryProposals.postValue(Objects.requireNonNull(categoryProposals.getValue())
+                .stream()
+                .filter(category -> !Objects.equals(category.getId(), id))
+                .collect(toList()));
     }
 
-    public List<String> getExistingCategoriesName() {
-        List<String> result = new ArrayList<>();
-        result.add("");
-        List<String> categoriesNames;
-        categoriesNames = Objects.requireNonNull(existingCategories.getValue())
-                .stream()
-                .map(Category::getName)
-                .collect(toList());
-        result.addAll(categoriesNames);
-        return result;
+    public LiveData<Boolean> updateCategoryStatus(Long id, CategoryUpdateStatusDto dto) {
+        return categoryProposalRepository.updateCategoryStatus(id, dto);
+    }
+
+    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequestDto dto) {
+        return categoryProposalRepository.updateCategoryProposal(id, dto);
+    }
+
+    public LiveData<Boolean> changeCategory(Long id, CategoryRequestDto dto) {
+        return categoryProposalRepository.changeCategory(id, dto);
     }
 }

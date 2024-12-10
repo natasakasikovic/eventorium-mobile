@@ -114,4 +114,6 @@
     <string name="category_deleted_successfully">Category deleted successfully!</string>
     <string name="failed_to_delete_category">Failed to delete category.</string>
     <string name="no_categories_found">No categories found</string>
+    <string name="category_accepted_successfully">Category accepted successfully</string>
+    <string name="failed_to_accept_category">Failed to accept category!</string>
 </resources>

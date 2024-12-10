@@ -11,6 +11,7 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.dtos.CategoryRequestDto;
 import com.eventorium.data.category.repositories.CategoryRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,6 +63,19 @@ public class CategoryViewModel extends ViewModel {
     public LiveData<Category> updateCategory(Long id, CategoryRequestDto category) {
         return categoryRepository.updateCategory(id, category);
     }
+
+    public List<String> getExistingCategoriesName() {
+        List<String> result = new ArrayList<>();
+        result.add("");
+        List<String> categoriesNames;
+        categoriesNames = Objects.requireNonNull(categories.getValue())
+                .stream()
+                .map(Category::getName)
+                .collect(toList());
+        result.addAll(categoriesNames);
+        return result;
+    }
+
 
     private void fetchCategories() {
         isLoading.setValue(true);
