@@ -12,6 +12,8 @@ import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.services.EventTypeService;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +22,7 @@ public class EventTypeRepository {
 
     private final EventTypeService eventTypeService;
 
+    @Inject
     public EventTypeRepository(EventTypeService eventTypeService) {
         this.eventTypeService = eventTypeService;
     }
