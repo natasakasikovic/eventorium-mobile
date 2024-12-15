@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ServiceResponseDto {
+public class ServiceSummaryResponseDto {
     private Long id;
     private String name;
     private Double price;

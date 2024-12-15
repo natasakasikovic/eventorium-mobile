@@ -6,17 +6,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 
 import java.util.List;
 
 public abstract class BaseServiceAdapter<T extends BaseServiceAdapter.BaseServiceViewHolder>
         extends RecyclerView.Adapter<T> {
 
-    protected List<Service> services;
+    protected List<ServiceSummary> serviceSummaries;
 
-    public BaseServiceAdapter(List<Service> services) {
-        this.services = services;
+    public BaseServiceAdapter(List<ServiceSummary> serviceSummaries) {
+        this.serviceSummaries = serviceSummaries;
     }
 
     @NonNull
@@ -25,13 +25,13 @@ public abstract class BaseServiceAdapter<T extends BaseServiceAdapter.BaseServic
 
     @Override
     public void onBindViewHolder(@NonNull T holder, int position) {
-        Service service = services.get(position);
-        holder.bind(service);
+        ServiceSummary serviceSummary = serviceSummaries.get(position);
+        holder.bind(serviceSummary);
     }
 
     @Override
     public int getItemCount() {
-        return services.size();
+        return serviceSummaries.size();
     }
 
     public abstract static class BaseServiceViewHolder extends RecyclerView.ViewHolder {
@@ -39,6 +39,6 @@ public abstract class BaseServiceAdapter<T extends BaseServiceAdapter.BaseServic
             super(itemView);
         }
 
-        public abstract void bind(Service service);
+        public abstract void bind(ServiceSummary serviceSummary);
     }
 }

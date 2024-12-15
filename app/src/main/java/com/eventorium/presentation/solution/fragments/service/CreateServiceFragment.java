@@ -56,7 +56,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CreateServiceFragment extends Fragment {
     private FragmentCreateServiceBinding binding;
-    private List<Uri> imageUris = new ArrayList<>();
+    private final List<Uri> imageUris = new ArrayList<>();
     private ImageUpload imageUpload;
     private LinearLayout imageContainer;
     private ServiceViewModel serviceViewModel;

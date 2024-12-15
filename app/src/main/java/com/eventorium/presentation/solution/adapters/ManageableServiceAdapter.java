@@ -13,15 +13,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 
 import java.util.List;
 
 public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
 
-    public ManageableServiceAdapter(List<Service> services) {
-        super(services);
+    public ManageableServiceAdapter(List<ServiceSummary> serviceSummaries) {
+        super(serviceSummaries);
     }
 
     @NonNull
@@ -52,19 +52,19 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
 
         @SuppressLint("SetTextI18n")
         @Override
-        public void bind(Service service) {
-            nameTextView.setText(service.getName());
-            priceTextView.setText(service.getPrice().toString());
-            photoImageview.setImageResource(service.getPhoto());
+        public void bind(ServiceSummary serviceSummary) {
+            nameTextView.setText(serviceSummary.getName());
+            priceTextView.setText(serviceSummary.getPrice().toString());
+            photoImageview.setImageResource(serviceSummary.getPhoto());
             seeMoreButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 navController.navigate(R.id.action_manageService_to_serviceDetailsFragment,
-                        ServiceDetailsFragment.newInstance(service).getArguments());
+                        ServiceDetailsFragment.newInstance().getArguments());
             });
             editButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 navController.navigate(R.id.action_manageService_to_editService,
-                        ServiceDetailsFragment.newInstance(service).getArguments());
+                        ServiceDetailsFragment.newInstance().getArguments());
             });
 
         }

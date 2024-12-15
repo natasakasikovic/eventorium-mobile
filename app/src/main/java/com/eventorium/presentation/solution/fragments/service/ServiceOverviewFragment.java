@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ServiceAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ServiceOverviewFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
-    private static final List<Service> services = new ArrayList<>();
+    private static final List<ServiceSummary> SERVICE_SUMMARIES = new ArrayList<>();
 
     public ServiceOverviewFragment() {}
 
@@ -53,7 +53,7 @@ public class ServiceOverviewFragment extends Fragment {
             bottomSheetDialog.show();
         });
 
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
+        binding.servicesRecycleView.setAdapter(new ServiceAdapter(SERVICE_SUMMARIES));
     }
 
     @Override
@@ -63,11 +63,11 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void prepareServiceData(){
-        services.clear();
-        services.add(new Service("Catering", 500.0, R.drawable.catering));
-        services.add(new Service("Photography", 300.0, R.drawable.catering));
-        services.add(new Service("Venue Setup", 200.0, R.drawable.catering));
-        services.add(new Service("DJ Service", 250.0, R.drawable.catering));
+        SERVICE_SUMMARIES.clear();
+        SERVICE_SUMMARIES.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
+        SERVICE_SUMMARIES.add(new ServiceSummary("Photography", 300.0, R.drawable.catering));
+        SERVICE_SUMMARIES.add(new ServiceSummary("Venue Setup", 200.0, R.drawable.catering));
+        SERVICE_SUMMARIES.add(new ServiceSummary("DJ ServiceSummary", 250.0, R.drawable.catering));
     }
 
 }

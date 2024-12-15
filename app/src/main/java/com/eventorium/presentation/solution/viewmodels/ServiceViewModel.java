@@ -2,10 +2,10 @@ package com.eventorium.presentation.solution.viewmodels;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
@@ -25,6 +25,18 @@ public class ServiceViewModel extends ViewModel {
     @Inject
     public ServiceViewModel(ServiceRepository serviceRepository) {
         this.serviceRepository = serviceRepository;
+    }
+
+    public LiveData<Service> getService(Long id) {
+        return serviceRepository.getService(id);
+    }
+
+    public LiveData<Bitmap> getServiceImage(Long id) {
+        return serviceRepository.getServiceImage(id);
+    }
+
+    public LiveData<List<Bitmap>> getServiceImages(Long id) {
+        return serviceRepository.getServiceImages(id);
     }
 
     public LiveData<Long> createService(CreateServiceRequestDto dto) {

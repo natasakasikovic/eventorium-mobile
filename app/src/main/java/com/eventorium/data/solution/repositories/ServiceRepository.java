@@ -1,6 +1,9 @@
 package com.eventorium.data.solution.repositories;
 
+import static java.util.stream.Collectors.toList;
+
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -9,21 +12,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.dtos.ServiceResponseDto;
+import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.FileUtil;
+import com.eventorium.data.util.dtos.ImageResponseDto;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,25 +44,81 @@ public class ServiceRepository {
         serviceService.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<ServiceResponseDto> call,
-                    @NonNull Response<ServiceResponseDto> response
+                    @NonNull Call<ServiceSummaryResponseDto> call,
+                    @NonNull Response<ServiceSummaryResponseDto> response
             ) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
+                if(response.isSuccessful() && response.body() != null) {
                     result.postValue(response.body().getId());
                 } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     result.postValue(null);
                 }
             }
 
             @Override
             public void onFailure(
-                    @NonNull Call<ServiceResponseDto> call,
+                    @NonNull Call<ServiceSummaryResponseDto> call,
                     @NonNull Throwable t
             ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
                 result.postValue(null);
             }
         });
+        return result;
+    }
+
+    public LiveData<Service> getService(Long id) {
+        MutableLiveData<Service> result = new MutableLiveData<>();
+        serviceService.getService(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Service> call,
+                    @NonNull Response<Service> response)
+            {
+                if(response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<Service> call,
+                    @NonNull Throwable t
+            ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                result.postValue(null);
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Bitmap> getServiceImage(Long id) {
+        MutableLiveData<Bitmap> result = new MutableLiveData<>();
+        serviceService.getServiceImage(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<String> call,
+                    @NonNull Response<String> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    result.postValue(FileUtil.convertToBitmap(response.body()));
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                result.postValue(null);
+            }
+        });
+
         return result;
     }
 
@@ -86,6 +143,7 @@ public class ServiceRepository {
                 if(response.isSuccessful()) {
                     result.postValue(true);
                 } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     result.postValue(false);
                 }
             }
@@ -95,10 +153,44 @@ public class ServiceRepository {
                     @NonNull Call<ResponseBody> call,
                     @NonNull Throwable t
             ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
                 result.postValue(false);
             }
         });
         return result;
     }
 
+    public LiveData<List<Bitmap>> getServiceImages(Long id) {
+        MutableLiveData<List<Bitmap>> liveData = new MutableLiveData<>();
+
+        serviceService.getServiceImages(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ImageResponseDto>> call,
+                    @NonNull Response<List<ImageResponseDto>> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(response.body().stream()
+                            .map(ImageResponseDto::getData)
+                            .map(FileUtil::convertToBitmap)
+                            .collect(toList())
+                    );
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    liveData.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<List<ImageResponseDto>> call,
+                    @NonNull Throwable t
+            ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                liveData.postValue(null);
+            }
+        });
+
+        return liveData;
+    }
 }

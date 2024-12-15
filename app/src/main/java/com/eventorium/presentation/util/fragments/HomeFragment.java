@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.solution.models.Product;
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
@@ -30,7 +30,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private static List<Event> events = new ArrayList<>();
     private static List<Product> products = new ArrayList<>();
-    private static List<Service> services = new ArrayList<>();
+    private static List<ServiceSummary> serviceSummaries = new ArrayList<>();
 
 
     public HomeFragment() { }
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(services));
+        binding.servicesRecycleView.setAdapter(new ServiceAdapter(serviceSummaries));
 
         setUpListeners();
     }
@@ -104,11 +104,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareServiceData(){
-        services.clear();
-        services.add(new Service("Catering", 500.0, R.drawable.catering));
-        services.add(new Service("Photography", 300.0,  R.drawable.catering));
-        services.add(new Service("Venue Setup", 200.0,  R.drawable.catering));
-        services.add(new Service("DJ Service", 250.0,  R.drawable.catering));
-        services.add(new Service("Florist", 150.0,  R.drawable.catering));
+        serviceSummaries.clear();
+        serviceSummaries.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
+        serviceSummaries.add(new ServiceSummary("Photography", 300.0,  R.drawable.catering));
+        serviceSummaries.add(new ServiceSummary("Venue Setup", 200.0,  R.drawable.catering));
+        serviceSummaries.add(new ServiceSummary("DJ ServiceSummary", 250.0,  R.drawable.catering));
+        serviceSummaries.add(new ServiceSummary("Florist", 150.0,  R.drawable.catering));
     }
 }

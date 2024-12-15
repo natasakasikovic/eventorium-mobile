@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentEditServiceBinding;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
@@ -22,16 +22,16 @@ public class EditServiceFragment extends Fragment {
 
     private FragmentEditServiceBinding binding;
 
-    private static final String ARG_SERVICE = "service";
-    private Service service;
+    private static final String ARG_SERVICE = "serviceSummary";
+    private ServiceSummary serviceSummary;
 
     public EditServiceFragment() {
     }
 
-    public static EditServiceFragment newInstance(Service service) {
+    public static EditServiceFragment newInstance(ServiceSummary serviceSummary) {
         EditServiceFragment fragment = new EditServiceFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SERVICE, service);
+        args.putParcelable(ARG_SERVICE, serviceSummary);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +40,7 @@ public class EditServiceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            service = getArguments().getParcelable(ARG_SERVICE);
+            serviceSummary = getArguments().getParcelable(ARG_SERVICE);
         }
     }
 
@@ -58,10 +58,10 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void fillForm() {
-        binding.serviceNameEditText.setText(service.getName());
+        binding.serviceNameEditText.setText(serviceSummary.getName());
         binding.serviceDescriptionText.setText("Description");
         binding.serviceSpecificitiesText.setText("Specificities");
-        binding.servicePriceText.setText(service.getPrice().toString());
+        binding.servicePriceText.setText(serviceSummary.getPrice().toString());
         binding.serviceDiscountText.setText("0.0");
         binding.serviceCancellationDeadlineText.setText("30.4.2024.");
         binding.serviceReservationDeadlineText.setText("30.4.2025.");
