@@ -68,7 +68,7 @@ public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceVie
                 }
 
                 navController.navigate(actionId,
-                        ServiceDetailsFragment.newInstance().getArguments());
+                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
             });
         }
     }

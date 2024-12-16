@@ -1,10 +1,6 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import static java.util.stream.Collectors.toList;
-
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,17 +10,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
 
-import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.BitSet;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -33,13 +25,19 @@ public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding binding;
     private ServiceViewModel serviceViewModel;
-    public static final String ARG_SERVICE = "serviceSummary";
+    public static final String ARG_ID = "ARG_SERVICE_ID";
+
+
 
     public ServiceDetailsFragment() {
     }
 
-    public static ServiceDetailsFragment newInstance() {
-        return new ServiceDetailsFragment();
+    public static ServiceDetailsFragment newInstance(Long id) {
+        ServiceDetailsFragment fragment = new ServiceDetailsFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -53,7 +51,8 @@ public class ServiceDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-        serviceViewModel.getService(12L).observe(getViewLifecycleOwner(), service -> {
+        assert getArguments() != null;
+        serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 

@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.presentation.solution.fragments.service.EditServiceFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 
 import java.util.List;
@@ -65,12 +66,12 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             seeMoreButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 navController.navigate(R.id.action_manageService_to_serviceDetailsFragment,
-                        ServiceDetailsFragment.newInstance().getArguments());
+                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
             });
             editButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 navController.navigate(R.id.action_manageService_to_editService,
-                        ServiceDetailsFragment.newInstance().getArguments());
+                        EditServiceFragment.newInstance(serviceSummary).getArguments());
             });
 
         }
