@@ -18,7 +18,7 @@ public interface AccountServiceService {
     @GET("account/services/filter/all")
     Call<List<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
 
-    @GET("account/service/search/all")
+    @GET("account/services/search/all")
     Call<List<ServiceSummary>> searchManageableServices(@Query("keyword") String keyword);
 
 }

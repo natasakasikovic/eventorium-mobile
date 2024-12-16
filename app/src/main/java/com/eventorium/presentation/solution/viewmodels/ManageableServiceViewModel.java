@@ -19,6 +19,7 @@ public class ManageableServiceViewModel extends ViewModel {
 
     private final AccountServiceRepository repository;
     private MutableLiveData<List<ServiceSummary>> manageableServices = new MutableLiveData<>();
+    private MutableLiveData<List<ServiceSummary>> searchResults = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
 
@@ -40,8 +41,30 @@ public class ManageableServiceViewModel extends ViewModel {
         });
     }
 
-
+    public LiveData<List<ServiceSummary>> getSearchResults() {
+        return searchResults;
+    }
     public LiveData<List<ServiceSummary>> getManageableServices() {
         return manageableServices;
+    }
+
+    public void searchServices(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            searchResults.postValue(manageableServices.getValue());
+            return;
+        }
+
+        isLoading.setValue(true);
+        repository.searchServices(query).observeForever(services -> {
+            searchResults.postValue(services);
+            isLoading.postValue(false);
+        });
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repository.getManageableServices().removeObserver(services -> manageableServices.postValue(services));
+        repository.searchServices(null).removeObserver(services -> searchResults.postValue(services));
     }
 }

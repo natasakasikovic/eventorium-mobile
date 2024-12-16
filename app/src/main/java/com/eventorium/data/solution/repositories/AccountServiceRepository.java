@@ -53,5 +53,31 @@ public class AccountServiceRepository {
     }
 
 
+    public LiveData<List<ServiceSummary>> searchServices(String query) {
+        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>();
 
+        service.searchManageableServices(query).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ServiceSummary>> call,
+                    @NonNull Response<List<ServiceSummary>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(response.body());
+                } else {
+                    liveData.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<List<ServiceSummary>> call,
+                    @NonNull Throwable t
+            ) {
+                liveData.postValue(null);
+            }
+        });
+
+        return liveData;
+    }
 }

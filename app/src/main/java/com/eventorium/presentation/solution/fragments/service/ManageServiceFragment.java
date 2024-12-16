@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +35,6 @@ public class ManageServiceFragment extends Fragment {
     private ManageableServiceViewModel manageableServiceViewModel;
     private ServiceViewModel serviceViewModel;
     private ManageableServiceAdapter adapter;
-
     private CircularProgressIndicator loadingIndicator;
     private RecyclerView recyclerView;
     private TextView noServicesText;
@@ -78,6 +78,23 @@ public class ManageServiceFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         loadingIndicator = binding.loadingIndicator;
         noServicesText = binding.noServicesText;
+
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                manageableServiceViewModel.searchServices(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(),
+                services -> adapter.setServices(services)
+        );
 
         loadServices();
         showLoadingIndicator();
