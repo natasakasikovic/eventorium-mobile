@@ -25,6 +25,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -92,12 +93,25 @@ public class ManageServiceFragment extends Fragment {
             }
         });
 
-        manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(),
-                services -> adapter.setServices(services)
-        );
+        manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(), services -> {
+                getServiceImages(services);
+                adapter.setServices(services);
+        });
 
         loadServices();
         showLoadingIndicator();
+    }
+
+    private void getServiceImages(List<ServiceSummary> services) {
+        services.forEach(service ->
+            serviceViewModel.getServiceImage(service.getId())
+                    .observe(getViewLifecycleOwner(), image -> {
+                        if(image != null) {
+                            service.setImage(image);
+                            int position = services.indexOf(service);
+                            adapter.notifyItemChanged(position);
+                        }
+                    }));
     }
 
     private void loadServices() {
@@ -105,17 +119,7 @@ public class ManageServiceFragment extends Fragment {
             if(services != null && !services.isEmpty()) {
                 recyclerView.setVisibility(View.VISIBLE);
                 noServicesText.setVisibility(View.GONE);
-
-                services.forEach(service ->
-                        serviceViewModel.getServiceImage(service.getId())
-                        .observe(getViewLifecycleOwner(), image -> {
-                            if(image != null) {
-                                service.setImage(image);
-                                int position = services.indexOf(service);
-                                adapter.notifyItemChanged(position);
-                            }
-                        }));
-
+                getServiceImages(services);
                 adapter.setServices(services);
             } else {
                 adapter.setServices(Collections.EMPTY_LIST);
