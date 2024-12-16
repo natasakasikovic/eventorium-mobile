@@ -26,7 +26,7 @@ public interface ServiceService {
     Call<Service> getService(@Path("id") Long id);
 
     @GET("services/{id}/image")
-    Call<String> getServiceImage(@Path("id") Long id);
+    Call<ResponseBody> getServiceImage(@Path("id") Long id);
 
     @GET("services/{id}/images")
     Call<List<ImageResponseDto>> getServiceImages(@Path("id") Long id);

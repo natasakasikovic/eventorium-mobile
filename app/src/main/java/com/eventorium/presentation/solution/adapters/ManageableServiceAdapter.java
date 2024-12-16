@@ -31,10 +31,15 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
         return new ManageableServiceViewHolder(view);
     }
 
+    public void setServices(List<ServiceSummary> newServices) {
+        serviceSummaries = newServices;
+        notifyDataSetChanged();;
+    }
+
     public static class ManageableServiceViewHolder extends BaseServiceViewHolder {
         TextView nameTextView;
         TextView priceTextView;
-        ImageView photoImageview;
+        ImageView imageView;
 
         Button seeMoreButton;
         Button editButton;
@@ -44,7 +49,7 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             super(itemView);
             nameTextView = itemView.findViewById(R.id.service_name);
             priceTextView = itemView.findViewById(R.id.service_price);
-            photoImageview = itemView.findViewById(R.id.service_photo);
+            imageView = itemView.findViewById(R.id.service_photo);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
@@ -55,7 +60,8 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
         public void bind(ServiceSummary serviceSummary) {
             nameTextView.setText(serviceSummary.getName());
             priceTextView.setText(serviceSummary.getPrice().toString());
-            photoImageview.setImageResource(serviceSummary.getPhoto());
+            imageView.setImageBitmap(serviceSummary.getImage());
+
             seeMoreButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 navController.navigate(R.id.action_manageService_to_serviceDetailsFragment,

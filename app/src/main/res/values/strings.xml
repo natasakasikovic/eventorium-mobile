@@ -118,4 +118,5 @@
     <string name="suggest_category_description">Suggest category description</string>
     <string name="service_created_successfully">Service created successfully</string>
     <string name="failed_to_create_service">Failed to create service</string>
+    <string name="no_services_found">No services found!</string>
 </resources>

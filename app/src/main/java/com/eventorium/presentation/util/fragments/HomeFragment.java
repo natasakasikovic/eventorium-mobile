@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         prepareEventData();
         prepareProductData();
-        prepareServiceData();
 
         attachSnapHelpers();
 
@@ -101,14 +100,5 @@ public class HomeFragment extends Fragment {
         products.add(new Product("LED String Lights", 100.0, R.drawable.conference));
         products.add(new Product("Photo Booth Props", 20.0, R.drawable.baloons));
         products.add(new Product("Custom Banner", 25.0, R.drawable.conference));
-    }
-
-    private void prepareServiceData(){
-        serviceSummaries.clear();
-        serviceSummaries.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
-        serviceSummaries.add(new ServiceSummary("Photography", 300.0,  R.drawable.catering));
-        serviceSummaries.add(new ServiceSummary("Venue Setup", 200.0,  R.drawable.catering));
-        serviceSummaries.add(new ServiceSummary("DJ ServiceSummary", 250.0,  R.drawable.catering));
-        serviceSummaries.add(new ServiceSummary("Florist", 150.0,  R.drawable.catering));
     }
 }

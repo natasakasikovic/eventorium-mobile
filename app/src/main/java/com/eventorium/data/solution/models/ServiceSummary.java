@@ -1,6 +1,7 @@
 package com.eventorium.data.solution.models;
 
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,22 +19,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ServiceSummary implements Parcelable {
-
+    private Long id;
     private String name;
     private Double price;
-    private Integer photo;
+    private Bitmap image;
 
     protected ServiceSummary(Parcel in) {
         name = in.readString();
         price = in.readDouble();
-        photo = in.readInt();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeDouble(price);
-        dest.writeInt(photo);
     }
 
     @Override

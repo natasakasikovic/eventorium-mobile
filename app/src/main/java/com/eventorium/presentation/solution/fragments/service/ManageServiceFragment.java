@@ -5,28 +5,43 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
+import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class ManageServiceFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
-    private static final List<ServiceSummary> SERVICE_SUMMARIES = new ArrayList<>();
+    private ManageableServiceViewModel manageableServiceViewModel;
+    private ServiceViewModel serviceViewModel;
+    private ManageableServiceAdapter adapter;
+
+    private CircularProgressIndicator loadingIndicator;
+    private RecyclerView recyclerView;
+    private TextView noServicesText;
 
     public ManageServiceFragment() {
     }
+
     public static ManageServiceFragment newInstance() {
         return new ManageServiceFragment();
     }
@@ -34,6 +49,9 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        manageableServiceViewModel = provider.get(ManageableServiceViewModel.class);
+        serviceViewModel = provider.get(ServiceViewModel.class);
     }
 
     @Override
@@ -46,8 +64,8 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareServiceData();
 
+        adapter = new ManageableServiceAdapter(new ArrayList<>());
         binding.filterButton.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
             View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
@@ -55,7 +73,45 @@ public class ManageServiceFragment extends Fragment {
             bottomSheetDialog.show();
         });
 
-        binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(SERVICE_SUMMARIES));
+
+        recyclerView = binding.servicesRecycleView;
+        recyclerView.setAdapter(adapter);
+        loadingIndicator = binding.loadingIndicator;
+        noServicesText = binding.noServicesText;
+
+        loadServices();
+        showLoadingIndicator();
+    }
+
+    private void loadServices() {
+        manageableServiceViewModel.getManageableServices().observe(getViewLifecycleOwner(), services -> {
+            if(services != null && !services.isEmpty()) {
+                recyclerView.setVisibility(View.VISIBLE);
+                noServicesText.setVisibility(View.GONE);
+
+                services.forEach(service ->
+                        serviceViewModel.getServiceImage(service.getId())
+                        .observe(getViewLifecycleOwner(), image -> {
+                            if(image != null) {
+                                service.setImage(image);
+                                int position = services.indexOf(service);
+                                adapter.notifyItemChanged(position);
+                            }
+                        }));
+
+                adapter.setServices(services);
+            } else {
+                adapter.setServices(Collections.EMPTY_LIST);
+                recyclerView.setVisibility(View.GONE);
+                noServicesText.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void showLoadingIndicator() {
+        manageableServiceViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
     }
 
     @Override
@@ -64,19 +120,4 @@ public class ManageServiceFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareServiceData(){
-        SERVICE_SUMMARIES.clear();
-        SERVICE_SUMMARIES.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Photography", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Venue Setup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("DJ ServiceSummary", 250.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Florist", 150.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Transportation", 400.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Videography", 350.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Cake Design", 100.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Hair and Makeup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Security", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Guest Coordination", 250.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Bar ServiceSummary", 200.0, R.drawable.catering));
-    }
 }
