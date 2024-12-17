@@ -1,5 +1,6 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,23 +10,36 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.eventorium.R;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.dtos.ServiceFilterDto;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
+import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
+import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -35,6 +49,8 @@ public class ManageServiceFragment extends Fragment {
     private FragmentServiceOverviewBinding binding;
     private ManageableServiceViewModel manageableServiceViewModel;
     private ServiceViewModel serviceViewModel;
+    private CategoryViewModel categoryViewModel;
+    private EventTypeViewModel eventTypeViewModel;
     private ManageableServiceAdapter adapter;
     private CircularProgressIndicator loadingIndicator;
     private RecyclerView recyclerView;
@@ -53,6 +69,8 @@ public class ManageServiceFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         manageableServiceViewModel = provider.get(ManageableServiceViewModel.class);
         serviceViewModel = provider.get(ServiceViewModel.class);
+        categoryViewModel = provider.get(CategoryViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
     }
 
     @Override
@@ -66,15 +84,10 @@ public class ManageServiceFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        showLoadingIndicator();
+
         adapter = new ManageableServiceAdapter(new ArrayList<>());
-        binding.filterButton.setOnClickListener(v -> {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
-            View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
-            bottomSheetDialog.setContentView(dialogView);
-            bottomSheetDialog.show();
-        });
-
-
+        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);
         loadingIndicator = binding.loadingIndicator;
@@ -94,12 +107,99 @@ public class ManageServiceFragment extends Fragment {
         });
 
         manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(), services -> {
-                getServiceImages(services);
-                adapter.setServices(services);
+            getServiceImages(services);
+            adapter.setServices(services);
+        });
+
+        manageableServiceViewModel.getFilterResults().observe(getViewLifecycleOwner(), services -> {
+            getServiceImages(services);
+            adapter.setServices(services);
         });
 
         loadServices();
-        showLoadingIndicator();
+    }
+
+
+    private void createBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
+        loadCategories(dialogView.findViewById(R.id.categorySelector));
+        loadEventTypes(dialogView.findViewById(R.id.eventTypeSelector));
+        bottomSheetDialog.setContentView(dialogView);
+
+        bottomSheetDialog.setOnDismissListener(dialog -> {
+            boolean availability
+                    = ((CheckBox) dialogView.findViewById(R.id.availabilityBox)).isChecked();;
+
+            TextInputEditText minTextField = dialogView.findViewById(R.id.serviceMinPriceText);
+            TextInputEditText maxTextField = dialogView.findViewById(R.id.serviceMaxPriceText);
+            Double minPrice;
+            try {
+                minPrice = Double
+                        .parseDouble(Objects.requireNonNull(minTextField.getText()).toString());
+            } catch (Exception e) {
+                minPrice = null;
+            }
+
+            Double maxPrice;
+            try {
+                maxPrice = Double
+                        .parseDouble(Objects.requireNonNull(maxTextField.getText()).toString());
+            } catch (Exception e) {
+                maxPrice = null;
+            }
+
+            Category category = getFromSpinner(dialogView.findViewById(R.id.categorySelector));
+            EventType eventType = getFromSpinner(dialogView.findViewById(R.id.eventTypeSelector));
+
+            ServiceFilterDto filter = ServiceFilterDto.builder()
+                    .availability(availability)
+                    .minPrice(minPrice)
+                    .maxPrice(maxPrice)
+                    .category(category == null ? null : category.getName())
+                    .eventType(eventType == null ? null : eventType.getName())
+                    .build();
+
+            manageableServiceViewModel.filterServices(filter);
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private void loadEventTypes(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            adapter.addAll(eventTypes.stream().map(EventType::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(eventTypes);
+        });
+    }
+    private<T> T getFromSpinner(Spinner spinner) {
+        String name = spinner.getSelectedItem().toString();
+        T value;
+        if (!name.isEmpty()) {
+            value = ((List<T>) spinner.getTag())
+                .stream()
+                .filter(c -> {
+                    try {
+                        return Objects
+                                .equals(c.getClass().getMethod("getName").invoke(c), name);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .findFirst().get();
+            return value;
+        }
+        return null;
     }
 
     private void getServiceImages(List<ServiceSummary> services) {
@@ -113,6 +213,23 @@ public class ManageServiceFragment extends Fragment {
                         }
                     }));
     }
+
+    private void loadCategories(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(categories);
+        });
+    }
+
 
     private void loadServices() {
         manageableServiceViewModel.getManageableServices().observe(getViewLifecycleOwner(), services -> {

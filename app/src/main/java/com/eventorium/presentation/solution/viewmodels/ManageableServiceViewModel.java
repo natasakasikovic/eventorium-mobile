@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.solution.dtos.ServiceFilterDto;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.services.ServiceService;
@@ -18,8 +19,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class ManageableServiceViewModel extends ViewModel {
 
     private final AccountServiceRepository repository;
-    private MutableLiveData<List<ServiceSummary>> manageableServices = new MutableLiveData<>();
-    private MutableLiveData<List<ServiceSummary>> searchResults = new MutableLiveData<>();
+    private final MutableLiveData<List<ServiceSummary>> manageableServices = new MutableLiveData<>();
+    private MutableLiveData<List<ServiceSummary>> filterResults = new MutableLiveData<>();
+    private final MutableLiveData<List<ServiceSummary>> searchResults = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
 
@@ -61,10 +63,27 @@ public class ManageableServiceViewModel extends ViewModel {
         });
     }
 
+    public void filterServices(ServiceFilterDto filter) {
+        isLoading.setValue(true);
+        repository.filterServices(filter).observeForever(services -> {
+            filterResults.postValue(services);
+            isLoading.setValue(false);
+        });
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
-        repository.getManageableServices().removeObserver(services -> manageableServices.postValue(services));
-        repository.searchServices(null).removeObserver(services -> searchResults.postValue(services));
+        repository.getManageableServices().removeObserver(manageableServices::postValue);
+        repository.searchServices(null).removeObserver(searchResults::postValue);
+        repository.filterServices(new ServiceFilterDto()).removeObserver(filterResults::postValue);
+    }
+
+    public LiveData<List<ServiceSummary>> getFilterResults() {
+        return filterResults;
+    }
+
+    public void setFilterResults(List<ServiceSummary> filterResults) {
+        this.filterResults.setValue(filterResults);
     }
 }
