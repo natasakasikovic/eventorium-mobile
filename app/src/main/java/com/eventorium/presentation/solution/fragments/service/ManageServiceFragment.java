@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
@@ -30,12 +32,10 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -86,7 +86,7 @@ public class ManageServiceFragment extends Fragment {
 
         showLoadingIndicator();
 
-        adapter = new ManageableServiceAdapter(new ArrayList<>());
+        adapter = new ManageableServiceAdapter(new ArrayList<>(), service -> showDeleteDialog(service));
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);
@@ -117,6 +117,32 @@ public class ManageServiceFragment extends Fragment {
         });
 
         loadServices();
+    }
+
+    private void showDeleteDialog(ServiceSummary service) {
+        new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+                .setTitle("Delete Service")
+                .setMessage("Are you sure you want to delete " + service.getName() + "?" )
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    manageableServiceViewModel.deleteService(service.getId())
+                            .observe(getViewLifecycleOwner(), success -> {
+                                if(success) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.service_deleted_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.failed_to_delete_service,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
 

@@ -16,13 +16,20 @@ import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.presentation.solution.fragments.service.EditServiceFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
+import com.eventorium.presentation.util.listeners.OnDeleteClickListener;
+import com.eventorium.presentation.util.listeners.OnEditClickListener;
 
 import java.util.List;
 
 public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
 
-    public ManageableServiceAdapter(List<ServiceSummary> serviceSummaries) {
+    private final OnDeleteClickListener<ServiceSummary> deleteListener;
+    public ManageableServiceAdapter(
+            List<ServiceSummary> serviceSummaries,
+            OnDeleteClickListener<ServiceSummary> listener
+    ) {
         super(serviceSummaries);
+        this.deleteListener = listener;
     }
 
     @NonNull
@@ -37,7 +44,7 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
         notifyDataSetChanged();;
     }
 
-    public static class ManageableServiceViewHolder extends BaseServiceViewHolder {
+    public class ManageableServiceViewHolder extends BaseServiceViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         ImageView imageView;
@@ -74,6 +81,7 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
                         EditServiceFragment.newInstance(serviceSummary).getArguments());
             });
 
+            deleteButton.setOnClickListener(v -> deleteListener.onDeleteClick(serviceSummary));
         }
     }
 }

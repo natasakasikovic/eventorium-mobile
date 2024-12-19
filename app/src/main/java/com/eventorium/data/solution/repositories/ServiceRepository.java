@@ -200,4 +200,30 @@ public class ServiceRepository {
 
         return liveData;
     }
+
+    public LiveData<Boolean> deleteService(Long id) {
+        MutableLiveData<Boolean> successful = new MutableLiveData<>(true);
+        serviceService.deleteService(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Void> call,
+                    @NonNull Response<Void> response
+            ) {
+                if (!response.isSuccessful()) {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    successful.postValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<Void> call,
+                    @NonNull Throwable t
+            ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+                successful.postValue(false);
+            }
+        });
+        return successful;
+    }
 }
