@@ -1,17 +1,27 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.eventorium.R;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentEditServiceBinding;
@@ -23,9 +33,13 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -70,10 +84,62 @@ public class EditServiceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditServiceBinding.inflate(inflater, container, false);
+        binding.editServiceButton.setOnClickListener(v -> editService());
         loadEventTypes();
 
         return binding.getRoot();
     }
+
+    private void editService() {
+        ReservationType type = binding.manualChecked.isChecked()
+                ? ReservationType.MANUAL
+                : ReservationType.AUTOMATIC;
+
+        List<Float> duration = binding.serviceDuration.getValues();
+
+        LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
+        LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
+
+        UpdateServiceRequestDto dto = UpdateServiceRequestDto.builder()
+                .name(String.valueOf(binding.serviceNameEditText.getText()))
+                .description(String.valueOf(binding.serviceDescriptionText.getText()))
+                .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
+                .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
+                .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
+                .cancellationDeadline(cancellationDate)
+                .available(binding.availabilityBox.isChecked())
+                .visible(binding.visibilityBox.isChecked())
+                .reservationDeadline(reservationDate)
+                .minDuration(duration.get(0).intValue())
+                .maxDuration(duration.get(1).intValue())
+                .type(type)
+                .eventTypesIds(((ChecklistAdapter<EventType>)
+                        (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
+                        .getSelectedItems().stream()
+                        .map(EventType::getId)
+                        .collect(toList()))
+                .build();
+
+        serviceViewModel.updateService(serviceSummary.getId(), dto)
+                .observe(getViewLifecycleOwner(), service -> {
+                    if(service != null) {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.service_updated_successfully,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        NavController navController = Navigation.findNavController(requireView());
+                        navController.navigate(R.id.action_update_to_serviceManagement);
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.failed_to_update_service,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+        });
+    }
+
 
     @SuppressLint("SetTextI18n")
     private void fillForm() {
@@ -128,15 +194,19 @@ public class EditServiceFragment extends Fragment {
                 cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
 
         reservationPicker.addOnPositiveButtonClickListener(selection -> {
-            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
-                    .format(new Date(selection));
-            reservationDate.setText(selectedDate);
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            reservationDate.setText(formattedDate);
         });
 
         cancellationPicker.addOnPositiveButtonClickListener(selection -> {
-            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
-                    .format(new Date(selection));
-            cancellationDate.setText(selectedDate);
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            cancellationDate.setText(formattedDate);
         });
     }
 

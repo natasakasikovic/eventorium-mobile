@@ -231,7 +231,7 @@ public class ServiceRepository {
     }
 
     public LiveData<ServiceSummary> updateService(Long serviceId, UpdateServiceRequestDto dto) {
-        MutableLiveData<ServiceSummary> liveData = new MutableLiveData<>(null);
+        MutableLiveData<ServiceSummary> liveData = new MutableLiveData<>();
         serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
