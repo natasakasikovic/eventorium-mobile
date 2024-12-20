@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
@@ -29,7 +29,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private static List<Event> events = new ArrayList<>();
-    private static List<Product> products = new ArrayList<>();
+    private static List<ProductSummary> productSummaries = new ArrayList<>();
     private static List<ServiceSummary> serviceSummaries = new ArrayList<>();
 
 
@@ -47,12 +47,11 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prepareEventData();
-        prepareProductData();
 
         attachSnapHelpers();
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
+        binding.productsRecycleView.setAdapter(new ProductsAdapter(productSummaries));
         binding.servicesRecycleView.setAdapter(new ServiceAdapter(serviceSummaries));
 
         setUpListeners();
@@ -91,14 +90,5 @@ public class HomeFragment extends Fragment {
         events.add(new Event("Workshop",  "Novi Sad", R.drawable.conference));
         events.add(new Event("Festival",  "Novi Sad", R.drawable.conference));
         events.add(new Event("Webinar", "Novi Sad", R.drawable.conference));
-    }
-
-    private void prepareProductData() {
-        products.clear();
-        products.add(new Product("Balloon Bouquet", 500.0, R.drawable.baloons));
-        products.add(new Product("Confetti Cannon", 200.0, R.drawable.conference));
-        products.add(new Product("LED String Lights", 100.0, R.drawable.conference));
-        products.add(new Product("Photo Booth Props", 20.0, R.drawable.baloons));
-        products.add(new Product("Custom Banner", 25.0, R.drawable.conference));
     }
 }

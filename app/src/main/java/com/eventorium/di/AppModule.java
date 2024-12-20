@@ -5,8 +5,10 @@ import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
+import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.AccountServiceService;
+import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.RetrofitApi;
 
@@ -68,4 +70,15 @@ public class AppModule {
         return new AccountServiceRepository(service);
     }
 
+    @Provides
+    @Singleton
+    public static ProductService provideProductService() {
+        return RetrofitApi.retrofit.create(ProductService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static ProductRepository provideProductRepository(ProductService productService) {
+        return new ProductRepository(productService);
+    }
 }

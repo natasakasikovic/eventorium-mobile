@@ -1,42 +1,45 @@
 package com.eventorium.presentation.solution.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 
 import java.util.List;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
-    private List<Product> products;
+    private List<ProductSummary> productSummaries;
 
-    public ProductsAdapter(List<Product> products) {
-        this.products = products;
+    public ProductsAdapter(List<ProductSummary> productSummaries) {
+        this.productSummaries = productSummaries;
     }
 
+    @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
         return new ProductViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
-        Product product = products.get(position);
-        holder.nameTextView.setText(product.getName());
-        holder.priceTextView.setText(product.getPrice().toString());
-        holder.imageView.setImageResource(product.getPhoto());
+        ProductSummary productSummary = productSummaries.get(position);
+        holder.nameTextView.setText(productSummary.getName());
+        holder.priceTextView.setText(productSummary.getPrice().toString());
     }
 
     @Override
     public int getItemCount() {
-        return products.size();
+        return productSummaries.size();
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
