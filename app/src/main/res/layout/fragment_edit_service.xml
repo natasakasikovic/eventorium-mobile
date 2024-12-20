@@ -276,50 +276,24 @@
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@id/availabilityBox" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceMinDurationInputLayout"
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/serviceDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:valueFrom="1"
+                android:valueTo="24"
+                android:stepSize="1"
+                app:values="@array/defaultValues"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:hint="@string/minimum_duration"
-                android:minHeight="56dp"
-                app:boxBackgroundMode="outline"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:thumbColor="@color/md_theme_primary"
+                app:thumbStrokeColor="@color/card_background"
+                app:trackColorActive="@color/md_theme_primaryContainer"
+                app:trackColorInactive="@color/card_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/durationText">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceMinDurationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textColor="@android:color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceMaxDurationInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:hint="@string/maximum_duration"
-                android:minHeight="56dp"
-                app:boxBackgroundMode="outline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/serviceMinDurationInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceMaxDurationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textColor="@android:color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
+                app:layout_constraintTop_toBottomOf="@id/durationText" />
 
             <TextView
                 android:id="@+id/confirmationText"
@@ -330,7 +304,7 @@
                 android:text="@string/confirmation"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/serviceMaxDurationInputLayout" />
+                app:layout_constraintTop_toBottomOf="@id/serviceDuration" />
 
             <RadioGroup
                 android:id="@+id/confirmationGroup"
@@ -341,6 +315,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/confirmationText">
                 <RadioButton
+                    android:id="@+id/manualChecked"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:checked="false"
@@ -348,6 +323,7 @@
                     android:text="@string/manual"
                     android:textColor="@android:color/black" />
                 <RadioButton
+                    android:id="@+id/automaticChecked"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:checked="false"
@@ -355,6 +331,41 @@
                     android:text="@string/automatic"
                     android:textColor="@android:color/black" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/eventTypesText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/event_types"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/confirmationGroup" />
+
+            <LinearLayout
+                android:id="@+id/eventTypeCheckboxList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_goneMarginTop="20dp"
+                android:orientation="vertical"
+                android:background="@color/md_theme_tertiaryContainer"
+                android:padding="10dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintTop_toBottomOf="@id/eventTypesText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/eventTypeRecycleView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:orientation="vertical"
+                    android:background="@color/card_background"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_gravity="center" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/see_more_button"
@@ -367,7 +378,7 @@
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/confirmationGroup" />
+                app:layout_constraintTop_toBottomOf="@id/eventTypeCheckboxList" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

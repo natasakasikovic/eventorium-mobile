@@ -14,7 +14,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
+import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
+import com.eventorium.data.solution.mappers.ServiceMapper;
 import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.dtos.ImageResponseDto;
@@ -225,5 +228,32 @@ public class ServiceRepository {
             }
         });
         return successful;
+    }
+
+    public LiveData<ServiceSummary> updateService(Long serviceId, UpdateServiceRequestDto dto) {
+        MutableLiveData<ServiceSummary> liveData = new MutableLiveData<>(null);
+        serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Service> call,
+                    @NonNull Response<Service> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(ServiceMapper.fromService(response.body()));
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(
+                    @NonNull Call<Service> call,
+                    @NonNull Throwable t
+            ) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+
+        return liveData;
     }
 }
