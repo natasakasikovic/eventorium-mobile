@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
-import com.eventorium.presentation.solution.adapters.ServiceAdapter;
+import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class ServiceOverviewFragment extends Fragment {
             bottomSheetDialog.show();
         });
 
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(SERVICE_SUMMARIES));
+        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
     }
 
     @Override

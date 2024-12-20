@@ -119,4 +119,7 @@
     <string name="service_created_successfully">Service created successfully</string>
     <string name="failed_to_create_service">Failed to create service</string>
     <string name="no_services_found">No services found!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="product">Product</string>
 </resources>

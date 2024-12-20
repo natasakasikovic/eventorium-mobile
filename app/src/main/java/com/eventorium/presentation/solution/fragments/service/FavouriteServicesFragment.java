@@ -10,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteServicesBinding;
-import com.eventorium.presentation.solution.adapters.ServiceAdapter;
+import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class FavouriteServicesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(SERVICE_SUMMARIES));
+        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
     }
 
     @Override

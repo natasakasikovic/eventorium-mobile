@@ -15,13 +15,16 @@ import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
+import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
-import com.eventorium.presentation.solution.adapters.ServiceAdapter;
+import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,13 +49,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        prepareProductData();
         prepareEventData();
 
         attachSnapHelpers();
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         binding.productsRecycleView.setAdapter(new ProductsAdapter(productSummaries));
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(serviceSummaries));
+        binding.servicesRecycleView.setAdapter(new ServicesAdapter(serviceSummaries));
+
 
         setUpListeners();
     }
@@ -90,5 +95,14 @@ public class HomeFragment extends Fragment {
         events.add(new Event("Workshop",  "Novi Sad", R.drawable.conference));
         events.add(new Event("Festival",  "Novi Sad", R.drawable.conference));
         events.add(new Event("Webinar", "Novi Sad", R.drawable.conference));
+    }
+
+    private void prepareProductData() {
+        productSummaries.clear();
+        productSummaries.add(new ProductSummary(1L, "Smartphone X", 799.99, 15.0, true, true, 4.5, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(2L, "Laptop Pro 15", 1499.99, 10.0, false, true, 4.7, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(3L, "Bluetooth Headphones", 120.00, 5.0, true, true, 4.2, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(4L, "Smartwatch 2024", 250.00, 20.0, true, false, 4.8, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(5L, "Electric Scooter", 499.99, 25.0, true, true, 3.9, Status.ACCEPTED));
     }
 }

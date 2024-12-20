@@ -19,9 +19,9 @@ import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFrag
 import java.util.List;
 import java.util.Objects;
 
-public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceViewHolder> {
+public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceViewHolder> {
 
-    public ServiceAdapter(List<ServiceSummary> serviceSummaries) {
+    public ServicesAdapter(List<ServiceSummary> serviceSummaries) {
         super(serviceSummaries);
     }
 
