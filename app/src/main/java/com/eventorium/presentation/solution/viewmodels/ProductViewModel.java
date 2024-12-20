@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 
 import java.util.List;
@@ -19,10 +20,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class ProductViewModel extends ViewModel {
     private final ProductRepository productRepository;
+    private final AccountProductRepository accountProductRepository;
 
     @Inject
-    public ProductViewModel(ProductRepository productRepository) {
+    public ProductViewModel(
+            ProductRepository productRepository,
+            AccountProductRepository accountProductRepository
+    ) {
         this.productRepository = productRepository;
+        this.accountProductRepository = accountProductRepository;
     }
 
     public LiveData<Product> getProduct(Long id) {
@@ -35,6 +41,18 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<List<Bitmap>> getServiceImages(Long id) {
         return productRepository.getProductImages(id);
+    }
+
+    public LiveData<Boolean> isFavourite(Long id) {
+        return accountProductRepository.isFavouriteProduct(id);
+    }
+
+    public LiveData<Boolean> removeFavouriteProduct(Long id) {
+        return accountProductRepository.removeFavouriteProduct(id);
+    }
+
+    public LiveData<String> addFavouriteProduct(Long id) {
+        return accountProductRepository.addFavouriteProduct(id);
     }
 
 }

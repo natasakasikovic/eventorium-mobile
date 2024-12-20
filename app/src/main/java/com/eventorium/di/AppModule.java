@@ -4,6 +4,7 @@ import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
@@ -80,5 +81,11 @@ public class AppModule {
     @Singleton
     public static ProductRepository provideProductRepository(ProductService productService) {
         return new ProductRepository(productService);
+    }
+
+    @Provides
+    @Singleton
+    public static AccountProductRepository provideAccountProductRepository(ProductService service) {
+        return new AccountProductRepository(service);
     }
 }
