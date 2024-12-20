@@ -122,4 +122,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="product">Product</string>
+    <string name="removed_service_from_favourites">Removed service from favourites!</string>
+    <string name="to_favourites">to favourites!</string>
+    <string name="added_service">"Added service "</string>
 </resources>

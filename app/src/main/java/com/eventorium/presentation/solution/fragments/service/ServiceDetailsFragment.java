@@ -10,11 +10,15 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.eventorium.R;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.google.android.material.button.MaterialButton;
 
 import java.time.format.DateTimeFormatter;
 
@@ -25,8 +29,10 @@ public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding binding;
     private ServiceViewModel serviceViewModel;
-    public static final String ARG_ID = "ARG_SERVICE_ID";
 
+    private MaterialButton favouriteButton;
+    private boolean isFavourite;
+    public static final String ARG_ID = "ARG_SERVICE_ID";
 
 
     public ServiceDetailsFragment() {
@@ -52,6 +58,7 @@ public class ServiceDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         assert getArguments() != null;
+        favouriteButton = binding.favButton;
         serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
@@ -70,6 +77,46 @@ public class ServiceDetailsFragment extends Fragment {
 
                 serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
                     binding.images.setAdapter(new ImageAdapter(images));
+                });
+            }
+        });
+
+        serviceViewModel.isFavourite(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
+            isFavourite = result;
+            favouriteButton.setIconResource(
+                    result
+                    ? R.drawable.ic_favourite
+                    : R.drawable.ic_not_favourite
+            );
+        });
+
+        favouriteButton.setOnClickListener(v -> {
+            Long id = getArguments().getLong(ARG_ID);
+            if(isFavourite) {
+                serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+                    if(result) {
+                        isFavourite = false;
+                        favouriteButton.setIconResource(R.drawable.ic_not_favourite);
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.removed_service_from_favourites,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            } else {
+                serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), name -> {
+                    if(name != null) {
+                        isFavourite = true;
+                        favouriteButton.setIconResource(R.drawable.ic_favourite);
+                        Toast.makeText(
+                                requireContext(),
+                                getString(R.string.added_service)
+                                        + name
+                                        + getString(R.string.to_favourites),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
                 });
             }
         });
