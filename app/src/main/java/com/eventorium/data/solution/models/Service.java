@@ -1,10 +1,15 @@
 package com.eventorium.data.solution.models;
 
+import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.dtos.EventTypeResponseDto;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.util.models.ReservationType;
+import com.eventorium.data.util.models.Status;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,39 +17,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Service implements Parcelable {
-
+public class Service {
+    private Long id;
     private String name;
+    private String description;
+    private String specialties;
     private Double price;
-    private Integer photo;
-
-    protected Service(Parcel in) {
-        name = in.readString();
-        price = in.readDouble();
-        photo = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeDouble(price);
-        dest.writeInt(photo);
-    }
-
-    @Override
-    public int describeContents() { return 0; }
-
-    public static final Creator<Service> CREATOR = new Creator<>() {
-        @Override
-        public Service createFromParcel(Parcel in) { return new Service(in); }
-
-        @Override
-        public Service[] newArray(int size) { return new Service[size]; }
-    };
-
+    private Double discount;
+    private Status status;
+    private List<EventType> eventTypes;
+    private Double rating;
+    private Category category;
+    private ReservationType type;
+    private LocalDate reservationDeadline;
+    private LocalDate cancellationDeadline;
+    private Integer minDuration;
+    private Integer maxDuration;
 }

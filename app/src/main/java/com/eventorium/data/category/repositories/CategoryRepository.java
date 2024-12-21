@@ -87,6 +87,7 @@ public class CategoryRepository {
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
+                liveData.postValue(null);
             }
         });
 

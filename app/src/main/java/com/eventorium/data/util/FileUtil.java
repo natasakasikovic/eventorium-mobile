@@ -2,8 +2,11 @@ package com.eventorium.data.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +36,11 @@ public class FileUtil {
             parts.add(getImageFromUri(context, uri));
         }
         return parts;
+    }
+
+    public static Bitmap convertToBitmap(String base64String) {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     public static File getFileFromUri(Context context, Uri uri) throws IOException {
