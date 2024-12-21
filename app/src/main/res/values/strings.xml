@@ -119,4 +119,6 @@
     <string name="service_created_successfully">Service created successfully</string>
     <string name="failed_to_create_service">Failed to create service</string>
     <string name="no_services_found">No services found!</string>
+    <string name="successfully_set_the_category">Successfully set the category.</string>
+    <string name="failed_to_set_category">Failed to set category!</string>
 </resources>

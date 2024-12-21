@@ -1,51 +1,51 @@
 package com.eventorium.presentation.category.viewmodels;
 
-import android.os.Build;
+import static java.util.stream.Collectors.toList;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.repositories.CategoryProposalRepository;
+import com.eventorium.data.category.repositories.CategoryRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+import lombok.Getter;
+
+@Getter
+@HiltViewModel
 public class CategoryProposalViewModel extends ViewModel {
     private final MutableLiveData<List<Category>> categoryProposals = new MutableLiveData<>();
-    private final MutableLiveData<List<Category>> existingCategories = new MutableLiveData<>();
     private final MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    public CategoryProposalViewModel() {
-        categoryProposals.setValue(List.of(
-                new Category(1L, "Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
-                new Category(2L, "Clothing", "Apparel and fashion items for men, women, and children."),
-                new Category(3L, "Food & Beverages", "Groceries, packaged foods, and drinks."),
-                new Category(4L, "Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
-                new Category(5L, "Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
-                new Category(6L, "Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
-        ));
-        existingCategories.setValue(List.of(
-                new Category(1L, "Electronics", "Devices and gadgets such as smartphones, laptops, and accessories."),
-                new Category(2L,"Clothing", "Apparel and fashion items for men, women, and children."),
-                new Category(3L,"Food & Beverages", "Groceries, packaged foods, and drinks."),
-                new Category(4L,"Home Appliances", "Appliances and tools for home use, such as refrigerators, washing machines, etc."),
-                new Category(5L,"Health & Wellness", "Products related to fitness, medicine, and personal well-being."),
-                new Category(6L, "Automotive", "Cars, motorcycles, spare parts, and automotive accessories.")
-        ));
+    private final CategoryProposalRepository categoryProposalRepository;
+    private final CategoryRepository categoryRepository;
+
+    @Inject
+    public CategoryProposalViewModel(
+            CategoryRepository categoryRepository,
+            CategoryProposalRepository categoryProposalRepository
+    ) {
+        this.categoryRepository = categoryRepository;
+        this.categoryProposalRepository = categoryProposalRepository;
+        fetchCategoryProposals();
     }
 
-    public MutableLiveData<List<Category>> getCategoryProposals() {
-        return categoryProposals;
-    }
-
-    public MutableLiveData<List<Category>> getExistingCategories() {
-        return existingCategories;
-    }
-
-    public MutableLiveData<Category> getSelectedCategory() {
-        return selectedCategory;
+    public void fetchCategoryProposals() {
+        isLoading.setValue(true);
+        categoryProposalRepository.getCategoryProposals().observeForever(categories -> {
+            this.categoryProposals.postValue(categories);
+            isLoading.postValue(false);
+        });
     }
 
     public void setCategoryProposals(List<Category> categoriesProposals) {
@@ -60,26 +60,22 @@ public class CategoryProposalViewModel extends ViewModel {
         selectedCategory.setValue(category);
     }
 
-    public void updateCategory(Category updateCategory) {
-
+    public void refreshProposals(Long id) {
+        categoryProposals.postValue(Objects.requireNonNull(categoryProposals.getValue())
+                .stream()
+                .filter(category -> !Objects.equals(category.getId(), id))
+                .collect(toList()));
     }
 
-    public List<String> getExistingCategoriesName() {
-        List<String> result = new ArrayList<>();
-        result.add("");
-        List<String> categoriesNames;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            categoriesNames = Objects.requireNonNull(existingCategories.getValue())
-                    .stream()
-                    .map(Category::getName)
-                    .toList();
-        } else {
-            categoriesNames = Objects.requireNonNull(existingCategories.getValue())
-                    .stream()
-                    .map(Category::getName)
-                    .collect(Collectors.toList());
-        }
-        result.addAll(categoriesNames);
-        return result;
+    public LiveData<Boolean> updateCategoryStatus(Long id, CategoryUpdateStatusDto dto) {
+        return categoryProposalRepository.updateCategoryStatus(id, dto);
+    }
+
+    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequestDto dto) {
+        return categoryProposalRepository.updateCategoryProposal(id, dto);
+    }
+
+    public LiveData<Boolean> changeCategory(Long id, CategoryRequestDto dto) {
+        return categoryProposalRepository.changeCategory(id, dto);
     }
 }
