@@ -73,7 +73,11 @@
         android:id="@+id/createServiceFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.CreateServiceFragment"
         android:label="fragment_create_service"
-        tools:layout="@layout/fragment_create_service" />
+        tools:layout="@layout/fragment_create_service">
+        <action
+            android:id="@+id/action_create_to_serviceOverview"
+            app:destination="@+id/serviceOverviewFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/homepageFragment"

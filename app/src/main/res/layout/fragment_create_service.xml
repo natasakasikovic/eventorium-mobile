@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toBottomOf="@id/generalText">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceNameEditText"
+                    android:id="@+id/serviceNameText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
@@ -112,6 +112,18 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/categoriesText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/categories"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintTop_toBottomOf="@id/serviceSpecificitiesInputLayout"
+                />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/categorySelectionInputLayout"
                 android:layout_width="0dp"
@@ -124,27 +136,27 @@
                 app:boxBackgroundMode="outline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/serviceSpecificitiesInputLayout">
+                app:layout_constraintTop_toBottomOf="@id/categoriesText">
 
-                <AutoCompleteTextView
+                <Spinner
                     android:id="@+id/categorySelector"
                     android:layout_width="match_parent"
-                    android:textColor="@android:color/black"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
                     android:layout_height="50dp"
-                    android:importantForAccessibility="yes" />
+                    android:importantForAccessibility="yes"
+                    android:background="@drawable/spinner_background"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/suggestCategoryTextLayout"
+                android:id="@+id/suggestCategoryNameTextLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="12dp"
-                android:hint="@string/suggest_category"
+                android:hint="@string/suggest_category_name"
                 android:minHeight="56dp"
                 app:boxBackgroundMode="outline"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +164,7 @@
                 app:layout_constraintTop_toBottomOf="@id/categorySelectionInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/suggestCategoryText"
+                    android:id="@+id/suggestCategoryNameText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
@@ -160,6 +172,31 @@
                     android:textColor="@android:color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/suggestCategoryDescriptionTextLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="12dp"
+                android:hint="@string/suggest_category_description"
+                android:minHeight="56dp"
+                app:boxBackgroundMode="outline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/suggestCategoryNameTextLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/suggestCategoryDescriptionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="yes"
+                    android:inputType="text"
+                    android:textColor="@android:color/black" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <TextView
                 android:id="@+id/priceAndDiscountText"
@@ -170,7 +207,7 @@
                 android:text="@string/price_and_discount"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/suggestCategoryTextLayout" />
+                app:layout_constraintTop_toBottomOf="@id/suggestCategoryDescriptionTextLayout" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -325,49 +362,24 @@
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@id/availabilityBox" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceMinDurationInputLayout"
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/serviceDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:valueFrom="1"
+                android:valueTo="24"
+                android:stepSize="1"
+                app:values="@array/defaultValues"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:hint="@string/minimum_duration"
-                android:minHeight="56dp"
-                app:boxBackgroundMode="outline"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:thumbColor="@color/md_theme_primary"
+                app:thumbStrokeColor="@color/card_background"
+                app:trackColorActive="@color/md_theme_primaryContainer"
+                app:trackColorInactive="@color/card_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/durationText">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceMinDurationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textColor="@android:color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/serviceMaxDurationInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:hint="@string/maximum_duration"
-                android:minHeight="56dp"
-                app:boxBackgroundMode="outline"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/serviceMinDurationInputLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/serviceMaxDurationText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textColor="@android:color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintTop_toBottomOf="@id/durationText" />
 
             <TextView
                 android:id="@+id/confirmationText"
@@ -378,7 +390,7 @@
                 android:text="@string/confirmation"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/serviceMaxDurationInputLayout" />
+                app:layout_constraintTop_toBottomOf="@id/serviceDuration" />
 
             <RadioGroup
                 android:id="@+id/confirmationGroup"
@@ -389,6 +401,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/confirmationText">
                 <RadioButton
+                    android:id="@+id/manualChecked"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:checked="false"
@@ -396,6 +409,7 @@
                     android:text="@string/manual"
                     android:textColor="@android:color/black" />
                 <RadioButton
+                    android:id="@+id/automaticChecked"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:checked="false"
@@ -416,7 +430,7 @@
                 app:layout_constraintTop_toBottomOf="@id/confirmationGroup" />
 
             <LinearLayout
-                android:id="@+id/categoryCheckboxList"
+                android:id="@+id/eventTypeCheckboxList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_goneMarginTop="20dp"
@@ -429,7 +443,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 >
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/categoryRecycleView"
+                    android:id="@+id/eventTypeRecycleView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scrollbars="vertical"
@@ -448,7 +462,7 @@
                 android:text="@string/photos"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                app:layout_constraintTop_toBottomOf="@id/categoryCheckboxList" />
+                app:layout_constraintTop_toBottomOf="@id/eventTypeCheckboxList" />
 
             <HorizontalScrollView
                 android:id="@+id/photos"
@@ -466,25 +480,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
-
-                    <!-- TODO: delete when uploading images is implemented -->
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/md_theme_primaryContainer" />
                 </LinearLayout>
             </HorizontalScrollView>
             <Button

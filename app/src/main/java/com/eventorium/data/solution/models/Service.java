@@ -6,23 +6,22 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Service implements Parcelable {
 
     private String name;
     private Double price;
     private Integer photo;
-
-    public Service(String name, Double price, Integer photo) {
-        this.name = name;
-        this.price = price;
-        this.photo = photo;
-    }
-
-    public Service() { }
-
-    public String getName() { return name; }
-    public Double getPrice() { return price; }
-    public Integer getPhoto(){ return photo; }
 
     protected Service(Parcel in) {
         name = in.readString();

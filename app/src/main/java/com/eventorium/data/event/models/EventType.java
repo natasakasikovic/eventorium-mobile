@@ -63,4 +63,8 @@ public class EventType implements Parcelable {
         dest.writeString(description);
         dest.writeTypedList(suggestedCategories);
     }
+
+    @NonNull
+    @Override
+    public String toString() { return name; }
 }

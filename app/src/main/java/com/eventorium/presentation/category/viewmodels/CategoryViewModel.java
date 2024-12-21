@@ -29,6 +29,7 @@ public class CategoryViewModel extends ViewModel {
     @Inject
     public CategoryViewModel(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+        //TODO: do not fetch on creation
         fetchCategories();
     }
 
