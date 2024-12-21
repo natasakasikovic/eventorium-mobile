@@ -116,4 +116,8 @@
     <string name="no_categories_found">No categories found</string>
     <string name="category_accepted_successfully">Category accepted successfully</string>
     <string name="failed_to_accept_category">Failed to accept category!</string>
+    <string name="suggest_category_name">Suggest category name</string>
+    <string name="suggest_category_description">Suggest category description</string>
+    <string name="service_created_successfully">Service created successfully</string>
+    <string name="failed_to_create_service">Failed to create service</string>
 </resources>

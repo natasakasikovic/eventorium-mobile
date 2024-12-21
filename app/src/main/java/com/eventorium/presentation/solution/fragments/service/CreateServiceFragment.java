@@ -1,28 +1,67 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import static java.util.stream.Collectors.toList;
+
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ListAdapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.eventorium.R;
+import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.mappers.EventTypeMapper;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
+import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
+import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
+import com.eventorium.presentation.util.ImageUpload;
 import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CreateServiceFragment extends Fragment {
-
     private FragmentCreateServiceBinding binding;
+    private List<Uri> imageUris = new ArrayList<>();
+    private ImageUpload imageUpload;
+    private LinearLayout imageContainer;
+    private ServiceViewModel serviceViewModel;
+    private EventTypeViewModel eventTypeViewModel;
+    private CategoryViewModel categoryViewModel;
 
     public CreateServiceFragment() {
     }
@@ -34,27 +73,35 @@ public class CreateServiceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        serviceViewModel = provider.get(ServiceViewModel.class);
+        categoryViewModel = provider.get(CategoryViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
+        imageUpload = new ImageUpload(this, imageUris -> {
+            imageContainer.removeAllViews();
+            for (Uri uri : imageUris) {
+                ImageView imageView = new ImageView(requireContext());
+                imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                imageView.setPadding(50, 0, 50, 0);
+                imageView.setImageURI(uri);
+                imageContainer.addView(imageView);
+            }
+            this.imageUris.addAll(imageUris);
+        });
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateServiceBinding.inflate(inflater, container, false);
-        setupCategoryAutoCompleteAdapter();
         createDatePickers();
-        binding.categoryRecycleView.setAdapter(new ChecklistAdapter(List.of(
-                "Wedding",
-                "Birthday Party",
-                "Conference",
-                "Concert",
-                "Corporate Event",
-                "Workshop",
-                "Fundraiser",
-                "Networking Event",
-                "Exhibition",
-                "Festival",
-                "Sports Event"
-        )));
+        loadCategories();
+        loadEventTypes();
+        binding.manualChecked.setChecked(true);
+        setupImagePicker();
+        binding.createServiceButton.setOnClickListener(v -> createService());
         return binding.getRoot();
     }
 
@@ -79,15 +126,19 @@ public class CreateServiceFragment extends Fragment {
                 cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
 
         reservationPicker.addOnPositiveButtonClickListener(selection -> {
-            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
-                    .format(new Date(selection));
-            reservationDate.setText(selectedDate);
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            reservationDate.setText(formattedDate);
         });
 
         cancellationPicker.addOnPositiveButtonClickListener(selection -> {
-            String selectedDate = new SimpleDateFormat("dd.MM.yyyy")
-                    .format(new Date(selection));
-            cancellationDate.setText(selectedDate);
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            cancellationDate.setText(formattedDate);
         });
     }
 
@@ -97,25 +148,116 @@ public class CreateServiceFragment extends Fragment {
         binding = null;
     }
 
-    private void setupCategoryAutoCompleteAdapter() {
-        // TODO: Replace the hardcoded list of cities with a dynamic list
-        List<String> serviceCategories = List.of(
-                "Venue Services",
-                "Catering and Food Services",
-                "Entertainment",
-                "Music",
-                "Audio-Visual and Lighting",
-                "Photography and Videography",
-                "Planning and Coordination"
-        );
+    private void setupImagePicker() {
+        imageContainer = binding.photosContainer;
+        binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
+    }
 
-        AutoCompleteTextView categoryAutocomplete = binding.categorySelector;
+    private void loadCategories() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                serviceCategories);
-        categoryAutocomplete.setAdapter(adapter);
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        categoryAutocomplete.setThreshold(0);
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            binding.categorySelector.setAdapter(adapter);
+            binding.categorySelector.setTag(categories);
+        });
     }
+
+    private void loadEventTypes() {
+        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            binding.eventTypeRecycleView.setAdapter(new ChecklistAdapter<>(eventTypes));
+        });
+    }
+
+    private Category getCategory() {
+        String categoryName = binding.categorySelector.getSelectedItem().toString();
+        Category category;
+        if(!categoryName.isEmpty()) {
+            category = ((List<Category>) binding.categorySelector.getTag())
+                    .stream()
+                    .filter(c -> c.getName().equals(categoryName))
+                    .findFirst().get();
+        } else {
+            category = new Category(
+                    null,
+                    String.valueOf(binding.suggestCategoryNameText.getText()),
+                    String.valueOf(binding.suggestCategoryDescriptionText.getText()));
+        }
+        return category;
+    }
+
+    private void createService() {
+        Category category = getCategory();
+        ReservationType type = binding.manualChecked.isChecked()
+                ? ReservationType.MANUAL
+                : ReservationType.AUTOMATIC;
+
+        List<Float> duration = binding.serviceDuration.getValues();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+
+        LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
+        LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
+
+        CreateServiceRequestDto dto = CreateServiceRequestDto.builder()
+                .name(String.valueOf(binding.serviceNameText.getText()))
+                .description(String.valueOf(binding.serviceDescriptionText.getText()))
+                .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
+                .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
+                .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
+                .cancellationDeadline(cancellationDate)
+                .reservationDeadline(reservationDate)
+                .minDuration(duration.get(0).intValue())
+                .maxDuration(duration.get(1).intValue())
+                .type(type)
+                .eventTypes(((ChecklistAdapter<EventType>)
+                        (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
+                        .getSelectedItems().stream()
+                        .map(EventTypeMapper::toRequest)
+                        .collect(toList()))
+                .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
+                .build();
+
+        serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
+            if(serviceId != null) {
+                if(!imageUris.isEmpty()) {
+                    serviceViewModel
+                            .uploadImages(serviceId, getContext(), imageUris)
+                            .observe(getViewLifecycleOwner(), this::handleUpload);
+                }
+            } else {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.failed_to_create_service,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void handleUpload(boolean successfulUpload) {
+        if(successfulUpload) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.service_created_successfully,
+                    Toast.LENGTH_SHORT
+            ).show();
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_create_to_serviceOverview, null, new NavOptions.Builder()
+                    .setPopUpTo(R.id.createServiceFragment, true)
+                    .build());
+        } else {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.failed_to_create_service,
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
 }

@@ -7,6 +7,8 @@ import com.eventorium.data.event.dtos.EventTypeRequestDto;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
@@ -22,5 +24,9 @@ public class EventTypeViewModel extends ViewModel {
 
     public LiveData<EventType> createEventType(EventTypeRequestDto eventTypeDto) {
         return eventTypeRepository.createEventType(eventTypeDto);
+    }
+
+    public LiveData<List<EventType>> fetchEventTypes() {
+        return eventTypeRepository.getEventTypes();
     }
 }
