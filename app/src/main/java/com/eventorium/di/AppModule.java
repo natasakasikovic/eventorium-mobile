@@ -4,6 +4,8 @@ import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.solution.repositories.ServiceRepository;
+import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.RetrofitApi;
 
 import javax.inject.Singleton;
@@ -39,6 +41,19 @@ public class AppModule {
     public static EventTypeRepository provideEventTypeRepository(EventTypeService service) {
         return new EventTypeRepository(service);
     }
+
+    @Provides
+    @Singleton
+    public static ServiceService provideServiceService() {
+        return RetrofitApi.retrofit.create(ServiceService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static ServiceRepository provideServiceRepository(ServiceService serviceService) {
+        return new ServiceRepository(serviceService);
+    }
+
 
 
 }
