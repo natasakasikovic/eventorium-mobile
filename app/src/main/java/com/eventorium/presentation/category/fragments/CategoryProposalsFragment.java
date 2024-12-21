@@ -107,14 +107,14 @@ public class CategoryProposalsFragment extends Fragment {
         if(success) {
             Toast.makeText(
                     requireContext(),
-                    R.string.category_accepted_successfully,
+                    R.string.successfully_set_the_category,
                     Toast.LENGTH_SHORT
             ).show();
             proposalViewModel.refreshProposals(id);
         } else {
             Toast.makeText(
                     requireContext(),
-                    R.string.failed_to_accept_category,
+                    R.string.failed_to_set_category,
                     Toast.LENGTH_SHORT
             ).show();
         }
