@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.eventorium.BuildConfig;
+import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
@@ -133,6 +135,21 @@ public class AppModule {
             CategoryProposalService service
     ) {
         return new CategoryProposalRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public AuthService provideAuthService(Retrofit retrofit) {
+        return retrofit.create(AuthService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static AuthRepository authRepository(AuthService service,
+                                                SharedPreferences sharedPreferences)
+    {
+        return new AuthRepository(service, sharedPreferences);
     }
 
 
