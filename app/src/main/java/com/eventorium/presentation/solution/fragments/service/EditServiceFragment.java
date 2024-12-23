@@ -95,7 +95,7 @@ public class EditServiceFragment extends Fragment {
         if(dto != null) {
             serviceViewModel.updateService(serviceSummary.getId(), loadDataFromForm())
                     .observe(getViewLifecycleOwner(), service -> {
-                        if (service.getError() != null) {
+                        if (service.getError() == null) {
                             Toast.makeText(
                                     requireContext(),
                                     R.string.service_updated_successfully,
