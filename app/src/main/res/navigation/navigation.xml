@@ -36,6 +36,12 @@
         tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" />
+
+    <fragment
         android:id="@+id/bookingCalendarFragment"
         android:name="com.eventorium.presentation.user.fragments.BookingCalendarFragment"
         tools:layout="@layout/fragment_booking_calendar"
@@ -93,6 +99,9 @@
             android:id="@+id/action_home_to_service_details"
             app:destination="@id/serviceDetailsFragment"/>
         <action
+            android:id="@+id/action_home_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
             android:id="@+id/action_homepage_to_services_overview"
             app:destination="@id/serviceOverviewFragment" />
         <action
@@ -101,6 +110,7 @@
         <action
             android:id="@+id/action_homepage_to_products_overview"
             app:destination="@id/productsOverviewFragment" />
+
     </fragment>
 
     <fragment

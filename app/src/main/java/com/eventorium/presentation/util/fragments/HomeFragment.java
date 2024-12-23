@@ -16,12 +16,15 @@ import android.view.ViewGroup;
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
-import com.eventorium.presentation.solution.adapters.ServiceAdapter;
+import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private static List<Event> events = new ArrayList<>();
-    private static List<Product> products = new ArrayList<>();
+    private static List<ProductSummary> productSummaries = new ArrayList<>();
     private static List<ServiceSummary> serviceSummaries = new ArrayList<>();
 
 
@@ -46,14 +49,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareEventData();
         prepareProductData();
+        prepareEventData();
 
         attachSnapHelpers();
 
         binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
-        binding.servicesRecycleView.setAdapter(new ServiceAdapter(serviceSummaries));
+        binding.productsRecycleView.setAdapter(new ProductsAdapter(productSummaries));
+        binding.servicesRecycleView.setAdapter(new ServicesAdapter(serviceSummaries));
+
 
         setUpListeners();
     }
@@ -94,11 +98,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareProductData() {
-        products.clear();
-        products.add(new Product("Balloon Bouquet", 500.0, R.drawable.baloons));
-        products.add(new Product("Confetti Cannon", 200.0, R.drawable.conference));
-        products.add(new Product("LED String Lights", 100.0, R.drawable.conference));
-        products.add(new Product("Photo Booth Props", 20.0, R.drawable.baloons));
-        products.add(new Product("Custom Banner", 25.0, R.drawable.conference));
+        productSummaries.clear();
+        productSummaries.add(new ProductSummary(1L, "Smartphone X", 799.99, 15.0, true, true, 4.5, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(2L, "Laptop Pro 15", 1499.99, 10.0, false, true, 4.7, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(3L, "Bluetooth Headphones", 120.00, 5.0, true, true, 4.2, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(4L, "Smartwatch 2024", 250.00, 20.0, true, false, 4.8, Status.ACCEPTED));
+        productSummaries.add(new ProductSummary(5L, "Electric Scooter", 499.99, 25.0, true, true, 3.9, Status.ACCEPTED));
     }
 }

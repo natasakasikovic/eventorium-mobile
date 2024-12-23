@@ -129,4 +129,5 @@
     <string name="reservation_date_in_past">The cancellation date cannot be in the past.</string>
     <string name="cancellation_date_in_past">The reservation date cannot be in the past.</string>
     <string name="cancellation_after_reservation">Cancellation deadline should be after reservation deadline!</string>
+    <string name="product">Product</string>
 </resources>

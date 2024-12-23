@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.databinding.FragmentFavouriteProductsBinding;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class FavouriteProductsFragment extends Fragment {
 
     private FragmentFavouriteProductsBinding binding;
-    private static final List<Product> products = new ArrayList<>();
+    private static final List<ProductSummary> PRODUCT_SUMMARIES = new ArrayList<>();
 
     public FavouriteProductsFragment() { }
 
@@ -44,22 +44,12 @@ public class FavouriteProductsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareProductData();
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
+        binding.productsRecycleView.setAdapter(new ProductsAdapter(PRODUCT_SUMMARIES));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    private void prepareProductData() {
-        products.clear();
-        products.add(new Product("Balloon Bouquet", 500.0, R.drawable.baloons));
-        products.add(new Product("Confetti Cannon", 200.0, R.drawable.conference));
-        products.add(new Product("LED String Lights", 100.0, R.drawable.conference));
-        products.add(new Product("Photo Booth Props", 20.0, R.drawable.baloons));
-        products.add(new Product("Custom Banner", 25.0, R.drawable.conference));
     }
 }
