@@ -20,7 +20,7 @@ public class ManageableServiceViewModel extends ViewModel {
 
     private final AccountServiceRepository repository;
     private final MutableLiveData<List<ServiceSummary>> manageableServices = new MutableLiveData<>();
-    private MutableLiveData<List<ServiceSummary>> filterResults = new MutableLiveData<>();
+    private final MutableLiveData<List<ServiceSummary>> filterResults = new MutableLiveData<>();
     private final MutableLiveData<List<ServiceSummary>> searchResults = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
