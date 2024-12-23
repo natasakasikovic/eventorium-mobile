@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
@@ -58,6 +59,9 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
+        if(!productViewModel.isLoggedIn()) {
+            binding.favButton.setVisibility(View.GONE);
+        }
         assert getArguments() != null;
         favouriteButton = binding.favButton;
         productViewModel.getProduct(1L).observe(getViewLifecycleOwner(), product -> {

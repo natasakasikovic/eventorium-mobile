@@ -119,10 +119,18 @@
     <string name="service_created_successfully">Service created successfully</string>
     <string name="failed_to_create_service">Failed to create service</string>
     <string name="no_services_found">No services found!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="service_deleted_successfully">Service deleted successfully!</string>
+    <string name="failed_to_delete_service">Failed to delete service!</string>
+    <string name="failed_to_update_service">Failed to update service!</string>
+    <string name="service_updated_successfully">Service updated successfully!</string>
+    <string name="successfully_set_the_category">Successfully set the category.</string>
+    <string name="failed_to_set_category">Failed to set category!</string>
+    <string name="the_service_cannot_be_deleted_because_it_is_currently_reserved">The service cannot be deleted because it is currently reserved.</string>
+    <string name="reservation_date_in_past">The cancellation date cannot be in the past.</string>
+    <string name="cancellation_date_in_past">The reservation date cannot be in the past.</string>
+    <string name="cancellation_after_reservation">Cancellation deadline should be after reservation deadline!</string>
     <string name="product">Product</string>
     <string name="removed_service_from_favourites">Removed service from favourites!</string>
-    <string name="to_favourites">to favourites!</string>
+    <string name="to_favourites"> to favourites!</string>
     <string name="added_service">"Added service "</string>
 </resources>

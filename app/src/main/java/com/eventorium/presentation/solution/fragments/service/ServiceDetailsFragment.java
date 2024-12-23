@@ -35,6 +35,7 @@ public class ServiceDetailsFragment extends Fragment {
     public static final String ARG_ID = "ARG_SERVICE_ID";
 
 
+
     public ServiceDetailsFragment() {
     }
 
@@ -59,6 +60,9 @@ public class ServiceDetailsFragment extends Fragment {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         assert getArguments() != null;
         favouriteButton = binding.favButton;
+        if(!serviceViewModel.isLoggedIn()) {
+            favouriteButton.setVisibility(View.GONE);
+        }
         serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");

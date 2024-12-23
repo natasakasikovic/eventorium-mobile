@@ -3,8 +3,10 @@ package com.eventorium.presentation.solution.viewmodels;
 import android.graphics.Bitmap;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.Service;
@@ -19,14 +21,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class ProductViewModel extends ViewModel {
+
+    private final AuthRepository authRepository;
     private final ProductRepository productRepository;
     private final AccountProductRepository accountProductRepository;
 
     @Inject
     public ProductViewModel(
-            ProductRepository productRepository,
-            AccountProductRepository accountProductRepository
+            AccountProductRepository accountProductRepository,
+            AuthRepository authRepository,
+            ProductRepository productRepository
     ) {
+        this.authRepository = authRepository;
         this.productRepository = productRepository;
         this.accountProductRepository = accountProductRepository;
     }
@@ -43,6 +49,9 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImages(id);
     }
 
+    public boolean isLoggedIn()  {
+        return authRepository.isLoggedIn();
+    }
     public LiveData<Boolean> isFavourite(Long id) {
         return accountProductRepository.isFavouriteProduct(id);
     }
