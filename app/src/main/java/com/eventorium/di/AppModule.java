@@ -12,6 +12,8 @@ import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
@@ -134,13 +136,6 @@ public class AppModule {
     @Provides
     @Singleton
     @Inject
-    public ProductRepository provideProductRepository(ProductService productService) {
-        return new ProductRepository(productService);
-    }
-
-    @Provides
-    @Singleton
-    @Inject
     public AccountServiceService provideAccountServiceService(Retrofit retrofit) {
         return retrofit.create(AccountServiceService.class);
     }
@@ -181,4 +176,10 @@ public class AppModule {
         return new AuthRepository(service, sharedPreferences);
     }
 
+
+    @Provides
+    @Singleton
+    public static AccountProductRepository provideAccountProductRepository(ProductService service) {
+        return new AccountProductRepository(service);
+    }
 }

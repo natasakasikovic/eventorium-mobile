@@ -10,6 +10,7 @@ import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 
 import java.util.List;
@@ -23,11 +24,17 @@ public class ProductViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
     private final ProductRepository productRepository;
+    private final AccountProductRepository accountProductRepository;
 
     @Inject
-    public ProductViewModel(AuthRepository authRepository, ProductRepository productRepository) {
+    public ProductViewModel(
+            AccountProductRepository accountProductRepository,
+            AuthRepository authRepository,
+            ProductRepository productRepository
+    ) {
         this.authRepository = authRepository;
         this.productRepository = productRepository;
+        this.accountProductRepository = accountProductRepository;
     }
 
     public LiveData<Product> getProduct(Long id) {
@@ -45,4 +52,16 @@ public class ProductViewModel extends ViewModel {
     public boolean isLoggedIn()  {
         return authRepository.isLoggedIn();
     }
+    public LiveData<Boolean> isFavourite(Long id) {
+        return accountProductRepository.isFavouriteProduct(id);
+    }
+
+    public LiveData<Boolean> removeFavouriteProduct(Long id) {
+        return accountProductRepository.removeFavouriteProduct(id);
+    }
+
+    public LiveData<String> addFavouriteProduct(Long id) {
+        return accountProductRepository.addFavouriteProduct(id);
+    }
+
 }

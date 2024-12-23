@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.services.AuthService;
@@ -19,6 +20,7 @@ import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.google.android.material.button.MaterialButton;
 
 import java.time.format.DateTimeFormatter;
 
@@ -31,6 +33,8 @@ public class ProductDetailsFragment extends Fragment {
     private ProductViewModel productViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
+    private MaterialButton favouriteButton;
+    private boolean isFavourite;
 
 
     public ProductDetailsFragment() {
@@ -59,7 +63,7 @@ public class ProductDetailsFragment extends Fragment {
             binding.favButton.setVisibility(View.GONE);
         }
         assert getArguments() != null;
-        // There is no list of products anywhere
+        favouriteButton = binding.favButton;
         productViewModel.getProduct(1L).observe(getViewLifecycleOwner(), product -> {
             if (product != null) {
                 binding.productName.setText(product.getName());
@@ -74,6 +78,48 @@ public class ProductDetailsFragment extends Fragment {
                 });
             }
         });
+
+        productViewModel.isFavourite(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
+            isFavourite = result;
+            favouriteButton.setIconResource(
+                    result
+                            ? R.drawable.ic_favourite
+                            : R.drawable.ic_not_favourite
+            );
+        });
+
+        favouriteButton.setOnClickListener(v -> {
+            Long id = getArguments().getLong(ARG_ID);
+            if(isFavourite) {
+                productViewModel.removeFavouriteProduct(id).observe(getViewLifecycleOwner(), result -> {
+                    if(result) {
+                        isFavourite = false;
+                        favouriteButton.setIconResource(R.drawable.ic_not_favourite);
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.removed_service_from_favourites,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            } else {
+                productViewModel.addFavouriteProduct(id).observe(getViewLifecycleOwner(), name -> {
+                    if(name != null) {
+                        isFavourite = true;
+                        favouriteButton.setIconResource(R.drawable.ic_favourite);
+                        Toast.makeText(
+                                requireContext(),
+                                getString(R.string.added_service)
+                                        + name
+                                        + getString(R.string.to_favourites),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            }
+        });
+
+
         return binding.getRoot();
     }
 
