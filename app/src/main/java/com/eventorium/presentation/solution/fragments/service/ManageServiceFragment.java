@@ -1,6 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +28,10 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,21 +98,16 @@ public class ManageServiceFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                if (newText.isEmpty()) {
+                    manageableServiceViewModel.searchServices(null);
+                }
+                return true;
             }
         });
 
-        manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(), services -> {
-            getServiceImages(services);
-            adapter.setServices(services);
-        });
-
-        manageableServiceViewModel.getFilterResults().observe(getViewLifecycleOwner(), services -> {
-            getServiceImages(services);
-            adapter.setServices(services);
-        });
-
         loadServices();
+        setupSearch();
+        setupFilter();
     }
 
     private void createBottomSheetDialog() {
@@ -154,7 +145,6 @@ public class ManageServiceFragment extends Fragment {
         manageableServiceViewModel.filterServices(filter);
     }
 
-
     private Double parsePrice(TextInputEditText textInput) {
         Double price = null;
         try {
@@ -164,6 +154,7 @@ public class ManageServiceFragment extends Fragment {
         }
         return price;
     }
+
     private void loadEventTypes(Spinner spinner) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
@@ -228,20 +219,32 @@ public class ManageServiceFragment extends Fragment {
         });
     }
 
+    private void updateServiceAdapter(List<ServiceSummary> services) {
+        if(services != null && !services.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            noServicesText.setVisibility(View.GONE);
+            getServiceImages(services);
+            adapter.setServices(services);
+        } else {
+            adapter.setServices(Collections.EMPTY_LIST);
+            recyclerView.setVisibility(View.GONE);
+            noServicesText.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void loadServices() {
-        manageableServiceViewModel.getManageableServices().observe(getViewLifecycleOwner(), services -> {
-            if(services != null && !services.isEmpty()) {
-                recyclerView.setVisibility(View.VISIBLE);
-                noServicesText.setVisibility(View.GONE);
-                getServiceImages(services);
-                adapter.setServices(services);
-            } else {
-                adapter.setServices(Collections.EMPTY_LIST);
-                recyclerView.setVisibility(View.GONE);
-                noServicesText.setVisibility(View.VISIBLE);
-            }
-        });
+        manageableServiceViewModel.getManageableServices()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupFilter() {
+        manageableServiceViewModel.getFilterResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupSearch() {
+        manageableServiceViewModel.getSearchResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
     }
 
     private void showLoadingIndicator() {
