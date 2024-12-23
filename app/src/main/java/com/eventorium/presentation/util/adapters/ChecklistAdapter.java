@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ChecklistAdapter<T> extends RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder> {
+
 
     private final List<T> items;
     private final List<Boolean> selected = new ArrayList<>();
@@ -24,8 +29,30 @@ public class ChecklistAdapter<T> extends RecyclerView.Adapter<ChecklistAdapter.C
     public ChecklistAdapter(List<T> items) {
         this.items = items;
         for (int i = 0; i < items.size(); i++) {
-            selected.add(false); 
+            selected.add(false);
         }
+    }
+
+
+    public void selectItem(String name) {
+        OptionalInt selectedItemIndex =
+                IntStream.range(0, items.size())
+                        .filter(i -> {
+                            try {
+                                Field nameField = items.get(i).getClass().getDeclaredField("name");
+                                nameField.setAccessible(true);
+                                return name.equals(nameField.get(items.get(i)));
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
+                        })
+                        .findFirst();
+
+        selectedItemIndex.ifPresent(i -> {
+            selected.set(i, true);
+            notifyItemChanged(i);
+        });
     }
 
     @NonNull

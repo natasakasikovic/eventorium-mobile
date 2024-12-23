@@ -1,15 +1,21 @@
 package com.eventorium.presentation.solution.viewmodels;
 
+import static java.util.stream.Collectors.toList;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.solution.dtos.ServiceFilterDto;
+import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
+import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.ServiceService;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -19,6 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class ManageableServiceViewModel extends ViewModel {
 
     private final AccountServiceRepository repository;
+    private final ServiceRepository serviceRepository;
     private final MutableLiveData<List<ServiceSummary>> manageableServices = new MutableLiveData<>();
     private final MutableLiveData<List<ServiceSummary>> filterResults = new MutableLiveData<>();
     private final MutableLiveData<List<ServiceSummary>> searchResults = new MutableLiveData<>();
@@ -26,8 +33,9 @@ public class ManageableServiceViewModel extends ViewModel {
 
 
     @Inject
-    public ManageableServiceViewModel(AccountServiceRepository repository) {
+    public ManageableServiceViewModel(AccountServiceRepository repository, ServiceRepository serviceRepository) {
         this.repository = repository;
+        this.serviceRepository = serviceRepository;
         fetchManageableServices();
     }
 
@@ -81,6 +89,18 @@ public class ManageableServiceViewModel extends ViewModel {
 
     public LiveData<List<ServiceSummary>> getFilterResults() {
         return filterResults;
+    }
+
+
+    public LiveData<Result<Void>> deleteService(Long serviceId) {
+        LiveData<Result<Void>> result =  serviceRepository.deleteService(serviceId);
+        if(result != null && Objects.requireNonNull(result.getValue()).getError() != null) {
+            manageableServices.postValue(Objects.requireNonNull(manageableServices.getValue())
+                    .stream()
+                    .filter(category -> !Objects.equals(category.getId(), serviceId))
+                    .collect(toList()));
+        }
+        return result;
     }
 
     public void setFilterResults(List<ServiceSummary> filterResults) {

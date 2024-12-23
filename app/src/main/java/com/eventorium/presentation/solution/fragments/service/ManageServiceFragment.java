@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
@@ -82,7 +84,7 @@ public class ManageServiceFragment extends Fragment {
 
         showLoadingIndicator();
 
-        adapter = new ManageableServiceAdapter(new ArrayList<>());
+        adapter = new ManageableServiceAdapter(new ArrayList<>(), this::showDeleteDialog);
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);
@@ -109,6 +111,33 @@ public class ManageServiceFragment extends Fragment {
         setupSearch();
         setupFilter();
     }
+
+    private void showDeleteDialog(ServiceSummary service) {
+        new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+                .setTitle("Delete Service")
+                .setMessage("Are you sure you want to delete " + service.getName() + "?" )
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    manageableServiceViewModel.deleteService(service.getId())
+                            .observe(getViewLifecycleOwner(), success -> {
+                                if(success.getError() == null) {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            R.string.service_deleted_successfully,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                } else {
+                                    Toast.makeText(
+                                            requireContext(),
+                                            success.getError(),
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
 
     private void createBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());

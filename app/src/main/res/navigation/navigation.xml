@@ -57,7 +57,12 @@
         android:id="@+id/editServiceFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.EditServiceFragment"
         android:label="fragment_edit_service"
-        tools:layout="@layout/fragment_edit_service" />
+        tools:layout="@layout/fragment_edit_service">
+        <action
+            android:id="@+id/action_update_to_serviceManagement"
+            app:destination="@+id/manageServicesFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/createCategoryFragment"
