@@ -1,6 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +84,7 @@ public class ManageServiceFragment extends Fragment {
 
         showLoadingIndicator();
 
-        adapter = new ManageableServiceAdapter(new ArrayList<>(), service -> showDeleteDialog(service));
+        adapter = new ManageableServiceAdapter(new ArrayList<>(), this::showDeleteDialog);
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);
@@ -102,21 +100,16 @@ public class ManageServiceFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                if (newText.isEmpty()) {
+                    manageableServiceViewModel.searchServices(null);
+                }
+                return true;
             }
         });
 
-        manageableServiceViewModel.getSearchResults().observe(getViewLifecycleOwner(), services -> {
-            getServiceImages(services);
-            adapter.setServices(services);
-        });
-
-        manageableServiceViewModel.getFilterResults().observe(getViewLifecycleOwner(), services -> {
-            getServiceImages(services);
-            adapter.setServices(services);
-        });
-
         loadServices();
+        setupSearch();
+        setupFilter();
     }
 
     private void showDeleteDialog(ServiceSummary service) {
@@ -153,43 +146,42 @@ public class ManageServiceFragment extends Fragment {
         loadEventTypes(dialogView.findViewById(R.id.eventTypeSelector));
         bottomSheetDialog.setContentView(dialogView);
 
-        bottomSheetDialog.setOnDismissListener(dialog -> {
-            boolean availability
-                    = ((CheckBox) dialogView.findViewById(R.id.availabilityBox)).isChecked();;
-
-            TextInputEditText minTextField = dialogView.findViewById(R.id.serviceMinPriceText);
-            TextInputEditText maxTextField = dialogView.findViewById(R.id.serviceMaxPriceText);
-            Double minPrice;
-            try {
-                minPrice = Double
-                        .parseDouble(Objects.requireNonNull(minTextField.getText()).toString());
-            } catch (Exception e) {
-                minPrice = null;
-            }
-
-            Double maxPrice;
-            try {
-                maxPrice = Double
-                        .parseDouble(Objects.requireNonNull(maxTextField.getText()).toString());
-            } catch (Exception e) {
-                maxPrice = null;
-            }
-
-            Category category = getFromSpinner(dialogView.findViewById(R.id.categorySelector));
-            EventType eventType = getFromSpinner(dialogView.findViewById(R.id.eventTypeSelector));
-
-            ServiceFilterDto filter = ServiceFilterDto.builder()
-                    .availability(availability)
-                    .minPrice(minPrice)
-                    .maxPrice(maxPrice)
-                    .category(category == null ? null : category.getName())
-                    .eventType(eventType == null ? null : eventType.getName())
-                    .build();
-
-            manageableServiceViewModel.filterServices(filter);
-        });
+        bottomSheetDialog.setOnDismissListener(dialog
+                -> onBottomSheetDismiss((BottomSheetDialog) dialog));
 
         bottomSheetDialog.show();
+    }
+
+    private void onBottomSheetDismiss(BottomSheetDialog dialogView) {
+        boolean availability
+                = ((CheckBox) Objects.requireNonNull(dialogView.findViewById(R.id.availabilityBox)))
+                .isChecked();;
+        TextInputEditText minTextField = dialogView.findViewById(R.id.serviceMinPriceText);
+        TextInputEditText maxTextField = dialogView.findViewById(R.id.serviceMaxPriceText);
+        Double minPrice = parsePrice(minTextField);
+        Double maxPrice = parsePrice(maxTextField);
+        Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.categorySelector)));
+        EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.eventTypeSelector)));
+
+        ServiceFilterDto filter = ServiceFilterDto.builder()
+                .availability(availability)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .category(category == null ? null : category.getName())
+                .eventType(eventType == null ? null : eventType.getName())
+                .build();
+
+        manageableServiceViewModel.filterServices(filter);
+    }
+
+    private Double parsePrice(TextInputEditText textInput) {
+        Double price = null;
+        try {
+            price = Double
+                    .parseDouble(Objects.requireNonNull(textInput.getText()).toString());
+        } catch (Exception ignored) {
+        }
+        return price;
     }
 
     private void loadEventTypes(Spinner spinner) {
@@ -256,20 +248,32 @@ public class ManageServiceFragment extends Fragment {
         });
     }
 
+    private void updateServiceAdapter(List<ServiceSummary> services) {
+        if(services != null && !services.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            noServicesText.setVisibility(View.GONE);
+            getServiceImages(services);
+            adapter.setServices(services);
+        } else {
+            adapter.setServices(Collections.EMPTY_LIST);
+            recyclerView.setVisibility(View.GONE);
+            noServicesText.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void loadServices() {
-        manageableServiceViewModel.getManageableServices().observe(getViewLifecycleOwner(), services -> {
-            if(services != null && !services.isEmpty()) {
-                recyclerView.setVisibility(View.VISIBLE);
-                noServicesText.setVisibility(View.GONE);
-                getServiceImages(services);
-                adapter.setServices(services);
-            } else {
-                adapter.setServices(Collections.EMPTY_LIST);
-                recyclerView.setVisibility(View.GONE);
-                noServicesText.setVisibility(View.VISIBLE);
-            }
-        });
+        manageableServiceViewModel.getManageableServices()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupFilter() {
+        manageableServiceViewModel.getFilterResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupSearch() {
+        manageableServiceViewModel.getSearchResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
     }
 
     private void showLoadingIndicator() {

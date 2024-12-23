@@ -123,4 +123,6 @@
     <string name="failed_to_delete_service">Failed to delete service!</string>
     <string name="failed_to_update_service">Failed to update service!</string>
     <string name="service_updated_successfully">Service updated successfully!</string>
+    <string name="successfully_set_the_category">Successfully set the category.</string>
+    <string name="failed_to_set_category">Failed to set category!</string>
 </resources>

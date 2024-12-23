@@ -91,55 +91,68 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void editService() {
-        ReservationType type = binding.manualChecked.isChecked()
-                ? ReservationType.MANUAL
-                : ReservationType.AUTOMATIC;
-
-        List<Float> duration = binding.serviceDuration.getValues();
-
-        LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
-        LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
-
-        UpdateServiceRequestDto dto = UpdateServiceRequestDto.builder()
-                .name(String.valueOf(binding.serviceNameEditText.getText()))
-                .description(String.valueOf(binding.serviceDescriptionText.getText()))
-                .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
-                .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
-                .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
-                .cancellationDeadline(cancellationDate)
-                .available(binding.availabilityBox.isChecked())
-                .visible(binding.visibilityBox.isChecked())
-                .reservationDeadline(reservationDate)
-                .minDuration(duration.get(0).intValue())
-                .maxDuration(duration.get(1).intValue())
-                .type(type)
-                .eventTypesIds(((ChecklistAdapter<EventType>)
-                        (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
-                        .getSelectedItems().stream()
-                        .map(EventType::getId)
-                        .collect(toList()))
-                .build();
-
-        serviceViewModel.updateService(serviceSummary.getId(), dto)
-                .observe(getViewLifecycleOwner(), service -> {
-                    if(service != null) {
-                        Toast.makeText(
-                                requireContext(),
-                                R.string.service_updated_successfully,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        NavController navController = Navigation.findNavController(requireView());
-                        navController.navigate(R.id.action_update_to_serviceManagement);
-                    } else {
-                        Toast.makeText(
-                                requireContext(),
-                                R.string.failed_to_update_service,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    }
-        });
+        UpdateServiceRequestDto dto = loadDataFromForm();
+        if(dto != null) {
+            serviceViewModel.updateService(serviceSummary.getId(), loadDataFromForm())
+                    .observe(getViewLifecycleOwner(), service -> {
+                        if (service != null) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    R.string.service_updated_successfully,
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            NavController navController = Navigation.findNavController(requireView());
+                            navController.navigate(R.id.action_update_to_serviceManagement);
+                        } else {
+                            Toast.makeText(
+                                    requireContext(),
+                                    R.string.failed_to_update_service,
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
+        }
     }
 
+    private UpdateServiceRequestDto loadDataFromForm() {
+        try {
+            ReservationType type = binding.manualChecked.isChecked()
+                    ? ReservationType.MANUAL
+                    : ReservationType.AUTOMATIC;
+
+            List<Float> duration = binding.serviceDuration.getValues();
+
+            LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
+            LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
+
+            return UpdateServiceRequestDto.builder()
+                    .name(String.valueOf(binding.serviceNameEditText.getText()))
+                    .description(String.valueOf(binding.serviceDescriptionText.getText()))
+                    .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
+                    .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
+                    .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
+                    .cancellationDeadline(cancellationDate)
+                    .available(binding.availabilityBox.isChecked())
+                    .visible(binding.visibilityBox.isChecked())
+                    .reservationDeadline(reservationDate)
+                    .minDuration(duration.get(0).intValue())
+                    .maxDuration(duration.get(1).intValue())
+                    .type(type)
+                    .eventTypesIds(((ChecklistAdapter<EventType>)
+                            (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
+                            .getSelectedItems().stream()
+                            .map(EventType::getId)
+                            .collect(toList()))
+                    .build();
+        } catch (NullPointerException | NumberFormatException exception) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return null;
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private void fillForm() {

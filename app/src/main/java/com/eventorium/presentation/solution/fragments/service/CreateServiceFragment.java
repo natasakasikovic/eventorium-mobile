@@ -26,6 +26,7 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
+import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -186,51 +187,65 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void createService() {
-        Category category = getCategory();
-        ReservationType type = binding.manualChecked.isChecked()
-                ? ReservationType.MANUAL
-                : ReservationType.AUTOMATIC;
-
-        List<Float> duration = binding.serviceDuration.getValues();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
-
-        LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
-        LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
-
-        CreateServiceRequestDto dto = CreateServiceRequestDto.builder()
-                .name(String.valueOf(binding.serviceNameText.getText()))
-                .description(String.valueOf(binding.serviceDescriptionText.getText()))
-                .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
-                .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
-                .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
-                .cancellationDeadline(cancellationDate)
-                .reservationDeadline(reservationDate)
-                .minDuration(duration.get(0).intValue())
-                .maxDuration(duration.get(1).intValue())
-                .type(type)
-                .eventTypes(((ChecklistAdapter<EventType>)
-                        (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
-                        .getSelectedItems().stream()
-                        .map(EventTypeMapper::toRequest)
-                        .collect(toList()))
-                .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
-                .build();
-
-        serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
-            if(serviceId != null) {
-                if(!imageUris.isEmpty()) {
-                    serviceViewModel
-                            .uploadImages(serviceId, getContext(), imageUris)
-                            .observe(getViewLifecycleOwner(), this::handleUpload);
+        CreateServiceRequestDto dto = loadDataFromForm();
+        if(dto != null) {
+            serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
+                if (serviceId != null) {
+                    if (!imageUris.isEmpty()) {
+                        serviceViewModel
+                                .uploadImages(serviceId, getContext(), imageUris)
+                                .observe(getViewLifecycleOwner(), this::handleUpload);
+                    }
+                } else {
+                    Toast.makeText(
+                            requireContext(),
+                            R.string.failed_to_create_service,
+                            Toast.LENGTH_SHORT
+                    ).show();
                 }
-            } else {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.failed_to_create_service,
-                        Toast.LENGTH_SHORT
-                ).show();
-            }
-        });
+            });
+        }
+    }
+
+    private CreateServiceRequestDto loadDataFromForm() {
+        try {
+            Category category = getCategory();
+            ReservationType type = binding.manualChecked.isChecked()
+                    ? ReservationType.MANUAL
+                    : ReservationType.AUTOMATIC;
+
+            List<Float> duration = binding.serviceDuration.getValues();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+
+            LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
+            LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
+
+            return CreateServiceRequestDto.builder()
+                    .name(String.valueOf(binding.serviceNameText.getText()))
+                    .description(String.valueOf(binding.serviceDescriptionText.getText()))
+                    .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
+                    .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
+                    .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
+                    .cancellationDeadline(cancellationDate)
+                    .reservationDeadline(reservationDate)
+                    .minDuration(duration.get(0).intValue())
+                    .maxDuration(duration.get(1).intValue())
+                    .type(type)
+                    .eventTypes(((ChecklistAdapter<EventType>)
+                            (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
+                            .getSelectedItems().stream()
+                            .map(EventTypeMapper::toRequest)
+                            .collect(toList()))
+                    .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
+                    .build();
+        } catch (NullPointerException | NumberFormatException exception) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return null;
+        }
     }
 
     private void handleUpload(boolean successfulUpload) {

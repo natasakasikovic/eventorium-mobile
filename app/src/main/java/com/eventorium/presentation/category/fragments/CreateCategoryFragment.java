@@ -16,11 +16,8 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.repositories.CategoryRepository;
-import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCreateCategoryBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
-import com.eventorium.presentation.util.viewmodels.ViewModelFactory;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
