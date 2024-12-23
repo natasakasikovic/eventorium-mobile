@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
@@ -12,14 +13,27 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Objects;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
+    private LoginViewModel loginViewModel;
+
+    private TextInputEditText emailEditText;
+    private TextInputEditText passwordEditText;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -28,24 +42,52 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-
-        binding.signInButton.setOnClickListener(v -> {
-            // TODO: Change this when the login logic is implemented
-            NavController navController = NavHostFragment.findNavController(this);
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.loginFragment, true)
-                    .build();
-            navController.navigate(R.id.homepageFragment, null, navOptions);
-            ((MainActivity) requireActivity()).updateMenuAfterLogin();
-        });
+        emailEditText = binding.emailEditText;
+        passwordEditText = binding.passwordEditText;
+        binding.signInButton.setOnClickListener(v -> { login();});
 
         return binding.getRoot();
+    }
+
+    private void login() {
+
+        String email = Objects.requireNonNull(emailEditText.getText()).toString();
+        String password = Objects.requireNonNull(passwordEditText.getText()).toString();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        LoginRequestDto dto = new LoginRequestDto(email, password);
+        loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                NavController navController = NavHostFragment.findNavController(this);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.loginFragment, true)
+                        .build();
+                navController.navigate(R.id.homepageFragment, null, navOptions);
+                ((MainActivity) requireActivity()).updateMenuAfterLogin();
+            } else {
+                Toast.makeText(
+                        requireContext(),
+                        result.getError(),
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        });
+
     }
 
     @Override
