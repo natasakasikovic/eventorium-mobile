@@ -128,7 +128,7 @@ public class ManageServiceFragment extends Fragment {
                                 } else {
                                     Toast.makeText(
                                             requireContext(),
-                                            R.string.failed_to_delete_service,
+                                            R.string.the_service_cannot_be_deleted_because_it_is_currently_reserved,
                                             Toast.LENGTH_SHORT
                                     ).show();
                                 }
