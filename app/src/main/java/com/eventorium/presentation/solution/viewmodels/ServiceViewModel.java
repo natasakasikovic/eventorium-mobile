@@ -16,6 +16,7 @@ import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.util.Result;
 
@@ -31,10 +32,17 @@ public class ServiceViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
     private final ServiceRepository serviceRepository;
+    private final AccountServiceRepository accountServiceRepository;
+
     @Inject
-    public ServiceViewModel(AuthRepository authRepository, ServiceRepository serviceRepository) {
+    public ServiceViewModel(
+            AuthRepository authRepository,
+            ServiceRepository serviceRepository,
+            AccountServiceRepository accountServiceRepository
+    ) {
         this.authRepository = authRepository;
         this.serviceRepository = serviceRepository;
+        this.accountServiceRepository = accountServiceRepository;
     }
 
     public LiveData<Service> getService(Long id) {
@@ -59,6 +67,18 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Boolean> uploadImages(Long serviceId, Context context, List<Uri> uris) {
         return serviceRepository.uploadImages(serviceId, context, uris);
+    }
+
+    public LiveData<Boolean> isFavourite(Long id) {
+        return accountServiceRepository.isFavouriteService(id);
+    }
+
+    public LiveData<Boolean> removeFavouriteService(Long id) {
+        return accountServiceRepository.removeFavouriteService(id);
+    }
+
+    public LiveData<String> addFavouriteService(Long id) {
+        return accountServiceRepository.addFavouriteService(id);
     }
 
     public boolean isLoggedIn() {

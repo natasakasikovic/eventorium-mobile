@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.dtos.ServiceFilterDto;
+import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -74,10 +76,7 @@ public class AccountServiceRepository {
             }
 
             @Override
-            public void onFailure(
-                    @NonNull Call<List<ServiceSummary>> call,
-                    @NonNull Throwable t
-            ) {
+            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
                 liveData.postValue(null);
             }
         });
@@ -109,6 +108,77 @@ public class AccountServiceRepository {
 
 
         return liveData;
+    }
+
+    public LiveData<Boolean> isFavouriteService(Long id) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        service.isFavouriteService(id).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Boolean> call,
+                    @NonNull Response<Boolean> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+        return result;
+    }
+
+    public LiveData<String> addFavouriteService(Long id) {
+        MutableLiveData<String> result = new MutableLiveData<>();
+        service.addFavouriteService(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Service> call,
+                    @NonNull Response<Service> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body().getName());
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Service> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Boolean> removeFavouriteService(Long id) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>(false);
+        service.removeFavouriteService(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
+            ) {
+                if(response.isSuccessful()) {
+                    result.postValue(true);
+                } else {
+                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+
+        return result;
     }
 
     private Map<String, String> getFilterParams(ServiceFilterDto filter) {
