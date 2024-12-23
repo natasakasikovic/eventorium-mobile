@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.WebSocketService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +22,10 @@ public class AuthRepository {
     private final AuthService authService;
     private final SharedPreferences sharedPreferences;
 
-    public AuthRepository(AuthService authService, SharedPreferences sharedPreferences) {
+    private final WebSocketService webSocketService;
+
+    public AuthRepository(WebSocketService webSocketService, AuthService authService, SharedPreferences sharedPreferences) {
+        this.webSocketService = webSocketService;
         this.authService = authService;
         this.sharedPreferences = sharedPreferences;
     }
@@ -47,6 +53,8 @@ public class AuthRepository {
     private void handleSuccessfulResponse(LoginResponseDto responseBody, MutableLiveData<Result<LoginResponseDto>> liveData) {
         saveJwtToken(responseBody.getJwt());
         liveData.postValue(Result.success(responseBody));
+        Long userId = new JWT(responseBody.getJwt()).getClaim("userId").asLong();
+        webSocketService.connect(userId);
     }
 
     private void handleErrorResponse(Response<LoginResponseDto> response, MutableLiveData<Result<LoginResponseDto>> liveData) {

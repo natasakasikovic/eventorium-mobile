@@ -19,6 +19,7 @@ import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
+import com.eventorium.data.util.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,6 +60,11 @@ public class AppModule {
                 .build();
     }
 
+    @Provides
+    @Singleton
+    public WebSocketService provideWebSocketService() {
+        return new WebSocketService();
+    }
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(AuthInterceptor authInterceptor) {
@@ -175,10 +181,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AuthRepository authRepository(AuthService service,
-                                                SharedPreferences sharedPreferences)
+    public static AuthRepository authRepository(
+            WebSocketService webSocketService,
+            AuthService service,
+            SharedPreferences sharedPreferences
+    )
     {
-        return new AuthRepository(service, sharedPreferences);
+        return new AuthRepository(webSocketService, service, sharedPreferences);
     }
 
 }
