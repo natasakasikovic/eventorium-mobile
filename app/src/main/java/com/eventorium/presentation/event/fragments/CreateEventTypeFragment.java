@@ -25,12 +25,9 @@ import com.eventorium.data.event.dtos.EventTypeRequestDto;
 import com.eventorium.data.category.mappers.CategoryMapper;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryRepository;
-import com.eventorium.data.event.repositories.EventTypeRepository;
-import com.eventorium.data.util.RetrofitApi;
 import com.eventorium.databinding.FragmentCreateEventTypeBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
-import com.eventorium.presentation.util.viewmodels.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
