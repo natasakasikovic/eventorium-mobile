@@ -44,7 +44,6 @@ public class FavouriteServicesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareServiceData();
 
         binding.servicesRecycleView.setAdapter(new ServiceAdapter(SERVICE_SUMMARIES));
     }
@@ -55,11 +54,4 @@ public class FavouriteServicesFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareServiceData(){
-        SERVICE_SUMMARIES.clear();
-        SERVICE_SUMMARIES.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Photography", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Venue Setup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("DJ ServiceSummary", 250.0, R.drawable.catering));
-    }
 }

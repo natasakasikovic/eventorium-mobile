@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
@@ -101,11 +102,17 @@ public class ServiceRepository {
         serviceService.getServiceImage(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<String> call,
-                    @NonNull Response<String> response
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(FileUtil.convertToBitmap(response.body()));
+                    try (ResponseBody responseBody = response.body()){
+                        Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
+                        result.postValue(bitmap);
+                    } catch (Exception e) {
+                        Log.e("API_ERROR", "Error decoding image: " + e.getMessage());
+                        result.postValue(null);
+                    }
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     result.postValue(null);
@@ -113,7 +120,7 @@ public class ServiceRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
                 result.postValue(null);
             }

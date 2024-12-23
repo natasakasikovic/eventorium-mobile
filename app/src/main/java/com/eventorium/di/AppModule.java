@@ -12,7 +12,9 @@ import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
+import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
@@ -121,6 +123,12 @@ public class AppModule {
         return new ServiceRepository(serviceService);
     }
 
+    @Provides
+    @Singleton
+    @Inject
+    public AccountServiceService provideAccountServiceService(Retrofit retrofit) {
+        return retrofit.create(AccountServiceService.class);
+    }
 
     @Provides
     @Singleton
@@ -131,10 +139,16 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static CategoryProposalRepository provideCategoryProposalRepository(
+    public CategoryProposalRepository provideCategoryProposalRepository(
             CategoryProposalService service
     ) {
         return new CategoryProposalRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public static AccountServiceRepository provideAccountServiceRepository(AccountServiceService service) {
+        return new AccountServiceRepository(service);
     }
 
     @Provides
@@ -151,6 +165,5 @@ public class AppModule {
     {
         return new AuthRepository(service, sharedPreferences);
     }
-
 
 }

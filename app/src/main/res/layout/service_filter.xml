@@ -61,7 +61,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/serviceSpecificitiesInputLayout">
 
-            <AutoCompleteTextView
+            <Spinner
                 android:id="@+id/categorySelector"
                 android:layout_width="match_parent"
                 android:textColor="@android:color/black"
@@ -95,7 +95,7 @@
             app:boxBackgroundMode="outline"
             app:layout_constraintTop_toBottomOf="@id/eventTypeText">
 
-            <AutoCompleteTextView
+            <Spinner
                 android:id="@+id/eventTypeSelector"
                 android:layout_width="match_parent"
                 android:textColor="@android:color/black"

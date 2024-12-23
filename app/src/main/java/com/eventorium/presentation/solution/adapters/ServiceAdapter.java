@@ -1,5 +1,6 @@
 package com.eventorium.presentation.solution.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +46,12 @@ public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceVie
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void bind(ServiceSummary serviceSummary) {
             nameTextView.setText(serviceSummary.getName());
             priceTextView.setText(serviceSummary.getPrice().toString());
-            photoImageview.setImageResource(serviceSummary.getPhoto());
+            photoImageview.setImageBitmap(serviceSummary.getImage());
             seeMoreButton.setOnClickListener(v -> {
                 NavController navController = Navigation.findNavController(itemView);
                 int currentId = Objects.requireNonNull(navController.getCurrentDestination()).getId();
@@ -66,7 +68,7 @@ public class ServiceAdapter extends BaseServiceAdapter<ServiceAdapter.ServiceVie
                 }
 
                 navController.navigate(actionId,
-                        ServiceDetailsFragment.newInstance().getArguments());
+                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
             });
         }
     }

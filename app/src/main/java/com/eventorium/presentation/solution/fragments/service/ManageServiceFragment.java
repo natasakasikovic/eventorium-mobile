@@ -4,29 +4,57 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.eventorium.R;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.dtos.ServiceFilterDto;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
+import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
+import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class ManageServiceFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
-    private static final List<ServiceSummary> SERVICE_SUMMARIES = new ArrayList<>();
+    private ManageableServiceViewModel manageableServiceViewModel;
+    private ServiceViewModel serviceViewModel;
+    private CategoryViewModel categoryViewModel;
+    private EventTypeViewModel eventTypeViewModel;
+    private ManageableServiceAdapter adapter;
+    private CircularProgressIndicator loadingIndicator;
+    private RecyclerView recyclerView;
+    private TextView noServicesText;
 
     public ManageServiceFragment() {
     }
+
     public static ManageServiceFragment newInstance() {
         return new ManageServiceFragment();
     }
@@ -34,6 +62,11 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        manageableServiceViewModel = provider.get(ManageableServiceViewModel.class);
+        serviceViewModel = provider.get(ServiceViewModel.class);
+        categoryViewModel = provider.get(CategoryViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
     }
 
     @Override
@@ -46,16 +79,178 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareServiceData();
 
-        binding.filterButton.setOnClickListener(v -> {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
-            View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
-            bottomSheetDialog.setContentView(dialogView);
-            bottomSheetDialog.show();
+        showLoadingIndicator();
+
+        adapter = new ManageableServiceAdapter(new ArrayList<>());
+        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
+        recyclerView = binding.servicesRecycleView;
+        recyclerView.setAdapter(adapter);
+        loadingIndicator = binding.loadingIndicator;
+        noServicesText = binding.noServicesText;
+
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                manageableServiceViewModel.searchServices(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    manageableServiceViewModel.searchServices(null);
+                }
+                return true;
+            }
         });
 
-        binding.servicesRecycleView.setAdapter(new ManageableServiceAdapter(SERVICE_SUMMARIES));
+        loadServices();
+        setupSearch();
+        setupFilter();
+    }
+
+    private void createBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
+        loadCategories(dialogView.findViewById(R.id.categorySelector));
+        loadEventTypes(dialogView.findViewById(R.id.eventTypeSelector));
+        bottomSheetDialog.setContentView(dialogView);
+
+        bottomSheetDialog.setOnDismissListener(dialog
+                -> onBottomSheetDismiss((BottomSheetDialog) dialog));
+
+        bottomSheetDialog.show();
+    }
+
+    private void onBottomSheetDismiss(BottomSheetDialog dialogView) {
+        boolean availability
+                = ((CheckBox) Objects.requireNonNull(dialogView.findViewById(R.id.availabilityBox)))
+                .isChecked();;
+        TextInputEditText minTextField = dialogView.findViewById(R.id.serviceMinPriceText);
+        TextInputEditText maxTextField = dialogView.findViewById(R.id.serviceMaxPriceText);
+        Double minPrice = parsePrice(minTextField);
+        Double maxPrice = parsePrice(maxTextField);
+        Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.categorySelector)));
+        EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.eventTypeSelector)));
+
+        ServiceFilterDto filter = ServiceFilterDto.builder()
+                .availability(availability)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .category(category == null ? null : category.getName())
+                .eventType(eventType == null ? null : eventType.getName())
+                .build();
+
+        manageableServiceViewModel.filterServices(filter);
+    }
+
+    private Double parsePrice(TextInputEditText textInput) {
+        Double price = null;
+        try {
+            price = Double
+                    .parseDouble(Objects.requireNonNull(textInput.getText()).toString());
+        } catch (Exception ignored) {
+        }
+        return price;
+    }
+
+    private void loadEventTypes(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            adapter.addAll(eventTypes.stream().map(EventType::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(eventTypes);
+        });
+    }
+    private<T> T getFromSpinner(Spinner spinner) {
+        String name = spinner.getSelectedItem().toString();
+        T value;
+        if (!name.isEmpty()) {
+            value = ((List<T>) spinner.getTag())
+                .stream()
+                .filter(c -> {
+                    try {
+                        return Objects
+                                .equals(c.getClass().getMethod("getName").invoke(c), name);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .findFirst().get();
+            return value;
+        }
+        return null;
+    }
+
+    private void getServiceImages(List<ServiceSummary> services) {
+        services.forEach(service ->
+            serviceViewModel.getServiceImage(service.getId())
+                    .observe(getViewLifecycleOwner(), image -> {
+                        if(image != null) {
+                            service.setImage(image);
+                            int position = services.indexOf(service);
+                            adapter.notifyItemChanged(position);
+                        }
+                    }));
+    }
+
+    private void loadCategories(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>(List.of(""))
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(categories);
+        });
+    }
+
+    private void updateServiceAdapter(List<ServiceSummary> services) {
+        if(services != null && !services.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            noServicesText.setVisibility(View.GONE);
+            getServiceImages(services);
+            adapter.setServices(services);
+        } else {
+            adapter.setServices(Collections.EMPTY_LIST);
+            recyclerView.setVisibility(View.GONE);
+            noServicesText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadServices() {
+        manageableServiceViewModel.getManageableServices()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupFilter() {
+        manageableServiceViewModel.getFilterResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void setupSearch() {
+        manageableServiceViewModel.getSearchResults()
+                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
+    }
+
+    private void showLoadingIndicator() {
+        manageableServiceViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
     }
 
     @Override
@@ -64,19 +259,4 @@ public class ManageServiceFragment extends Fragment {
         binding = null;
     }
 
-    private void prepareServiceData(){
-        SERVICE_SUMMARIES.clear();
-        SERVICE_SUMMARIES.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Photography", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Venue Setup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("DJ ServiceSummary", 250.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Florist", 150.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Transportation", 400.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Videography", 350.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Cake Design", 100.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Hair and Makeup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Security", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Guest Coordination", 250.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Bar ServiceSummary", 200.0, R.drawable.catering));
-    }
 }

@@ -44,7 +44,6 @@ public class ServiceOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareServiceData();
 
         binding.filterButton.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
@@ -60,14 +59,6 @@ public class ServiceOverviewFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    private void prepareServiceData(){
-        SERVICE_SUMMARIES.clear();
-        SERVICE_SUMMARIES.add(new ServiceSummary("Catering", 500.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Photography", 300.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("Venue Setup", 200.0, R.drawable.catering));
-        SERVICE_SUMMARIES.add(new ServiceSummary("DJ ServiceSummary", 250.0, R.drawable.catering));
     }
 
 }
