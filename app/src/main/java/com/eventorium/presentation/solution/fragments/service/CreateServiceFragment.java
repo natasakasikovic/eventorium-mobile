@@ -238,6 +238,15 @@ public class CreateServiceFragment extends Fragment {
                 return null;
             }
 
+            if(cancellationDate.isBefore(reservationDate)) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.cancellation_after_reservation,
+                        Toast.LENGTH_LONG
+                ).show();
+                return null;
+            }
+
             return CreateServiceRequestDto.builder()
                     .name(String.valueOf(binding.serviceNameText.getText()))
                     .description(String.valueOf(binding.serviceDescriptionText.getText()))
