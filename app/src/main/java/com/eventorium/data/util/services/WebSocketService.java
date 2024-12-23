@@ -10,6 +10,7 @@ import com.eventorium.Eventorium;
 import com.eventorium.data.util.models.Notification;
 import com.google.gson.Gson;
 
+import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -19,7 +20,6 @@ public class WebSocketService {
     private static final String SERVER_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/api/v1/ws/websocket";
     private StompClient stompClient;
     private final NotificationService notificationService;
-    private Long userId;
 
     public WebSocketService() {
         this.notificationService = new NotificationService(Eventorium.getAppContext());
@@ -30,7 +30,6 @@ public class WebSocketService {
         if(userId == null) {
             return;
         }
-        this.userId = userId;
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL);
         stompClient.connect();
         logConnection(stompClient);
@@ -42,7 +41,7 @@ public class WebSocketService {
             new Handler(Looper.getMainLooper()).post(() -> {
                 notificationService.showNotification("Notification", notification.getMessage());
             });
-        })
+        });
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
