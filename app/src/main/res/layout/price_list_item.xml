@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/item"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/priceEditText"
+            android:layout_width="wrap_content"
+            android:autofillHints="@string/price"
+            android:layout_height="wrap_content"
+            android:hint="@string/price"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:inputType="numberDecimal"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp" />
+
+        <EditText
+            android:id="@+id/discountEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="discount"
+            android:hint="@string/discount"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:inputType="numberDecimal"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
+
+        <TextView
+            android:id="@+id/netPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/net_price"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp" />
+
+        <ImageButton
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_save"
+            android:contentDescription="@string/save"
+            android:layout_marginStart="16dp"
+            android:background="?attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
