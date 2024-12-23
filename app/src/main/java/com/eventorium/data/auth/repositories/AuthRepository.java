@@ -52,8 +52,6 @@ public class AuthRepository {
     private void handleSuccessfulResponse(LoginResponseDto responseBody, MutableLiveData<Result<LoginResponseDto>> liveData) {
         saveJwtToken(responseBody.getJwt());
         liveData.postValue(Result.success(responseBody));
-        Long userId = new JWT(responseBody.getJwt()).getClaim("userId").asLong();
-        webSocketService.connect(userId);
     }
 
     private void handleErrorResponse(Response<LoginResponseDto> response, MutableLiveData<Result<LoginResponseDto>> liveData) {
@@ -79,4 +77,11 @@ public class AuthRepository {
         return sharedPreferences.getString("user", null) != null;
     }
 
+    public Long getUserId() {
+        if(!isLoggedIn()) {
+            return null;
+        }
+        return new JWT(sharedPreferences.getString("user", ""))
+                .getClaim("userId").asLong();
+    }
 }

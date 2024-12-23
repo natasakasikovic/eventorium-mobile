@@ -1,8 +1,16 @@
 package com.eventorium.data.util.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
@@ -26,6 +34,9 @@ public class WebSocketService {
 
     @SuppressLint("CheckResult")
     public void connect(Long userId) {
+        if(userId == null) {
+            return;
+        }
         StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL);
         stompClient.connect();
         logConnection(stompClient);
@@ -34,7 +45,9 @@ public class WebSocketService {
 
         stompClient.topic("/user/" + userId + "/notifications").subscribe(message -> {
             Notification notification = gson.fromJson(message.getPayload(), Notification.class);
-            notificationService.showNotification("Notification", notification.getMessage());
+            new Handler(Looper.getMainLooper()).post(() -> {
+                notificationService.showNotification("Notification", notification.getMessage());
+            });
         });
     }
 

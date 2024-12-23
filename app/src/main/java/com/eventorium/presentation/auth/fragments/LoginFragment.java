@@ -1,9 +1,15 @@
 package com.eventorium.presentation.auth.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -17,6 +23,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
+import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -24,11 +31,18 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
+    //
+    // TODO: CLOSE WEB SOCKET ON LOGOUT!!!
+    //
+
+    private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
 
@@ -43,6 +57,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        subscribeToNotifications();
     }
 
     @Override
@@ -79,6 +94,7 @@ public class LoginFragment extends Fragment {
                         .build();
                 navController.navigate(R.id.homepageFragment, null, navOptions);
                 ((MainActivity) requireActivity()).updateMenuAfterLogin();
+                requestNotificationPermission();
             } else {
                 Toast.makeText(
                         requireContext(),
@@ -88,6 +104,32 @@ public class LoginFragment extends Fragment {
             }
         });
 
+    }
+
+    private void subscribeToNotifications() {
+        requestNotificationPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        Toast.makeText(getContext(), "Notification Permission Granted!", Toast.LENGTH_SHORT).show();
+                        loginViewModel.openWebSocket();
+                    } else {
+                        Toast.makeText(getContext(), "Notification Permission Denied!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    public void requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "Notification Permission Already Granted!", Toast.LENGTH_SHORT).show();
+            loginViewModel.openWebSocket();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     @Override
