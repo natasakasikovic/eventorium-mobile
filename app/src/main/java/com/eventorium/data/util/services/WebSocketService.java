@@ -1,23 +1,14 @@
 package com.eventorium.data.util.services;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
 import com.eventorium.data.util.models.Notification;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
@@ -26,7 +17,9 @@ public class WebSocketService {
 
     private static final String TAG = "WebSocketService";
     private static final String SERVER_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/api/v1/ws/websocket";
+    private StompClient stompClient;
     private final NotificationService notificationService;
+    private Long userId;
 
     public WebSocketService() {
         this.notificationService = new NotificationService(Eventorium.getAppContext());
@@ -37,7 +30,8 @@ public class WebSocketService {
         if(userId == null) {
             return;
         }
-        StompClient stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL);
+        this.userId = userId;
+        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL);
         stompClient.connect();
         logConnection(stompClient);
 
@@ -48,7 +42,7 @@ public class WebSocketService {
             new Handler(Looper.getMainLooper()).post(() -> {
                 notificationService.showNotification("Notification", notification.getMessage());
             });
-        });
+        })
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
@@ -68,6 +62,12 @@ public class WebSocketService {
                     break;
             }
         });
+    }
+
+    public void disconnect() {
+        if(stompClient != null) {
+            stompClient.disconnect();
+        }
     }
 
 }
