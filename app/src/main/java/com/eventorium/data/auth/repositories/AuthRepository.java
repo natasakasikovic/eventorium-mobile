@@ -5,13 +5,12 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
-import com.eventorium.data.util.WebSocketService;
+import com.eventorium.data.util.services.WebSocketService;
 
 import retrofit2.Call;
 import retrofit2.Callback;

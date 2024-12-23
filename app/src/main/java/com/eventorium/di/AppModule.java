@@ -19,7 +19,8 @@ import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
-import com.eventorium.data.util.WebSocketService;
+import com.eventorium.data.util.services.NotificationService;
+import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,6 +36,7 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -42,6 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 @InstallIn(SingletonComponent.class)
+@NoArgsConstructor
 public class AppModule {
 
     private static final String SERVICE_API_PATH = "http://" + BuildConfig.IP_ADDR + ":8080/api/v1/";

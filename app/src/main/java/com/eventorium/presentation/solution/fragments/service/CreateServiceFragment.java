@@ -41,6 +41,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -195,6 +196,16 @@ public class CreateServiceFragment extends Fragment {
                         serviceViewModel
                                 .uploadImages(serviceId, getContext(), imageUris)
                                 .observe(getViewLifecycleOwner(), this::handleUpload);
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.service_created_successfully,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        NavController navController = Navigation.findNavController(requireView());
+                        navController.navigate(R.id.action_create_to_serviceOverview, null, new NavOptions.Builder()
+                                .setPopUpTo(R.id.createServiceFragment, true)
+                                .build());
                     }
                 } else {
                     Toast.makeText(
@@ -265,7 +276,7 @@ public class CreateServiceFragment extends Fragment {
                             .collect(toList()))
                     .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
                     .build();
-        } catch (NullPointerException | NumberFormatException exception) {
+        } catch (NullPointerException | NumberFormatException | DateTimeParseException exception) {
             Toast.makeText(
                     requireContext(),
                     R.string.please_fill_in_all_fields,

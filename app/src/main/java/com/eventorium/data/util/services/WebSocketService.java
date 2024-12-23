@@ -1,25 +1,16 @@
-package com.eventorium.data.util;
-
-import static ua.naiksoftware.stomp.dto.LifecycleEvent.Type.OPENED;
-
-import io.reactivex.disposables.Disposable;
-import okhttp3.WebSocketListener;
+package com.eventorium.data.util.services;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.eventorium.BuildConfig;
-import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.Eventorium;
+import com.eventorium.data.util.models.Notification;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import javax.inject.Inject;
-
-import okhttp3.*;
-import okio.ByteString;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -27,6 +18,11 @@ public class WebSocketService {
 
     private static final String TAG = "WebSocketService";
     private static final String SERVER_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/api/v1/ws/websocket";
+    private final NotificationService notificationService;
+
+    public WebSocketService() {
+        this.notificationService = new NotificationService(Eventorium.getAppContext());
+    }
 
     @SuppressLint("CheckResult")
     public void connect(Long userId) {
@@ -34,9 +30,11 @@ public class WebSocketService {
         stompClient.connect();
         logConnection(stompClient);
 
+        Gson gson = new Gson();
+
         stompClient.topic("/user/" + userId + "/notifications").subscribe(message -> {
-            JSONObject jsonObject = new JSONObject(message.getPayload());
-            Log.i(TAG, "Receive: " + jsonObject);
+            Notification notification = gson.fromJson(message.getPayload(), Notification.class);
+            notificationService.showNotification("Notification", notification.getMessage());
         });
     }
 
