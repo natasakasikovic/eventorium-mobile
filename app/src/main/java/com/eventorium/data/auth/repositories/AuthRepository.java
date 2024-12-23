@@ -68,4 +68,8 @@ public class AuthRepository {
         editor.apply();
     }
 
+    public boolean isLoggedIn() {
+        return sharedPreferences.getString("user", null) != null;
+    }
+
 }

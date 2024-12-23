@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.Service;
@@ -27,9 +28,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class ServiceViewModel extends ViewModel {
+
+    private final AuthRepository authRepository;
     private final ServiceRepository serviceRepository;
     @Inject
-    public ServiceViewModel(ServiceRepository serviceRepository) {
+    public ServiceViewModel(AuthRepository authRepository, ServiceRepository serviceRepository) {
+        this.authRepository = authRepository;
         this.serviceRepository = serviceRepository;
     }
 
@@ -55,5 +59,9 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Boolean> uploadImages(Long serviceId, Context context, List<Uri> uris) {
         return serviceRepository.uploadImages(serviceId, context, uris);
+    }
+
+    public boolean isLoggedIn() {
+        return authRepository.isLoggedIn();
     }
 }

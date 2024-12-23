@@ -52,6 +52,9 @@ public class ServiceDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         assert getArguments() != null;
+        if(!serviceViewModel.isLoggedIn()) {
+            binding.favButton.setVisibility(View.GONE);
+        }
         serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");

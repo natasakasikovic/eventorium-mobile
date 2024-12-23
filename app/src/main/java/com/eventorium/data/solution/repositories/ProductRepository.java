@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.util.FileUtil;
@@ -28,10 +29,12 @@ public class ProductRepository {
 
     private final ProductService productService;
 
+
     @Inject
     public ProductRepository(ProductService productService) {
         this.productService = productService;
     }
+
 
     public LiveData<Product> getProduct(Long id) {
         MutableLiveData<Product> result = new MutableLiveData<>();
