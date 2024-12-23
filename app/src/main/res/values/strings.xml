@@ -126,4 +126,6 @@
     <string name="successfully_set_the_category">Successfully set the category.</string>
     <string name="failed_to_set_category">Failed to set category!</string>
     <string name="the_service_cannot_be_deleted_because_it_is_currently_reserved">The service cannot be deleted because it is currently reserved.</string>
+    <string name="reservation_date_in_past">The cancellation date cannot be in the past.</string>
+    <string name="cancellation_date_in_past">The reservation date cannot be in the past.</string>
 </resources>

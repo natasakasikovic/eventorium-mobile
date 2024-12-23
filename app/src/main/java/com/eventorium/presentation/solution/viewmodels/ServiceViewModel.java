@@ -16,6 +16,7 @@ import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.repositories.ServiceRepository;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class ServiceViewModel extends ViewModel {
         return serviceRepository.getServiceImages(id);
     }
 
-    public LiveData<ServiceSummary> updateService(Long serviceId, UpdateServiceRequestDto dto) {
+    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateServiceRequestDto dto) {
         return serviceRepository.updateService(serviceId, dto);
     }
 

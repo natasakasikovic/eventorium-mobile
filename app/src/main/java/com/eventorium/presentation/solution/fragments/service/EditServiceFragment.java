@@ -95,7 +95,7 @@ public class EditServiceFragment extends Fragment {
         if(dto != null) {
             serviceViewModel.updateService(serviceSummary.getId(), loadDataFromForm())
                     .observe(getViewLifecycleOwner(), service -> {
-                        if (service != null) {
+                        if (service.getError() != null) {
                             Toast.makeText(
                                     requireContext(),
                                     R.string.service_updated_successfully,
@@ -106,7 +106,7 @@ public class EditServiceFragment extends Fragment {
                         } else {
                             Toast.makeText(
                                     requireContext(),
-                                    R.string.failed_to_update_service,
+                                    service.getError(),
                                     Toast.LENGTH_SHORT
                             ).show();
                         }
@@ -124,6 +124,24 @@ public class EditServiceFragment extends Fragment {
 
             LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
             LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
+
+            if(cancellationDate.isBefore(LocalDate.now())) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.reservation_date_in_past,
+                        Toast.LENGTH_LONG
+                ).show();
+                return null;
+            }
+
+            if(reservationDate.isBefore(LocalDate.now())) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.cancellation_date_in_past,
+                        Toast.LENGTH_LONG
+                ).show();
+                return null;
+            }
 
             return UpdateServiceRequestDto.builder()
                     .name(String.valueOf(binding.serviceNameEditText.getText()))

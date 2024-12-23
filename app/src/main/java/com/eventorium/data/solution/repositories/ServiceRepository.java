@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.repositories;
 
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
@@ -20,6 +21,7 @@ import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.FileUtil;
+import com.eventorium.data.util.Result;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.io.IOException;
@@ -204,8 +206,8 @@ public class ServiceRepository {
         return liveData;
     }
 
-    public LiveData<Boolean> deleteService(Long id) {
-        MutableLiveData<Boolean> successful = new MutableLiveData<>(true);
+    public LiveData<Result<Void>> deleteService(Long id) {
+        MutableLiveData<Result<Void>> successful = new MutableLiveData<>();
         serviceService.deleteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -214,7 +216,7 @@ public class ServiceRepository {
             ) {
                 if (!response.isSuccessful()) {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    successful.postValue(false);
+                    successful.postValue(Result.error(response.message()));
                 }
             }
 
@@ -224,14 +226,14 @@ public class ServiceRepository {
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
-                successful.postValue(false);
+                successful.postValue(Result.error(t.getMessage()));
             }
         });
         return successful;
     }
 
-    public LiveData<ServiceSummary> updateService(Long serviceId, UpdateServiceRequestDto dto) {
-        MutableLiveData<ServiceSummary> liveData = new MutableLiveData<>();
+    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateServiceRequestDto dto) {
+        MutableLiveData<Result<ServiceSummary>> liveData = new MutableLiveData<>();
         serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -239,8 +241,9 @@ public class ServiceRepository {
                     @NonNull Response<Service> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(ServiceMapper.fromService(response.body()));
+                    liveData.postValue(Result.success(ServiceMapper.fromService(response.body())));
                 } else {
+                    liveData.postValue(Result.error(response.message()));
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                 }
             }
@@ -250,6 +253,7 @@ public class ServiceRepository {
                     @NonNull Call<Service> call,
                     @NonNull Throwable t
             ) {
+                liveData.postValue(Result.error(t.getMessage()));
                 Log.e("API_ERROR", "Error: " + t.getMessage());
             }
         });

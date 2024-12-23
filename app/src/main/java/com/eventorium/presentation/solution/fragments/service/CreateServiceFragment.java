@@ -220,6 +220,24 @@ public class CreateServiceFragment extends Fragment {
             LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
             LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
 
+            if(cancellationDate.isBefore(LocalDate.now())) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.reservation_date_in_past,
+                        Toast.LENGTH_LONG
+                ).show();
+                return null;
+            }
+
+            if(reservationDate.isBefore(LocalDate.now())) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.cancellation_date_in_past,
+                        Toast.LENGTH_LONG
+                ).show();
+                return null;
+            }
+
             return CreateServiceRequestDto.builder()
                     .name(String.valueOf(binding.serviceNameText.getText()))
                     .description(String.valueOf(binding.serviceDescriptionText.getText()))

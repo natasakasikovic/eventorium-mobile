@@ -119,7 +119,7 @@ public class ManageServiceFragment extends Fragment {
                 .setPositiveButton("Delete", (dialog, which) -> {
                     manageableServiceViewModel.deleteService(service.getId())
                             .observe(getViewLifecycleOwner(), success -> {
-                                if(success) {
+                                if(success.getError() == null) {
                                     Toast.makeText(
                                             requireContext(),
                                             R.string.service_deleted_successfully,
@@ -128,7 +128,7 @@ public class ManageServiceFragment extends Fragment {
                                 } else {
                                     Toast.makeText(
                                             requireContext(),
-                                            R.string.the_service_cannot_be_deleted_because_it_is_currently_reserved,
+                                            success.getError(),
                                             Toast.LENGTH_SHORT
                                     ).show();
                                 }
