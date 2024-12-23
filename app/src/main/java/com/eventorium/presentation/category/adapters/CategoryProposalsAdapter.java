@@ -1,5 +1,6 @@
 package com.eventorium.presentation.category.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class CategoryProposalsAdapter extends RecyclerView.Adapter<CategoryProposalsAdapter.CategoryProposalViewHolder>{
 
-    private final List<Category> categoriesProposals;
+    private List<Category> categoriesProposals;
     private final OnReviewProposalListener proposalListener;
 
     public CategoryProposalsAdapter(List<Category> categoriesProposals, OnReviewProposalListener proposalListener) {
@@ -41,6 +42,12 @@ public class CategoryProposalsAdapter extends RecyclerView.Adapter<CategoryPropo
 
     @Override
     public int getItemCount() { return categoriesProposals.size(); }
+
+    public void setCategories(List<Category> proposals) {
+        Log.d("SetCategories", "New proposals size: " + proposals.size());
+        categoriesProposals = proposals;
+        notifyDataSetChanged();
+    }
 
     public class CategoryProposalViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
