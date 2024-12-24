@@ -78,7 +78,6 @@ public class LoginFragment extends Fragment {
                         .setPopUpTo(R.id.loginFragment, true)
                         .build();
                 navController.navigate(R.id.homepageFragment, null, navOptions);
-                ((MainActivity) requireActivity()).updateMenuAfterLogin();
             } else {
                 Toast.makeText(
                         requireContext(),

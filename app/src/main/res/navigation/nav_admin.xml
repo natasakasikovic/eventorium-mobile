@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_admin"
+    app:startDestination="@id/nav_user">
+
+    <include app:graph="@navigation/nav_user" />
+
+    <fragment
+        android:id="@+id/homepageFragment"
+        android:name="com.eventorium.presentation.util.fragments.HomeFragment"
+        android:label="fragment_homepage"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_service_details"
+            app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_home_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_homepage_to_services_overview"
+            app:destination="@id/serviceOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_events_overview"
+            app:destination="@id/eventsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_products_overview"
+            app:destination="@id/productsOverviewFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryOverviewFragment"
+        android:name="com.eventorium.presentation.category.fragments.CategoryOverviewFragment"
+        android:label="fragment_category_overview"
+        tools:layout="@layout/fragment_category_overview" />
+
+    <fragment
+        android:id="@+id/categoryProposalsFragment"
+        android:name="com.eventorium.presentation.category.fragments.CategoryProposalsFragment"
+        android:label="fragment_category_proposals"
+        tools:layout="@layout/fragment_category_proposals" />
+
+    <fragment
+        android:id="@+id/createCategoryFragment"
+        android:name="com.eventorium.presentation.category.fragments.CreateCategoryFragment"
+        android:label="fragment_create_category"
+        tools:layout="@layout/fragment_create_category" >
+        <action
+            android:id="@+id/action_create_to_categoryOverview"
+            app:destination="@+id/categoryOverviewFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.CreateEventTypeFragment"
+        android:label="create_event_type"
+        tools:layout="@layout/fragment_create_event_type"/>
+
+</navigation>

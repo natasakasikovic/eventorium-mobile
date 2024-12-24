@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_provider"
+    app:startDestination="@id/nav_user">
+
+    <include app:graph="@navigation/nav_user" />
+
+    <fragment
+        android:id="@+id/manageServicesFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ManageServiceFragment"
+        android:label="fragment_manage_service"
+        tools:layout="@layout/fragment_service_overview">
+        <action
+            android:id="@+id/action_manageService_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_manageService_to_editService"
+            app:destination="@+id/editServiceFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editServiceFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.EditServiceFragment"
+        android:label="fragment_edit_service"
+        tools:layout="@layout/fragment_edit_service">
+        <action
+            android:id="@+id/action_update_to_serviceManagement"
+            app:destination="@+id/manageServicesFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createServiceFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.CreateServiceFragment"
+        android:label="fragment_create_service"
+        tools:layout="@layout/fragment_create_service">
+        <action
+            android:id="@+id/action_create_to_serviceOverview"
+            app:destination="@+id/serviceOverviewFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/invitationsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventInvitationFragment"
+        android:label="event_invitation_fragment"
+        tools:layout="@layout/fragment_event_invitation" />
+
+
+    <fragment
+        android:id="@+id/companyEditFragment"
+        android:name="com.eventorium.presentation.company.fragments.EditCompanyFragment"
+        android:label="fragment_edit_company"
+        tools:layout="@layout/fragment_edit_company"/>
+
+    <fragment
+        android:id="@+id/company_categories_fragment"
+        android:name="com.eventorium.presentation.company.fragments.ManageCategoriesFragment"
+        android:label="company_categories_fragment"
+        tools:layout="@layout/fragment_manage_categories"/>
+
+    <action
+        android:id="@+id/action_companyDetails_to_editCompanyFragment"
+        app:destination="@id/companyEditFragment" />
+
+    <action
+        android:id="@+id/action_companyDetails_to_manageCategoriesFragment"
+        app:destination="@id/company_categories_fragment" />
+
+</navigation>

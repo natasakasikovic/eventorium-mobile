@@ -3,12 +3,14 @@ package com.eventorium.presentation;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +19,8 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -43,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         viewModel = new ViewModelProvider(this).get(SplashScreenViewModel.class);
         SplashScreen
                 .installSplashScreen(this)
@@ -53,24 +55,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         setupStatusBarAndToolbar();
-
-        setNavigation();
-
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
+            actionBar.setHomeButtonEnabled(true);
+        }
         setupDrawer();
 
-        configureNavigation();
-
-        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_favourite, R.id.nav_login, R.id.nav_new, R.id.nav_signup)
-                .setOpenableLayout(drawer)
-                .build();
-
-        setupBottomNavigationVisibility();
+        setContentView(binding.getRoot());
+        setNavigation();
     }
 
     @Override
@@ -95,20 +92,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        updateMenu(false);
         return true;
     }
 
-    private void setNavigation() {
-        bottomNavigationView = binding.baseLayout.bottomNavigation;
-        navigationView = binding.baseLayout.navigationView;
-        toolbar = binding.baseLayout.toolbar;
-    }
-
-    private void configureNavigation() {
-        navigationView.setNavigationItemSelectedListener(this::handleSideNavigationSelection);
-        bottomNavigationView.setOnItemSelectedListener(this::handleBottomNavigationSelection);
-    }
 
     private void setupDrawer() {
         drawer = binding.baseLayout.drawerLayout;
@@ -118,108 +104,69 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
     }
 
+    private void setupNavController() {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
 
-    private boolean handleSideNavigationSelection(MenuItem item) {
-        // TODO: add messages, notification, booking calendar
-        int id = item.getItemId();
+        String userRole = "admin"; // TODO: get role from shared prefs
 
-        if (id == R.id.nav_login) {
-            navController.navigate(R.id.loginFragment);
-            hideBottomNavigation();
-        } else if (id == R.id.nav_signup) {
-            navController.navigate(R.id.registerFragment);
-            hideBottomNavigation();
-        } else if (id == R.id.nav_logout) {
-            navController.navigate(R.id.homepageFragment);
-            logOutUser();
-        } else if (id == R.id.nav_calendar) {
-            navController.navigate(R.id.bookingCalendarFragment);
-        } else if (id == R.id.nav_services) {
-            navController.navigate(R.id.manageServicesFragment);
-        } else if (id == R.id.nav_invitations) { // TODO: delete later - just for testing purposes (until budget and agenda are created)!
-            navController.navigate(R.id.invitationsFragment);
-        } else if (id == R.id.nav_categories) {
-            navController.navigate(R.id.categoryOverviewFragment);
-        } else if (id == R.id.nav_booking){
-            navController.navigate(R.id.bookingFragment);
-        } else if (id == R.id.nav_company) {
-            navController.navigate(R.id.companyDetailsFragment);
-        } else if (id == R.id.nav_category_proposals) { // TODO: delete later - just for testing purposes (until sessions are added)!
-            navController.navigate(R.id.categoryProposalsFragment);
-        } else if (id == R.id.nav_create_category) {
-            navController.navigate(R.id.createCategoryFragment); // TODO: delete later - just for testing purposes (until sessions are added)!
-        } else if (id == R.id.nav_create_event_type) {
-            navController.navigate(R.id.createEventTypeFragment); // TODO: delete later - just for testing purposes (until sessions are added)!
+        NavGraph navGraph;
+
+        if (userRole.equals("admin")) {
+            navGraph = navController.getNavInflater().inflate(R.navigation.nav_admin);
+        } else if (userRole.equals("user")) {
+            navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
         } else {
-            showBottomNavigation();
-            return false;
+            hideBottomNavigation();
+            navGraph = navController.getNavInflater().inflate(R.navigation.nav_guest);
         }
-        return true;
+
+        navController.setGraph(navGraph);
+        navController.popBackStack(R.id.homepageFragment, false);
+
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    private boolean handleBottomNavigationSelection(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.nav_home) {
-            navController.navigate(R.id.homepageFragment);
-        } else if(id == R.id.nav_new) {
-            navController.navigate(R.id.createServiceFragment);
-        } else if (id == R.id.nav_account) {
-            navController.navigate(R.id.accountDetailsFragment);
-        } else if (id == R.id.nav_favourite) {
-            navController.navigate(R.id.favourites);
-        } else {
-            return false;
-        }
-        return true;
+    private void setNavigation() {
+        bottomNavigationView = binding.baseLayout.bottomNavigation;
+        navigationView = binding.baseLayout.navigationView;
+
+        setupNavController();
+
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_account) {
+                navController.navigate(R.id.accountDetailsFragment);
+            } else if (id == R.id.nav_home) {
+                navController.popBackStack(R.id.homepageFragment, false);
+                navController.navigate(R.id.homepageFragment);
+            }
+            return true;
+        });
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_login) {
+                navController.navigate(R.id.loginFragment);
+            } else if (id == R.id.nav_signup) {
+                navController.navigate(R.id.registerFragment);
+            }
+            drawer.closeDrawers();
+            return true;
+        });
     }
 
     @SuppressLint("UnsafeIntentLaunch")
-    private void logOutUser() {
+    private void logOutUser() { // TODO: remove user from shared prefs
         Intent intent = getIntent();
         finish();
         startActivity(intent);
     }
 
-    private void setupBottomNavigationVisibility() {
-        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
-            int id = navDestination.getId();
-            if (id == R.id.nav_login || id == R.id.nav_signup || id == R.id.companyRegisterFragment) {
-                hideBottomNavigation();
-            } else {
-                showBottomNavigation();
-            }
-            drawer.closeDrawers();
-        });
-    }
-
     private void hideBottomNavigation() {
         bottomNavigationView.setVisibility(View.GONE);
-    }
-
-    private void showBottomNavigation() {
-        bottomNavigationView.setVisibility(View.VISIBLE);
-    }
-
-    public void updateMenuAfterLogin() {
-        updateMenu(true);
-    }
-
-    private void updateMenu(boolean isLoggedIn) {
-        Menu bottomMenu = bottomNavigationView.getMenu();
-        bottomMenu.findItem(R.id.nav_favourite).setVisible(isLoggedIn);
-        bottomMenu.findItem(R.id.nav_account).setVisible(isLoggedIn);
-        bottomMenu.findItem(R.id.nav_new).setVisible(isLoggedIn);
-
-        Menu navMenu = navigationView.getMenu();
-        navMenu.findItem(R.id.nav_login).setVisible(!isLoggedIn);
-        navMenu.findItem(R.id.nav_signup).setVisible(!isLoggedIn);
-        navMenu.findItem(R.id.nav_logout).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_notification).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_messages).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_calendar).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_services).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_categories).setVisible(isLoggedIn);
-        navMenu.findItem(R.id.nav_company).setVisible(isLoggedIn);
     }
 
     private void setupStatusBarAndToolbar() {
