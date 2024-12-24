@@ -6,6 +6,8 @@ hiltAndroidGradlePlugin = "2.51.1"
 hiltAndroidVersion = "2.53"
 hiltCompiler = "2.51.1"
 hiltCompilerVersion = "2.44"
+jacksonDatabind = "2.15.2"
+jjwt = "0.11.5"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -36,6 +38,12 @@ hilt-android-v253 = { module = "com.google.dagger:hilt-android", version.ref = "
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler-v244 = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompilerVersion" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
+jjwt = { module = "io.jsonwebtoken:jjwt", version.ref = "jjwt" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
+jsonwebtoken-jjwt = { module = "io.jsonwebtoken:jjwt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

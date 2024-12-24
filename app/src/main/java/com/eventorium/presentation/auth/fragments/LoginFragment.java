@@ -1,5 +1,6 @@
 package com.eventorium.presentation.auth.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
-
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
 
@@ -51,7 +51,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         emailEditText = binding.emailEditText;
         passwordEditText = binding.passwordEditText;
-        binding.signInButton.setOnClickListener(v -> { login();});
+        binding.signInButton.setOnClickListener(v -> { login(); } );
 
         return binding.getRoot();
     }
@@ -78,6 +78,8 @@ public class LoginFragment extends Fragment {
                         .setPopUpTo(R.id.loginFragment, true)
                         .build();
                 navController.navigate(R.id.homepageFragment, null, navOptions);
+                String role = loginViewModel.saveRole(result.getData().getJwt());
+                ((MainActivity) getActivity()).refresh(role);
             } else {
                 Toast.makeText(
                         requireContext(),

@@ -1,7 +1,6 @@
 package com.eventorium.presentation;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private NavController navController;
 
-    private String userRole;
+    private String userRole = "GUEST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        userRole = "provider"; // TODO: get user from shared prefs
+
         setupStatusBarAndToolbar();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -69,7 +68,13 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
         setContentView(binding.getRoot());
+        refresh("GUEST");
+    }
+
+    public void refresh(String role) {
+        userRole = role;
         setNavigation();
+        if (role.equals("GUEST")) hideBottomNavigation();
     }
 
     @Override
@@ -80,10 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        if (navController.getCurrentDestination() != null &&
-                navController.getCurrentDestination().getId() == R.id.homepageFragment) {
-            return true;
-        }
         return super.onSupportNavigateUp();
     }
 
@@ -96,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
-
-
     private void setupDrawer() {
         drawer = binding.baseLayout.drawerLayout;
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -109,22 +108,23 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavController() {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         NavGraph navGraph;
+        clearMenu();
         setUpMenu(R.menu.user_menu);
 
         switch (userRole) {
-            case "user" -> navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
+            case "USER" -> navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
 
-            case "admin" -> {
+            case "ADMIN" -> {
                 navGraph = navController.getNavInflater().inflate(R.navigation.nav_admin);
                 setUpMenu(R.menu.admin_menu);
             }
 
-            case "provider" -> {
+            case "PROVIDER" -> {
                 navGraph = navController.getNavInflater().inflate(R.navigation.nav_provider);
                 setUpMenu(R.menu.provider_menu);
             }
 
-            case "organizer" -> {
+            case "EVENT_ORGANIZER" -> {
                 navGraph = navController.getNavInflater().inflate(R.navigation.nav_organizer);
                 setUpMenu(R.menu.organizer_menu);
             }
@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
             default -> {
                 hideBottomNavigation();
                 clearMenu();
-                setUpMenu(R.menu.guest_menu);
                 navGraph = navController.getNavInflater().inflate(R.navigation.nav_guest);
+                setUpMenu(R.menu.guest_menu);
             }
         }
 
@@ -148,10 +148,11 @@ public class MainActivity extends AppCompatActivity {
         navigationView = binding.baseLayout.navigationView;
 
         setupNavController();
+        bottomNavigationView.setVisibility(View.VISIBLE);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            navController.popBackStack(R.id.homepageFragment, false);
             int id = item.getItemId();
+            navController.popBackStack(R.id.homepageFragment, false);
             if (id == R.id.nav_account) {
                 navController.navigate(R.id.accountDetailsFragment);
             } else if (id == R.id.nav_home) {
@@ -166,12 +167,12 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-
+            navController.popBackStack(R.id.homepageFragment, false);
             switch (userRole) {
-                case "user" -> handleUserMenuItemSelection(id);
-                case "admin" -> handleAdminMenuItemSelection(id);
-                case "organizer" -> handleOrganizerMenuItemSelection(id);
-                case "provider" -> handleProviderMenuItemSelection(id);
+                case "USER" -> handleUserMenuItemSelection(id);
+                case "ADMIN" -> handleAdminMenuItemSelection(id);
+                case "EVENT_ORGANIZER" -> handleOrganizerMenuItemSelection(id);
+                case "PROVIDER" -> handleProviderMenuItemSelection(id);
                 default -> handleGuestMenuItemSelection(id);
             }
 
@@ -227,11 +228,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("UnsafeIntentLaunch")
-    private void logOutUser() { // TODO: remove user from shared prefs
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
+    private void logOutUser() {
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        refresh("GUEST");
     }
 
     private void hideBottomNavigation() {

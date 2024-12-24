@@ -26,6 +26,10 @@ public class LoginViewModel extends ViewModel {
         return authRepository.login(dto);
     }
 
+    public String saveRole(String jwt) {
+        return authRepository.saveRole(jwt);
+    }
+
     @Override
     protected void onCleared() {
         super.onCleared();
