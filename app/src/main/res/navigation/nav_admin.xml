@@ -8,29 +8,6 @@
     <include app:graph="@navigation/nav_user" />
 
     <fragment
-        android:id="@+id/homepageFragment"
-        android:name="com.eventorium.presentation.util.fragments.HomeFragment"
-        android:label="fragment_homepage"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_home_to_service_details"
-            app:destination="@id/serviceDetailsFragment"/>
-        <action
-            android:id="@+id/action_home_to_product_details"
-            app:destination="@id/productDetailsFragment"/>
-        <action
-            android:id="@+id/action_homepage_to_services_overview"
-            app:destination="@id/serviceOverviewFragment" />
-        <action
-            android:id="@+id/action_homepage_to_events_overview"
-            app:destination="@id/eventsOverviewFragment" />
-        <action
-            android:id="@+id/action_homepage_to_products_overview"
-            app:destination="@id/productsOverviewFragment" />
-
-    </fragment>
-
-    <fragment
         android:id="@+id/categoryOverviewFragment"
         android:name="com.eventorium.presentation.category.fragments.CategoryOverviewFragment"
         android:label="fragment_category_overview"
