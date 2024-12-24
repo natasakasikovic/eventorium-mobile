@@ -3,11 +3,11 @@ package com.eventorium.presentation;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -20,9 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
@@ -30,6 +28,8 @@ import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private NavController navController;
 
+    private String userRole;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-
+        userRole = "provider"; // TODO: get user from shared prefs
         setupStatusBarAndToolbar();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -106,22 +108,36 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNavController() {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-
-        String userRole = "admin"; // TODO: get role from shared prefs
-
         NavGraph navGraph;
+        setUpMenu(R.menu.user_menu);
 
-        if (userRole.equals("admin")) {
-            navGraph = navController.getNavInflater().inflate(R.navigation.nav_admin);
-        } else if (userRole.equals("user")) {
-            navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
-        } else {
-            hideBottomNavigation();
-            navGraph = navController.getNavInflater().inflate(R.navigation.nav_guest);
+        switch (userRole) {
+            case "user" -> navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
+
+            case "admin" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_admin);
+                setUpMenu(R.menu.admin_menu);
+            }
+
+            case "provider" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_provider);
+                setUpMenu(R.menu.provider_menu);
+            }
+
+            case "organizer" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_organizer);
+                setUpMenu(R.menu.organizer_menu);
+            }
+
+            default -> {
+                hideBottomNavigation();
+                clearMenu();
+                setUpMenu(R.menu.guest_menu);
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_guest);
+            }
         }
 
         navController.setGraph(navGraph);
-        navController.popBackStack(R.id.homepageFragment, false);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -133,14 +149,17 @@ public class MainActivity extends AppCompatActivity {
 
         setupNavController();
 
-
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            navController.popBackStack(R.id.homepageFragment, false);
             int id = item.getItemId();
             if (id == R.id.nav_account) {
                 navController.navigate(R.id.accountDetailsFragment);
             } else if (id == R.id.nav_home) {
-                navController.popBackStack(R.id.homepageFragment, false);
                 navController.navigate(R.id.homepageFragment);
+            } else if (id == R.id.nav_favourite) {
+                navController.navigate(R.id.favourites);
+            } else if (id == R.id.nav_calendar) {
+                navController.navigate(R.id.bookingCalendarFragment);
             }
             return true;
         });
@@ -148,14 +167,64 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.nav_login) {
-                navController.navigate(R.id.loginFragment);
-            } else if (id == R.id.nav_signup) {
-                navController.navigate(R.id.registerFragment);
+            switch (userRole) {
+                case "user" -> handleUserMenuItemSelection(id);
+                case "admin" -> handleAdminMenuItemSelection(id);
+                case "organizer" -> handleOrganizerMenuItemSelection(id);
+                case "provider" -> handleProviderMenuItemSelection(id);
+                default -> handleGuestMenuItemSelection(id);
             }
+
             drawer.closeDrawers();
             return true;
         });
+    }
+
+    private void handleProviderMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+        if (id == R.id.nav_services) {
+            navController.navigate(R.id.manageServicesFragment);
+        } else if (id == R.id.nav_company) {
+            navController.navigate(R.id.companyDetailsFragment);
+        } else if (id == R.id.nav_new_service)
+            navController.navigate(R.id.createServiceFragment);
+    }
+
+    private void handleOrganizerMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+    }
+
+    private void handleAdminMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+        if (id == R.id.nav_create_event_type) {
+            navController.navigate(R.id.createEventTypeFragment);
+        } else if (id == R.id.nav_create_category) {
+            navController.navigate(R.id.createCategoryFragment);
+        } else if (id == R.id.nav_categories) {
+            navController.navigate(R.id.createCategoryFragment);
+        } else if (id == R.id.nav_category_proposals) {
+            navController.navigate(R.id.categoryProposalsFragment);
+        }
+    }
+
+    private void handleUserMenuItemSelection(int id) {
+        if (id == R.id.nav_logout) {
+            logOutUser();
+        } else if (id == R.id.nav_notification) {
+            // TODO: navigate to notifications fragment
+            Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+        } else if (id == R.id.nav_messages) {
+            // TODO: navigate to messages fragment
+            Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleGuestMenuItemSelection(int id) {
+        if (id == R.id.nav_login) {
+            navController.navigate(R.id.loginFragment);
+        } else if (id == R.id.nav_signup) {
+            navController.navigate(R.id.registerFragment);
+        }
     }
 
     @SuppressLint("UnsafeIntentLaunch")
@@ -169,6 +238,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setVisibility(View.GONE);
     }
 
+    private void clearMenu() {
+        navigationView.getMenu().clear();
+    }
+
     private void setupStatusBarAndToolbar() {
         toolbar = binding.baseLayout.toolbar;
         setSupportActionBar(toolbar);
@@ -177,6 +250,10 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_secondaryContainer));
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+    }
+
+    private void setUpMenu(int menuId) {
+        navigationView.inflateMenu(menuId);
     }
 }

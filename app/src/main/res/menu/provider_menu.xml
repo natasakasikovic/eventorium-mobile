@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_services"
+        android:title="@string/services"
+        android:icon="@drawable/ic_info" />
+
+    <item
+        android:id="@+id/nav_company"
+        android:title="@string/your_company"
+        android:icon="@drawable/ic_company"/>
+
+    <item
+        android:id="@+id/nav_new_service"
+        android:icon="@drawable/ic_plus"
+        android:title="@string/new_service" />
+</menu>
