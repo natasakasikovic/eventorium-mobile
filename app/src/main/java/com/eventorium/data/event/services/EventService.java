@@ -11,4 +11,7 @@ public interface EventService {
 
     @GET("events/all")
     Call<List<EventSummary>> getAll();
+
+    @GET("events/top-five-events")
+    Call<List<EventSummary>> getTopEvents();
 }

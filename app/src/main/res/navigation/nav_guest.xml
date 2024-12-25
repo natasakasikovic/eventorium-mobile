@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/homepageFragment"
-        android:name="com.eventorium.presentation.util.fragments.HomeFragment"
+        android:name="com.eventorium.presentation.homepage.HomeFragment"
         android:label="fragment_homepage"
         tools:layout="@layout/fragment_home">
         <action
