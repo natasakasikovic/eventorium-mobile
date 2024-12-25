@@ -59,7 +59,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/md_theme_secondaryContainer"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/side_menu"/>
+        app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -26,6 +26,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation" />
+        app:navGraph="@navigation/nav_guest"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
