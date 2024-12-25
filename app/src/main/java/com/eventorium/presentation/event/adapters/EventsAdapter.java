@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventSummary;
 
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
-    private final List<Event> events;
+    private final List<EventSummary> events;
 
-    public EventsAdapter(List<Event> events) {
+    public EventsAdapter(List<EventSummary> events) {
         this.events = events;
     }
 
@@ -30,9 +30,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
-        Event event = events.get(position);
+        EventSummary event = events.get(position);
         holder.nameTextView.setText(event.getName());
-        holder.locationTextView.setText(event.getLocation());
+        holder.cityTextView.setText(event.getCity());
         // TODO: Consider implementing generic photos for events based on event type in the backend
         //holder.photoImageView.setImageResource(event.getPhoto());
     }
@@ -44,13 +44,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
-        TextView locationTextView;
+        TextView cityTextView;
         ImageView photoImageView;
 
         public EventViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.event_name);
-            locationTextView = itemView.findViewById(R.id.event_location);
+            cityTextView = itemView.findViewById(R.id.event_city);
             photoImageView = itemView.findViewById(R.id.event_photo);
         }
     }
