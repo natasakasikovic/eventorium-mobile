@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
@@ -45,8 +46,12 @@ public class EventOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
-            binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
+        viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null){
+                binding.eventsRecycleView.setAdapter(new EventsAdapter(result.getData()));
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            }
         });
     }
 
