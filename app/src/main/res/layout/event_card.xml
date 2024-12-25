@@ -40,7 +40,7 @@
                 android:layout_marginEnd="8dp"/>
 
             <TextView
-                android:id="@+id/event_location"
+                android:id="@+id/event_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"

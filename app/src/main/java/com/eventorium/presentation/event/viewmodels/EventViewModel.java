@@ -3,7 +3,7 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.util.Result;
 
@@ -23,7 +23,7 @@ public class EventViewModel extends ViewModel {
         this.repository = eventRepository;
     }
 
-    public LiveData<Result<List<Event>>> getEvents(){
+    public LiveData<Result<List<EventSummary>>> getEvents(){
         return repository.getEvents();
     }
 }

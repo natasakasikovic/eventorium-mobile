@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class FavouriteEventsFragment extends Fragment {
 
     private FragmentFavouriteEventsBinding binding;
-    private static final List<Event> events = new ArrayList<>();
+    private static final List<EventSummary> events = new ArrayList<>();
 
     public FavouriteEventsFragment() { }
 
@@ -45,12 +45,12 @@ public class FavouriteEventsFragment extends Fragment {
 
     public void prepareEventData() {
         events.clear();
-        events.add(new Event("Concert",  "Novi Sad", R.drawable.conference));
-        events.add(new Event("Conference",  "Novi Sad", R.drawable.conference));
-        events.add(new Event("Workshop",  "Novi Sad", R.drawable.conference));
-        events.add(new Event("Festival",  "Novi Sad", R.drawable.conference));
-        events.add(new Event("Webinar", "Novi Sad", R.drawable.conference));
-        events.add(new Event("Webinar", "Novi Sad", R.drawable.conference));
-        events.add(new Event("Webinar", "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Concert",  "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Conference",  "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Workshop",  "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Festival",  "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
+        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
     }
 }
