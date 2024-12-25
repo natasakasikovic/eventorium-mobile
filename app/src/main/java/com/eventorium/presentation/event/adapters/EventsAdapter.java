@@ -33,7 +33,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         Event event = events.get(position);
         holder.nameTextView.setText(event.getName());
         holder.locationTextView.setText(event.getLocation());
-        holder.photoImageView.setImageResource(event.getPhoto());
+        // TODO: Consider implementing generic photos for events based on event type in the backend
+        //holder.photoImageView.setImageResource(event.getPhoto());
     }
 
     @Override
