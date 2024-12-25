@@ -9,10 +9,10 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
-def getIpAddress() {
+def getProp(String key) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty('ip_addr')
+    return properties.getProperty(key)
 }
 
 android {
@@ -31,7 +31,8 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        buildConfigField "String", "IP_ADDR", "\""+getIpAddress()+"\""
+        buildConfigField "String", "IP_ADDR", "\""+getProp('ip_addr')+"\""
+        buildConfigField "String", "SECRET", "\""+getProp('secret')+"\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
     }
@@ -71,6 +72,16 @@ dependencies {
     annotationProcessor 'com.google.dagger:hilt-android-compiler:2.40.5'
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     annotationProcessor 'androidx.hilt:hilt-compiler:1.0.0'
+    implementation libs.kotlinx.serialization.json
+
+    implementation libs.jjwt.api
+    runtimeOnly libs.jjwt.impl
+    runtimeOnly libs.jjwt.jackson
+
+    implementation libs.jackson.databind
+
+    implementation libs.androidx.navigation.fragment.v273
+    implementation libs.androidx.navigation.ui.v273
 
     implementation 'com.auth0.android:jwtdecode:2.0.2'
     api "com.github.NaikSoftware:StompProtocolAndroid:1.6.4"

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_guest"
+    app:startDestination="@id/homepageFragment">
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details" />
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details" />
+
+    <fragment
+        android:id="@+id/homepageFragment"
+        android:name="com.eventorium.presentation.util.fragments.HomeFragment"
+        android:label="fragment_homepage"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_service_details"
+            app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_home_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_homepage_to_services_overview"
+            app:destination="@id/serviceOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_events_overview"
+            app:destination="@id/eventsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_products_overview"
+            app:destination="@id/productsOverviewFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.eventorium.presentation.auth.fragments.RegisterFragment"
+        android:label="Main Fragment"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/user_register_to_company_register"
+            app:destination="@id/companyRegisterFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/companyRegisterFragment"
+        android:name="com.eventorium.presentation.auth.fragments.CompanyRegisterFragment"
+        android:label="fragment_company_register"
+        tools:layout="@layout/fragment_company_register" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.eventorium.presentation.auth.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
+        android:label="fragment_company_details"
+        tools:layout="@layout/fragment_company_details" />
+
+    <fragment
+        android:id="@+id/eventsOverviewFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventOverviewFragment"
+        android:label="fragment_event_overview"
+        tools:layout="@layout/fragment_event_overview" />
+
+    <fragment
+        android:id="@+id/productsOverviewFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductOverviewFragment"
+        android:label="fragment_product_overview"
+        tools:layout="@layout/fragment_product_overview" />
+
+    <fragment
+        android:id="@+id/serviceOverviewFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceOverviewFragment"
+        android:label="fragment_service_overview"
+        tools:layout="@layout/fragment_service_overview">
+        <action
+            android:id="@+id/action_serviceOverview_to_service_details"
+            app:destination="@id/serviceDetailsFragment"/>
+    </fragment>
+
+
+</navigation>

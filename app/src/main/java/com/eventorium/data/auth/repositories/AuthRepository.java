@@ -11,6 +11,8 @@ import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.services.WebSocketService;
+import com.eventorium.presentation.MainActivity;
+import com.eventorium.presentation.util.JwtDecoder;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,5 +85,12 @@ public class AuthRepository {
         }
         return new JWT(sharedPreferences.getString("user", ""))
                 .getClaim("userId").asLong();
+    }
+    public String saveRole(String jwt) {
+        String role = JwtDecoder.decodeRole(jwt);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("role", role);
+        editor.apply();
+        return role;
     }
 }

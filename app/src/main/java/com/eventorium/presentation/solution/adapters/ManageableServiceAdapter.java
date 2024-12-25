@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +17,19 @@ import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.presentation.solution.fragments.service.EditServiceFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
-import com.eventorium.presentation.util.listeners.OnDeleteClickListener;
-import com.eventorium.presentation.util.listeners.OnEditClickListener;
+import com.eventorium.presentation.util.listeners.OnManageListener;
 
 import java.util.List;
 
 public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
 
-    private final OnDeleteClickListener<ServiceSummary> deleteListener;
+    private final OnManageListener<ServiceSummary> manageListener;
     public ManageableServiceAdapter(
             List<ServiceSummary> serviceSummaries,
-            OnDeleteClickListener<ServiceSummary> listener
+            OnManageListener<ServiceSummary> listener
     ) {
         super(serviceSummaries);
-        this.deleteListener = listener;
+        this.manageListener = listener;
     }
 
     @NonNull
@@ -70,18 +70,9 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             priceTextView.setText(serviceSummary.getPrice().toString());
             imageView.setImageBitmap(serviceSummary.getImage());
 
-            seeMoreButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(itemView);
-                navController.navigate(R.id.action_manageService_to_serviceDetailsFragment,
-                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
-            });
-            editButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(itemView);
-                navController.navigate(R.id.action_manageService_to_editService,
-                        EditServiceFragment.newInstance(serviceSummary).getArguments());
-            });
-
-            deleteButton.setOnClickListener(v -> deleteListener.onDeleteClick(serviceSummary));
+            seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));
+            editButton.setOnClickListener(v -> manageListener.onEditClick(serviceSummary));
+            deleteButton.setOnClickListener(v -> manageListener.onDeleteClick(serviceSummary));
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,8 +9,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +35,7 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
+import com.eventorium.presentation.util.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -84,7 +90,28 @@ public class ManageServiceFragment extends Fragment {
 
         showLoadingIndicator();
 
-        adapter = new ManageableServiceAdapter(new ArrayList<>(), this::showDeleteDialog);
+        adapter = new ManageableServiceAdapter(new ArrayList<>(), new OnManageListener<>() {
+            @Override
+            public void onDeleteClick(ServiceSummary item) {
+                showDeleteDialog(item);
+            }
+
+            @Override
+            public void onSeeMoreClick(ServiceSummary serviceSummary) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                NavGraph currentGraph = navController.getGraph();
+                Log.d("Navigation", "Current Graph: " + currentGraph);
+                navController.navigate(R.id.action_manageServices_to_serviceDetails,
+                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
+            }
+
+            @Override
+            public void onEditClick(ServiceSummary serviceSummary) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_manageService_to_editService,
+                        EditServiceFragment.newInstance(serviceSummary).getArguments());
+            }
+        });
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);

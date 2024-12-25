@@ -26,14 +26,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 >
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/favButton"
                     style="?attr/materialIconButtonStyle"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:layout_marginStart="5dp"
-                    app:icon="@drawable/ic_fav"
+                    app:icon="@drawable/ic_not_favourite"
                     app:iconTint="@android:color/black" />
 
 

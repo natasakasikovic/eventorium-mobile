@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_user"
+    app:startDestination="@id/nav_guest">
+
+    <include app:graph="@navigation/nav_guest" />
+
+    <fragment
+        android:id="@+id/favourites"
+        android:name="com.eventorium.presentation.user.fragments.FavouritesFragment"
+        tools:layout="@layout/fragment_favourites"
+        android:label="fragment_favourites">
+        <action
+            android:id="@+id/action_favServices_to_serviceDetailsFragment"
+            app:destination="@id/serviceDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookingCalendarFragment"
+        android:name="com.eventorium.presentation.user.fragments.BookingCalendarFragment"
+        tools:layout="@layout/fragment_booking_calendar"
+        android:label="fragment_booking_calendar" />
+
+    <fragment
+        android:id="@+id/accountDetailsFragment"
+        android:name="com.eventorium.presentation.user.fragments.AccountDetails"
+        android:label="fragment_account_details"
+        tools:layout="@layout/fragment_account_details">
+        <action
+            android:id="@+id/action_accountDetails_to_editAccountFragment"
+            app:destination="@id/accountEditFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountEditFragment"
+        android:name="com.eventorium.presentation.user.fragments.AccountEditFragment"
+        android:label="fragment_account_edit"
+        tools:layout="@layout/fragment_account_edit" />
+
+</navigation>

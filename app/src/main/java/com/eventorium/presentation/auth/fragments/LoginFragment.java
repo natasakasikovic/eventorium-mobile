@@ -3,6 +3,7 @@ package com.eventorium.presentation.auth.fragments;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -66,7 +67,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         emailEditText = binding.emailEditText;
         passwordEditText = binding.passwordEditText;
-        binding.signInButton.setOnClickListener(v -> { login();});
+        binding.signInButton.setOnClickListener(v -> { login(); } );
 
         return binding.getRoot();
     }
@@ -93,8 +94,9 @@ public class LoginFragment extends Fragment {
                         .setPopUpTo(R.id.loginFragment, true)
                         .build();
                 navController.navigate(R.id.homepageFragment, null, navOptions);
-                ((MainActivity) requireActivity()).updateMenuAfterLogin();
+                String role = loginViewModel.saveRole(result.getData().getJwt());
                 requestNotificationPermission();
+                ((MainActivity) getActivity()).refresh(role);
             } else {
                 Toast.makeText(
                         requireContext(),
@@ -105,7 +107,6 @@ public class LoginFragment extends Fragment {
         });
 
     }
-
     private void subscribeToNotifications() {
         requestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
