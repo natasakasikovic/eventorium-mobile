@@ -41,10 +41,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class LoginFragment extends Fragment {
 
-    //
-    // TODO: CLOSE WEB SOCKET ON LOGOUT!!!
-    //
-
     private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;

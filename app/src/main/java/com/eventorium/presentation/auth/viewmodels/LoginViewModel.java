@@ -41,4 +41,8 @@ public class LoginViewModel extends ViewModel {
     public void openWebSocket() {
         webSocketService.connect(authRepository.getUserId());
     }
+
+    public void closeWebSocket() {
+        webSocketService.disconnect();
+    }
 }

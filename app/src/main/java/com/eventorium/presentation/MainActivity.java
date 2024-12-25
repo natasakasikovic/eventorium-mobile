@@ -31,6 +31,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.eventorium.R;
 import com.eventorium.data.util.services.NotificationService;
 import com.eventorium.databinding.ActivityMainBinding;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 100;
     private SplashScreenViewModel viewModel;
+    private LoginViewModel loginViewModel;
     private ActivityMainBinding binding;
     private DrawerLayout drawer;
     private Toolbar toolbar;
@@ -55,14 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(SplashScreenViewModel.class);
 
-        viewModel = new ViewModelProvider(this).get(SplashScreenViewModel.class);
         SplashScreen
                 .installSplashScreen(this)
                 .setKeepOnScreenCondition(() -> Boolean.TRUE.equals(viewModel.getIsLoading().getValue()));
 
         super.onCreate(savedInstanceState);
 
+        loginViewModel = provider.get(LoginViewModel.class);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -243,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
         editor.apply();
         refresh("GUEST");
+        loginViewModel.closeWebSocket();
     }
 
     private void hideBottomNavigation() {
