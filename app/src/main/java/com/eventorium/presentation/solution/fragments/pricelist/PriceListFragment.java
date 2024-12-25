@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.databinding.FragmentPriceListBinding;
-import com.eventorium.presentation.solution.adapters.PriceListPagerAdapter;
-import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
+import com.eventorium.presentation.util.adapters.PriceListPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import dagger.hilt.android.AndroidEntryPoint;

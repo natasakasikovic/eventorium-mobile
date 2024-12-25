@@ -10,60 +10,66 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/nameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/item"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:ellipsize="end"
             android:maxLines="1" />
 
-        <EditText
-            android:id="@+id/priceEditText"
-            android:layout_width="wrap_content"
-            android:autofillHints="@string/price"
-            android:layout_height="wrap_content"
-            android:hint="@string/price"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:inputType="numberDecimal"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp" />
-
-        <EditText
-            android:id="@+id/discountEditText"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autofillHints="discount"
-            android:hint="@string/discount"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:inputType="numberDecimal"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp" />
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/netPriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/net_price"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp" />
+            <EditText
+                android:id="@+id/priceEditText"
+                android:layout_width="wrap_content"
+                android:autofillHints="@string/price"
+                android:layout_height="wrap_content"
+                android:hint="@string/price"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:inputType="numberDecimal"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp" />
 
-        <ImageButton
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_save"
-            android:contentDescription="@string/save"
-            android:layout_marginStart="16dp"
-            android:background="?attr/selectableItemBackground" />
+            <EditText
+                android:id="@+id/discountEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="discount"
+                android:hint="@string/discount"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:inputType="numberDecimal"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
 
+            <TextView
+                android:id="@+id/netPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/net_price"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp" />
+
+            <ImageButton
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_save"
+                android:contentDescription="@string/save"
+                android:layout_marginStart="16dp"
+                android:background="?attr/selectableItemBackground" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

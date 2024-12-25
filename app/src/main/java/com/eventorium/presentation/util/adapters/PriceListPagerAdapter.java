@@ -1,10 +1,10 @@
-package com.eventorium.presentation.solution.adapters;
+package com.eventorium.presentation.util.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.eventorium.presentation.event.fragments.FavouriteEventsFragment;
+import com.eventorium.presentation.solution.fragments.pricelist.ServicePriceListFragment;
 
 public class PriceListPagerAdapter extends FragmentStateAdapter {
 
@@ -15,9 +15,8 @@ public class PriceListPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return switch (position) {
-            default -> new FavouriteEventsFragment();
-        };
+        // TODO: Change in product price list
+        return ServicePriceListFragment.newInstance();
     }
 
     @Override

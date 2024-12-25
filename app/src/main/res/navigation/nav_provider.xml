@@ -60,6 +60,12 @@
         tools:layout="@layout/fragment_edit_company"/>
 
     <fragment
+        android:id="@+id/priceList"
+        android:name="com.eventorium.presentation.solution.fragments.pricelist.PriceListFragment"
+        android:label="fragment_price_list"
+        tools:layout="@layout/fragment_price_list"/>
+
+    <fragment
         android:id="@+id/company_categories_fragment"
         android:name="com.eventorium.presentation.company.fragments.ManageCategoriesFragment"
         android:label="company_categories_fragment"
