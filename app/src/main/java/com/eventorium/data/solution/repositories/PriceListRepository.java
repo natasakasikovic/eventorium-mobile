@@ -54,7 +54,7 @@ public class PriceListRepository {
 
     public LiveData<PriceListItem> updateService(Long id, UpdatePriceListRequestDto dto) {
         MutableLiveData<PriceListItem> result = new MutableLiveData<>();
-        priceListService.updateService(id).enqueue(new Callback<>() {
+        priceListService.updateService(id, dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<PriceListItem> call,
