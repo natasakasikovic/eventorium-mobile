@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class EventRepository {
 
@@ -44,4 +45,24 @@ public class EventRepository {
         return liveData;
     }
 
+    public LiveData<Result<List<EventSummary>>> getTopEvents(){
+
+        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
+
+        service.getTopEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<EventSummary>> call, Response<List<EventSummary>> response) {
+                if (response.body() != null && response.isSuccessful()){
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EventSummary>> call, Throwable t) {
+                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
+                }
+            }
+        );
+        return liveData;
+    }
 }
