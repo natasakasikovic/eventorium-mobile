@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
+import com.eventorium.data.auth.dtos.LoginResponseDto;
+import com.eventorium.data.util.Result;
 import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
@@ -50,6 +52,8 @@ public class LoginFragment extends Fragment {
     private TextInputEditText emailEditText;
     private TextInputEditText passwordEditText;
 
+    private LoginResponseDto response;
+
     public static LoginFragment newInstance() {
         return new LoginFragment();
     }
@@ -67,7 +71,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         emailEditText = binding.emailEditText;
         passwordEditText = binding.passwordEditText;
-        binding.signInButton.setOnClickListener(v -> { login(); } );
+        binding.signInButton.setOnClickListener(v -> login());
 
         return binding.getRoot();
     }
@@ -89,14 +93,8 @@ public class LoginFragment extends Fragment {
         LoginRequestDto dto = new LoginRequestDto(email, password);
         loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
-                NavController navController = NavHostFragment.findNavController(this);
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setPopUpTo(R.id.loginFragment, true)
-                        .build();
-                navController.navigate(R.id.homepageFragment, null, navOptions);
-                String role = loginViewModel.saveRole(result.getData().getJwt());
+                response = result.getData();
                 requestNotificationPermission();
-                ((MainActivity) getActivity()).refresh(role);
             } else {
                 Toast.makeText(
                         requireContext(),
@@ -107,16 +105,25 @@ public class LoginFragment extends Fragment {
         });
 
     }
+
+    private void navigateToHome() {
+        NavController navController = NavHostFragment.findNavController(this);
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.loginFragment, true)
+                .build();
+        navController.navigate(R.id.homepageFragment, null, navOptions);
+        String role = loginViewModel.saveRole(response.getJwt());
+        ((MainActivity) getActivity()).refresh(role);
+    }
+
     private void subscribeToNotifications() {
         requestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        Toast.makeText(getContext(), "Notification Permission Granted!", Toast.LENGTH_SHORT).show();
                         loginViewModel.openWebSocket();
-                    } else {
-                        Toast.makeText(getContext(), "Notification Permission Denied!", Toast.LENGTH_SHORT).show();
                     }
+                    navigateToHome();
                 }
         );
     }
@@ -124,12 +131,10 @@ public class LoginFragment extends Fragment {
     public void requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getContext(), "Notification Permission Already Granted!", Toast.LENGTH_SHORT).show();
             loginViewModel.openWebSocket();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            navigateToHome();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
         }
     }
 
