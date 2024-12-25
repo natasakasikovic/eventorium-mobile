@@ -54,6 +54,8 @@ dependencies {
     compileOnly libs.lombok
     annotationProcessor libs.lombok
 
+
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -80,6 +82,10 @@ dependencies {
 
     implementation libs.androidx.navigation.fragment.v273
     implementation libs.androidx.navigation.ui.v273
+
+    implementation 'com.auth0.android:jwtdecode:2.0.2'
+    api "com.github.NaikSoftware:StompProtocolAndroid:1.6.4"
+    api "io.reactivex.rxjava2:rxjava:2.2.5"
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

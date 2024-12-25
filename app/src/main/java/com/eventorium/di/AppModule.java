@@ -21,6 +21,8 @@ import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
+import com.eventorium.data.util.services.NotificationService;
+import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,6 +38,7 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -43,6 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 @InstallIn(SingletonComponent.class)
+@NoArgsConstructor
 public class AppModule {
 
     private static final String SERVICE_API_PATH = "http://" + BuildConfig.IP_ADDR + ":8080/api/v1/";
@@ -61,6 +65,11 @@ public class AppModule {
                 .build();
     }
 
+    @Provides
+    @Singleton
+    public WebSocketService provideWebSocketService() {
+        return new WebSocketService();
+    }
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(AuthInterceptor authInterceptor) {
@@ -170,10 +179,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AuthRepository authRepository(AuthService service,
-                                                SharedPreferences sharedPreferences)
+    public static AuthRepository authRepository(
+            WebSocketService webSocketService,
+            AuthService service,
+            SharedPreferences sharedPreferences
+    )
     {
-        return new AuthRepository(service, sharedPreferences);
+        return new AuthRepository(webSocketService, service, sharedPreferences);
     }
 
 

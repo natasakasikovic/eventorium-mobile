@@ -7,6 +7,7 @@ import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.services.WebSocketService;
 
 import javax.inject.Inject;
 
@@ -16,9 +17,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class LoginViewModel extends ViewModel {
 
     private final AuthRepository authRepository;
+    private final WebSocketService webSocketService;
 
     @Inject
-    public LoginViewModel(AuthRepository authRepository) {
+    public LoginViewModel(WebSocketService webSocketService, AuthRepository authRepository) {
+        this.webSocketService = webSocketService;
         this.authRepository = authRepository;
     }
 
@@ -35,4 +38,11 @@ public class LoginViewModel extends ViewModel {
         super.onCleared();
     }
 
+    public void openWebSocket() {
+        webSocketService.connect(authRepository.getUserId());
+    }
+
+    public void closeWebSocket() {
+        webSocketService.disconnect();
+    }
 }

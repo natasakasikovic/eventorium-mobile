@@ -37,6 +37,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -171,7 +172,7 @@ public class EditServiceFragment extends Fragment {
                             .map(EventType::getId)
                             .collect(toList()))
                     .build();
-        } catch (NullPointerException | NumberFormatException exception) {
+        } catch (NullPointerException | NumberFormatException | DateTimeParseException exception) {
             Toast.makeText(
                     requireContext(),
                     R.string.please_fill_in_all_fields,
