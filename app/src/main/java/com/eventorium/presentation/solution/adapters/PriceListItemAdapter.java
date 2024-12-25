@@ -1,8 +1,11 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.eventorium.data.solution.models.PriceListItem;
 import com.eventorium.presentation.util.listeners.OnSaveListener;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdapter.ProductViewHolder> {
     private final List<PriceListItem> productList;
@@ -36,6 +40,10 @@ public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdap
         return new ProductViewHolder(itemView);
     }
 
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable debounceRunnable;
+    private static final long DEBOUNCE_DELAY = 300;
+
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, @SuppressLint("RecyclerView") int position) {
@@ -46,50 +54,84 @@ public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdap
         holder.discountEditText.setText(String.format("%.2f", priceListItem.getDiscount()));
         holder.netPriceTextView.setText(String.format("$%.2f", priceListItem.getNetPrice()));
 
+        createPriceChangeHandler(holder, priceListItem);
+        createDiscountChangeHandler(holder, priceListItem);
+
+        holder.saveButton.setOnClickListener(v -> onSave.save(priceListItem));
+    }
+
+
+    private void createPriceChangeHandler(ProductViewHolder holder, PriceListItem priceListItem) {
         holder.priceEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (!charSequence.toString().isEmpty()) {
-                    try {
-                        double newPrice = Double.parseDouble(charSequence.toString());
-                        priceListItem.setPrice(newPrice);
-                        notifyItemChanged(position);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
+                if (debounceRunnable != null) {
+                    handler.removeCallbacks(debounceRunnable);
                 }
             }
 
+            @SuppressLint("DefaultLocale")
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+                if (!editable.toString().isEmpty()) {
+                    debounceRunnable = () -> onPriceChanged(editable, holder, priceListItem);
+                    handler.postDelayed(debounceRunnable, DEBOUNCE_DELAY);
+                }
+            }
         });
+    }
 
+    private void createDiscountChangeHandler(ProductViewHolder holder, PriceListItem priceListItem) {
         holder.discountEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (!charSequence.toString().isEmpty()) {
-                    try {
-                        double newDiscount = Double.parseDouble(charSequence.toString());
-                        priceListItem.setDiscount(newDiscount);
-                        notifyItemChanged(position);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
+                if (debounceRunnable != null) {
+                    handler.removeCallbacks(debounceRunnable);
                 }
             }
 
+            @SuppressLint("DefaultLocale")
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void afterTextChanged(Editable editable) {
+                if (!editable.toString().isEmpty()) {
+                    debounceRunnable = () -> onDiscountChanged(editable, holder, priceListItem);
+                    handler.postDelayed(debounceRunnable, DEBOUNCE_DELAY);
+                }
+            }
         });
-
-        holder.saveButton.setOnClickListener(v -> onSave.save(priceListItem));
     }
+
+    @SuppressLint("DefaultLocale")
+    private void onDiscountChanged(Editable editable, ProductViewHolder holder, PriceListItem priceListItem) {
+        try {
+            double newDiscount = Double.parseDouble(editable.toString());
+            priceListItem.setDiscount(newDiscount);
+            priceListItem.setNetPrice(priceListItem.getPrice() * (1 - newDiscount / 100));
+            holder.netPriceTextView.setText(String.format("$%.2f", priceListItem.getNetPrice()));
+        } catch (NumberFormatException e) {
+            Log.e("PRICE_LIST", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
+
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void onPriceChanged(Editable editable, ProductViewHolder holder, PriceListItem priceListItem) {
+        try {
+            double newPrice = Double.parseDouble(editable.toString());
+            priceListItem.setPrice(newPrice);
+            priceListItem.setNetPrice(newPrice * (1 - priceListItem.getDiscount() / 100));
+            holder.netPriceTextView.setText(String.format("$%.2f", priceListItem.getNetPrice()));
+        } catch (NumberFormatException e) {
+            Log.e("PRICE_LIST", Objects.requireNonNull(e.getLocalizedMessage()));
+        }
+    }
+
 
     @Override
     public int getItemCount() {
