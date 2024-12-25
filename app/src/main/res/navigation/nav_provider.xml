@@ -5,7 +5,7 @@
     android:id="@+id/nav_provider"
     app:startDestination="@id/nav_user">
 
-    <include app:graph="@navigation/nav_user" />
+    <include app:graph="@navigation/nav_user"  />
 
     <fragment
         android:id="@+id/manageServicesFragment"
@@ -13,8 +13,8 @@
         android:label="fragment_manage_service"
         tools:layout="@layout/fragment_service_overview">
         <action
-            android:id="@+id/action_manageService_to_serviceDetailsFragment"
-            app:destination="@id/serviceDetailsFragment" />
+            android:id="@+id/action_manageServices_to_serviceDetails"
+            app:destination="@id/manageServiceDetailsFragment"/>
         <action
             android:id="@+id/action_manageService_to_editService"
             app:destination="@+id/editServiceFragment"/>
@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_edit_service">
         <action
             android:id="@+id/action_update_to_serviceManagement"
-            app:destination="@+id/manageServicesFragment"
+            app:destination="@id/manageServicesFragment"
             />
     </fragment>
 
@@ -47,6 +47,11 @@
         android:label="event_invitation_fragment"
         tools:layout="@layout/fragment_event_invitation" />
 
+    <fragment
+        android:id="@+id/manageServiceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="event_invitation_fragment"
+        tools:layout="@layout/fragment_service_details" />
 
     <fragment
         android:id="@+id/companyEditFragment"
