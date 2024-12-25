@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_organizer"
+    app:startDestination="@id/nav_user">
+
+    <include app:graph="@navigation/nav_user" />
+
+    <fragment
+        android:id="@+id/bookingFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceBookingFragment"
+        android:label="service_booking_fragment"
+        tools:layout="@layout/fragment_service_booking" />
+
+</navigation>

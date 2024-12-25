@@ -5,10 +5,14 @@ import android.content.SharedPreferences;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.auth0.android.jwt.JWT;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.services.WebSocketService;
+import com.eventorium.presentation.MainActivity;
+import com.eventorium.presentation.util.JwtDecoder;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +23,10 @@ public class AuthRepository {
     private final AuthService authService;
     private final SharedPreferences sharedPreferences;
 
-    public AuthRepository(AuthService authService, SharedPreferences sharedPreferences) {
+    private final WebSocketService webSocketService;
+
+    public AuthRepository(WebSocketService webSocketService, AuthService authService, SharedPreferences sharedPreferences) {
+        this.webSocketService = webSocketService;
         this.authService = authService;
         this.sharedPreferences = sharedPreferences;
     }
@@ -72,4 +79,18 @@ public class AuthRepository {
         return sharedPreferences.getString("user", null) != null;
     }
 
+    public Long getUserId() {
+        if(!isLoggedIn()) {
+            return null;
+        }
+        return new JWT(sharedPreferences.getString("user", ""))
+                .getClaim("userId").asLong();
+    }
+    public String saveRole(String jwt) {
+        String role = JwtDecoder.decodeRole(jwt);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("role", role);
+        editor.apply();
+        return role;
+    }
 }

@@ -10,9 +10,10 @@ import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
-import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
@@ -23,6 +24,8 @@ import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
+import com.eventorium.data.util.services.NotificationService;
+import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,14 +41,15 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.POST;
 
 @Module
 @InstallIn(SingletonComponent.class)
+@NoArgsConstructor
 public class AppModule {
 
     private static final String SERVICE_API_PATH = "http://" + BuildConfig.IP_ADDR + ":8080/api/v1/";
@@ -64,6 +68,11 @@ public class AppModule {
                 .build();
     }
 
+    @Provides
+    @Singleton
+    public WebSocketService provideWebSocketService() {
+        return new WebSocketService();
+    }
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(AuthInterceptor authInterceptor) {
@@ -173,10 +182,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AuthRepository authRepository(AuthService service,
-                                                SharedPreferences sharedPreferences)
+    public static AuthRepository authRepository(
+            WebSocketService webSocketService,
+            AuthService service,
+            SharedPreferences sharedPreferences
+    )
     {
-        return new AuthRepository(service, sharedPreferences);
+        return new AuthRepository(webSocketService, service, sharedPreferences);
     }
 
 
@@ -198,4 +210,16 @@ public class AppModule {
         return new PriceListRepository(priceListService);
     }
 
+
+    @Provides
+    @Singleton
+    public static EventRepository provideEventRepository(EventService service){
+        return new EventRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public EventService provideEventService(Retrofit retrofit){
+        return retrofit.create(EventService.class);
+    }
 }
