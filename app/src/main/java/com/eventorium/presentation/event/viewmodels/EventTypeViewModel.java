@@ -3,7 +3,7 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.event.dtos.EventTypeRequestDto;
+import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 
@@ -22,11 +22,11 @@ public class EventTypeViewModel extends ViewModel {
         this.eventTypeRepository = eventTypeRepository;
     }
 
-    public LiveData<EventType> createEventType(EventTypeRequestDto eventTypeDto) {
-        return eventTypeRepository.createEventType(eventTypeDto);
+    public LiveData<EventType> createEventType(CreateEventType eventType) {
+        return eventTypeRepository.createEventType(eventType);
     }
 
-    public LiveData<List<EventType>> fetchEventTypes() {
+    public LiveData<List<EventType>> getEventTypes() {
         return eventTypeRepository.getEventTypes();
     }
 }
