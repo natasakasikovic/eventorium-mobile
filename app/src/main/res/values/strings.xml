@@ -142,4 +142,8 @@
     <string name="your_company">Your company</string>
     <string name="new_service">New service</string>
     <string name="price_list">Price list</string>
+    <string name="discount_should_be_between_0_and_100">Discount should be between 0 and 100</string>
+    <string name="item_has_been_updated_successfully">Item has been updated successfully!</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

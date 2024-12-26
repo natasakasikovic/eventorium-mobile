@@ -13,24 +13,21 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
+import com.eventorium.databinding.FragmentProductPriceListBinding;
 import com.eventorium.databinding.FragmentServicePriceListBinding;
 import com.eventorium.presentation.solution.adapters.PriceListItemAdapter;
-import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.PriceListViewModel;
 
-import dagger.hilt.android.AndroidEntryPoint;
+public class ProductPriceListFragment extends Fragment {
 
-@AndroidEntryPoint
-public class ServicePriceListFragment extends Fragment {
-
-    private FragmentServicePriceListBinding binding;
+    private FragmentProductPriceListBinding binding;
     private PriceListViewModel priceListViewModel;
 
-    public ServicePriceListFragment() {
+    public ProductPriceListFragment() {
     }
 
-    public static ServicePriceListFragment newInstance() {
-        return new ServicePriceListFragment();
+    public static ProductPriceListFragment newInstance() {
+        return new ProductPriceListFragment();
     }
 
     @Override
@@ -42,11 +39,11 @@ public class ServicePriceListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentServicePriceListBinding.inflate(inflater, container, false);
-        priceListViewModel.getServices().observe(getViewLifecycleOwner(), services -> {
-            binding.servicesRecycleView.setAdapter(new PriceListItemAdapter(services, service -> {
+        binding = FragmentProductPriceListBinding.inflate(inflater, container, false);
+        priceListViewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            binding.productsRecycleView.setAdapter(new PriceListItemAdapter(products, product -> {
 
-                if(service.getDiscount() > 100 || service.getDiscount() < 0) {
+                if(product.getDiscount() > 100 || product.getDiscount() < 0) {
                     Toast.makeText(
                             getContext(),
                             R.string.discount_should_be_between_0_and_100,
@@ -55,9 +52,9 @@ public class ServicePriceListFragment extends Fragment {
                     return;
                 }
 
-                priceListViewModel.updateService(
-                        service.getId(),
-                        new UpdatePriceListRequestDto(service.getPrice(), service.getDiscount())
+                priceListViewModel.updateProduct(
+                        product.getId(),
+                        new UpdatePriceListRequestDto(product.getPrice(), product.getDiscount())
                 ).observe(getViewLifecycleOwner(), priceListItem -> {
                     if(priceListItem != null) {
                         Toast.makeText(
@@ -77,4 +74,5 @@ public class ServicePriceListFragment extends Fragment {
         });
         return binding.getRoot();
     }
+
 }

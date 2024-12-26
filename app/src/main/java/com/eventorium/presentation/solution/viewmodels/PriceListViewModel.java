@@ -28,8 +28,14 @@ public class PriceListViewModel extends ViewModel {
         return priceListRepository.getServices();
     }
 
+    public LiveData<List<PriceListItem>> getProducts() {
+        return priceListRepository.getProducts();
+    }
     public LiveData<PriceListItem> updateService(Long id, UpdatePriceListRequestDto dto) {
         return priceListRepository.updateService(id, dto);
     }
 
+    public LiveData<PriceListItem> updateProduct(Long id, UpdatePriceListRequestDto dto) {
+        return priceListRepository.updateProduct(id, dto);
+    }
 }
