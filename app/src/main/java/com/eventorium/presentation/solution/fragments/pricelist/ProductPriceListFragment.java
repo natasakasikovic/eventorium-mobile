@@ -18,6 +18,9 @@ import com.eventorium.databinding.FragmentServicePriceListBinding;
 import com.eventorium.presentation.solution.adapters.PriceListItemAdapter;
 import com.eventorium.presentation.solution.viewmodels.PriceListViewModel;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProductPriceListFragment extends Fragment {
 
     private FragmentProductPriceListBinding binding;

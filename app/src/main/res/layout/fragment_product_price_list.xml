@@ -14,7 +14,7 @@
             android:id="@+id/productsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/services"
+            android:text="@string/products"
             android:textSize="28sp"
             android:textColor="@color/md_theme_primary"
             android:fontFamily="@font/jejumyeongjo"

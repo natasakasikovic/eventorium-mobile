@@ -35,7 +35,7 @@ public class PriceListRepository {
 
     public LiveData<List<PriceListItem>> getProducts() {
         MutableLiveData<List<PriceListItem>> result = new MutableLiveData<>();
-        priceListService.getServices().enqueue(handleResponse(result));
+        priceListService.getProducts().enqueue(handleResponse(result));
         return result;
     }
 

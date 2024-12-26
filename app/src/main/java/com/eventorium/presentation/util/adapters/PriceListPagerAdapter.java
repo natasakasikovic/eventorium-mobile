@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.eventorium.presentation.solution.fragments.pricelist.ProductPriceListFragment;
 import com.eventorium.presentation.solution.fragments.pricelist.ServicePriceListFragment;
 
 public class PriceListPagerAdapter extends FragmentStateAdapter {
@@ -15,7 +16,9 @@ public class PriceListPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // TODO: Change in product price list
+        if (position == 0) {
+            return ProductPriceListFragment.newInstance();
+        }
         return ServicePriceListFragment.newInstance();
     }
 
