@@ -41,6 +41,7 @@
                 android:id="@+id/productsRecycleView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_gravity="center" />
 
