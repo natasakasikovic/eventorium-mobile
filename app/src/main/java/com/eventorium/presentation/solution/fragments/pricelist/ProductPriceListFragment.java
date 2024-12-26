@@ -44,36 +44,44 @@ public class ProductPriceListFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentProductPriceListBinding.inflate(inflater, container, false);
         priceListViewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            binding.productsRecycleView.setAdapter(new PriceListItemAdapter(products, product -> {
+            if(products.getError() == null) {
+                binding.productsRecycleView.setAdapter(new PriceListItemAdapter(products.getData(), product -> {
 
-                if(product.getDiscount() > 100 || product.getDiscount() < 0) {
-                    Toast.makeText(
-                            getContext(),
-                            R.string.discount_should_be_between_0_and_100,
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    return;
-                }
-
-                priceListViewModel.updateProduct(
-                        product.getId(),
-                        new UpdatePriceListRequestDto(product.getPrice(), product.getDiscount())
-                ).observe(getViewLifecycleOwner(), priceListItem -> {
-                    if(priceListItem != null) {
+                    if (product.getDiscount() > 100 || product.getDiscount() < 0) {
                         Toast.makeText(
                                 getContext(),
-                                R.string.item_has_been_updated_successfully,
+                                R.string.discount_should_be_between_0_and_100,
                                 Toast.LENGTH_SHORT
                         ).show();
-                    } else {
-                        Toast.makeText(
-                                getContext(),
-                                "Failed to update item!",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        return;
                     }
-                });
-            }));
+
+                    priceListViewModel.updateProduct(
+                            product.getId(),
+                            new UpdatePriceListRequestDto(product.getPrice(), product.getDiscount())
+                    ).observe(getViewLifecycleOwner(), priceListItem -> {
+                        if (priceListItem.getError() == null) {
+                            Toast.makeText(
+                                    getContext(),
+                                    R.string.item_has_been_updated_successfully,
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        } else {
+                            Toast.makeText(
+                                    getContext(),
+                                    priceListItem.getError(),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    });
+                }));
+            } else {
+                Toast.makeText(
+                        getContext(),
+                        products.getError(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
         });
         return binding.getRoot();
     }

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
 import com.eventorium.data.solution.models.PriceListItem;
 import com.eventorium.data.solution.services.PriceListService;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 
@@ -27,31 +28,31 @@ public class PriceListRepository {
         this.priceListService = priceListService;
     }
 
-    public LiveData<List<PriceListItem>> getServices() {
-        MutableLiveData<List<PriceListItem>> result = new MutableLiveData<>();
+    public LiveData<Result<List<PriceListItem>>> getServices() {
+        MutableLiveData<Result<List<PriceListItem>>> result = new MutableLiveData<>();
         priceListService.getServices().enqueue(handleResponse(result));
         return result;
     }
 
-    public LiveData<List<PriceListItem>> getProducts() {
-        MutableLiveData<List<PriceListItem>> result = new MutableLiveData<>();
+    public LiveData<Result<List<PriceListItem>>> getProducts() {
+        MutableLiveData<Result<List<PriceListItem>>> result = new MutableLiveData<>();
         priceListService.getProducts().enqueue(handleResponse(result));
         return result;
     }
 
-    public LiveData<PriceListItem> updateService(Long id, UpdatePriceListRequestDto dto) {
-        MutableLiveData<PriceListItem> result = new MutableLiveData<>();
+    public LiveData<Result<PriceListItem>> updateService(Long id, UpdatePriceListRequestDto dto) {
+        MutableLiveData<Result<PriceListItem>> result = new MutableLiveData<>();
         priceListService.updateService(id, dto).enqueue(handleResponse(result));
         return result;
     }
 
-    public LiveData<PriceListItem> updateProduct(Long id, UpdatePriceListRequestDto dto) {
-        MutableLiveData<PriceListItem> result = new MutableLiveData<>();
+    public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceListRequestDto dto) {
+        MutableLiveData<Result<PriceListItem>> result = new MutableLiveData<>();
         priceListService.updateProduct(id, dto).enqueue(handleResponse(result));
         return result;
     }
 
-    private <T> Callback<T> handleResponse(MutableLiveData<T> result) {
+    private <T> Callback<T> handleResponse(MutableLiveData<Result<T>> result) {
         return new Callback<>() {
             @Override
             public void onResponse(
@@ -59,14 +60,16 @@ public class PriceListRepository {
                     @NonNull Response<T> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
+                    result.postValue(Result.success(response.body()));
                 } else {
+                    result.postValue(Result.error(response.message()));
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
                 Log.e("API_ERROR", "Error: " + t.getMessage());
             }
         };
