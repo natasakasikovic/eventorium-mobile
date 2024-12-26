@@ -45,6 +45,16 @@ public class ServicePriceListFragment extends Fragment {
         binding = FragmentServicePriceListBinding.inflate(inflater, container, false);
         priceListViewModel.getServices().observe(getViewLifecycleOwner(), services -> {
             binding.servicesRecycleView.setAdapter(new PriceListItemAdapter(services, service -> {
+
+                if(service.getDiscount() > 100 || service.getDiscount() < 0) {
+                    Toast.makeText(
+                            getContext(),
+                            "Discount should be between 0 and 100",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    return;
+                }
+
                 priceListViewModel.updateService(
                         service.getId(),
                         new UpdatePriceListRequestDto(service.getPrice(), service.getDiscount())
