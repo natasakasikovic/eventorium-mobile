@@ -86,5 +86,7 @@ public class EventRepository {
                 liveData.postValue(Result.error(t.getMessage()));
             }
         });
+
+        return liveData;
     }
 }

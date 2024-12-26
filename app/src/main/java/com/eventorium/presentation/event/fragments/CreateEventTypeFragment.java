@@ -31,6 +31,7 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -148,9 +149,8 @@ public class CreateEventTypeFragment extends Fragment {
                         "Event type created successfully",
                         Toast.LENGTH_SHORT
                 ).show();
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.homepageFragment);
-
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.popBackStack(R.id.homepageFragment, false);
             } else {
                 Toast.makeText(
                         requireContext(),

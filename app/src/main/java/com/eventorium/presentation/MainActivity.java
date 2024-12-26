@@ -1,10 +1,5 @@
 package com.eventorium.presentation;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +13,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -29,7 +23,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
-import com.eventorium.data.util.services.NotificationService;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
@@ -206,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleOrganizerMenuItemSelection(int id) {
         handleUserMenuItemSelection(id);
+        if (id == R.id.nav_new_event) {
+            navController.navigate(R.id.createEventFragment);
+        }
     }
 
     private void handleAdminMenuItemSelection(int id) {
