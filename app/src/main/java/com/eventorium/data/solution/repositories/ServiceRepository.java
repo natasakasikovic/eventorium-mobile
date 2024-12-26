@@ -1,6 +1,5 @@
 package com.eventorium.data.solution.repositories;
 
-import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
@@ -16,7 +15,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
 import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.mappers.ServiceMapper;
 import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
@@ -239,7 +237,7 @@ public class ServiceRepository {
                     @NonNull Response<Service> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(ServiceMapper.fromService(response.body())));
+                    liveData.postValue(Result.success(getServiceSummary(response.body())));
                 } else {
                     liveData.postValue(Result.error(response.message()));
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
@@ -258,4 +256,13 @@ public class ServiceRepository {
 
         return liveData;
     }
+
+    private ServiceSummary getServiceSummary(Service service) {
+        return ServiceSummary.builder()
+                .id(service.getId())
+                .name(service.getName())
+                .price(service.getPrice())
+                .build();
+    }
+
 }

@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Notification {
+    private String title;
     private String message;
     private Boolean seen;
     private NotificationType type;

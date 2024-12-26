@@ -1,9 +1,7 @@
 package com.eventorium.data.solution.services;
 
 import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.PriceListItem;
-import com.eventorium.data.solution.models.Product;
 
 import java.util.List;
 

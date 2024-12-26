@@ -25,6 +25,8 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
+import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
