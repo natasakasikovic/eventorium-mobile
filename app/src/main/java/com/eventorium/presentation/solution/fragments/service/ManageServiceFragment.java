@@ -1,6 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -220,7 +219,7 @@ public class ManageServiceFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             adapter.addAll(eventTypes.stream().map(EventType::getName).toArray(String[]::new));
             adapter.notifyDataSetChanged();
             spinner.setAdapter(adapter);

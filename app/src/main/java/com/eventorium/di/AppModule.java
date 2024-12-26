@@ -14,6 +14,9 @@ import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.shared.models.City;
+import com.eventorium.data.shared.repositories.CityRepository;
+import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
@@ -221,5 +224,18 @@ public class AppModule {
     @Singleton
     public EventService provideEventService(Retrofit retrofit){
         return retrofit.create(EventService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static CityRepository provideCityRepository(CityService service){
+        return new CityRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public CityService provideCityService(Retrofit retrofit){
+        return retrofit.create(CityService.class);
     }
 }

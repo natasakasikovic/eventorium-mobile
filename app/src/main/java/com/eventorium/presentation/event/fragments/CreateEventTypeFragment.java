@@ -21,16 +21,17 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.dtos.CategoryResponseDto;
-import com.eventorium.data.event.dtos.EventTypeRequestDto;
 import com.eventorium.data.category.mappers.CategoryMapper;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.databinding.FragmentCreateEventTypeBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -140,17 +141,16 @@ public class CreateEventTypeFragment extends Fragment {
         for (Category c: selectedCategories) {
             selectedCategoriesDto.add(CategoryMapper.toResponse(c));
         }
-        EventTypeRequestDto dto = new EventTypeRequestDto(name, description, selectedCategoriesDto);
-        eventTypeViewModel.createEventType(dto).observe(getViewLifecycleOwner(), response -> {
+        CreateEventType eventType = new CreateEventType(name, description, selectedCategoriesDto);
+        eventTypeViewModel.createEventType(eventType).observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
                 Toast.makeText(
                         requireContext(),
                         "Event type created successfully",
                         Toast.LENGTH_SHORT
                 ).show();
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.homepageFragment);
-
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.popBackStack(R.id.homepageFragment, false);
             } else {
                 Toast.makeText(
                         requireContext(),
