@@ -26,7 +26,7 @@ public class EventTypeViewModel extends ViewModel {
         return eventTypeRepository.createEventType(eventType);
     }
 
-    public LiveData<List<EventType>> fetchEventTypes() {
+    public LiveData<List<EventType>> getEventTypes() {
         return eventTypeRepository.getEventTypes();
     }
 }

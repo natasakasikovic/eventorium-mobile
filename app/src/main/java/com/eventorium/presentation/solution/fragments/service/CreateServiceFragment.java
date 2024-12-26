@@ -1,7 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import static java.util.stream.Collectors.toList;
-
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -163,7 +161,7 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void loadEventTypes() {
-        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             binding.eventTypeRecycleView.setAdapter(new ChecklistAdapter<>(eventTypes));
         });
     }

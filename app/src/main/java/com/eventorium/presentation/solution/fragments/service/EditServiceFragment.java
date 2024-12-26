@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -203,7 +201,7 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void loadEventTypes() {
-        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             adapter = new ChecklistAdapter<>(eventTypes);
             binding.eventTypeRecycleView.setAdapter(adapter);
             createDatePickers();
