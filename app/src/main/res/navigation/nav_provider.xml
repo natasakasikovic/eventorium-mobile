@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_create_service">
         <action
             android:id="@+id/action_create_to_serviceOverview"
-            app:destination="@+id/serviceOverviewFragment"/>
+            app:destination="@+id/manageServicesFragment"/>
     </fragment>
 
     <fragment
