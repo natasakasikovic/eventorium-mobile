@@ -1,7 +1,7 @@
 package com.eventorium.data.category.services;
 
 import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import retrofit2.http.Path;
 public interface CategoryService {
 
     @GET("categories/all")
-    Call<List<CategoryResponseDto>> getCategories();
+    Call<List<Category>> getCategories();
 
     @PUT("categories/{id}")
-    Call<CategoryResponseDto> updateCategory(@Path("id") Long id, @Body CategoryRequestDto dto);
+    Call<Category> updateCategory(@Path("id") Long id, @Body CategoryRequestDto dto);
 
     @POST("categories")
-    Call<CategoryResponseDto> createCategory(@Body CategoryRequestDto dto);
+    Call<Category> createCategory(@Body CategoryRequestDto dto);
 
     @DELETE("categories/{id}")
     Call<Void> deleteCategory(@Path("id") Long id);

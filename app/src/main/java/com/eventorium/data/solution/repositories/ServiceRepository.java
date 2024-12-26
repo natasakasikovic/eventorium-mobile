@@ -45,8 +45,8 @@ public class ServiceRepository {
         this.serviceService = serviceService;
     }
 
-    public LiveData<Long> createService(CreateServiceRequestDto dto) {
-        MutableLiveData<Long> result = new MutableLiveData<>();
+    public LiveData<Result<Long>> createService(CreateServiceRequestDto dto) {
+        MutableLiveData<Result<Long>> result = new MutableLiveData<>();
         serviceService.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -54,10 +54,9 @@ public class ServiceRepository {
                     @NonNull Response<ServiceSummaryResponseDto> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body().getId());
+                    result.postValue(Result.success(response.body().getId()));
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
+                    result.postValue(Result.error(response.message()));
                 }
             }
 
@@ -66,8 +65,7 @@ public class ServiceRepository {
                     @NonNull Call<ServiceSummaryResponseDto> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
+                result.postValue(Result.error(t.getMessage()));
             }
         });
         return result;

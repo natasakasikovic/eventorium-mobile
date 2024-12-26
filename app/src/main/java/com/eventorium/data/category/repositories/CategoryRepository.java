@@ -1,18 +1,15 @@
 package com.eventorium.data.category.repositories;
 
-import static java.util.stream.Collectors.toList;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.category.mappers.CategoryMapper;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.util.Result;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,14 +35,11 @@ public class CategoryRepository {
         categoryService.getCategories().enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<CategoryResponseDto>> call,
-                    @NonNull Response<List<CategoryResponseDto>> response
+                    @NonNull Call<List<Category>> call,
+                    @NonNull Response<List<Category>> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Category> categories = response.body()
-                            .stream().map(CategoryMapper::fromResponse)
-                            .collect(toList());
-                    liveData.postValue(categories);
+                    liveData.postValue(response.body());
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(Collections.emptyList());
@@ -54,7 +48,7 @@ public class CategoryRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<CategoryResponseDto>> call,
+                    @NonNull Call<List<Category>> call,
                     @NonNull Throwable t
             ) {
                 liveData.postValue(Collections.emptyList());
@@ -64,58 +58,55 @@ public class CategoryRepository {
         return liveData;
     }
 
-    public LiveData<Category> updateCategory(Long id, CategoryRequestDto category) {
-        MutableLiveData<Category> liveData = new MutableLiveData<>();
+    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequestDto category) {
+        MutableLiveData<Result<Category>> liveData = new MutableLiveData<>();
 
         categoryService.updateCategory(id, category).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<CategoryResponseDto> call,
-                    @NonNull Response<CategoryResponseDto> response
+                    @NonNull Call<Category> call,
+                    @NonNull Response<Category> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(CategoryMapper.fromResponse(response.body()));
+                    liveData.postValue(Result.success(response.body()));
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(null);
+                    liveData.postValue(Result.error(response.message()));
                 }
             }
 
             @Override
             public void onFailure(
-                    @NonNull Call<CategoryResponseDto> call,
+                    @NonNull Call<Category> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                liveData.postValue(null);
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
 
         return liveData;
     }
 
-    public LiveData<Category> createCategory(CategoryRequestDto dto) {
-        MutableLiveData<Category> liveData = new MutableLiveData<>();
+    public LiveData<Result<Category>> createCategory(CategoryRequestDto dto) {
+        MutableLiveData<Result<Category>> liveData = new MutableLiveData<>();
         categoryService.createCategory(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<CategoryResponseDto> call,
-                    @NonNull Response<CategoryResponseDto> response
+                    @NonNull Call<Category> call,
+                    @NonNull Response<Category> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(CategoryMapper.fromResponse(response.body()));
+                    liveData.postValue(Result.success(response.body()));
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(null);
+                    liveData.postValue(Result.error(response.message()));
                 }
             }
 
             @Override
             public void onFailure(
-                    @NonNull Call<CategoryResponseDto> call,
+                    @NonNull Call<Category> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
 
@@ -131,7 +122,6 @@ public class CategoryRepository {
                     @NonNull Response<Void> response
             ) {
                 if (!response.isSuccessful()) {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(false);
                 }
             }
@@ -141,7 +131,6 @@ public class CategoryRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
                 liveData.postValue(false);
             }
         });

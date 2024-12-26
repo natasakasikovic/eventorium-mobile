@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.dtos.CategoryRequestDto;
 import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.util.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ public class CategoryViewModel extends ViewModel {
     @Inject
     public CategoryViewModel(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        //TODO: do not fetch on creation
         fetchCategories();
     }
 
@@ -57,11 +57,11 @@ public class CategoryViewModel extends ViewModel {
         return result;
     }
 
-    public LiveData<Category> createCategory(CategoryRequestDto category) {
+    public LiveData<Result<Category>> createCategory(CategoryRequestDto category) {
         return categoryRepository.createCategory(category);
     }
 
-    public LiveData<Category> updateCategory(Long id, CategoryRequestDto category) {
+    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequestDto category) {
         return categoryRepository.updateCategory(id, category);
     }
 

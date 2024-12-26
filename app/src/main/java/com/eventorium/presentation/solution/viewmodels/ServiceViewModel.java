@@ -61,7 +61,7 @@ public class ServiceViewModel extends ViewModel {
         return serviceRepository.updateService(serviceId, dto);
     }
 
-    public LiveData<Long> createService(CreateServiceRequestDto dto) {
+    public LiveData<Result<Long>> createService(CreateServiceRequestDto dto) {
         return serviceRepository.createService(dto);
     }
 

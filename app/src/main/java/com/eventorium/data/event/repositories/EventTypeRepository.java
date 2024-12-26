@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.category.mappers.CategoryMapper;
 import com.eventorium.data.event.dtos.EventTypeRequestDto;
 import com.eventorium.data.event.dtos.EventTypeResponseDto;
 import com.eventorium.data.event.mappers.EventTypeMapper;

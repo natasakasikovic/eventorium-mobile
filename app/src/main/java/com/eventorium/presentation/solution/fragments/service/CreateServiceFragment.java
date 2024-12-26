@@ -21,12 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -191,10 +189,10 @@ public class CreateServiceFragment extends Fragment {
         CreateServiceRequestDto dto = loadDataFromForm();
         if(dto != null) {
             serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
-                if (serviceId != null) {
+                if (serviceId.getError() == null) {
                     if (!imageUris.isEmpty()) {
                         serviceViewModel
-                                .uploadImages(serviceId, getContext(), imageUris)
+                                .uploadImages(serviceId.getData(), getContext(), imageUris)
                                 .observe(getViewLifecycleOwner(), this::handleUpload);
                     } else {
                         Toast.makeText(
@@ -210,7 +208,7 @@ public class CreateServiceFragment extends Fragment {
                 } else {
                     Toast.makeText(
                             requireContext(),
-                            R.string.failed_to_create_service,
+                            serviceId.getError(),
                             Toast.LENGTH_SHORT
                     ).show();
                 }
@@ -274,7 +272,7 @@ public class CreateServiceFragment extends Fragment {
                             .getSelectedItems().stream()
                             .map(EventTypeMapper::toRequest)
                             .collect(toList()))
-                    .category(new CategoryResponseDto(category.getId(), category.getName(), category.getDescription()))
+                    .category(category)
                     .build();
         } catch (NullPointerException | NumberFormatException | DateTimeParseException exception) {
             Toast.makeText(

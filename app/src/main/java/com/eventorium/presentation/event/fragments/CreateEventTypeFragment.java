@@ -20,9 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
 import com.eventorium.data.event.dtos.EventTypeRequestDto;
-import com.eventorium.data.category.mappers.CategoryMapper;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.databinding.FragmentCreateEventTypeBinding;
@@ -136,11 +134,7 @@ public class CreateEventTypeFragment extends Fragment {
             return;
         }
 
-        List<CategoryResponseDto> selectedCategoriesDto = new ArrayList<>();
-        for (Category c: selectedCategories) {
-            selectedCategoriesDto.add(CategoryMapper.toResponse(c));
-        }
-        EventTypeRequestDto dto = new EventTypeRequestDto(name, description, selectedCategoriesDto);
+        EventTypeRequestDto dto = new EventTypeRequestDto(name, description, selectedCategories);
         eventTypeViewModel.createEventType(dto).observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
                 Toast.makeText(

@@ -1,6 +1,6 @@
 package com.eventorium.data.solution.dtos;
 
-import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.dtos.EventTypeResponseDto;
 import com.eventorium.data.util.models.ReservationType;
 
@@ -27,7 +27,7 @@ public class CreateServiceRequestDto {
     private double price;
     private double discount;
     private List<EventTypeResponseDto> eventTypes;
-    private CategoryResponseDto category;
+    private Category category;
     private ReservationType type;
     private LocalDate reservationDeadline;
     private LocalDate cancellationDeadline;
