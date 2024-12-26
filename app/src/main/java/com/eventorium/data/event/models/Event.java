@@ -1,7 +1,7 @@
 package com.eventorium.data.event.models;
 
 
-import com.eventorium.data.auth.models.City;
+import com.eventorium.data.shared.models.City;
 
 import java.time.LocalDate;
 

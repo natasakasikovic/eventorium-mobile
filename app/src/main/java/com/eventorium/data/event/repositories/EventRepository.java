@@ -10,6 +10,7 @@ import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -77,7 +78,12 @@ public class EventRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     liveData.postValue(Result.success((response.body())));
                 } else {
-                    liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        liveData.postValue(Result.error(errorResponse));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
                 }
             }
 

@@ -1,6 +1,6 @@
 package com.eventorium.data.event.models;
 
-import com.eventorium.data.auth.models.City;
+import com.eventorium.data.shared.models.City;
 
 import java.time.LocalDate;
 
@@ -21,7 +21,7 @@ public class CreateEvent {
     private LocalDate date;
     private Privacy privacy;
     private Integer maxParticipants;
-    private EventType type;
+    private EventType eventType;
     private City city;
     private String address;
 }

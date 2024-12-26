@@ -1,5 +1,7 @@
 package com.eventorium.data.auth.models;
 
+import com.eventorium.data.shared.models.City;
+
 public class Person {
     private String name;
     private String lastname;
