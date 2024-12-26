@@ -3,9 +3,12 @@ package com.eventorium.data.event.repositories;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.event.models.CreateEvent;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.util.List;
 
@@ -14,7 +17,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.internal.EverythingIsNonNull;
 
 public class EventRepository {
 
@@ -39,7 +41,7 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<List<EventSummary>> call, Throwable t) {
-                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
         return liveData;
@@ -59,10 +61,30 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<List<EventSummary>> call, Throwable t) {
-                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
                 }
             }
         );
         return liveData;
+    }
+
+    public LiveData<Result<Event>> createEvent(CreateEvent event) {
+        MutableLiveData<Result<Event>> liveData = new MutableLiveData<>();
+        service.createEvent(event).enqueue(new Callback<>() {
+
+            @Override
+            public void onResponse(Call<Event> call, Response<Event> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(Result.success((response.body())));
+                } else {
+                    liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Event> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
     }
 }
