@@ -82,8 +82,6 @@ public class FileUtil {
         return null;
     }
 
-
-
     public static Uri savePdfToDownloads(Context context, ResponseBody responseBody) throws IOException {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Downloads.DISPLAY_NAME, "price_list_report.pdf");

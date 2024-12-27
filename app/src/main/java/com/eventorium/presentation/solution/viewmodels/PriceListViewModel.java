@@ -43,7 +43,7 @@ public class PriceListViewModel extends ViewModel {
         return priceListRepository.updateProduct(id, dto);
     }
 
-    public LiveData<Uri> downloadPdf(Context context) {
+    public LiveData<Result<Uri>> downloadPdf(Context context) {
         return priceListRepository.downloadPdf(context);
     }
 

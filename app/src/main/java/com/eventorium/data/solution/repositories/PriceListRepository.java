@@ -60,9 +60,9 @@ public class PriceListRepository {
         return result;
     }
 
-    public LiveData<Uri> downloadPdf(Context context) {
-        MutableLiveData<Uri> pdfFile = new MutableLiveData<>();
-        priceListService.downloadPdf().enqueue(new Callback<ResponseBody>() {
+    public LiveData<Result<Uri>> downloadPdf(Context context) {
+        MutableLiveData<Result<Uri>> pdfFile = new MutableLiveData<>();
+        priceListService.downloadPdf().enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<ResponseBody> call,
@@ -70,9 +70,14 @@ public class PriceListRepository {
             ) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                         pdfFile.postValue(FileUtil.savePdfToDownloads(context, response.body()));
+                        Uri uri = FileUtil.savePdfToDownloads(context, response.body());
+                        if(uri != null) {
+                            pdfFile.postValue(Result.success(uri));
+                        } else {
+                            pdfFile.postValue(Result.error("Failed to save pdf"));
+                        }
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        pdfFile.postValue(Result.error("Failed to download pdf: " + e.getMessage()));
                     }
                 }
 
@@ -80,7 +85,7 @@ public class PriceListRepository {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
+                pdfFile.postValue(Result.error("Failed to download pdf: " + t.getMessage()));
             }
         });
 

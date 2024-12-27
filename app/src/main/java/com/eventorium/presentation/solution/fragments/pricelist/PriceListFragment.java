@@ -63,11 +63,11 @@ public class PriceListFragment extends Fragment {
 
         binding.downloadPdf.setOnClickListener(v ->
             priceListViewModel.downloadPdf(getContext()).observe(getViewLifecycleOwner(), pdfFile -> {
-                if (pdfFile != null) {
-                    Toast.makeText(requireContext(), "PDF downloaded to " + pdfFile.getPath(), Toast.LENGTH_LONG).show();
-                    openPdf(pdfFile);
+                if (pdfFile.getError() == null) {
+                    Toast.makeText(requireContext(), "PDF downloaded to " + pdfFile.getData().getPath(), Toast.LENGTH_LONG).show();
+                    openPdf(pdfFile.getData());
                 } else {
-                    Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), pdfFile.getError(), Toast.LENGTH_SHORT).show();
                 }
             })
         );
