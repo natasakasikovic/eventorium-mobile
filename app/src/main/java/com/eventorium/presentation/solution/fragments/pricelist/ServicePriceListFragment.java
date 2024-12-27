@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
 import com.eventorium.databinding.FragmentServicePriceListBinding;
 import com.eventorium.presentation.solution.adapters.PriceListItemAdapter;
-import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.PriceListViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -57,7 +56,7 @@ public class ServicePriceListFragment extends Fragment {
 
                     priceListViewModel.updateService(
                             service.getId(),
-                            new UpdatePriceListRequestDto(service.getPrice(), service.getDiscount())
+                            new UpdatePriceList(service.getPrice(), service.getDiscount())
                     ).observe(getViewLifecycleOwner(), priceListItem -> {
                         if (priceListItem.getError() == null) {
                             Toast.makeText(

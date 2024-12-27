@@ -14,10 +14,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.category.models.Category;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
-import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 
 import java.util.List;
 import java.util.Objects;

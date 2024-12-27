@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.dtos.ImageResponseDto;

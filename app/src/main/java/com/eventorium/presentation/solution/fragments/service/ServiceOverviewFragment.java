@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;

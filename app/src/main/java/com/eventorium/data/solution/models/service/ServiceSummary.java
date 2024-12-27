@@ -1,4 +1,4 @@
-package com.eventorium.data.solution.models;
+package com.eventorium.data.solution.models.service;
 
 
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+
+import com.eventorium.data.util.models.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +25,9 @@ public class ServiceSummary implements Parcelable {
     private String name;
     private Double price;
     private Bitmap image;
+    private Boolean available;
+    private Boolean visible;
+    private Status status;
 
     protected ServiceSummary(Parcel in) {
         name = in.readString();

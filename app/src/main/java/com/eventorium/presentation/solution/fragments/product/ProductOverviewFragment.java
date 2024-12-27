@@ -10,8 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 

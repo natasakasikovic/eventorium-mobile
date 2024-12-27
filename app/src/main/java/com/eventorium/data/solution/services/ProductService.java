@@ -1,7 +1,7 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.models.Product;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;

@@ -12,11 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.UpdateService;
+import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
@@ -43,13 +42,13 @@ public class ServiceRepository {
         this.serviceService = serviceService;
     }
 
-    public LiveData<Result<Long>> createService(CreateServiceRequestDto dto) {
+    public LiveData<Result<Long>> createService(CreateService dto) {
         MutableLiveData<Result<Long>> result = new MutableLiveData<>();
         serviceService.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<ServiceSummaryResponseDto> call,
-                    @NonNull Response<ServiceSummaryResponseDto> response
+                    @NonNull Call<ServiceSummary> call,
+                    @NonNull Response<ServiceSummary> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
                     result.postValue(Result.success(response.body().getId()));
@@ -60,7 +59,7 @@ public class ServiceRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<ServiceSummaryResponseDto> call,
+                    @NonNull Call<ServiceSummary> call,
                     @NonNull Throwable t
             ) {
                 result.postValue(Result.error(t.getMessage()));
@@ -228,7 +227,7 @@ public class ServiceRepository {
         return successful;
     }
 
-    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateServiceRequestDto dto) {
+    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
         MutableLiveData<Result<ServiceSummary>> liveData = new MutableLiveData<>();
         serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
             @Override

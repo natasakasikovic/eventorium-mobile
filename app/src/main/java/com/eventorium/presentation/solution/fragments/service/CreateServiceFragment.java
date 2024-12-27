@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -185,7 +183,7 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void createService() {
-        CreateServiceRequestDto dto = loadDataFromForm();
+        CreateService dto = loadDataFromForm();
         if(dto != null) {
             serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
                 if (serviceId.getError() == null) {
@@ -215,7 +213,7 @@ public class CreateServiceFragment extends Fragment {
         }
     }
 
-    private CreateServiceRequestDto loadDataFromForm() {
+    private CreateService loadDataFromForm() {
         try {
             Category category = getCategory();
             ReservationType type = binding.manualChecked.isChecked()
@@ -255,7 +253,7 @@ public class CreateServiceFragment extends Fragment {
                 return null;
             }
 
-            return CreateServiceRequestDto.builder()
+            return CreateService.builder()
                     .name(String.valueOf(binding.serviceNameText.getText()))
                     .description(String.valueOf(binding.serviceDescriptionText.getText()))
                     .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))

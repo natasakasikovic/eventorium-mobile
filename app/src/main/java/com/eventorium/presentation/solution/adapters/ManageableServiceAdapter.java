@@ -1,7 +1,6 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ServiceSummary;
-import com.eventorium.presentation.solution.fragments.service.EditServiceFragment;
-import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.util.listeners.OnManageListener;
 
 import java.util.List;
