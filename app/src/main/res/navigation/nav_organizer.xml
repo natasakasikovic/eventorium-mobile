@@ -13,4 +13,10 @@
         android:label="service_booking_fragment"
         tools:layout="@layout/fragment_service_booking" />
 
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.eventorium.presentation.event.fragments.CreateEventFragment"
+        android:label="create_event_fragment"
+        tools:layout="@layout/fragment_create_event" />
+
 </navigation>

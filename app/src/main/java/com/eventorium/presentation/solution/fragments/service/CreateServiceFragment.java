@@ -1,7 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import static java.util.stream.Collectors.toList;
-
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,7 +20,6 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.mappers.EventTypeMapper;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.models.Service;
@@ -165,7 +162,7 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void loadEventTypes() {
-        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             binding.eventTypeRecycleView.setAdapter(new ChecklistAdapter<>(eventTypes));
         });
     }
@@ -271,9 +268,7 @@ public class CreateServiceFragment extends Fragment {
                     .type(type)
                     .eventTypes(((ChecklistAdapter<EventType>)
                             (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
-                            .getSelectedItems().stream()
-                            .map(EventTypeMapper::toRequest)
-                            .collect(toList()))
+                            .getSelectedItems())
                     .category(category)
                     .build();
         } catch (NullPointerException | NumberFormatException | DateTimeParseException exception) {

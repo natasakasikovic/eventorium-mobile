@@ -201,7 +201,7 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void loadEventTypes() {
-        eventTypeViewModel.fetchEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             adapter = new ChecklistAdapter<>(eventTypes);
             binding.eventTypeRecycleView.setAdapter(adapter);
             createDatePickers();
