@@ -1,6 +1,6 @@
 package com.eventorium.data.category.services;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.Category;
 
 import java.util.List;
@@ -19,10 +19,10 @@ public interface CategoryService {
     Call<List<Category>> getCategories();
 
     @PUT("categories/{id}")
-    Call<Category> updateCategory(@Path("id") Long id, @Body CategoryRequestDto dto);
+    Call<Category> updateCategory(@Path("id") Long id, @Body CategoryRequest dto);
 
     @POST("categories")
-    Call<Category> createCategory(@Body CategoryRequestDto dto);
+    Call<Category> createCategory(@Body CategoryRequest dto);
 
     @DELETE("categories/{id}")
     Call<Void> deleteCategory(@Path("id") Long id);

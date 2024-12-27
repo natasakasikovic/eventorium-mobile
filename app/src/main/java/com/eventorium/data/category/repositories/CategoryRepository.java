@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.util.Result;
 
@@ -58,10 +58,10 @@ public class CategoryRepository {
         return liveData;
     }
 
-    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequestDto category) {
+    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequest request) {
         MutableLiveData<Result<Category>> liveData = new MutableLiveData<>();
 
-        categoryService.updateCategory(id, category).enqueue(new Callback<>() {
+        categoryService.updateCategory(id, request).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Category> call,
@@ -86,9 +86,9 @@ public class CategoryRepository {
         return liveData;
     }
 
-    public LiveData<Result<Category>> createCategory(CategoryRequestDto dto) {
+    public LiveData<Result<Category>> createCategory(CategoryRequest request) {
         MutableLiveData<Result<Category>> liveData = new MutableLiveData<>();
-        categoryService.createCategory(dto).enqueue(new Callback<>() {
+        categoryService.createCategory(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Category> call,

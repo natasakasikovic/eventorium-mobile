@@ -1,7 +1,7 @@
 package com.eventorium.data.category.services;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 
 import java.util.List;
@@ -21,18 +21,18 @@ public interface CategoryProposalService {
     @PATCH("categories/pending/{id}")
     Call<Category> updateCategoryStatus(
             @Path("id") Long id,
-            @Body CategoryUpdateStatusDto dto
+            @Body UpdateCategoryStatus dto
     );
 
     @PUT("categories/pending/{id}")
     Call<Category> updateCategoryProposal(
             @Path("id") Long id,
-            @Body CategoryRequestDto dto
+            @Body CategoryRequest dto
     );
 
     @PUT("categories/pending/{id}/change")
     Call<Category> changeCategoryProposal(
             @Path("id") Long id,
-            @Body CategoryRequestDto dto
+            @Body CategoryRequest dto
     );
 }

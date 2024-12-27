@@ -1,4 +1,4 @@
-package com.eventorium.data.category.dtos;
+package com.eventorium.data.category.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryRequestDto {
+public class CategoryRequest {
     @SerializedName("name")
     @Expose
     private String name;

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.category.adapters.CategoriesAdapter;
@@ -156,7 +156,7 @@ public class CategoryOverviewFragment extends Fragment {
                 .setPositiveButton("Save", (dialog, which) -> {
                     String newName = nameEditText.getText().toString();
                     String newDescription = descriptionEditText.getText().toString();
-                    saveCategory(category.getId(), new CategoryRequestDto(newName, newDescription));
+                    saveCategory(category.getId(), new CategoryRequest(newName, newDescription));
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
@@ -171,7 +171,7 @@ public class CategoryOverviewFragment extends Fragment {
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    private void saveCategory(Long id, CategoryRequestDto dto) {
+    private void saveCategory(Long id, CategoryRequest dto) {
         categoryViewModel.updateCategory(id, dto).observe(getViewLifecycleOwner(), updatedCategory -> {
             if(updatedCategory.getError() == null) {
                 Toast.makeText(

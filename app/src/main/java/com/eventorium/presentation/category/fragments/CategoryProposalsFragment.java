@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
@@ -98,7 +98,7 @@ public class CategoryProposalsFragment extends Fragment {
     private void updateCategoryStatus(Category category, Status status) {
         proposalViewModel.updateCategoryStatus(
                 category.getId(),
-                new CategoryUpdateStatusDto(status)
+                new UpdateCategoryStatus(status)
         ).observe(getViewLifecycleOwner(), success
                 -> handleResponse(category.getId(), success));
     }
@@ -155,7 +155,7 @@ public class CategoryProposalsFragment extends Fragment {
                     String newDescription = descriptionEditText.getText().toString();
 
                     updateCategoryProposal(category, categoryName, existingCategoriesSpinner);
-                    saveCategory(category.getId(), new CategoryRequestDto(newName, newDescription));
+                    saveCategory(category.getId(), new CategoryRequest(newName, newDescription));
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
@@ -189,7 +189,7 @@ public class CategoryProposalsFragment extends Fragment {
             Category selectedCategory = getSelectedCategory(spinner, categoryName);
             proposalViewModel.changeCategory(
                     category.getId(),
-                    new CategoryRequestDto(
+                    new CategoryRequest(
                             selectedCategory.getName(),
                             selectedCategory.getDescription()
                     )
@@ -205,7 +205,7 @@ public class CategoryProposalsFragment extends Fragment {
                 .findFirst().get();
     }
 
-    private void saveCategory(Long id, CategoryRequestDto dto) {
+    private void saveCategory(Long id, CategoryRequest dto) {
         proposalViewModel.updateCategoryProposal(id, dto)
                 .observe(getViewLifecycleOwner(), success -> handleResponse(id, success));
     }

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.util.Result;
 
@@ -57,11 +57,11 @@ public class CategoryViewModel extends ViewModel {
         return result;
     }
 
-    public LiveData<Result<Category>> createCategory(CategoryRequestDto category) {
+    public LiveData<Result<Category>> createCategory(CategoryRequest category) {
         return categoryRepository.createCategory(category);
     }
 
-    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequestDto category) {
+    public LiveData<Result<Category>> updateCategory(Long id, CategoryRequest category) {
         return categoryRepository.updateCategory(id, category);
     }
 

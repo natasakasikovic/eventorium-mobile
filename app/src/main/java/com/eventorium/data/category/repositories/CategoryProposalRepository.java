@@ -1,15 +1,13 @@
 package com.eventorium.data.category.repositories;
 
-import static java.util.stream.Collectors.toList;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.services.CategoryProposalService;
 
@@ -58,23 +56,23 @@ public class CategoryProposalRepository {
         return liveData;
     }
 
-    public LiveData<Boolean> updateCategoryStatus(Long id, CategoryUpdateStatusDto categoryUpdateStatusDto) {
+    public LiveData<Boolean> updateCategoryStatus(Long id, UpdateCategoryStatus updateCategoryStatus) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.updateCategoryStatus(id, categoryUpdateStatusDto)
+        service.updateCategoryStatus(id, updateCategoryStatus)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
 
-    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequestDto dto) {
+    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequest request) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.updateCategoryProposal(id, dto)
+        service.updateCategoryProposal(id, request)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
 
-    public LiveData<Boolean> changeCategory(Long id, CategoryRequestDto categoryRequestDto) {
+    public LiveData<Boolean> changeCategory(Long id, CategoryRequest categoryRequest) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.changeCategoryProposal(id, categoryRequestDto)
+        service.changeCategoryProposal(id, categoryRequest)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
