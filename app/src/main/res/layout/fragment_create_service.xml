@@ -461,7 +461,6 @@
                     android:scrollbars="vertical"
                     android:orientation="vertical"
                     android:background="@color/card_background"
-
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_gravity="center" />
             </LinearLayout>
