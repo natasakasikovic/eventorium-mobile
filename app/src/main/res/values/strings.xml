@@ -146,4 +146,5 @@
     <string name="item_has_been_updated_successfully">Item has been updated successfully!</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="download">Download</string>
 </resources>

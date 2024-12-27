@@ -26,4 +26,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/downloadPdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:text="@string/download"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_download"
+        android:drawablePadding="8dp"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/ic_download"
+        app:iconGravity="textStart"
+        app:iconTint="@android:color/white"
+        app:strokeColor="@android:color/white"
+        app:strokeWidth="1dp"
+        android:backgroundTint="@color/md_theme_primary"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

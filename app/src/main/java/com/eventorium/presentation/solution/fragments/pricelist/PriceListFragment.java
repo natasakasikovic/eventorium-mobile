@@ -1,17 +1,25 @@
 package com.eventorium.presentation.solution.fragments.pricelist;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.databinding.FragmentPriceListBinding;
+import com.eventorium.presentation.solution.viewmodels.PriceListViewModel;
 import com.eventorium.presentation.util.adapters.PriceListPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.io.File;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -20,6 +28,7 @@ public class PriceListFragment extends Fragment {
 
     private FragmentPriceListBinding binding;
     private PriceListPagerAdapter adapter;
+    private PriceListViewModel priceListViewModel;
 
     public PriceListFragment() {
     }
@@ -31,6 +40,7 @@ public class PriceListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        priceListViewModel = new ViewModelProvider(this).get(PriceListViewModel.class);
     }
 
     @Override
@@ -51,7 +61,25 @@ public class PriceListFragment extends Fragment {
             }
         }).attach();
 
+        binding.downloadPdf.setOnClickListener(v ->
+            priceListViewModel.downloadPdf(getContext()).observe(getViewLifecycleOwner(), pdfFile -> {
+                if (pdfFile != null) {
+                    Toast.makeText(requireContext(), "PDF downloaded to " + pdfFile.getPath(), Toast.LENGTH_LONG).show();
+                    openPdf(pdfFile);
+                } else {
+                    Toast.makeText(requireContext(), "Failed to download PDF", Toast.LENGTH_SHORT).show();
+                }
+            })
+        );
+
         return binding.getRoot();
+    }
+
+    private void openPdf(Uri pdfUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(pdfUri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
     }
 
     @Override
