@@ -133,11 +133,14 @@
     <string name="removed_service_from_favourites">Removed service from favourites!</string>
     <string name="to_favourites"> to favourites!</string>
     <string name="added_service">"Added service "</string>
+    <string name="net_price">Net Price</string>
+    <string name="item">Item</string>
     <string name="new_event_type">New event type</string>
     <string name="home">Home</string>
     <string name="favourites">Favourites</string>
     <string name="account">Account</string>
     <string name="your_company">Your company</string>
     <string name="new_service">New service</string>
+    <string name="price_list">Price list</string>
     <string name="new_event">New event</string>
 </resources>

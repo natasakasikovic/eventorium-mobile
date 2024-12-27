@@ -1,0 +1,26 @@
+package com.eventorium.presentation.util.adapters;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.eventorium.presentation.solution.fragments.pricelist.ServicePriceListFragment;
+
+public class PriceListPagerAdapter extends FragmentStateAdapter {
+
+    public PriceListPagerAdapter(@NonNull Fragment fragment) {
+        super(fragment);
+    }
+
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        // TODO: Change in product price list
+        return ServicePriceListFragment.newInstance();
+    }
+
+    @Override
+    public int getItemCount() {
+        return 2;
+    }
+}

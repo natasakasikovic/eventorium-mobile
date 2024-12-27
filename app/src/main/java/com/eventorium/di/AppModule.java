@@ -19,8 +19,11 @@ import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
+import com.eventorium.data.solution.repositories.PriceListRepository;
+import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.AccountServiceService;
+import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
@@ -197,6 +200,19 @@ public class AppModule {
     public static AccountProductRepository provideAccountProductRepository(ProductService service) {
         return new AccountProductRepository(service);
     }
+
+    @Provides
+    @Singleton
+    public PriceListService providePriceListService(Retrofit retrofit) {
+        return retrofit.create(PriceListService.class);
+    }
+
+    @Provides
+    @Singleton
+    public PriceListRepository providePriceListRepository(PriceListService priceListService) {
+        return new PriceListRepository(priceListService);
+    }
+
 
     @Provides
     @Singleton

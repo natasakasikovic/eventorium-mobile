@@ -193,8 +193,11 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.manageServicesFragment);
         } else if (id == R.id.nav_company) {
             navController.navigate(R.id.companyDetailsFragment);
-        } else if (id == R.id.nav_new_service)
+        } else if (id == R.id.nav_new_service) {
             navController.navigate(R.id.createServiceFragment);
+        } else if (id == R.id.nav_price_list) {
+            navController.navigate(R.id.priceList);
+        }
     }
 
     private void handleOrganizerMenuItemSelection(int id) {
