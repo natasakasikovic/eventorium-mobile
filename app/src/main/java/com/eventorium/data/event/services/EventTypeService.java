@@ -1,7 +1,7 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.dtos.EventTypeRequestDto;
-import com.eventorium.data.event.dtos.EventTypeResponseDto;
+import com.eventorium.data.event.models.CreateEventType;
+import com.eventorium.data.event.models.EventType;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import retrofit2.http.POST;
 
 public interface EventTypeService {
     @GET("event-types/all")
-    Call<List<EventTypeResponseDto>> getEventTypes();
+    Call<List<EventType>> getEventTypes();
 
     @POST("event-types")
-    Call<EventTypeResponseDto> createEventType(@Body EventTypeRequestDto dto);
+    Call<EventType> createEventType(@Body CreateEventType dto);
 }

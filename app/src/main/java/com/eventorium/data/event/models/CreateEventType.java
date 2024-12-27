@@ -1,4 +1,4 @@
-package com.eventorium.data.event.dtos;
+package com.eventorium.data.event.models;
 
 import com.eventorium.data.category.dtos.CategoryResponseDto;
 import com.google.gson.annotations.Expose;
@@ -17,11 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventTypeResponseDto {
-    @SerializedName("id")
-    @Expose
-    private Long id;
-
+public class CreateEventType {
     @SerializedName("name")
     @Expose
     private String name;

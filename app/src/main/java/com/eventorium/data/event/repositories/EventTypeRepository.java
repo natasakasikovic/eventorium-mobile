@@ -1,17 +1,12 @@
 package com.eventorium.data.event.repositories;
 
-import static java.util.stream.Collectors.toList;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.category.mappers.CategoryMapper;
-import com.eventorium.data.event.dtos.EventTypeRequestDto;
-import com.eventorium.data.event.dtos.EventTypeResponseDto;
-import com.eventorium.data.event.mappers.EventTypeMapper;
+import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.services.EventTypeService;
 
@@ -33,16 +28,16 @@ public class EventTypeRepository {
         this.eventTypeService = eventTypeService;
     }
 
-    public LiveData<EventType> createEventType(EventTypeRequestDto dto) {
+    public LiveData<EventType> createEventType(CreateEventType eventType) {
         MutableLiveData<EventType> liveData = new MutableLiveData<>();
 
-        eventTypeService.createEventType(dto).enqueue(new Callback<>() {
+        eventTypeService.createEventType(eventType).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<EventTypeResponseDto> call,
-                    @NonNull Response<EventTypeResponseDto> response) {
+                    @NonNull Call<EventType> call,
+                    @NonNull Response<EventType> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(EventTypeMapper.fromResponse(response.body()));
+                    liveData.postValue(response.body());
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(null);
@@ -51,7 +46,7 @@ public class EventTypeRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<EventTypeResponseDto> call,
+                    @NonNull Call<EventType> call,
                     @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
             }
@@ -66,13 +61,11 @@ public class EventTypeRepository {
         eventTypeService.getEventTypes().enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<EventTypeResponseDto>> call,
-                    @NonNull Response<List<EventTypeResponseDto>> response
+                    @NonNull Call<List<EventType>> call,
+                    @NonNull Response<List<EventType>> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body().stream()
-                            .map(EventTypeMapper::fromResponse)
-                            .collect(toList()));
+                    liveData.postValue(response.body());
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(new ArrayList<>());
@@ -81,7 +74,7 @@ public class EventTypeRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<EventTypeResponseDto>> call,
+                    @NonNull Call<List<EventType>> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getLocalizedMessage());
@@ -91,4 +84,5 @@ public class EventTypeRepository {
 
         return liveData;
     }
+
 }
