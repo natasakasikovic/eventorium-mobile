@@ -143,4 +143,5 @@
     <string name="new_service">New service</string>
     <string name="price_list">Price list</string>
     <string name="new_event">New event</string>
+    <string name="add_new_category">Add new category</string>
 </resources>
