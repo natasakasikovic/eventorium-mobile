@@ -14,12 +14,19 @@ import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentBudgetPlanningBinding;
+import com.eventorium.presentation.util.adapters.BudgetPagerAdapter;
+import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class BudgetPlanningFragment extends Fragment {
 
     private FragmentBudgetPlanningBinding binding;
     public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
     public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
+
+    private Long eventId;
+    private EventType eventType;
+    private BudgetPagerAdapter adapter;
 
     public BudgetPlanningFragment() {
     }
@@ -36,15 +43,33 @@ public class BudgetPlanningFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            eventId = getArguments().getLong(ARG_EVENT_ID);
+            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
+        }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetPlanningBinding.inflate(inflater, container, false);
-        assert getArguments() != null;
-        Log.i("BUDGET_PLANNING", String.valueOf(getArguments().getLong(ARG_EVENT_ID)));
-        Log.i("BUDGET_PLANNING", String.valueOf(getArguments().getParcelable(ARG_EVENT_TYPE)));
+        adapter = new BudgetPagerAdapter(this, eventType, eventId);
+        binding.viewPager.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Planning");
+                    break;
+                case 1:
+                    tab.setText("Purchased & Reserved");
+                    break;
+                case 2:
+                    tab.setText("Products");
+                    break;
+            }
+        }).attach();
+
         return binding.getRoot();
     }
 
