@@ -14,9 +14,20 @@
         tools:layout="@layout/fragment_service_booking" />
 
     <fragment
+        android:id="@+id/budgetPlanning"
+        android:name="com.eventorium.presentation.event.fragments.BudgetPlanningFragment"
+        android:label="service_booking_fragment"
+        tools:layout="@layout/fragment_budget_planning" />
+
+    <fragment
         android:id="@+id/createEventFragment"
         android:name="com.eventorium.presentation.event.fragments.CreateEventFragment"
         android:label="create_event_fragment"
-        tools:layout="@layout/fragment_create_event" />
+        tools:layout="@layout/fragment_create_event">
+        <action
+            android:id="@+id/action_create_to_budgetPlanning"
+            app:destination="@id/budgetPlanning"/>
+    </fragment>
+
 
 </navigation>
