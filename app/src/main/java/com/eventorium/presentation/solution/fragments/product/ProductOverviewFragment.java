@@ -5,23 +5,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
-import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
+import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class ProductOverviewFragment extends Fragment {
 
     private FragmentProductOverviewBinding binding;
-    private static final List<ProductSummary> PRODUCT_SUMMARIES = new ArrayList<>();
+    private ProductViewModel viewModel;
 
     public ProductOverviewFragment() { }
 
@@ -32,6 +32,7 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
     }
 
     @Override
@@ -43,7 +44,10 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(PRODUCT_SUMMARIES));
+        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+                    binding.productsRecycleView.setAdapter(new ProductsAdapter(products.getData()));
+                }
+        );
     }
 
     @Override
