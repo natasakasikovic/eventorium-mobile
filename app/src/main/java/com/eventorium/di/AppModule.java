@@ -10,8 +10,10 @@ import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.shared.models.City;
@@ -224,6 +226,18 @@ public class AppModule {
     @Singleton
     public EventService provideEventService(Retrofit retrofit){
         return retrofit.create(EventService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static BudgetRepository provideBudgetRepository(BudgetService service){
+        return new BudgetRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public BudgetService provideBudgetService(Retrofit retrofit){
+        return retrofit.create(BudgetService.class);
     }
 
     @Provides
