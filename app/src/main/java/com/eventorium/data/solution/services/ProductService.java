@@ -2,8 +2,6 @@ package com.eventorium.data.solution.services;
 
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;
@@ -34,6 +32,9 @@ public interface ProductService {
 
     @GET("account/products/favourites/{id}")
     Call<Boolean> isFavouriteProduct(@Path("id") Long id);
+
+    @GET("products/top-five-products")
+    Call<List<ProductSummary>> getTopProducts();
 
     @POST("account/products/favourites/{id}")
     Call<Product> addFavouriteProduct(@Path("id") Long id);

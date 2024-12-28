@@ -10,10 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.util.FileUtil;
+import com.eventorium.data.util.Result;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;
@@ -127,6 +128,24 @@ public class ProductRepository {
             }
         });
 
+        return liveData;
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getTopProducts(){
+        MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
+
+        productService.getTopProducts().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+            @Override
+            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
+                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
+            }
+        });
         return liveData;
     }
 }
