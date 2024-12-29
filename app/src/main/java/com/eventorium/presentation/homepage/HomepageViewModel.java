@@ -39,6 +39,10 @@ public class HomepageViewModel extends ViewModel {
         return  productRepository.getTopProducts();
     }
 
+    public LiveData<Bitmap> getProductImage(Long id) {
+        return productRepository.getProductImage(id);
+    }
+
     public LiveData<Result<List<ServiceSummary>>> getTopServices(){
         return serviceRepository.getTopServices();
     }

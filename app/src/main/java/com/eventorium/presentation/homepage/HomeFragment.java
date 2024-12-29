@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.util.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
@@ -98,8 +99,21 @@ public class HomeFragment extends Fragment {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
                 data -> { productsAdapter.setData(data);
-                }  // TODO: add loadProductsImages method
+                          loadProductImages(data); }
         ));
+    }
+
+    private void loadProductImages(List<ProductSummary> products) {
+        products.forEach( product -> viewModel.getProductImage(product.getId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        product.setImage(image);
+                        int position = products.indexOf(product);
+                        if (position != -1) {
+                            productsAdapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
     }
 
     private void observeTopServices() {
