@@ -54,9 +54,9 @@
         android:id="@+id/plannedAmountText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="100dp"
         android:hint="@string/planned_amount"
         android:minHeight="56dp"
         app:boxBackgroundMode="outline">
