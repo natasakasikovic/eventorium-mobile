@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
-    private final List<ProductSummary> productSummaries;
+    private List<ProductSummary> productSummaries;
     private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
     public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
         this.productSummaries = productSummaries;
@@ -74,6 +74,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     @Override
     public int getItemCount() {
         return productSummaries.size();
+    }
+
+    public void setData(List<ProductSummary> data) {
+        productSummaries = data;
+        notifyDataSetChanged();
     }
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {

@@ -51,8 +51,7 @@ public class ServiceOverviewFragment extends Fragment {
             bottomSheetDialog.setContentView(dialogView);
             bottomSheetDialog.show();
         });
-
-        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
+//        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
     }
 
     @Override
