@@ -86,6 +86,10 @@ public class AuthRepository {
         return new JWT(sharedPreferences.getString("user", ""))
                 .getClaim("userId").asLong();
     }
+
+    public String getUserRole() {
+        return sharedPreferences.getString("role", null);
+    }
     public String saveRole(String jwt) {
         String role = JwtDecoder.decodeRole(jwt);
         SharedPreferences.Editor editor = sharedPreferences.edit();

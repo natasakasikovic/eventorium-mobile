@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
+import ua.naiksoftware.stomp.dto.StompMessage;
 
 public class WebSocketService {
 
@@ -20,27 +21,44 @@ public class WebSocketService {
     private static final String SERVER_URL = "ws://" + BuildConfig.IP_ADDR + ":8080/api/v1/ws/websocket";
     private StompClient stompClient;
     private final NotificationService notificationService;
+    private Long userId;
 
     public WebSocketService() {
         this.notificationService = new NotificationService(Eventorium.getAppContext());
     }
 
     @SuppressLint("CheckResult")
-    public void connect(Long userId) {
+    public void connect(Long userId, String role) {
         if(userId == null) {
             return;
         }
+        this.userId = userId;
         stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SERVER_URL);
         stompClient.connect();
         logConnection(stompClient);
 
-        Gson gson = new Gson();
+        createGlobalSubscriptions();
+        switch(role) {
+            case "ADMIN" -> createAdminSubscriptions();
+        }
+    }
 
-        stompClient.topic("/user/" + userId + "/notifications").subscribe(message -> {
-            Notification notification = gson.fromJson(message.getPayload(), Notification.class);
-            new Handler(Looper.getMainLooper()).post(() -> {
-                notificationService.showNotification("Notification", notification.getMessage());
-            });
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
+    private void createGlobalSubscriptions() {
+        stompClient.topic("/user/" + userId + "/notifications").subscribe(this::handleNotification);
+    }
+
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
+    private void createAdminSubscriptions() {
+        stompClient.topic("/topic/admin").subscribe(this::handleNotification);
+    }
+
+
+    private void handleNotification(StompMessage message) {
+        Gson gson = new Gson();
+        Notification notification = gson.fromJson(message.getPayload(), Notification.class);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            notificationService.showNotification("Notification", notification.getMessage());
         });
     }
 
