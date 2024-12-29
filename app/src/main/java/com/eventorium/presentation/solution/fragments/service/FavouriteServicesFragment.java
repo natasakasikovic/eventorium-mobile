@@ -44,7 +44,7 @@ public class FavouriteServicesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
+//        binding.servicesRecycleView.setAdapter(new ServicesAdapter(SERVICE_SUMMARIES));
     }
 
     @Override

@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 
@@ -59,6 +61,10 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<String> addFavouriteProduct(Long id) {
         return accountProductRepository.addFavouriteProduct(id);
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getProducts(){
+        return productRepository.getProducts();
     }
 
 }

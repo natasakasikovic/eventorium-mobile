@@ -36,7 +36,7 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
 
     public void setServices(List<ServiceSummary> newServices) {
         serviceSummaries = newServices;
-        notifyDataSetChanged();;
+        notifyDataSetChanged();
     }
 
     public class ManageableServiceViewHolder extends BaseServiceViewHolder {

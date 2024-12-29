@@ -28,16 +28,23 @@ public class ServiceSummary implements Parcelable {
     private Boolean available;
     private Boolean visible;
     private Status status;
+    private Double discount;
 
     protected ServiceSummary(Parcel in) {
         name = in.readString();
         price = in.readDouble();
+        available = in.readBoolean();
+        visible = in.readBoolean();
+        discount = in.readDouble();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeDouble(price);
+        dest.writeBoolean(available);
+        dest.writeBoolean(visible);
+        dest.writeDouble(discount);
     }
 
     @Override

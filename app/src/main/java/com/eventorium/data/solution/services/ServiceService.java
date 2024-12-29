@@ -28,6 +28,9 @@ public interface ServiceService {
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
 
+    @GET("services/top-five-services")
+    Call<List<ServiceSummary>> getTopServices();
+
     @GET("services/{id}/image")
     Call<ResponseBody> getServiceImage(@Path("id") Long id);
 

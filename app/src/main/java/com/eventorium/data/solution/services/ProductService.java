@@ -33,6 +33,9 @@ public interface ProductService {
     @GET("account/products/favourites/{id}")
     Call<Boolean> isFavouriteProduct(@Path("id") Long id);
 
+    @GET("products/top-five-products")
+    Call<List<ProductSummary>> getTopProducts();
+
     @POST("account/products/favourites/{id}")
     Call<Product> addFavouriteProduct(@Path("id") Long id);
 

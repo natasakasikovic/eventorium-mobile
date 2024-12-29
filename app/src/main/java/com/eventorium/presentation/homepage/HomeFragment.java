@@ -1,5 +1,7 @@
 package com.eventorium.presentation.homepage;
 
+import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.data.util.Result;
 import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
@@ -26,6 +29,7 @@ import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -34,9 +38,8 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
     private HomepageViewModel viewModel;
-
-    private static List<ProductSummary> productSummaries = new ArrayList<>();
-    private static List<ServiceSummary> serviceSummaries = new ArrayList<>();
+    private ServicesAdapter serviceAdapter;
+    private ProductsAdapter productsAdapter;
 
     public HomeFragment() { }
 
@@ -46,32 +49,105 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(HomepageViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        configureServiceAdapter();
+        configureProductAdapter();
+
+        binding.servicesRecycleView.setAdapter(serviceAdapter);
+        binding.productsRecycleView.setAdapter(productsAdapter);
+
         return binding.getRoot();
+    }
+
+    private void configureProductAdapter() {
+        productsAdapter = new ProductsAdapter( new ArrayList<>(), product -> {
+            NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, product.getId());
+            navController.navigate(R.id.action_home_to_product_details, args);
+        });
+    }
+
+    private void configureServiceAdapter() {
+        serviceAdapter = new ServicesAdapter( new ArrayList<>(), service -> {
+            NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, service.getId());
+            navController.navigate(R.id.action_home_to_service_details, args);
+        });
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        prepareProductData();
+
+        observeTopEvents();
+        observeTopProducts();
+        observeTopServices();
 
         attachSnapHelpers();
-
-        viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null){
-                binding.eventsRecycleView.setAdapter(new EventsAdapter(result.getData()));
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(productSummaries));
-        binding.servicesRecycleView.setAdapter(new ServicesAdapter(serviceSummaries));
-
-
         setUpListeners();
     }
 
-    public void attachSnapHelpers() {
+    private void observeTopEvents() {
+        viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
+                result,
+                data -> binding.eventsRecycleView.setAdapter(new EventsAdapter(data)) // TODO: change
+        ));
+    }
+
+    private void observeTopProducts() {
+        viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
+                result,
+                data -> { productsAdapter.setData(data);
+                          loadProductImages(data); }
+        ));
+    }
+
+    private void loadProductImages(List<ProductSummary> products) {
+        products.forEach( product -> viewModel.getProductImage(product.getId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        product.setImage(image);
+                        int position = products.indexOf(product);
+                        if (position != -1) {
+                            productsAdapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
+    }
+
+    private void observeTopServices() {
+        viewModel.getTopServices().observe(getViewLifecycleOwner(), result -> handleResult(
+                result,
+                data -> {serviceAdapter.setData(data);
+                         loadServiceImages(data);
+                }
+        ));
+    }
+
+    private void loadServiceImages(List<ServiceSummary> services){
+        services.forEach( service -> viewModel.getServiceImage(service.getId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        service.setImage(image);
+                        int position = services.indexOf(service);
+                        if (position != -1) {
+                            serviceAdapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
+    }
+
+    private <T> void handleResult(Result<T> result, Consumer<T> onSuccess) {
+        if (result.getError() == null) {
+            onSuccess.accept(result.getData());
+        } else {
+            Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void attachSnapHelpers() {
         SnapHelper snapHelperEvents = new LinearSnapHelper();
         snapHelperEvents.attachToRecyclerView(binding.eventsRecycleView);
 
@@ -97,12 +173,4 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void prepareProductData() {
-        productSummaries.clear();
-        productSummaries.add(new ProductSummary(1L, "Smartphone X", 799.99, 15.0, true, true, 4.5, Status.ACCEPTED));
-        productSummaries.add(new ProductSummary(2L, "Laptop Pro 15", 1499.99, 10.0, false, true, 4.7, Status.ACCEPTED));
-        productSummaries.add(new ProductSummary(3L, "Bluetooth Headphones", 120.00, 5.0, true, true, 4.2, Status.ACCEPTED));
-        productSummaries.add(new ProductSummary(4L, "Smartwatch 2024", 250.00, 20.0, true, false, 4.8, Status.ACCEPTED));
-        productSummaries.add(new ProductSummary(5L, "Electric Scooter", 499.99, 25.0, true, true, 3.9, Status.ACCEPTED));
-    }
 }
