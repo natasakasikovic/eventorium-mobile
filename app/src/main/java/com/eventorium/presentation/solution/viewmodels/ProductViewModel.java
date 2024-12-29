@@ -12,6 +12,7 @@ import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.solution.models.Service;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 
@@ -62,6 +63,10 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<String> addFavouriteProduct(Long id) {
         return accountProductRepository.addFavouriteProduct(id);
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getProducts(){
+        return productRepository.getProducts();
     }
 
 }

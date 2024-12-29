@@ -37,6 +37,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomepageViewModel viewModel;
     private ServicesAdapter serviceAdapter;
+    private ProductsAdapter productsAdapter;
 
     public HomeFragment() { }
 
@@ -48,10 +49,21 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         configureServiceAdapter();
+        configureProductAdapter();
 
         binding.servicesRecycleView.setAdapter(serviceAdapter);
+        binding.productsRecycleView.setAdapter(productsAdapter);
 
         return binding.getRoot();
+    }
+
+    private void configureProductAdapter() {
+        productsAdapter = new ProductsAdapter( new ArrayList<>(), product -> {
+            NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, product.getId());
+            navController.navigate(R.id.action_home_to_product_details, args);
+        });
     }
 
     private void configureServiceAdapter() {
@@ -85,7 +97,8 @@ public class HomeFragment extends Fragment {
     private void observeTopProducts() {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> binding.productsRecycleView.setAdapter(new ProductsAdapter(data)) // TODO: change
+                data -> { productsAdapter.setData(data);
+                }  // TODO: add loadProductsImages method
         ));
     }
 

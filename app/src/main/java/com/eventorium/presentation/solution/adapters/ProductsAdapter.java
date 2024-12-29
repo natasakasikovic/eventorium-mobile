@@ -17,15 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
+import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.List;
 import java.util.Objects;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
-    private final List<ProductSummary> productSummaries;
-
-    public ProductsAdapter(List<ProductSummary> productSummaries) {
+    private List<ProductSummary> productSummaries;
+    private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
+    public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
         this.productSummaries = productSummaries;
+        this.onSeeMoreClick = onSeeMoreClick;
     }
 
     @NonNull
@@ -74,7 +76,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         return productSummaries.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+    public void setData(List<ProductSummary> data) {
+        productSummaries = data;
+        notifyDataSetChanged();
+    }
+
+    public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;
@@ -93,20 +100,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         }
 
         public void bind(ProductSummary productSummary) {
-            seeMoreButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(itemView);
-                int currentId = Objects.requireNonNull(navController.getCurrentDestination()).getId();
-                int actionId = 0;
-
-                if (currentId == R.id.homepageFragment) {
-                    actionId = R.id.action_home_to_product_details;
-                } else {
-                    throw new IllegalStateException("Unreachable...");
-                }
-
-                navController.navigate(actionId,
-                        ProductDetailsFragment.newInstance(productSummary.getId()).getArguments());
-            });
+            seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(productSummary));
         }
     }
 }
