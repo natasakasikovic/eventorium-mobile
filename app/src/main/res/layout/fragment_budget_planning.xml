@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@color/md_theme_tertiaryContainer"
             app:tabTextColor="@color/md_theme_secondaryContainer"
-            app:tabSelectedTextColor="@color/md_theme_primary" />
+            app:tabSelectedTextColor="@color/md_theme_primary"
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2

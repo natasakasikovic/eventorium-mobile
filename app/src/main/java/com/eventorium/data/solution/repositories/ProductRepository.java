@@ -12,10 +12,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -127,6 +130,27 @@ public class ProductRepository {
             }
         });
 
+        return liveData;
+    }
+
+    public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
+        MutableLiveData<List<ProductSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
+        productService.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ProductSummary>> call,
+                    @NonNull Response<List<ProductSummary>> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
+
+            }
+        });
         return liveData;
     }
 }

@@ -14,6 +14,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ProductService {
 
@@ -28,6 +29,9 @@ public interface ProductService {
 
     @GET("products/{id}/image")
     Call<ResponseBody> getProductImage(@Path("id") Long id);
+
+    @GET("products/suggestions")
+    Call<List<ProductSummary>> getSuggestions(@Query("categoryId") Long id, @Query("price") Double price);
 
     @GET("account/products/favourites")
     Call<List<ProductSummary>> getFavouriteProduct();

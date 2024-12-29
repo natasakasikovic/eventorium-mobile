@@ -32,7 +32,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class BudgetItemsFragment extends Fragment {
+public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragment.OnRemoveCategoryListener {
 
     private FragmentBudgetItemsBinding binding;
 
@@ -41,7 +41,7 @@ public class BudgetItemsFragment extends Fragment {
     private EventType eventType;
     private Long eventId;
 
-    private List<Category> plannedCategories = new ArrayList<>();
+    private final List<Category> plannedCategories = new ArrayList<>();
     private List<Category> otherCategories = new ArrayList<>();
 
 
@@ -103,7 +103,7 @@ public class BudgetItemsFragment extends Fragment {
     }
 
     private void addCategory(Category category) {
-        adapter.addFragment(BudgetCategoryFragment.newInstance(), category.getName());
+        adapter.addFragment(BudgetCategoryFragment.newInstance(category, plannedCategories.size()), category.getName());
         plannedCategories.add(category);
         otherCategories.remove(category);
     }
@@ -111,12 +111,13 @@ public class BudgetItemsFragment extends Fragment {
     private void loadSuggestedCategories() {
         adapter = new CategoryPagerAdapter(this);
         if(eventType != null) {
-            plannedCategories.addAll(eventType.getSuggestedCategories());
             eventType.getSuggestedCategories()
-                    .forEach(category -> adapter.addFragment(
-                            BudgetCategoryFragment.newInstance(),
-                            category.getName())
-                    );
+                    .forEach(category -> {
+                        adapter.addFragment(
+                                BudgetCategoryFragment.newInstance(category, plannedCategories.size()),
+                                category.getName());
+                        plannedCategories.add(category);
+                    });
         }
         binding.viewPager.setAdapter(adapter);
     }
@@ -126,5 +127,13 @@ public class BudgetItemsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    @Override
+    public void onRemoveCategory(int position, Category category) {
+        adapter.removeFragment(position);
+
+        plannedCategories.remove(category);
+        otherCategories.add(category);
     }
 }
