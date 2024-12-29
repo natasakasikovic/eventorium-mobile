@@ -1,5 +1,7 @@
 package com.eventorium.presentation.homepage;
 
+import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +65,12 @@ public class HomeFragment extends Fragment {
 
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null){
-                binding.productsRecycleView.setAdapter(new ProductsAdapter(result.getData()));
+                binding.productsRecycleView.setAdapter(new ProductsAdapter(result.getData(), product -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, product.getId());
+                    navController.navigate(R.id.action_home_to_product_details, args);
+                }));
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
             }
