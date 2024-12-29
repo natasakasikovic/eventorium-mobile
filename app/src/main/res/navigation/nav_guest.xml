@@ -79,7 +79,11 @@
         android:id="@+id/productsOverviewFragment"
         android:name="com.eventorium.presentation.solution.fragments.product.ProductOverviewFragment"
         android:label="fragment_product_overview"
-        tools:layout="@layout/fragment_product_overview" />
+        tools:layout="@layout/fragment_product_overview">
+        <action
+            android:id="@+id/action_productOverview_to_productDetails"
+            app:destination="@+id/productDetailsFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/serviceOverviewFragment"

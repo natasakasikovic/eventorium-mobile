@@ -6,23 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ServiceSummary;
-import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
+import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceViewHolder> {
 
-    public ServicesAdapter(List<ServiceSummary> serviceSummaries) {
+    private final OnSeeMoreClick<ServiceSummary> listener;
+
+    public ServicesAdapter(List<ServiceSummary> serviceSummaries, OnSeeMoreClick<ServiceSummary> listener) {
         super(serviceSummaries);
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,44 +33,59 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
         return new ServiceViewHolder(view);
     }
 
-    public static class ServiceViewHolder extends BaseServiceViewHolder {
+    @Override
+    public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
+        ServiceSummary service = serviceSummaries.get(position);
+        holder.bind(service);
+    }
+
+    public class ServiceViewHolder extends BaseServiceViewHolder {
         TextView nameTextView;
         TextView priceTextView;
+        TextView discountTextView;
         ImageView photoImageview;
         Button seeMoreButton;
+        LinearLayout layout;
 
         public ServiceViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.service_name);
             priceTextView = itemView.findViewById(R.id.service_price);
+            discountTextView = itemView.findViewById(R.id.service_discount);
             photoImageview = itemView.findViewById(R.id.service_photo);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
+            layout = itemView.findViewById(R.id.service_layout);
         }
 
         @SuppressLint("SetTextI18n")
         @Override
-        public void bind(ServiceSummary serviceSummary) {
-            nameTextView.setText(serviceSummary.getName());
-            priceTextView.setText(serviceSummary.getPrice().toString());
-            photoImageview.setImageBitmap(serviceSummary.getImage());
-            seeMoreButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(itemView);
-                int currentId = Objects.requireNonNull(navController.getCurrentDestination()).getId();
-                int actionId = 0;
+        public void bind(ServiceSummary service) {
 
-                if (currentId == R.id.homepageFragment) {
-                    actionId = R.id.action_home_to_service_details;
-                } else if (currentId == R.id.serviceOverviewFragment) {
-                    actionId = R.id.action_serviceOverview_to_service_details;
-                } else if (currentId == R.id.favourites) {
-                    actionId = R.id.action_favServices_to_serviceDetailsFragment;
-                } else {
-                    throw new IllegalStateException("Unreachable...");
-                }
+            float alpha = service.getAvailable() ? 1f : 0.5f;
+            layout.setAlpha(alpha);
 
-                navController.navigate(actionId,
-                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
-            });
+            setDiscount(service);
+
+            nameTextView.setText(service.getName());
+            priceTextView.setText(service.getPrice().toString());
+            photoImageview.setImageBitmap(service.getImage());
+            seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
+
         }
+
+        @SuppressLint("SetTextI18n")
+        private void setDiscount(ServiceSummary service){
+            if (hasDiscount(service)) {
+                discountTextView.setVisibility(View.VISIBLE);
+                discountTextView.setText(service.getDiscount().toString() + "% OFF");
+            } else {
+                discountTextView.setVisibility(View.GONE);
+            }
+        }
+
+        private boolean hasDiscount(ServiceSummary service) {
+            return service.getDiscount() != null && service.getDiscount() > 0;
+        }
+
     }
 }
