@@ -1,14 +1,11 @@
 package com.eventorium.presentation.solution.viewmodels;
 
 
-import static java.util.stream.Collectors.toList;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
@@ -55,6 +52,10 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<List<Bitmap>> getServiceImages(Long id) {
         return serviceRepository.getServiceImages(id);
+    }
+
+    public LiveData<Result<List<ServiceSummary>>> getServices(){
+        return serviceRepository.getServices();
     }
 
     public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateServiceRequestDto dto) {

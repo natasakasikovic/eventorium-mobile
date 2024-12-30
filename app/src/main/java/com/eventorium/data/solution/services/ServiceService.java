@@ -24,7 +24,7 @@ import retrofit2.http.Path;
 public interface ServiceService {
 
     @GET("services/all")
-    Call<List<ServiceSummaryResponseDto>> getServices();
+    Call<List<ServiceSummary>> getServices();
 
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
