@@ -1,10 +1,14 @@
 package com.eventorium.data.util;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 
@@ -12,12 +16,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 public class FileUtil {
 
@@ -71,6 +77,30 @@ public class FileUtil {
                 return cursor.getString(nameIndex);
             } finally {
                 cursor.close();
+            }
+        }
+        return null;
+    }
+
+    public static Uri savePdfToDownloads(Context context, ResponseBody responseBody) throws IOException {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Downloads.DISPLAY_NAME, "price_list_report.pdf");
+        values.put(MediaStore.Downloads.MIME_TYPE, "application/pdf");
+        values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+        Uri pdfUri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+
+        if (pdfUri != null) {
+            try (InputStream inputStream = responseBody.byteStream();
+                 OutputStream outputStream = context.getContentResolver().openOutputStream(pdfUri)) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    assert outputStream != null;
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                return pdfUri;
             }
         }
         return null;
