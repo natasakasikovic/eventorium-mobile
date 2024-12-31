@@ -24,6 +24,7 @@ import com.eventorium.data.util.Result;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -293,6 +294,27 @@ public class ServiceRepository {
             @Override
             public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
                 liveData.postValue(Result.error("Oops! Error while getting all services."));
+            }
+        });
+        return liveData;
+    }
+
+    public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Double price) {
+        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
+        serviceService.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ServiceSummary>> call,
+                    @NonNull Response<List<ServiceSummary>> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
+
             }
         });
         return liveData;
