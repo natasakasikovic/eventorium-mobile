@@ -5,7 +5,11 @@ import android.content.SharedPreferences;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.data.auth.repositories.RoleRepository;
+import com.eventorium.data.auth.repositories.UserRepository;
 import com.eventorium.data.auth.services.AuthService;
+import com.eventorium.data.auth.services.RoleService;
+import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
@@ -14,20 +18,17 @@ import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
-import com.eventorium.data.shared.models.City;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
-import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
-import com.eventorium.data.util.services.NotificationService;
 import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
@@ -237,5 +238,31 @@ public class AppModule {
     @Inject
     public CityService provideCityService(Retrofit retrofit){
         return retrofit.create(CityService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static RoleRepository provideRoleRepository(RoleService service){
+        return new RoleRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public RoleService provideRoleService(Retrofit retrofit){
+        return retrofit.create(RoleService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static UserRepository provideUserRepository(AuthService service){
+        return new UserRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public UserService provideUserService(Retrofit retrofit){
+        return retrofit.create(UserService.class);
     }
 }

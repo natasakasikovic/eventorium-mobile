@@ -27,19 +27,19 @@ import okhttp3.ResponseBody;
 
 public class FileUtil {
 
-    public static MultipartBody.Part getImageFromUri(Context context, Uri uri) throws IOException {
+    public static MultipartBody.Part getImageFromUri(Context context, Uri uri, String name) throws IOException {
         File file = FileUtil.getFileFromUri(context, uri);
         if (file != null) {
             RequestBody requestBody = RequestBody.create(file, MediaType.parse("image/*"));
-            return MultipartBody.Part.createFormData("images", file.getName(), requestBody);
+            return MultipartBody.Part.createFormData(name, file.getName(), requestBody);
         }
         throw new IOException("Error getting file from uri");
     }
 
-    public static List<MultipartBody.Part> getImagesFromUris(Context context, List<Uri> uris) throws IOException {
+    public static List<MultipartBody.Part> getImagesFromUris(Context context, List<Uri> uris, String name) throws IOException {
         List<MultipartBody.Part> parts = new ArrayList<>();
         for (Uri uri : uris) {
-            parts.add(getImageFromUri(context, uri));
+            parts.add(getImageFromUri(context, uri, name));
         }
         return parts;
     }

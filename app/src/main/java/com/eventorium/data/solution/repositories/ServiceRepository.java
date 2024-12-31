@@ -138,7 +138,7 @@ public class ServiceRepository {
         List<MultipartBody.Part> parts;
 
         try {
-            parts = FileUtil.getImagesFromUris(context, uris);
+            parts = FileUtil.getImagesFromUris(context, uris, "images");
         } catch (IOException e) {
             Log.e("IMAGES_ERROR", Objects.requireNonNull(e.getLocalizedMessage()));
             result.setValue(false);
