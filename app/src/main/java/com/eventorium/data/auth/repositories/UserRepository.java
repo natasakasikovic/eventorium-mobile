@@ -2,19 +2,18 @@ package com.eventorium.data.auth.repositories;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.services.AuthService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -41,10 +40,8 @@ public class UserRepository {
                     liveData.postValue(Result.success(response.body()));
                 } else {
                     try {
-                        // TODO: convert to json and extract error message
-                        Log.i("OVO JE GRESKA", response.errorBody().string());
                         String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(errorResponse));
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
                     } catch (IOException e) {
                         liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
                     }
