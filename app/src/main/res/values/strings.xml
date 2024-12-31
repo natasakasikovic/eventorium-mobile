@@ -146,4 +146,6 @@
     <string name="item_has_been_updated_successfully">Item has been updated successfully!</string>
     <string name="download">Download</string>
     <string name="new_event">New event</string>
+    <string name="join_the_eventorium_community">Join the Eventorium Community</string>
+    <string name="profile_photo_not_added">The profile photo has not been added. You can update it later.</string>
 </resources>

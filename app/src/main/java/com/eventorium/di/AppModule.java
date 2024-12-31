@@ -255,7 +255,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static UserRepository provideUserRepository(UserService service){
+    public static UserRepository provideUserRepository(AuthService service){
         return new UserRepository(service);
     }
 
