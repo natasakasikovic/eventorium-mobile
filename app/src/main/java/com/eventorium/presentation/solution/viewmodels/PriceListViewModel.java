@@ -1,5 +1,8 @@
 package com.eventorium.presentation.solution.viewmodels;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,6 +11,7 @@ import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.data.solution.repositories.PriceListRepository;
 import com.eventorium.data.util.Result;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class PriceListViewModel extends ViewModel {
     private final PriceListRepository priceListRepository;
-
 
     @Inject
     public PriceListViewModel(PriceListRepository priceListRepository) {
@@ -38,4 +41,9 @@ public class PriceListViewModel extends ViewModel {
     public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceList dto) {
         return priceListRepository.updateProduct(id, dto);
     }
+
+    public LiveData<Result<Uri>> downloadPdf(Context context) {
+        return priceListRepository.downloadPdf(context);
+    }
+
 }

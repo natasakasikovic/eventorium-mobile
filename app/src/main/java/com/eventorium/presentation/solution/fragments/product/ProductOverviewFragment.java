@@ -14,13 +14,16 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -38,25 +41,14 @@ public class ProductOverviewFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
-        configureAdapter();
-        return binding.getRoot();
-    }
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
 
-    private void configureAdapter() {
-        adapter = new ProductsAdapter(new ArrayList<>(), product  -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_productOverview_to_productDetails, args);
-        });
+        configureAdapter();
+        binding.productsRecycleView.setAdapter(adapter);
+
+        return binding.getRoot();
     }
 
     @Override
@@ -67,6 +59,41 @@ public class ProductOverviewFragment extends Fragment {
                 adapter.setData(products.getData());
             }
         });
+        observeProducts();
+    }
+
+    private void configureAdapter(){
+        adapter = new ProductsAdapter(new ArrayList<>(), product  -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, product.getId());
+            navController.navigate(R.id.action_productOverview_to_productDetails, args);
+        });
+    }
+
+    private void observeProducts(){
+        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                adapter.setData(result.getData());
+                loadProductImages(result.getData());
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadProductImages(List<ProductSummary> products) {
+        products.forEach( product -> viewModel.getProductImage(product.getId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        product.setImage(image);
+                        int position = products.indexOf(product);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                })
+        );
     }
 
     @Override

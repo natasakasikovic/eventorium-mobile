@@ -1,9 +1,14 @@
 package com.eventorium.presentation.event.fragments;
 
+import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
+import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -135,12 +140,11 @@ public class CreateEventFragment extends Fragment {
 
         eventViewModel.createEvent(event).observe(getViewLifecycleOwner(), response -> {
             if (response.getData() != null) {
-                // TODO: navigate to budget planning! (delete toast)
-                Toast.makeText(
-                        requireContext(),
-                        "Success",
-                        Toast.LENGTH_SHORT
-                ).show();
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                args.putLong(ARG_EVENT_ID, response.getData().getId());
+                args.putParcelable(ARG_EVENT_TYPE, response.getData().getType());
+                navController.navigate(R.id.action_create_to_budgetPlanning, args);
             } else {
                 Toast.makeText(
                         requireContext(),

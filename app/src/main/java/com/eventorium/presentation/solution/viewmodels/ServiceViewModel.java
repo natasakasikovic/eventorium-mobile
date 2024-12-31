@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.viewmodels;
 
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -10,9 +11,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.service.CreateService;
-import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.util.Result;
@@ -51,6 +52,10 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<List<Bitmap>> getServiceImages(Long id) {
         return serviceRepository.getServiceImages(id);
+    }
+
+    public LiveData<Result<List<ServiceSummary>>> getServices(){
+        return serviceRepository.getServices();
     }
 
     public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {

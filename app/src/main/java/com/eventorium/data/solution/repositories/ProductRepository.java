@@ -17,6 +17,7 @@ import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -163,6 +164,27 @@ public class ProductRepository {
            public void onFailure(@NonNull Call<List<ProductSummary>> call,@NonNull Throwable t) {
                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
            }
+        });
+        return liveData;
+    }
+
+    public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
+        MutableLiveData<List<ProductSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
+        productService.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ProductSummary>> call,
+                    @NonNull Response<List<ProductSummary>> response
+            ) {
+                if(response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
+
+            }
         });
         return liveData;
     }

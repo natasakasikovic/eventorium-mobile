@@ -19,6 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ServiceService {
 
@@ -37,6 +38,9 @@ public interface ServiceService {
     @GET("services/{id}/images")
     Call<List<ImageResponseDto>> getServiceImages(@Path("id") Long id);
 
+    @GET("services/suggestions")
+    Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);
+
     @POST("services")
     Call<ServiceSummary> createService(@Body CreateService dto);
 
@@ -49,4 +53,5 @@ public interface ServiceService {
 
     @DELETE("services/{id}")
     Call<Void> deleteService(@Path("id") Long id);
+
 }
