@@ -27,11 +27,11 @@ import okhttp3.ResponseBody;
 
 public class FileUtil {
 
-    public static MultipartBody.Part getImageFromUri(Context context, Uri uri, String paramName) throws IOException {
+    public static MultipartBody.Part getImageFromUri(Context context, Uri uri, String name) throws IOException {
         File file = FileUtil.getFileFromUri(context, uri);
         if (file != null) {
             RequestBody requestBody = RequestBody.create(file, MediaType.parse("image/*"));
-            return MultipartBody.Part.createFormData(paramName, file.getName(), requestBody);
+            return MultipartBody.Part.createFormData(name, file.getName(), requestBody);
         }
         throw new IOException("Error getting file from uri");
     }
