@@ -25,10 +25,13 @@ import retrofit2.http.Query;
 public interface ServiceService {
 
     @GET("services/all")
-    Call<List<ServiceSummaryResponseDto>> getServices();
+    Call<List<ServiceSummary>> getServices();
 
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
+
+    @GET("services/top-five-services")
+    Call<List<ServiceSummary>> getTopServices();
 
     @GET("services/{id}/image")
     Call<ResponseBody> getServiceImage(@Path("id") Long id);

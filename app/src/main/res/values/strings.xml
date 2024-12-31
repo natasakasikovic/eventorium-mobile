@@ -142,10 +142,15 @@
     <string name="your_company">Your company</string>
     <string name="new_service">New service</string>
     <string name="price_list">Price list</string>
+    <string name="discount_should_be_between_0_and_100">Discount should be between 0 and 100</string>
+    <string name="item_has_been_updated_successfully">Item has been updated successfully!</string>
+    <string name="download">Download</string>
     <string name="new_event">New event</string>
     <string name="add_new_category">Add new category</string>
     <string name="planned_amount">Planned amount</string>
     <string name="search">Search</string>
     <string name="delete_category">Delete category</string>
     <string name="continue_">Continue</string>
+    <string name="join_the_eventorium_community">Join the Eventorium Community</string>
+    <string name="profile_photo_not_added">The profile photo has not been added. You can update it later.</string>
 </resources>

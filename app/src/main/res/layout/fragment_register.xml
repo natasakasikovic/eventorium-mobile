@@ -13,16 +13,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_secondaryContainer">
+            android:background="@color/md_theme_primaryContainer">
 
             <TextView
                 android:id="@+id/pageTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/welcome"
+                android:text="@string/join_the_eventorium_community"
                 android:textColor="@color/md_theme_primary"
                 android:textSize="24sp"
+                android:fontFamily="@font/jejumyeongjo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,10 +42,12 @@
                 app:layout_constraintTop_toBottomOf="@id/pageTitle">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
                     android:inputType="text"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:hint="@string/name"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -62,10 +65,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lastNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
                     android:inputType="text"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:hint="@string/lastname"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -83,32 +88,45 @@
                 app:layout_constraintTop_toBottomOf="@+id/lastname">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addressEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
                     android:inputType="text"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:hint="@string/address"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/city"
+            <TextView
+                android:id="@+id/tvCityLabel"
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginHorizontal="40dp"
-                app:layout_constraintWidth_min="250dp"
-                app:layout_constraintWidth_max="350dp"
+                android:fontFamily="@font/jejumyeongjo"
+                android:text="City"
+                app:layout_constraintTop_toBottomOf="@id/address"
+                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="start"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/city"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:hint="City"
+                app:layout_constraintTop_toBottomOf="@id/tvCityLabel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/address" >
+                android:background="@color/md_theme_secondaryContainer">
 
-                <AutoCompleteTextView
-                    android:id="@+id/cityAutoComplete"
+                <Spinner
+                    android:id="@+id/spinnerCity"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:inputType="text"
-                    android:importantForAccessibility="yes"
-                    android:hint="@string/city"/>
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:spinnerMode="dropdown" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -125,10 +143,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/city">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/numberEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
                     android:inputType="text"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:hint="@string/phone_number"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,6 +171,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:importantForAccessibility="yes" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,6 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:importantForAccessibility="yes" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,31 +217,41 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    android:fontFamily="@font/jejumyeongjo"
                     android:importantForAccessibility="yes" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/registerAs"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginHorizontal="40dp"
+                android:fontFamily="@font/jejumyeongjo"
+                android:text="@string/register_as"
+                app:layout_constraintTop_toBottomOf="@id/confirmPassword"
+                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="start"
+                />
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/roleDropdownLayout"
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_height="55dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginHorizontal="40dp"
-                app:layout_constraintWidth_min="250dp"
-                app:layout_constraintWidth_max="350dp"
+                app:layout_constraintTop_toBottomOf="@id/registerAs"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/confirmPassword"
-                android:hint="@string/register_as"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_info"
-                android:importantForAccessibility="yes">
+                android:background="@color/md_theme_secondaryContainer" >
 
-                <AutoCompleteTextView
-                    android:id="@+id/roleDropdown"
+                <Spinner
+                    android:id="@+id/spinnerRole"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:importantForAccessibility="yes" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:spinnerMode="dropdown" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

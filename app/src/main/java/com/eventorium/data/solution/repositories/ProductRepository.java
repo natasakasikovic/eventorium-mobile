@@ -12,8 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
@@ -148,6 +146,24 @@ public class ProductRepository {
             public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
                 liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
             }
+        });
+        return liveData;
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getProducts(){
+        MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
+
+        productService.getAllProducts().enqueue(new Callback<>() {
+           @Override
+           public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
+               if (response.isSuccessful() && response.body() != null) {
+                   liveData.postValue(Result.success(response.body()));
+               }
+           }
+           @Override
+           public void onFailure(@NonNull Call<List<ProductSummary>> call,@NonNull Throwable t) {
+               liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
+           }
         });
         return liveData;
     }

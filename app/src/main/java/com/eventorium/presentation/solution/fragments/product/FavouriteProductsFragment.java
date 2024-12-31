@@ -44,7 +44,7 @@ public class FavouriteProductsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.productsRecycleView.setAdapter(new ProductsAdapter(PRODUCT_SUMMARIES));
+//        binding.productsRecycleView.setAdapter(new ProductsAdapter(PRODUCT_SUMMARIES));
     }
 
     @Override
