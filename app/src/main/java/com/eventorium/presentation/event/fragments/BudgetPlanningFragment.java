@@ -64,9 +64,6 @@ public class BudgetPlanningFragment extends Fragment {
                 case 1:
                     tab.setText("Purchased & Reserved");
                     break;
-                case 2:
-                    tab.setText("Products");
-                    break;
             }
         }).attach();
 
