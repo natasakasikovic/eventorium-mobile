@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.ChatMessageRequest;
 import com.eventorium.data.interaction.repositories.ChatRepository;
 import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.presentation.util.listeners.OnMessageReceive;
@@ -44,6 +45,11 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendMessage(ChatMessage message) {
-        webSocketService.sendMessage(message);
+        webSocketService.sendMessage(ChatMessageRequest.builder()
+                .chatName(message.getSenderId() + "_" + message.getRecipientId())
+                .message(message.getMessage())
+                .senderId(message.getSenderId())
+                .recipientId(message.getRecipientId())
+                .build());
     }
 }

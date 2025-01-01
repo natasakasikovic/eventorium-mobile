@@ -38,6 +38,7 @@ public class ProductDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     private Long id;
+    private Long providerId;
 
     public ProductDetailsFragment() {
     }
@@ -87,19 +88,21 @@ public class ProductDetailsFragment extends Fragment {
     private void navigateToChat() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        args.putLong(ChatFragment.ARG_RECIPIENT_ID, id);
+        args.putLong(ChatFragment.ARG_RECIPIENT_ID, providerId);
         navController.navigate(R.id.chatFragment, args);
     }
 
     @SuppressLint("SetTextI18n")
     private void loadProductDetails(Product product) {
         if (product != null) {
+            providerId = product.getProvider().getId();
             binding.productName.setText(product.getName());
             binding.productPrice.setText(product.getPrice().toString());
             binding.productDescription.setText(product.getDescription());
             binding.productCategory.setText("Category: " + product.getCategory().getName());
             binding.productSpecialties.setText(product.getSpecialties());
             binding.rating.setText(product.getRating().toString());
+            binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
 
             productViewModel.getServiceImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
                 binding.images.setAdapter(new ImageAdapter(images));

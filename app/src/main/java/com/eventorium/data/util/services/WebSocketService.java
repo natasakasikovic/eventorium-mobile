@@ -8,6 +8,7 @@ import android.util.Log;
 import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
 import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.ChatMessageRequest;
 import com.eventorium.data.interaction.models.Notification;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
@@ -113,7 +114,7 @@ public class WebSocketService {
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "CheckResult"})
-    public void sendMessage(ChatMessage message) {
+    public void sendMessage(ChatMessageRequest message) {
         stompClient.send("/app/chat", gson.toJson(message))
                 .subscribe(() -> Log.d(TAG, "Message sent successfully"),
                         throwable -> Log.e(TAG, "Failed to send message", throwable));
