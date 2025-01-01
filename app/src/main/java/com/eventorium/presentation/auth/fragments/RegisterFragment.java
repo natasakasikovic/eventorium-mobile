@@ -1,34 +1,54 @@
 package com.eventorium.presentation.auth.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.auth.models.Person;
+import com.eventorium.data.auth.models.Role;
+import com.eventorium.data.auth.models.User;
+import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentRegisterBinding;
-import com.eventorium.presentation.MainActivity;
-import com.google.android.material.textfield.TextInputLayout;
+import com.eventorium.presentation.auth.viewmodels.UserViewModel;
+import com.eventorium.presentation.auth.viewmodels.RoleViewModel;
+import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private AutoCompleteTextView roleDropdown;
-    private List<String> roleNames;
+    private UserViewModel viewModel;
+    private CityViewModel cityViewModel;
+    private RoleViewModel roleViewModel;
+
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private Uri selectedImageUri;
+
+    private User user;
+
 
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
@@ -37,17 +57,60 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        viewModel = viewModelProvider.get(UserViewModel.class);
+        cityViewModel = viewModelProvider.get(CityViewModel.class);
+        roleViewModel = viewModelProvider.get(RoleViewModel.class);
+
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        binding.profileImageView.setImageURI(selectedImageUri);
+                    }
+                }
+        );
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
-        setupCityAutoCompleteAdapter();
-        setupRoleDropdown();
-        showRoleInfoDialog();
+        setCities();
+        setRoles();
         setupNextButton();
+        setupImagePicker();
         return binding.getRoot();
+    }
+
+    private void setupImagePicker() {
+        binding.uploadButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
+    }
+
+    private void setRoles() {
+        roleViewModel.getRegistrationRoles().observe(getViewLifecycleOwner(), roles -> {
+            ArrayAdapter<Role> roleArrayAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    roles
+            );
+            binding.spinnerRole.setAdapter(roleArrayAdapter);
+        });
+    }
+
+    private void setCities() {
+        cityViewModel.getCities().observe(getViewLifecycleOwner(), cities -> {
+            ArrayAdapter<City> cityArrayAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    cities
+            );
+            binding.spinnerCity.setAdapter(cityArrayAdapter);
+        });
     }
 
     @Override
@@ -56,73 +119,78 @@ public class RegisterFragment extends Fragment {
         binding = null;
     }
 
-    private void setupCityAutoCompleteAdapter() {
-        // TODO: Replace the hardcoded list of cities with a dynamic list
-        List<String> cities = Arrays.asList("New York", "Los Angeles", "London", "Paris", "Tokyo", "Berlin", "Novi Sad");
-
-        AutoCompleteTextView cityAutoComplete = binding.cityAutoComplete;
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, cities);
-        cityAutoComplete.setAdapter(adapter);
-
-        cityAutoComplete.setThreshold(0);
-    }
-
-    private void setupRoleDropdown() {
-        roleDropdown = binding.roleDropdown;
-
-        roleNames = Arrays.asList(
-                getString(R.string.service_and_product_provider),
-                getString(R.string.event_organizer)
-        );
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, roleNames);
-        roleDropdown.setAdapter(adapter);
-
-        roleDropdown.setOnClickListener(v -> {
-            roleDropdown.requestFocus();
-            roleDropdown.showDropDown();
-        });
-
-        roleDropdown.setKeyListener(null);
-        roleDropdown.setFocusable(false);
-    }
-
-    private void showRoleInfoDialog() {
-
-        TextInputLayout roleDropdownLayout = binding.roleDropdownLayout;
-
-        roleDropdownLayout.setEndIconOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage(getString(R.string.role_info_message));
-            builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> dialog.dismiss());
-            builder.create().show();
-        });
-    }
-
     private void setupNextButton() {
         ImageButton button = binding.arrowButton;
+        button.setOnClickListener(v -> signup());
+    }
 
-        button.setOnClickListener(v -> {
-            String selectedRole = roleDropdown.getText().toString();
-            if (selectedRole.equals(getString(R.string.service_and_product_provider))) {
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.user_register_to_company_register);
-            }
-            else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setMessage(getString(R.string.activation_dialog_message));
-                builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> {
-                    dialog.dismiss();
+    private void signup() {
+        if (areFieldsEmpty()) {
+            Toast.makeText(requireContext(), R.string.please_fill_in_all_fields, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    getActivity().finish();
-                });
-                builder.create().show();
+        getFormFields();
+        viewModel.createAccount(user).observe(getViewLifecycleOwner(), response -> {
+            if (response.getData() != null) {
+                showInfoDialog();
+                uploadProfilePhoto(response.getData());
+                navigateToHome();
+            } else  {
+                Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private void navigateToHome() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.popBackStack(R.id.homepageFragment, false);
+    }
+
+    private void showInfoDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.activation_dialog_title)
+                .setMessage(R.string.activation_dialog_message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void uploadProfilePhoto(User user) {
+        if (selectedImageUri != null)
+            viewModel.uploadProfilePhoto(user.getId(), getContext(), selectedImageUri)
+                    .observe(getViewLifecycleOwner(), success -> {
+                        if (!success) Toast.makeText(requireContext(),
+                                R.string.profile_photo_not_added,
+                                Toast.LENGTH_LONG).show();
+                    });
+    }
+
+    private void getFormFields() {
+        user = new User();
+        user.setEmail(binding.emailEditText.getText().toString());
+        user.setPassword(binding.passwordEditText.getText().toString());
+        user.setConfirmPassword(binding.confirmPasswordEditText.getText().toString());
+        user.setRoles(Collections.singletonList((Role) binding.spinnerRole.getSelectedItem()));
+
+        Person person = new Person();
+        person.setName(binding.nameEditText.getText().toString());
+        person.setLastname(binding.lastNameEditText.getText().toString());
+        person.setAddress(binding.addressEditText.getText().toString());
+        person.setPhoneNumber(binding.numberEditText.getText().toString());
+        person.setCity((City) binding.spinnerCity.getSelectedItem());
+
+        user.setPerson(person);
+    }
+
+    private boolean areFieldsEmpty() {
+        return TextUtils.isEmpty(binding.emailEditText.getText()) &&
+                TextUtils.isEmpty(binding.passwordEditText.getText()) &&
+                TextUtils.isEmpty(binding.confirmPasswordEditText.getText()) &&
+                TextUtils.isEmpty(binding.nameEditText.getText()) &&
+                TextUtils.isEmpty(binding.lastNameEditText.getText()) &&
+                TextUtils.isEmpty(binding.addressEditText.getText()) &&
+                TextUtils.isEmpty(binding.addressEditText.getText()) &&
+                TextUtils.isEmpty(binding.numberEditText.getText());
+    }
 
 }

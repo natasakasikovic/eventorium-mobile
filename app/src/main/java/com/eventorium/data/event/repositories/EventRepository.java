@@ -7,6 +7,7 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
@@ -80,6 +81,7 @@ public class EventRepository {
                 } else {
                     try {
                         String errorResponse = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
                         liveData.postValue(Result.error(errorResponse));
                     } catch (IOException e) {
                         liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));

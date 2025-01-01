@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -22,6 +23,7 @@ public class ProductSummary implements Parcelable {
     private Long id;
     private String name;
     private Double price;
+    private Bitmap image;
     private Double discount;
     private Boolean available;
     private Boolean visible;

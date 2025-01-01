@@ -4,6 +4,7 @@ import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
 import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
 import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
 import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;
@@ -19,20 +20,27 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ServiceService {
 
     @GET("services/all")
-    Call<List<ServiceSummaryResponseDto>> getServices();
+    Call<List<ServiceSummary>> getServices();
 
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
+
+    @GET("services/top-five-services")
+    Call<List<ServiceSummary>> getTopServices();
 
     @GET("services/{id}/image")
     Call<ResponseBody> getServiceImage(@Path("id") Long id);
 
     @GET("services/{id}/images")
     Call<List<ImageResponseDto>> getServiceImages(@Path("id") Long id);
+
+    @GET("services/suggestions")
+    Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);
 
     @POST("services")
     Call<ServiceSummaryResponseDto> createService(@Body CreateServiceRequestDto dto);
@@ -46,4 +54,5 @@ public interface ServiceService {
 
     @DELETE("services/{id}")
     Call<Void> deleteService(@Path("id") Long id);
+
 }

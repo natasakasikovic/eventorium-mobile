@@ -5,13 +5,19 @@ import android.content.SharedPreferences;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.data.auth.repositories.RoleRepository;
+import com.eventorium.data.auth.repositories.UserRepository;
 import com.eventorium.data.auth.services.AuthService;
+import com.eventorium.data.auth.services.RoleService;
+import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
@@ -230,6 +236,18 @@ public class AppModule {
 
     @Provides
     @Singleton
+    public static BudgetRepository provideBudgetRepository(BudgetService service){
+        return new BudgetRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public BudgetService provideBudgetService(Retrofit retrofit){
+        return retrofit.create(BudgetService.class);
+    }
+
+    @Provides
+    @Singleton
     public static CityRepository provideCityRepository(CityService service){
         return new CityRepository(service);
     }
@@ -251,5 +269,31 @@ public class AppModule {
     @Singleton
     public ChatService provideChatService(Retrofit retrofit){
         return retrofit.create(ChatService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static RoleRepository provideRoleRepository(RoleService service){
+        return new RoleRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public RoleService provideRoleService(Retrofit retrofit){
+        return retrofit.create(RoleService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static UserRepository provideUserRepository(AuthService service){
+        return new UserRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public UserService provideUserService(Retrofit retrofit){
+        return retrofit.create(UserService.class);
     }
 }
