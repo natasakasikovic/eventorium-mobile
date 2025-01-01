@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -65,9 +66,8 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
-        if(!productViewModel.isLoggedIn()) {
-            binding.favButton.setVisibility(View.GONE);
-        }
+        renderButtons();
+
         favouriteButton = binding.favButton;
         productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
 
@@ -83,6 +83,30 @@ public class ProductDetailsFragment extends Fragment {
         favouriteButton.setOnClickListener(v -> handleIsFavourite());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         return binding.getRoot();
+    }
+
+    private void renderButtons() {
+        String role = productViewModel.getUserRole();
+        if(role == null || role.isEmpty()) {
+            binding.favButton.setVisibility(View.GONE);
+            binding.chatButton.setVisibility(View.GONE);
+            changeMargin();
+            return;
+        }
+        if(!role.equals("EVENT_ORGANIZER")) {
+            binding.chatButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void changeMargin() {
+        TextView productTextView = binding.productTextView;
+        float density = getResources().getDisplayMetrics().density;
+        int leftMargin = (int) (20 * density);
+
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) productTextView.getLayoutParams();
+        layoutParams.setMargins(leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
+
+        productTextView.setLayoutParams(layoutParams);
     }
 
     private void navigateToChat() {
