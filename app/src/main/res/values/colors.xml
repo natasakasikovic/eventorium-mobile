@@ -9,4 +9,5 @@
     <color name="gold">#FFD700</color>
     <color name="decline">#B53939</color>
     <color name="approve">#8B8BDA</color>
+    <color name="user_message">#e0f7fa</color>
 </resources>

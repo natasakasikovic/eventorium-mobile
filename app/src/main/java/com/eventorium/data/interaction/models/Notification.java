@@ -1,4 +1,6 @@
-package com.eventorium.data.util.models;
+package com.eventorium.data.interaction.models;
+
+import com.eventorium.data.util.models.NotificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Notification {
+    private String title;
     private String message;
     private Boolean seen;
     private NotificationType type;

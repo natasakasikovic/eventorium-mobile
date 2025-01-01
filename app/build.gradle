@@ -20,10 +20,9 @@ android {
     compileSdk 34
 
     buildFeatures {
-        viewBinding true
         buildConfig true
+        viewBinding true
     }
-
 
     defaultConfig {
         applicationId "com.eventorium"

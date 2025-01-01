@@ -1,5 +1,6 @@
 package com.eventorium.presentation;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.eventorium.R;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -36,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 100;
     private SplashScreenViewModel viewModel;
     private LoginViewModel loginViewModel;
     private ActivityMainBinding binding;
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
         setContentView(binding.getRoot());
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+        }
         refresh("GUEST");
     }
 
@@ -271,4 +275,28 @@ public class MainActivity extends AppCompatActivity {
     private void setUpMenu(int menuId) {
         navigationView.inflateMenu(menuId);
     }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String fragmentToOpen = intent.getStringExtra("openFragment");
+        if ("ChatFragment".equals(fragmentToOpen)) {
+            long recipientId = intent.getLongExtra(ChatFragment.ARG_RECIPIENT_ID, -1);
+            if (recipientId != -1) {
+                openChatFragment(recipientId);
+            }
+        }
+    }
+
+    private void openChatFragment(Long recipientId) {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(ChatFragment.ARG_RECIPIENT_ID, recipientId);
+        navController.navigate(R.id.action_homepage_to_chat, args);
+    }
+
 }
