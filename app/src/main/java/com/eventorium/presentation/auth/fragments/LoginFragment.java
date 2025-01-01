@@ -116,10 +116,8 @@ public class LoginFragment extends Fragment {
         requestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
-                    if (isGranted) {
-                        loginViewModel.openWebSocket();
-                    }
                     navigateToHome();
+                    loginViewModel.openWebSocket();
                 }
         );
     }
