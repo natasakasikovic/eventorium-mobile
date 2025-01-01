@@ -1,11 +1,16 @@
 package com.eventorium.data.util;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.eventorium.presentation.MainActivity;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -13,10 +18,12 @@ import okhttp3.Response;
 public class AuthInterceptor implements Interceptor {
 
     private final SharedPreferences sharedPreferences;
+    private final Context context;
 
     @Inject
-    public AuthInterceptor(SharedPreferences sharedPreferences) {
+    public AuthInterceptor(SharedPreferences sharedPreferences, @ApplicationContext Context context) {
         this.sharedPreferences = sharedPreferences;
+        this.context = context;
     }
 
     @Override
@@ -34,6 +41,23 @@ public class AuthInterceptor implements Interceptor {
         }
 
         Request newRequest = requestBuilder.build();
-        return chain.proceed(newRequest);
+        Response response = chain.proceed(newRequest);
+
+        if (response.code() == 401) {
+            String responseBody = response.body() != null ? response.body().string() : "";
+
+            if (responseBody.contains("Token expired")) {
+                sharedPreferences.edit().remove("user").apply();
+
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+
+                response.close();
+            }
+        }
+
+        return response;
     }
+
 }

@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/companyRegisterFragment"
-        android:name="com.eventorium.presentation.auth.fragments.CompanyRegisterFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyRegisterFragment"
         android:label="fragment_company_register"
         tools:layout="@layout/fragment_company_register" />
 

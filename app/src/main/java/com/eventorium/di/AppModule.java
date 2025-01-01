@@ -14,6 +14,8 @@ import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.company.repositories.CompanyRepository;
+import com.eventorium.data.company.services.CompanyService;
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
@@ -94,6 +96,13 @@ public class AppModule {
                 .build();
     }
 
+
+    @Provides
+    @Singleton
+    public Context provideContext(@ApplicationContext Context context) {
+        return context;
+    }
+
     @Provides
     @Singleton
     public static SharedPreferences provideSharedPreferences(@ApplicationContext Context context) {
@@ -102,8 +111,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AuthInterceptor provideAuthInterceptor(SharedPreferences sharedPreferences) {
-        return new AuthInterceptor(sharedPreferences);
+    public static AuthInterceptor provideAuthInterceptor(SharedPreferences sharedPreferences, @ApplicationContext Context context) {
+        return new AuthInterceptor(sharedPreferences, context);
     }
 
     @Provides
@@ -278,5 +287,17 @@ public class AppModule {
     @Inject
     public UserService provideUserService(Retrofit retrofit){
         return retrofit.create(UserService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static CompanyRepository provideCompanyRepository(CompanyService service) {
+        return new CompanyRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public CompanyService provideCompanyService(Retrofit retrofit) {
+        return retrofit.create(CompanyService.class);
     }
 }

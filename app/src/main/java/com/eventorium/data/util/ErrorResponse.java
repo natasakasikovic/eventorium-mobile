@@ -18,6 +18,8 @@ public class ErrorResponse {
     public static String getErrorMessage(String errorResponse) {
         Gson gson = new Gson();
         ErrorResponse parsedError = gson.fromJson(errorResponse, ErrorResponse.class);
-        return parsedError.getMessage();
+        if (parsedError != null)
+            return parsedError.getMessage();
+        else return "";
     }
 }
