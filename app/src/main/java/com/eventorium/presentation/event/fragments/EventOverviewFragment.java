@@ -17,6 +17,8 @@ import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
+import java.util.ArrayList;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -24,6 +26,7 @@ public class EventOverviewFragment extends Fragment {
 
     private FragmentEventOverviewBinding binding;
     private EventViewModel viewModel;
+    private EventsAdapter adapter;
 
     public EventOverviewFragment() { }
 
@@ -41,6 +44,10 @@ public class EventOverviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
+
+        adapter = new EventsAdapter(new ArrayList<>());
+        binding.eventsRecycleView.setAdapter(adapter);
+
         return binding.getRoot();
     }
 
@@ -54,7 +61,7 @@ public class EventOverviewFragment extends Fragment {
     private void setUpObserver(){
         viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null){
-                binding.eventsRecycleView.setAdapter(new EventsAdapter(result.getData()));
+                adapter.setData(result.getData());
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
             }
@@ -68,7 +75,7 @@ public class EventOverviewFragment extends Fragment {
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
                     if (result.getError() == null)
-                        binding.eventsRecycleView.setAdapter(new EventsAdapter(result.getData()));
+                        adapter.setData(result.getData());
                      else
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
                 });

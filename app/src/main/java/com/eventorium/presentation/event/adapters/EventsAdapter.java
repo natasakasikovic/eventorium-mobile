@@ -15,7 +15,7 @@ import com.eventorium.data.event.models.EventSummary;
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
-    private final List<EventSummary> events;
+    private List<EventSummary> events;
 
     public EventsAdapter(List<EventSummary> events) {
         this.events = events;
@@ -40,6 +40,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    public void setData(List<EventSummary> data) {
+        events = data;
+        notifyDataSetChanged();
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
