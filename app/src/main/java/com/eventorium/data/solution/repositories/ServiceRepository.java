@@ -319,4 +319,21 @@ public class ServiceRepository {
         });
         return liveData;
     }
+
+    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
+        MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
+        serviceService.searchServices(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return liveData;
+    }
 }
