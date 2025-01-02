@@ -188,4 +188,21 @@ public class ProductRepository {
         });
         return liveData;
     }
+
+    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
+        MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
+        productService.searchProducts(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return liveData;
+    }
 }

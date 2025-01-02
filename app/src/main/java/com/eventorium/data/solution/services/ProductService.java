@@ -45,4 +45,7 @@ public interface ProductService {
 
     @DELETE("account/products/favourites/{id}")
     Call<ResponseBody> removeFavouriteProduct(@Path("id") Long id);
+
+    @GET("products/search/all")
+    Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
 }
