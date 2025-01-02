@@ -67,6 +67,7 @@
                 app:layout_constraintTop_toBottomOf="@id/email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
@@ -89,6 +90,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addressEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:importantForAccessibility="yes"
@@ -141,6 +143,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/city">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/numberEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/jejumyeongjo"
@@ -163,6 +166,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/number">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minLines="5"

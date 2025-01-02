@@ -1,9 +1,7 @@
 package com.eventorium.data.company.models;
 
-import com.eventorium.data.auth.models.User;
 import com.eventorium.data.shared.models.City;
 
-import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Company {
+public class CreateCompany {
     private Long id;
     private String name;
     private String address;
@@ -24,7 +22,8 @@ public class Company {
     private String phoneNumber;
     private String description;
     private String email;
-    private LocalTime openingHours;
-    private LocalTime closingHours;
-    private User provider;
+    private String openingHours;
+    private String closingHours;
+    private Long providerId;
 }
+

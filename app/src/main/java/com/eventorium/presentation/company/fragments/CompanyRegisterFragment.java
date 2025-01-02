@@ -1,5 +1,6 @@
 package com.eventorium.presentation.company.fragments;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,14 +9,21 @@ import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.eventorium.R;
+import com.eventorium.data.company.models.Company;
+import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCompanyRegisterBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
@@ -24,6 +32,9 @@ import com.eventorium.presentation.util.ImageUpload;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -45,6 +56,7 @@ public class CompanyRegisterFragment extends Fragment {
 
     public static final String ARG_PROVIDER_ID = "ARG_PROVIDER_ID";
     private Long providerId;
+    private CreateCompany company;
 
     public CompanyRegisterFragment() {}
 
@@ -84,10 +96,10 @@ public class CompanyRegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentCompanyRegisterBinding.inflate(inflater, container, false);
         ViewCompat.setNestedScrollingEnabled(binding.scroll, true);
-        setupNextButton();
         setCities();
-        setTimePickers();
+        setupTimePickers();
         setupImagePicker();
+        binding.arrowButton.setOnClickListener(v -> registerCompany());
         return binding.getRoot();
     }
 
@@ -107,11 +119,7 @@ public class CompanyRegisterFragment extends Fragment {
         binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
     }
 
-    private void setupNextButton() {
-
-    }
-
-    private void setTimePickers() {
+    private void setupTimePickers() {
         TextInputEditText openingTimeEditText = binding.openingTimeEditText;
         TextInputEditText closingTimeEditText = binding.closingTimeEditText;
 
@@ -121,21 +129,74 @@ public class CompanyRegisterFragment extends Fragment {
     }
 
     private void showTimePicker(TextInputEditText editText) {
-
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 requireContext(),
                 (view, hourOfDay, minuteOfHour) -> {
-                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                     calendar.set(Calendar.MINUTE, minuteOfHour);
 
-                    String time = sdf.format(calendar.getTime());
+                    String time = new SimpleDateFormat("h:mm a", Locale.getDefault()).format(calendar.getTime());
 
                     editText.setText(time);
-                }, 0, 0, false);
+                }, 0, 0, false
+        );
 
         timePickerDialog.show();
+    }
+
+
+    private void registerCompany() {
+        if (!areFieldsValid()) {
+            Toast.makeText(requireContext(), R.string.please_fill_in_all_fields, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        getFormFields();
+
+        viewModel.registerCompany(company).observe(getViewLifecycleOwner(), response -> {
+            response.toString();
+            if (response.getData() != null) {
+                // TODO: upload images
+                showInfoDialog();
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.popBackStack(R.id.homepageFragment, false);
+            } else {
+                Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void getFormFields() {
+        company = new CreateCompany();
+        company.setEmail(binding.emailEditText.getText().toString());
+        company.setName(binding.nameEditText.getText().toString());
+        company.setAddress(binding.addressEditText.getText().toString());
+        company.setDescription(binding.descriptionEditText.getText().toString());
+        company.setPhoneNumber(binding.numberEditText.getText().toString());
+        company.setOpeningHours(binding.openingTimeEditText.getText().toString().toUpperCase());
+        company.setClosingHours(binding.closingTimeEditText.getText().toString().toUpperCase());
+        company.setCity((City) binding.spinnerCity.getSelectedItem());
+        company.setProviderId(providerId);
+    }
+
+    private boolean areFieldsValid() {
+        return !TextUtils.isEmpty(binding.emailEditText.getText()) &&
+                !TextUtils.isEmpty(binding.nameEditText.getText()) &&
+                !TextUtils.isEmpty(binding.addressEditText.getText()) &&
+                !TextUtils.isEmpty(binding.numberEditText.getText()) &&
+                !TextUtils.isEmpty(binding.descriptionEditText.getText()) &&
+                !TextUtils.isEmpty(binding.openingTimeEditText.getText()) &&
+                !TextUtils.isEmpty(binding.closingTimeEditText.getText());
+    }
+
+    private void showInfoDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.activation_dialog_title)
+                .setMessage(R.string.activation_dialog_message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 }
