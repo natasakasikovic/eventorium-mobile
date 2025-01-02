@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface EventService {
 
@@ -21,4 +22,7 @@ public interface EventService {
 
     @POST("events")
     Call<Event> createEvent(@Body CreateEvent event);
+
+    @GET("events/search/all")
+    Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
 }

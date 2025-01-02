@@ -1,5 +1,6 @@
 package com.eventorium.data.event.repositories;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -95,6 +96,25 @@ public class EventRepository {
             }
         });
 
+        return liveData;
+    }
+
+    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
+        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
+
+        service.searchEvents(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<EventSummary>> call, @NonNull Response<List<EventSummary>> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventSummary>> call, @NonNull Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
         return liveData;
     }
 }
