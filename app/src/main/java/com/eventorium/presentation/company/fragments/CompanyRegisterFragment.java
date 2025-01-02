@@ -2,6 +2,7 @@ package com.eventorium.presentation.company.fragments;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,7 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +35,6 @@ import com.eventorium.presentation.util.ImageUpload;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -78,18 +78,9 @@ public class CompanyRegisterFragment extends Fragment {
         viewModel = provider.get(CompanyViewModel.class);
         cityViewModel = provider.get(CityViewModel.class);
 
-        imageUpload = new ImageUpload(this, imageUris -> {
-            imageContainer.removeAllViews();
-            for (Uri uri : imageUris) {
-                ImageView imageView = new ImageView(requireContext());
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(1000, 1000);
-                imageView.setLayoutParams(layoutParams);
-                imageView.setImageURI(uri);
-                imageContainer.addView(imageView);
-            }
-            this.imageUris.addAll(imageUris);
-        });
+        setupImagesUpload();
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -155,11 +146,14 @@ public class CompanyRegisterFragment extends Fragment {
         getFormFields();
 
         viewModel.registerCompany(company).observe(getViewLifecycleOwner(), response -> {
-            response.toString();
             if (response.getData() != null) {
-                // TODO: upload images
+                if (!imageUris.isEmpty()) {
+                    viewModel.uploadImages(response.getData().getId(), getContext(), imageUris)
+                            .observe(getViewLifecycleOwner(), this::handleUpload);
+                }
                 showInfoDialog();
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                NavController navController = Navigation.findNavController(requireActivity(),
+                                                            R.id.fragment_nav_content_main);
                 navController.popBackStack(R.id.homepageFragment, false);
             } else {
                 Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
@@ -197,6 +191,66 @@ public class CompanyRegisterFragment extends Fragment {
                 .setMessage(R.string.activation_dialog_message)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    private void handleUpload(boolean successful) {
+        if (!successful) {
+            Toast.makeText(requireContext(),
+                    "Images upload failed. Please update images later.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void setupImagesUpload() {
+        imageUpload = new ImageUpload(this, imageUris -> {
+            imageContainer.removeAllViews();
+            this.imageUris.clear();
+            long totalSize = 0;
+            int maxSize = getResources().getInteger(R.integer.max_request_size);
+            long maxRequestSizeInBytes = maxSize * 1024L * 1024L;
+
+            for (Uri uri : imageUris) {
+                if (shouldAddImage(uri, maxRequestSizeInBytes, totalSize)) {
+                    totalSize += getImageSize(uri);
+                    addImageToView(uri);
+                }
+            }
+        });
+    }
+
+    private boolean shouldAddImage(Uri uri, long maxRequestSizeInBytes, long totalSize) {
+        long fileSize = getImageSize(uri);
+        if (fileSize + totalSize > maxRequestSizeInBytes) {
+            Toast.makeText(requireContext(),
+                    "Some photos or the total size exceed the allowed limit.",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private long getImageSize(Uri uri) {
+        try (Cursor cursor = requireContext().getContentResolver()
+                .query(uri, null, null, null, null)) {
+            if (cursor != null) {
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                cursor.moveToFirst();
+                return cursor.getLong(sizeIndex);
+            }
+        } catch (Exception e) {
+            Log.e("IMAGE ERROR", "Error while getting image size", e);
+        }
+        return 0;
+    }
+
+    private void addImageToView(Uri uri) {
+        ImageView imageView = new ImageView(requireContext());
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(1000, 1000);
+        imageView.setLayoutParams(layoutParams);
+        imageView.setImageURI(uri);
+        imageContainer.addView(imageView);
+        this.imageUris.add(uri);
     }
 
 }
