@@ -1,25 +1,32 @@
 package com.eventorium.presentation.event.fragments;
 
+import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.eventorium.databinding.FragmentEventInvitationBinding;
 import com.eventorium.presentation.event.adapters.EventInvitationAdapter;
+import com.eventorium.presentation.event.viewmodels.InvitationViewModel;
 
 import java.util.regex.Pattern;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class EventInvitationFragment extends Fragment {
 
     private FragmentEventInvitationBinding binding;
-    private EventInvitationAdapter invitationAdapter;
+    private EventInvitationAdapter adapter;
+    private InvitationViewModel viewModel;
+    private Long eventId;
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
@@ -31,22 +38,28 @@ public class EventInvitationFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null)
+            eventId = getArguments().getLong(ARG_EVENT_ID);
+        }
+
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventInvitationBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(InvitationViewModel.class);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUpAdapter();
-        setUpListeners();
-    }
 
-    private void setUpAdapter(){
-        RecyclerView recyclerView = binding.recyclerView;
-        invitationAdapter = new EventInvitationAdapter();
-        recyclerView.setAdapter(invitationAdapter);
+        adapter = new EventInvitationAdapter();
+        binding.recyclerView.setAdapter(adapter);
+
+        setUpListeners();
     }
 
     private void setUpListeners(){
@@ -55,7 +68,7 @@ public class EventInvitationFragment extends Fragment {
             String email = binding.emailEditText.getText().toString();
             if (!isEmailValid(email)) return;
 
-            boolean emailExists = invitationAdapter.updateRecycleView(email);
+            boolean emailExists = adapter.updateRecycleView(email);
             if (emailExists) {
                 binding.emailInputLayout.setError("This email is already added.");
             } else {
@@ -65,7 +78,7 @@ public class EventInvitationFragment extends Fragment {
         });
 
         binding.sendInvitationsButton.setOnClickListener( v -> {
-            Toast.makeText(getActivity().getApplicationContext(), "NOT IMPLEMENTED YET", Toast.LENGTH_SHORT).show();
+            viewModel.sendInvitations(this.eventId, adapter.getInvitations());
         });
     }
 

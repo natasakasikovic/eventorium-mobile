@@ -17,9 +17,11 @@ import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.event.repositories.InvitationRepository;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -279,4 +281,18 @@ public class AppModule {
     public UserService provideUserService(Retrofit retrofit){
         return retrofit.create(UserService.class);
     }
+
+    @Provides
+    @Singleton
+    public static InvitationRepository provideInvitationRepository(InvitationService service) {
+        return new InvitationRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public InvitationService provideInvitationService(Retrofit retrofit) {
+        return retrofit.create(InvitationService.class);
+    }
+
 }
