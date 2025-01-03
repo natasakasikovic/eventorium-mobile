@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,6 +17,8 @@ import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
+import java.util.ArrayList;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -23,6 +26,7 @@ public class EventOverviewFragment extends Fragment {
 
     private FragmentEventOverviewBinding binding;
     private EventViewModel viewModel;
+    private EventsAdapter adapter;
 
     public EventOverviewFragment() { }
 
@@ -40,17 +44,47 @@ public class EventOverviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
+
+        adapter = new EventsAdapter(new ArrayList<>());
+        binding.eventsRecycleView.setAdapter(adapter);
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setUpObserver();
+        setUpListener();
+    }
+
+    private void setUpObserver(){
         viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null){
-                binding.eventsRecycleView.setAdapter(new EventsAdapter(result.getData()));
+                adapter.setData(result.getData());
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setUpListener(){
+        binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextChange(String keyword) {
+                viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null)
+                        adapter.setData(result.getData());
+                     else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
         });
     }
