@@ -55,4 +55,6 @@ public interface ServiceService {
     @DELETE("services/{id}")
     Call<Void> deleteService(@Path("id") Long id);
 
+    @GET("services/search/all")
+    Call<List<ServiceSummary>> searchServices(@Query("keyword") String keyword);
 }

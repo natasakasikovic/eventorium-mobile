@@ -8,15 +8,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.Invitation;
+
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class EventInvitationAdapter extends RecyclerView.Adapter<EventInvitationAdapter.EmailViewHolder >{
 
-    private final List<String> emails;
-    public EventInvitationAdapter () { emails = new ArrayList<>(); }
+    private final List<Invitation> invitations;
+
+    public EventInvitationAdapter() {
+        invitations = new ArrayList<>();
+    }
 
     @NonNull
     @Override
@@ -27,27 +37,29 @@ public class EventInvitationAdapter extends RecyclerView.Adapter<EventInvitation
 
     @Override
     public void onBindViewHolder(@NonNull EmailViewHolder  holder, int position) {
-        holder.chip.setText(emails.get(position));
+        Invitation invitation = invitations.get(position);
+        holder.chip.setText(invitation.getEmail());
 
         holder.chip.setOnCloseIconClickListener(v -> {
-            emails.remove(emails.get(position));
+            invitations.remove(position);
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, emails.size());
+            notifyItemRangeChanged(position, invitations.size());
         });
     }
 
     @Override
-    public int getItemCount() { return emails.size(); }
+    public int getItemCount() {
+        return invitations.size();
+    }
 
-    public boolean updateRecycleView(String email){
-        boolean exists = emails.contains(email.trim());
+    public boolean updateRecycleView(String email) {
+        boolean exists = invitations.stream().anyMatch(invitation -> invitation.getEmail().equalsIgnoreCase(email.trim()));
 
-        if (!exists) {
-            emails.add(email);
-            notifyItemInserted(emails.size() - 1);
-        }
+        if (exists) return true;
 
-        return exists;
+        invitations.add(new Invitation(email));
+        notifyItemInserted(invitations.size() - 1);
+        return false;
     }
 
     public static class EmailViewHolder extends RecyclerView.ViewHolder {
@@ -58,5 +70,4 @@ public class EventInvitationAdapter extends RecyclerView.Adapter<EventInvitation
             chip = itemView.findViewById(R.id.input_chip);
         }
     }
-
 }

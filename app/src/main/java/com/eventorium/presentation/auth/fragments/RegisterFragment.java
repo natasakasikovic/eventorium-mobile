@@ -1,5 +1,7 @@
 package com.eventorium.presentation.auth.fragments;
 
+import static com.eventorium.presentation.company.fragments.CompanyRegisterFragment.ARG_PROVIDER_ID;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -48,6 +50,7 @@ public class RegisterFragment extends Fragment {
     private Uri selectedImageUri;
 
     private User user;
+    private Role selectedRole;
 
 
     public static RegisterFragment newInstance() {
@@ -133,18 +136,24 @@ public class RegisterFragment extends Fragment {
         getFormFields();
         viewModel.createAccount(user).observe(getViewLifecycleOwner(), response -> {
             if (response.getData() != null) {
-                showInfoDialog();
                 uploadProfilePhoto(response.getData());
-                navigateToHome();
+                nextStep(response.getData());
             } else  {
                 Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    private void navigateToHome() {
+    private void nextStep(User user) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        navController.popBackStack(R.id.homepageFragment, false);
+        if (selectedRole.getName().equals("PROVIDER")) {
+            Bundle args = new Bundle();
+            args.putLong(ARG_PROVIDER_ID, user.getId());
+            navController.navigate(R.id.companyRegisterFragment, args);
+        } else {
+            showInfoDialog();
+            navController.popBackStack(R.id.homepageFragment, false);
+        }
     }
 
     private void showInfoDialog() {
@@ -170,7 +179,8 @@ public class RegisterFragment extends Fragment {
         user.setEmail(binding.emailEditText.getText().toString());
         user.setPassword(binding.passwordEditText.getText().toString());
         user.setConfirmPassword(binding.confirmPasswordEditText.getText().toString());
-        user.setRoles(Collections.singletonList((Role) binding.spinnerRole.getSelectedItem()));
+        selectedRole = (Role) binding.spinnerRole.getSelectedItem();
+        user.setRoles(Collections.singletonList(selectedRole));
 
         Person person = new Person();
         person.setName(binding.nameEditText.getText().toString());

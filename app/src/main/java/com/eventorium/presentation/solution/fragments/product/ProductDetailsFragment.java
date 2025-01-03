@@ -17,12 +17,10 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.Provider;
-import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
-import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
 import com.google.android.material.button.MaterialButton;
@@ -131,11 +129,11 @@ public class ProductDetailsFragment extends Fragment {
             binding.rating.setText(product.getRating().toString());
             binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
 
-            productViewModel.getServiceImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
-                binding.images.setAdapter(new ImageAdapter(images));
-            });
+                productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
+                    binding.images.setAdapter(new ImageAdapter(images));
+                });
+            }
         }
-    }
 
     private void handleIsFavourite() {
         if(isFavourite) {
