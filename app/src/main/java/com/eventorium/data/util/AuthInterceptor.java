@@ -14,6 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class AuthInterceptor implements Interceptor {
 
@@ -44,9 +45,10 @@ public class AuthInterceptor implements Interceptor {
         Response response = chain.proceed(newRequest);
 
         if (response.code() == 401) {
-            String responseBody = response.body() != null ? response.body().string() : "";
+            ResponseBody responseBody = response.body();
+            String responseBodyString = responseBody != null ? responseBody.string() : "";
 
-            if (responseBody.contains("Token expired")) {
+            if (responseBodyString.contains("Token expired")) {
                 sharedPreferences.edit().remove("user").apply();
 
                 Intent intent = new Intent(context, MainActivity.class);
@@ -55,6 +57,10 @@ public class AuthInterceptor implements Interceptor {
 
                 response.close();
             }
+
+            return response.newBuilder()
+                    .body(ResponseBody.create(responseBodyString, responseBody.contentType()))
+                    .build();
         }
 
         return response;
