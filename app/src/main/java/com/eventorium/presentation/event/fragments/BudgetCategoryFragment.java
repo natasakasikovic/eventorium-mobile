@@ -2,6 +2,8 @@ package com.eventorium.presentation.event.fragments;
 
 import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
 
+import static java.util.stream.Collectors.toList;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
@@ -31,7 +34,9 @@ import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
 import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -41,6 +46,7 @@ public class BudgetCategoryFragment extends Fragment {
 
     public interface OnRemoveCategoryListener {
         void onRemoveCategory(int position, Category category);
+        void onPurchasedRemoveCategory(int position, Category category);
     }
 
     private FragmentBudgetCategoryBinding binding;
@@ -95,30 +101,41 @@ public class BudgetCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentBudgetCategoryBinding.inflate(inflater, container, false);
         binding.productChecked.setChecked(true);
-        configureProductsAdapter();
         binding.deleteButton.setOnClickListener(v -> {
             if (onRemoveCategoryListener != null) {
                 onRemoveCategoryListener.onRemoveCategory(position, category);
             }
         });
         binding.searchItems.setOnClickListener(v -> search());
+
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureListener());
+
         return binding.getRoot();
     }
 
-    private void configureProductsAdapter() {
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), new OnPurchaseListener<>() {
+
+    private BudgetItem getBudgetItem(Double plannedAmount, ProductSummary item) {
+        return BudgetItem.builder()
+                .category(category)
+                .itemId(item.getId())
+                .plannedAmount(plannedAmount)
+                .build();
+    }
+
+    private OnPurchaseListener<ProductSummary> configureListener() {
+        return new OnPurchaseListener<>() {
             @Override
             public void purchase(ProductSummary item) {
                 Double plannedAmount = Double.parseDouble(String.valueOf(binding.plannedAmount.getText()));
-                budgetViewModel.purchaseProduct(eventId,
-                        BudgetItem.builder()
-                                .category(category)
-                                .itemId(item.getId())
-                                .plannedAmount(plannedAmount)
-                                .build()
+                budgetViewModel.purchaseProduct(
+                        eventId,
+                        getBudgetItem(plannedAmount, item)
                 ).observe(getViewLifecycleOwner(), product -> {
                     if(product.getError() == null) {
                         productsAdapter.remove(item);
+                        if (onRemoveCategoryListener != null) {
+                            onRemoveCategoryListener.onPurchasedRemoveCategory(position, category);
+                        }
                     } else {
                         Toast.makeText(
                                 requireContext(),
@@ -136,7 +153,7 @@ public class BudgetCategoryFragment extends Fragment {
                 args.putLong(ARG_ID, item.getId());
                 navController.navigate(R.id.action_budget_to_productDetails, args);
             }
-        });
+        };
     }
 
     private void search() {
@@ -145,6 +162,7 @@ public class BudgetCategoryFragment extends Fragment {
         }
         Double price = Double.parseDouble(String.valueOf(binding.plannedAmount.getText()));
         if(binding.productChecked.isChecked()) {
+            binding.itemsRecycleView.setAdapter(productsAdapter);
             searchProducts(category.getId(), price);
         } else {
             searchServices(category.getId(), price);
@@ -153,7 +171,9 @@ public class BudgetCategoryFragment extends Fragment {
 
     private void searchProducts(Long id, Double price) {
         budgetViewModel.getSuggestedProducts(id, price).observe(getViewLifecycleOwner(), products -> {
-            productsAdapter.setData(products);
+            requireActivity().runOnUiThread(() -> {
+                productsAdapter.setData(products);
+            });
         });
     }
 

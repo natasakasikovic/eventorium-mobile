@@ -3,6 +3,8 @@ package com.eventorium.presentation.event.fragments;
 import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
 import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -14,13 +16,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.Budget;
+import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
 import com.eventorium.databinding.FragmentBudgetPlanningBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
 import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -28,6 +34,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -37,13 +44,15 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     private FragmentBudgetItemsBinding binding;
 
     private CategoryViewModel categoryViewModel;
+    private BudgetViewModel budgetViewModel;
     private CategoryPagerAdapter adapter;
+    private ArrayAdapter<Category> categoryAdapter;
     private EventType eventType;
     private Long eventId;
 
     private final List<Category> plannedCategories = new ArrayList<>();
     private List<Category> otherCategories = new ArrayList<>();
-
+    private List<Category> purchasedCategories;
 
     public BudgetItemsFragment() {
     }
@@ -66,12 +75,15 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         categoryViewModel = provider.get(CategoryViewModel.class);
+        budgetViewModel = provider.get(BudgetViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetItemsBinding.inflate(inflater, container, false);
+        configureCategoryAdapter();
+        restoreBudget();
         loadSuggestedCategories();
         loadOtherCategories();
 
@@ -87,21 +99,44 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
         return binding.getRoot();
     }
 
+    private void configureCategoryAdapter() {
+        categoryAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                new ArrayList<>()
+        );
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.categorySelector.setAdapter(categoryAdapter);
+    }
+
     private void loadOtherCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            ArrayAdapter<Category> adapter = new ArrayAdapter<>(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    categories.stream()
-                            .filter(category -> !plannedCategories.contains(category))
-                            .toArray(Category[]::new)
-            );
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            binding.categorySelector.setAdapter(adapter);
+            categoryAdapter.addAll(categories);
         });
     }
 
+
+    private void restoreBudget() {
+        budgetViewModel.getBudget(eventId).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null && !result.getData().getItems().isEmpty()) {
+                Budget budget = result.getData();
+                purchasedCategories =  budget.getItems().stream()
+                        .map(BudgetItem::getCategory)
+                        .collect(toList());
+            }
+        });
+
+    }
+
     private void addCategory(Category category) {
+        if(purchasedCategories != null && purchasedCategories.contains(category)) {
+            Toast.makeText(
+                getContext(),
+                R.string.already_bought_for_that_category,
+                Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
         adapter.addFragment(BudgetCategoryFragment.newInstance(category, eventId, plannedCategories.size()), category.getName());
         plannedCategories.add(category);
         otherCategories.remove(category);
@@ -134,5 +169,12 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
 
         plannedCategories.remove(category);
         otherCategories.add(category);
+    }
+
+    @Override
+    public void onPurchasedRemoveCategory(int position, Category category) {
+        adapter.removeFragment(position);
+        plannedCategories.remove(category);
+        otherCategories.remove(category);
     }
 }

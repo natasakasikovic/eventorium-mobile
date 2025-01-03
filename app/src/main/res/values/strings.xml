@@ -157,4 +157,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="purchased">Purchased</string>
     <string name="purchase">Purchase</string>
+    <string name="already_bought_for_that_category">Already bought for that category!</string>
 </resources>
