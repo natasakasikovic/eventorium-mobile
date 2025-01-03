@@ -44,6 +44,10 @@ public class ChatViewModel extends ViewModel {
         webSocketService.setChatMessageListener(onMessageReceive);
     }
 
+    public void destroyMessageListener() {
+        webSocketService.setChatMessageListener(null);
+    }
+
     public void sendMessage(ChatMessage message) {
         webSocketService.sendMessage(ChatMessageRequest.builder()
                 .chatName(message.getSenderId() + "_" + message.getRecipientId())

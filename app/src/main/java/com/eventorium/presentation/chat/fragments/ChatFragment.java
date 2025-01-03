@@ -85,5 +85,6 @@ public class ChatFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+        chatViewModel.destroyMessageListener();
     }
 }
