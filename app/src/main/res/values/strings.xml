@@ -6,7 +6,7 @@
     <string name="prompt_more_options_events">Would you like to see more content or search for a specific event?</string>
     <string name="prompt_more_options_products">Would you like to see more content or search for a specific product?</string>
     <string name="prompt_more_options_services">Would you like to see more content or search for a specific service?</string>
-    <string name="see_more">See more..</string>
+    <string name="see_more">See more</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="name">Name</string>
@@ -153,4 +153,8 @@
     <string name="continue_">Continue</string>
     <string name="join_the_eventorium_community">Join the Eventorium Community</string>
     <string name="profile_photo_not_added">The profile photo has not been added. You can update it later.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="purchased">Purchased</string>
+    <string name="purchase">Purchase</string>
 </resources>

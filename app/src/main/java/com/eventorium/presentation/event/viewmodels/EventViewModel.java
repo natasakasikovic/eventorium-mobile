@@ -7,6 +7,8 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.repositories.EventRepository;
+import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.data.util.Result;
 
 import java.util.List;

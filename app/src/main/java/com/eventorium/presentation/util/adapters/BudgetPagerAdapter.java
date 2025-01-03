@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.presentation.event.fragments.BudgetItemsFragment;
 import com.eventorium.presentation.event.fragments.FavouriteEventsFragment;
+import com.eventorium.presentation.event.fragments.PurchasedAndReservedFragment;
 import com.eventorium.presentation.solution.fragments.product.FavouriteProductsFragment;
 import com.eventorium.presentation.solution.fragments.service.FavouriteServicesFragment;
 
@@ -23,8 +24,10 @@ public class BudgetPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // TODO: change when purchase or reservation is added
-        return BudgetItemsFragment.newInstance(eventType, eventId);
+        if(position == 0) {
+            return BudgetItemsFragment.newInstance(eventType, eventId);
+        }
+        return PurchasedAndReservedFragment.newInstance(eventId);
     }
 
     @Override

@@ -11,19 +11,26 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.solution.models.ProductSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
+import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -39,20 +46,24 @@ public class BudgetCategoryFragment extends Fragment {
     private FragmentBudgetCategoryBinding binding;
     private BudgetViewModel budgetViewModel;
     private OnRemoveCategoryListener onRemoveCategoryListener;
+    private ProductsAdapter productsAdapter;
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
+    public static final String ARG_ID = "ARG_EVENT_ID";
     private static final String ARG_POSITION = "position";
     private Category category;
     private int position;
+    private Long eventId;
 
     public BudgetCategoryFragment() {
     }
 
-    public static BudgetCategoryFragment newInstance(Category category, int position) {
+    public static BudgetCategoryFragment newInstance(Category category, Long eventId, int position) {
         BudgetCategoryFragment fragment = new BudgetCategoryFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CATEGORY, category);
         args.putInt(ARG_POSITION, position);
+        args.putLong(ARG_ID, eventId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +85,7 @@ public class BudgetCategoryFragment extends Fragment {
         if(getArguments() != null) {
             category = getArguments().getParcelable(ARG_CATEGORY);
             position = getArguments().getInt(ARG_POSITION);
+            eventId = getArguments().getLong(ARG_ID);
         }
         budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
     }
@@ -83,6 +95,7 @@ public class BudgetCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentBudgetCategoryBinding.inflate(inflater, container, false);
         binding.productChecked.setChecked(true);
+        configureProductsAdapter();
         binding.deleteButton.setOnClickListener(v -> {
             if (onRemoveCategoryListener != null) {
                 onRemoveCategoryListener.onRemoveCategory(position, category);
@@ -90,6 +103,40 @@ public class BudgetCategoryFragment extends Fragment {
         });
         binding.searchItems.setOnClickListener(v -> search());
         return binding.getRoot();
+    }
+
+    private void configureProductsAdapter() {
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), new OnPurchaseListener<>() {
+            @Override
+            public void purchase(ProductSummary item) {
+                Double plannedAmount = Double.parseDouble(String.valueOf(binding.plannedAmount.getText()));
+                budgetViewModel.purchaseProduct(eventId,
+                        BudgetItem.builder()
+                                .category(category)
+                                .itemId(item.getId())
+                                .plannedAmount(plannedAmount)
+                                .build()
+                ).observe(getViewLifecycleOwner(), product -> {
+                    if(product.getError() == null) {
+                        productsAdapter.remove(item);
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                product.getError(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            }
+
+            @Override
+            public void navigateToDetails(ProductSummary item) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                args.putLong(ARG_ID, item.getId());
+                navController.navigate(R.id.action_budget_to_productDetails, args);
+            }
+        });
     }
 
     private void search() {
@@ -106,13 +153,7 @@ public class BudgetCategoryFragment extends Fragment {
 
     private void searchProducts(Long id, Double price) {
         budgetViewModel.getSuggestedProducts(id, price).observe(getViewLifecycleOwner(), products -> {
-            ProductsAdapter adapter = new ProductsAdapter(products, product -> {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                Bundle args = new Bundle();
-                args.putLong(ARG_ID, product.getId());
-                navController.navigate(R.id.action_budget_to_productDetails, args);
-            });
-            binding.itemsRecycleView.setAdapter(adapter);
+            productsAdapter.setData(products);
         });
     }
 

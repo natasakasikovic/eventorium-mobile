@@ -89,7 +89,6 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
 
     private void loadOtherCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            //TODO: Add custom adapter, this adapter is useless like the whole android API
             ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                     requireContext(),
                     android.R.layout.simple_spinner_item,
@@ -103,7 +102,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     }
 
     private void addCategory(Category category) {
-        adapter.addFragment(BudgetCategoryFragment.newInstance(category, plannedCategories.size()), category.getName());
+        adapter.addFragment(BudgetCategoryFragment.newInstance(category, eventId, plannedCategories.size()), category.getName());
         plannedCategories.add(category);
         otherCategories.remove(category);
     }
@@ -114,7 +113,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
             eventType.getSuggestedCategories()
                     .forEach(category -> {
                         adapter.addFragment(
-                                BudgetCategoryFragment.newInstance(category, plannedCategories.size()),
+                                BudgetCategoryFragment.newInstance(category, eventId, plannedCategories.size()),
                                 category.getName());
                         plannedCategories.add(category);
                     });

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.List;
@@ -21,17 +22,33 @@ import java.util.List;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
 
     private List<ProductSummary> productSummaries;
-    private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
-
-    public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
+    private OnPurchaseListener<ProductSummary> onPurchaseListener;
+    private OnSeeMoreClick<ProductSummary> onSeeMoreClick;
+    private Boolean purchasable = false;
+    public ProductsAdapter(
+            List<ProductSummary> productSummaries,
+            OnSeeMoreClick<ProductSummary> onSeeMoreClick
+    ) {
         this.productSummaries = productSummaries;
         this.onSeeMoreClick = onSeeMoreClick;
+    }
+
+    public ProductsAdapter(
+            List<ProductSummary> productSummaries,
+            OnPurchaseListener<ProductSummary> onPurchaseListener
+    ) {
+        this.productSummaries = productSummaries;
+        this.onPurchaseListener = onPurchaseListener;
+        this.purchasable = true;
     }
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
+        if(purchasable) {
+            view.findViewById(R.id.purchase_button).setVisibility(View.VISIBLE);
+        }
         return new ProductViewHolder(view);
     }
 
@@ -52,12 +69,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         notifyDataSetChanged();
     }
 
+    public void remove(ProductSummary item) {
+        productSummaries.remove(item);
+        notifyDataSetChanged();
+    }
+
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;
         ImageView imageView;
         Button seeMoreButton;
+        Button purchaseButton;
         LinearLayout layout;
 
         public ProductViewHolder(View itemView) {
@@ -67,6 +90,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             discountTextView = itemView.findViewById(R.id.product_discount);
             imageView = itemView.findViewById(R.id.product_photo);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
+            purchaseButton = itemView.findViewById(R.id.purchase_button);
             layout = itemView.findViewById(R.id.layout);
         }
 
@@ -74,7 +98,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             nameTextView.setText(product.getName());
             priceTextView.setText(product.getPrice().toString());
             imageView.setImageBitmap(product.getImage());
-            seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
+            if(onSeeMoreClick != null) {
+                seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
+            } else {
+                seeMoreButton.setOnClickListener(v -> onPurchaseListener.navigateToDetails(product));
+                purchaseButton.setOnClickListener(v -> onPurchaseListener.purchase(product));
+            }
 
             float alpha = product.getAvailable() ? 1f : 0.5f;
             layout.setAlpha(alpha);
