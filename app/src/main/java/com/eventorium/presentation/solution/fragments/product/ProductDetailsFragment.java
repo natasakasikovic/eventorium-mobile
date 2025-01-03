@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.auth.models.Provider;
 import com.eventorium.data.auth.services.AuthService;
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -39,7 +41,7 @@ public class ProductDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     private Long id;
-    private Long providerId;
+    private MessageSender provider;
 
     public ProductDetailsFragment() {
     }
@@ -112,14 +114,15 @@ public class ProductDetailsFragment extends Fragment {
     private void navigateToChat() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        args.putLong(ChatFragment.ARG_RECIPIENT_ID, providerId);
+        args.putParcelable(ChatFragment.ARG_RECIPIENT, provider);
         navController.navigate(R.id.chatFragment, args);
     }
 
     @SuppressLint("SetTextI18n")
     private void loadProductDetails(Product product) {
         if (product != null) {
-            providerId = product.getProvider().getId();
+            Provider sender = product.getProvider();
+            provider = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
             binding.productName.setText(product.getName());
             binding.productPrice.setText(product.getPrice().toString());
             binding.productDescription.setText(product.getDescription());

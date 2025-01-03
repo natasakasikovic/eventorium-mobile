@@ -1,5 +1,6 @@
 package com.eventorium.presentation.chat.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.FragmentChatBinding;
 import com.eventorium.presentation.chat.adapters.ChatAdapter;
 import com.eventorium.presentation.chat.viewmodels.ChatViewModel;
@@ -26,46 +28,52 @@ public class ChatFragment extends Fragment {
 
     private FragmentChatBinding binding;
     private ChatViewModel chatViewModel;
-    public static final String ARG_RECIPIENT_ID = "ARG_RECIPIENT_ID";
+    public static final String ARG_RECIPIENT = "ARG_RECIPIENT";
 
     private ChatAdapter adapter;
     private Long senderId;
-    private Long recipientId;
+    private MessageSender recipient;
 
     public ChatFragment() {
     }
 
-    public static ChatFragment newInstance(Long recipientId) {
+    public static ChatFragment newInstance(MessageSender sender) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_RECIPIENT_ID, recipientId);
+        args.putParcelable(ARG_RECIPIENT, sender);
         fragment.setArguments(args);
         return fragment;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            recipientId = getArguments().getLong(ARG_RECIPIENT_ID);
+            recipient = getArguments().getParcelable(ARG_RECIPIENT);
         }
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         chatViewModel.setupMessageListener(message -> {
+            if(binding.chatTitle.getText().toString().isEmpty()) {
+                binding.chatTitle.setText(message.getSender().getName() + " " + message.getSender().getLastname());
+            }
             adapter.addMessage(message);
         });
         senderId = chatViewModel.getUserId();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         adapter = new ChatAdapter(senderId, new ArrayList<>());
+        binding.chatTitle.setText(recipient.getName() + " " + recipient.getLastname());
         binding.chatRecyclerView.setAdapter(adapter);
         binding.sendButton.setOnClickListener(v -> {
             String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
             if(!message.isEmpty()) {
-                ChatMessage chatMessage = new ChatMessage(senderId, recipientId, message);
+                ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
                 chatViewModel.sendMessage(chatMessage);
                 adapter.addMessage(chatMessage);
                 binding.messageInputEditText.setText("");
@@ -76,7 +84,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void loadMessages() {
-        chatViewModel.getMessages(senderId, recipientId).observe(getViewLifecycleOwner(), messages -> {
+        chatViewModel.getMessages(senderId, recipient.getId()).observe(getViewLifecycleOwner(), messages -> {
             adapter.setData(messages);
         });
     }

@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 
@@ -51,17 +52,17 @@ public class NotificationService {
     public void showChatNotification(
             String title,
             String contentText,
-            Long recipientId
+            MessageSender recipient
     ) {
         createNotificationChannel();
-        sendNotification(buildNotification(title, contentText, configureChatIntent(recipientId))
+        sendNotification(buildNotification(title, contentText, configureChatIntent(recipient))
                 .build());
     }
 
-    private PendingIntent configureChatIntent(Long recipientId) {
+    private PendingIntent configureChatIntent(MessageSender recipient) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("openFragment", "ChatFragment");
-        intent.putExtra(ChatFragment.ARG_RECIPIENT_ID, recipientId);
+        intent.putExtra(ChatFragment.ARG_RECIPIENT, recipient);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(
                 context,

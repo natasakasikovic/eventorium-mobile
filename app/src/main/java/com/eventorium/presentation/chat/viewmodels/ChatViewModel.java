@@ -50,7 +50,6 @@ public class ChatViewModel extends ViewModel {
 
     public void sendMessage(ChatMessage message) {
         webSocketService.sendMessage(ChatMessageRequest.builder()
-                .chatName(message.getSenderId() + "_" + message.getRecipientId())
                 .message(message.getMessage())
                 .senderId(message.getSenderId())
                 .recipientId(message.getRecipientId())

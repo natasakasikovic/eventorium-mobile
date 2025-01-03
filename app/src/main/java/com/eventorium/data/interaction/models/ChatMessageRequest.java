@@ -14,7 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ChatMessageRequest {
-    private String chatName;
     private Long senderId;
     private Long recipientId;
     private String message;

@@ -24,6 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -285,17 +286,17 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         String fragmentToOpen = intent.getStringExtra("openFragment");
         if ("ChatFragment".equals(fragmentToOpen)) {
-            long recipientId = intent.getLongExtra(ChatFragment.ARG_RECIPIENT_ID, -1);
-            if (recipientId != -1) {
-                openChatFragment(recipientId);
+            MessageSender recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
+            if (recipient != null) {
+                openChatFragment(recipient);
             }
         }
     }
 
-    private void openChatFragment(Long recipientId) {
+    private void openChatFragment(MessageSender recipient) {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        args.putLong(ChatFragment.ARG_RECIPIENT_ID, recipientId);
+        args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);
         navController.navigate(R.id.action_homepage_to_chat, args);
     }
 
