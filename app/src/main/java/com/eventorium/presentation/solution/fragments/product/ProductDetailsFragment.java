@@ -73,7 +73,7 @@ public class ProductDetailsFragment extends Fragment {
                 binding.productSpecialties.setText(product.getSpecialties());
                 binding.rating.setText(product.getRating().toString());
 
-                productViewModel.getServiceImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
+                productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
                     binding.images.setAdapter(new ImageAdapter(images));
                 });
             }
