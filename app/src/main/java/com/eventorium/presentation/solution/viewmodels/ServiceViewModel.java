@@ -18,7 +18,6 @@ import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.util.Result;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -85,4 +84,9 @@ public class ServiceViewModel extends ViewModel {
     public boolean isLoggedIn() {
         return authRepository.isLoggedIn();
     }
+
+    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
+        return serviceRepository.searchServices(keyword);
+    }
+
 }

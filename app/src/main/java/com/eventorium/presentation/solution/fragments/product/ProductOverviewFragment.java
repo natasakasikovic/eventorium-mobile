@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -14,6 +15,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -55,6 +57,7 @@ public class ProductOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         observeProducts();
+        setUpListener();
     }
 
     private void configureAdapter(){
@@ -73,6 +76,25 @@ public class ProductOverviewFragment extends Fragment {
                 loadProductImages(result.getData());
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setUpListener(){
+        binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String keyword) {
+                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null)
+                        adapter.setData(result.getData());
+                    else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
         });
     }

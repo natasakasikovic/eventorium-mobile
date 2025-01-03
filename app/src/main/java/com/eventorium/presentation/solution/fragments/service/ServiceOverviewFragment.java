@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -72,6 +73,23 @@ public class ServiceOverviewFragment extends Fragment {
             View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
             bottomSheetDialog.setContentView(dialogView);
             bottomSheetDialog.show();
+        });
+
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String keyword) {
+                viewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null)
+                        adapter.setData(result.getData());
+                    else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
         });
     }
 

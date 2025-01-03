@@ -46,7 +46,7 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImage(id);
     }
 
-    public LiveData<List<Bitmap>> getServiceImages(Long id) {
+    public LiveData<List<Bitmap>> getProductImages(Long id) {
         return productRepository.getProductImages(id);
     }
 
@@ -69,4 +69,7 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProducts();
     }
 
+    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
+        return productRepository.searchProducts(keyword);
+    }
 }
