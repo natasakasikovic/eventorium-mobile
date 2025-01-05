@@ -1,6 +1,4 @@
-package com.eventorium.data.solution.dtos;
-
-import com.eventorium.data.util.models.Status;
+package com.eventorium.data.solution.models.pricelist;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,17 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ServiceSummaryResponseDto {
+public class PriceListItem {
     private Long id;
     private String name;
     private Double price;
-    private Boolean available;
-    private Boolean visible;
-    private Status status;
+    private Double discount;
+    private Double netPrice;
 }

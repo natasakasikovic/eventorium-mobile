@@ -4,11 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
-import com.eventorium.data.solution.models.PriceListItem;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.data.solution.repositories.PriceListRepository;
 import com.eventorium.data.util.Result;
 
@@ -35,11 +34,11 @@ public class PriceListViewModel extends ViewModel {
     public LiveData<Result<List<PriceListItem>>> getProducts() {
         return priceListRepository.getProducts();
     }
-    public LiveData<Result<PriceListItem>> updateService(Long id, UpdatePriceListRequestDto dto) {
+    public LiveData<Result<PriceListItem>> updateService(Long id, UpdatePriceList dto) {
         return priceListRepository.updateService(id, dto);
     }
 
-    public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceListRequestDto dto) {
+    public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceList dto) {
         return priceListRepository.updateProduct(id, dto);
     }
 

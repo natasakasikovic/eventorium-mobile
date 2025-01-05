@@ -3,13 +3,11 @@ package com.eventorium.presentation.solution.viewmodels;
 import android.graphics.Bitmap;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
-import com.eventorium.data.solution.models.Product;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.util.Result;

@@ -29,6 +29,7 @@ import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
+import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
@@ -160,6 +161,12 @@ public class AppModule {
     @Inject
     public ProductService provideProductService(Retrofit retrofit) {
         return retrofit.create(ProductService.class);
+    }
+
+    @Provides
+    @Singleton
+    public ProductRepository provideProductRepository(ProductService productService) {
+        return new ProductRepository(productService);
     }
 
     @Provides

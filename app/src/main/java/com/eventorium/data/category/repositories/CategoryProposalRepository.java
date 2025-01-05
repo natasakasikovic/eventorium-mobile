@@ -1,17 +1,13 @@
 package com.eventorium.data.category.repositories;
 
-import static java.util.stream.Collectors.toList;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
-import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.services.CategoryProposalService;
 
@@ -37,14 +33,11 @@ public class CategoryProposalRepository {
         service.getServiceProposals().enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<CategoryResponseDto>> call,
-                    @NonNull Response<List<CategoryResponseDto>> response
+                    @NonNull Call<List<Category>> call,
+                    @NonNull Response<List<Category>> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Category> categories = response.body()
-                            .stream().map(CategoryMapper::fromResponse)
-                            .collect(toList());
-                    liveData.postValue(categories);
+                    liveData.postValue(response.body());
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(Collections.emptyList());
@@ -53,7 +46,7 @@ public class CategoryProposalRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<CategoryResponseDto>> call,
+                    @NonNull Call<List<Category>> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getLocalizedMessage());
@@ -63,33 +56,33 @@ public class CategoryProposalRepository {
         return liveData;
     }
 
-    public LiveData<Boolean> updateCategoryStatus(Long id, CategoryUpdateStatusDto categoryUpdateStatusDto) {
+    public LiveData<Boolean> updateCategoryStatus(Long id, UpdateCategoryStatus updateCategoryStatus) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.updateCategoryStatus(id, categoryUpdateStatusDto)
+        service.updateCategoryStatus(id, updateCategoryStatus)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
 
-    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequestDto dto) {
+    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequest request) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.updateCategoryProposal(id, dto)
+        service.updateCategoryProposal(id, request)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
 
-    public LiveData<Boolean> changeCategory(Long id, CategoryRequestDto categoryRequestDto) {
+    public LiveData<Boolean> changeCategory(Long id, CategoryRequest categoryRequest) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        service.changeCategoryProposal(id, categoryRequestDto)
+        service.changeCategoryProposal(id, categoryRequest)
                 .enqueue(handleProposalUpdate(liveData));
         return liveData;
     }
 
-    private Callback<CategoryResponseDto> handleProposalUpdate(MutableLiveData<Boolean> liveData) {
+    private Callback<Category> handleProposalUpdate(MutableLiveData<Boolean> liveData) {
         return new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<CategoryResponseDto> call,
-                    @NonNull Response<CategoryResponseDto> response
+                    @NonNull Call<Category> call,
+                    @NonNull Response<Category> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
                     liveData.postValue(true);
@@ -100,7 +93,7 @@ public class CategoryProposalRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<CategoryResponseDto> call,
+                    @NonNull Call<Category> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getLocalizedMessage());

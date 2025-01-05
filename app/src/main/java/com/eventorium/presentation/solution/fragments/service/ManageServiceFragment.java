@@ -26,8 +26,8 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.solution.dtos.ServiceFilterDto;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceFilter;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -189,7 +189,7 @@ public class ManageServiceFragment extends Fragment {
         Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.categorySelector)));
         EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.eventTypeSelector)));
 
-        ServiceFilterDto filter = ServiceFilterDto.builder()
+        ServiceFilter filter = ServiceFilter.builder()
                 .availability(availability)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)

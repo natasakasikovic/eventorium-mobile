@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.databinding.FragmentCreateCategoryBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.google.android.material.textfield.TextInputEditText;
@@ -72,7 +72,7 @@ public class CreateCategoryFragment extends Fragment {
             return;
         }
 
-        CategoryRequestDto dto = new CategoryRequestDto(name, description);
+        CategoryRequest dto = new CategoryRequest(name, description);
 
         categoryViewModel.createCategory(dto).observe(getViewLifecycleOwner(), response -> {
             if (response != null) {

@@ -11,7 +11,6 @@ import com.eventorium.data.auth.dtos.LoginResponseDto;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.services.WebSocketService;
-import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.util.JwtDecoder;
 
 import retrofit2.Call;

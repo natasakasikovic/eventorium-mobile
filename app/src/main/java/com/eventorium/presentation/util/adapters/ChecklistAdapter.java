@@ -1,11 +1,13 @@
 package com.eventorium.presentation.util.adapters;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
@@ -68,6 +70,9 @@ public class ChecklistAdapter<T> extends RecyclerView.Adapter<ChecklistAdapter.C
         T item = items.get(position);
         holder.itemText.setText(item.toString());
         holder.checkBox.setChecked(selected.get(position));
+
+        Typeface typeface = ResourcesCompat.getFont(holder.itemText.getContext(), R.font.jejumyeongjo);
+        holder.itemText.setTypeface(typeface);
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked)
                 -> selected.set(position, isChecked));

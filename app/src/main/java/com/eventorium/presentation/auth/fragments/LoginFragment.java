@@ -3,7 +3,6 @@ package com.eventorium.presentation.auth.fragments;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,16 +24,12 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.dtos.LoginRequestDto;
 import com.eventorium.data.auth.dtos.LoginResponseDto;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

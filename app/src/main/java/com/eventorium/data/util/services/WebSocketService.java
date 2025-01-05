@@ -10,7 +10,6 @@ import com.eventorium.Eventorium;
 import com.eventorium.data.util.models.Notification;
 import com.google.gson.Gson;
 
-import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 

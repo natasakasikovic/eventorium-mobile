@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.UpdateService;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentEditServiceBinding;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -86,7 +86,7 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void editService() {
-        UpdateServiceRequestDto dto = loadDataFromForm();
+        UpdateService dto = loadDataFromForm();
         if(dto != null) {
             serviceViewModel.updateService(serviceSummary.getId(), loadDataFromForm())
                     .observe(getViewLifecycleOwner(), service -> {
@@ -109,7 +109,7 @@ public class EditServiceFragment extends Fragment {
         }
     }
 
-    private UpdateServiceRequestDto loadDataFromForm() {
+    private UpdateService loadDataFromForm() {
         try {
             ReservationType type = binding.manualChecked.isChecked()
                     ? ReservationType.MANUAL
@@ -147,7 +147,7 @@ public class EditServiceFragment extends Fragment {
                 return null;
             }
 
-            return UpdateServiceRequestDto.builder()
+            return UpdateService.builder()
                     .name(String.valueOf(binding.serviceNameEditText.getText()))
                     .description(String.valueOf(binding.serviceDescriptionText.getText()))
                     .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))

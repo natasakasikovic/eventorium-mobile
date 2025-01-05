@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.repositories.EventRepository;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.util.Result;

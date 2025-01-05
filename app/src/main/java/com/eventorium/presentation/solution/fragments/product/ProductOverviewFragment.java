@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
@@ -56,6 +56,11 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            if(products.getError() == null) {
+                adapter.setData(products.getData());
+            }
+        });
         observeProducts();
         setUpListener();
     }

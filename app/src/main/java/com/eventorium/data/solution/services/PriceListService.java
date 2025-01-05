@@ -1,9 +1,7 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.models.PriceListItem;
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
 
 import java.util.List;
 
@@ -22,10 +20,10 @@ public interface PriceListService {
     Call<List<PriceListItem>> getProducts();
 
     @PATCH("price-list/services/{id}")
-    Call<PriceListItem> updateService(@Path("id") Long id, @Body UpdatePriceListRequestDto dto);
+    Call<PriceListItem> updateService(@Path("id") Long id, @Body UpdatePriceList dto);
 
     @PATCH("price-list/products/{id}")
-    Call<PriceListItem> updateProduct(@Path("id") Long id, @Body UpdatePriceListRequestDto dto);
+    Call<PriceListItem> updateProduct(@Path("id") Long id, @Body UpdatePriceList dto);
 
     @GET("price-list/pdf")
     Call<ResponseBody> downloadPdf();
