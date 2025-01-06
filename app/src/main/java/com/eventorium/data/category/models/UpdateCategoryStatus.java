@@ -1,4 +1,4 @@
-package com.eventorium.data.category.dtos;
+package com.eventorium.data.category.models;
 
 
 import com.eventorium.data.util.models.Status;
@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryUpdateStatusDto {
+public class UpdateCategoryStatus {
     private Status status;
 }

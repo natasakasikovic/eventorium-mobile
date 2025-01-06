@@ -1,10 +1,9 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.data.solution.models.service.UpdateService;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;
@@ -43,14 +42,14 @@ public interface ServiceService {
     Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);
 
     @POST("services")
-    Call<ServiceSummaryResponseDto> createService(@Body CreateServiceRequestDto dto);
+    Call<ServiceSummary> createService(@Body CreateService dto);
 
     @Multipart
     @POST("services/{id}/images")
     Call<ResponseBody> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
 
     @PUT("services/{id}")
-    Call<Service> updateService(@Path("id") Long id, @Body UpdateServiceRequestDto dto);
+    Call<Service> updateService(@Path("id") Long id, @Body UpdateService dto);
 
     @DELETE("services/{id}")
     Call<Void> deleteService(@Path("id") Long id);

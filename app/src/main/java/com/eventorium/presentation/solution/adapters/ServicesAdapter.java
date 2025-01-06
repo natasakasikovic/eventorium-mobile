@@ -12,8 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
+import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 
 import java.util.List;
 

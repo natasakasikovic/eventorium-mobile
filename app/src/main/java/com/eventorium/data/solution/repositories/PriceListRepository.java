@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.dtos.UpdatePriceListRequestDto;
-import com.eventorium.data.solution.models.PriceListItem;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
@@ -48,13 +48,13 @@ public class PriceListRepository {
         return result;
     }
 
-    public LiveData<Result<PriceListItem>> updateService(Long id, UpdatePriceListRequestDto dto) {
+    public LiveData<Result<PriceListItem>> updateService(Long id, UpdatePriceList dto) {
         MutableLiveData<Result<PriceListItem>> result = new MutableLiveData<>();
         priceListService.updateService(id, dto).enqueue(handleResponse(result));
         return result;
     }
 
-    public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceListRequestDto dto) {
+    public LiveData<Result<PriceListItem>> updateProduct(Long id, UpdatePriceList dto) {
         MutableLiveData<Result<PriceListItem>> result = new MutableLiveData<>();
         priceListService.updateProduct(id, dto).enqueue(handleResponse(result));
         return result;

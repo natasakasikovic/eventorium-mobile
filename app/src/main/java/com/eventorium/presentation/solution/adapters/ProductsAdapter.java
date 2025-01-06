@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.List;

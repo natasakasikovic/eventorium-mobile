@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteServicesBinding;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 

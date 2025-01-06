@@ -1,4 +1,4 @@
-package com.eventorium.data.solution.models;
+package com.eventorium.data.solution.models.service;
 
 
 import android.graphics.Bitmap;

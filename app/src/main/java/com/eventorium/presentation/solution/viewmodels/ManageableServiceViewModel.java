@@ -6,12 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.solution.dtos.ServiceFilterDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceFilter;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
-import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.Result;
 
 import java.util.List;
@@ -71,7 +69,7 @@ public class ManageableServiceViewModel extends ViewModel {
         });
     }
 
-    public void filterServices(ServiceFilterDto filter) {
+    public void filterServices(ServiceFilter filter) {
         isLoading.setValue(true);
         repository.filterServices(filter).observeForever(services -> {
             filterResults.postValue(services);
@@ -84,7 +82,7 @@ public class ManageableServiceViewModel extends ViewModel {
         super.onCleared();
         repository.getManageableServices().removeObserver(manageableServices::postValue);
         repository.searchServices(null).removeObserver(searchResults::postValue);
-        repository.filterServices(new ServiceFilterDto()).removeObserver(filterResults::postValue);
+        repository.filterServices(new ServiceFilter()).removeObserver(filterResults::postValue);
     }
 
     public LiveData<List<ServiceSummary>> getFilterResults() {

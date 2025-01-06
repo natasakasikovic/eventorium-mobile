@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.services.BudgetService;
-import com.eventorium.data.solution.models.Product;
+import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.util.Result;
 
 import java.util.List;

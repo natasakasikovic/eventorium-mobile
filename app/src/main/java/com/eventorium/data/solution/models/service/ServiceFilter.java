@@ -1,4 +1,4 @@
-package com.eventorium.data.solution.dtos;
+package com.eventorium.data.solution.models.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ServiceFilterDto {
+public class ServiceFilter {
     private String category;
     private String eventType;
     private Boolean availability;

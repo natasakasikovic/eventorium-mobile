@@ -1,4 +1,4 @@
-package com.eventorium.data.solution.dtos;
+package com.eventorium.data.solution.models.pricelist;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdatePriceListRequestDto {
+public class UpdatePriceList {
     private Double price;
     private Double discount;
 }

@@ -17,7 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;

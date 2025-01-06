@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.mappers.CategoryMapper;
+import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.category.adapters.CategoriesAdapter;
@@ -150,41 +150,44 @@ public class CategoryOverviewFragment extends Fragment {
         nameEditText.setText(category.getName());
         descriptionEditText.setText(category.getDescription());
 
+
         AlertDialog alertDialog = new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
                     String newName = nameEditText.getText().toString();
                     String newDescription = descriptionEditText.getText().toString();
-
-                    category.setName(newName);
-                    category.setDescription(newDescription);
-
-                    categoryViewModel.updateCategory(category.getId(), CategoryMapper.toRequest(category))
-                            .observe(getViewLifecycleOwner(), updatedCategory -> {
-                                if(updatedCategory != null) {
-                                    Toast.makeText(
-                                            requireContext(),
-                                            R.string.category_updated_successfully,
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                    loadCategories();
-                                } else {
-                                    Toast.makeText(
-                                            requireContext(),
-                                            R.string.failed_to_update_category,
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                }
-                            });
+                    saveCategory(category.getId(), new CategoryRequest(newName, newDescription));
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
 
         alertDialog.show();
+        resizeDialog(alertDialog);
+    }
 
-
+    private void resizeDialog(AlertDialog alertDialog) {
         int width = (int) (requireContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         Objects.requireNonNull(alertDialog.getWindow())
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
+
+    private void saveCategory(Long id, CategoryRequest dto) {
+        categoryViewModel.updateCategory(id, dto).observe(getViewLifecycleOwner(), updatedCategory -> {
+            if(updatedCategory.getError() == null) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.category_updated_successfully,
+                        Toast.LENGTH_SHORT
+                ).show();
+                loadCategories();
+            } else {
+                Toast.makeText(
+                        requireContext(),
+                        updatedCategory.getError(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
 }
