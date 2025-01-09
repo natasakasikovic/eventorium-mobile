@@ -15,7 +15,6 @@
             android:layout_height="255dp"
             android:layout_marginTop="84dp"
             android:contentDescription="Profile picture of the user"
-            android:src="@drawable/profile_picture_example"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
