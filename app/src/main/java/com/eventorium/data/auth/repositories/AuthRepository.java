@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.auth0.android.jwt.JWT;
-import com.eventorium.data.auth.dtos.LoginRequestDto;
-import com.eventorium.data.auth.dtos.LoginResponseDto;
+import com.eventorium.data.auth.models.LoginRequest;
+import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.services.WebSocketService;
@@ -30,11 +30,11 @@ public class AuthRepository {
         this.sharedPreferences = sharedPreferences;
     }
 
-    public LiveData<Result<LoginResponseDto>> login(LoginRequestDto dto) {
-        MutableLiveData<Result<LoginResponseDto>> liveData = new MutableLiveData<>();
+    public LiveData<Result<LoginResponse>> login(LoginRequest dto) {
+        MutableLiveData<Result<LoginResponse>> liveData = new MutableLiveData<>();
         authService.login(dto).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<LoginResponseDto> call, Response<LoginResponseDto> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     handleSuccessfulResponse(response.body(), liveData);
                 } else {
@@ -43,19 +43,19 @@ public class AuthRepository {
             }
 
             @Override
-            public void onFailure(Call<LoginResponseDto> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 liveData.postValue(Result.error("An error occurred. Please try again later."));
             }
         });
         return liveData;
     }
 
-    private void handleSuccessfulResponse(LoginResponseDto responseBody, MutableLiveData<Result<LoginResponseDto>> liveData) {
+    private void handleSuccessfulResponse(LoginResponse responseBody, MutableLiveData<Result<LoginResponse>> liveData) {
         saveJwtToken(responseBody.getJwt());
         liveData.postValue(Result.success(responseBody));
     }
 
-    private void handleErrorResponse(Response<LoginResponseDto> response, MutableLiveData<Result<LoginResponseDto>> liveData) {
+    private void handleErrorResponse(Response<LoginResponse> response, MutableLiveData<Result<LoginResponse>> liveData) {
         String errorMessage = getErrorMessage(response.code());
         liveData.postValue(Result.error(errorMessage));
     }
