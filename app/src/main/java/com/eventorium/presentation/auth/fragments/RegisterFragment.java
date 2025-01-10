@@ -30,7 +30,7 @@ import com.eventorium.data.auth.models.Role;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentRegisterBinding;
-import com.eventorium.presentation.auth.viewmodels.UserViewModel;
+import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.auth.viewmodels.RoleViewModel;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 
@@ -42,7 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private UserViewModel viewModel;
+    private AuthViewModel viewModel;
     private CityViewModel cityViewModel;
     private RoleViewModel roleViewModel;
 
@@ -61,7 +61,7 @@ public class RegisterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
-        viewModel = viewModelProvider.get(UserViewModel.class);
+        viewModel = viewModelProvider.get(AuthViewModel.class);
         cityViewModel = viewModelProvider.get(CityViewModel.class);
         roleViewModel = viewModelProvider.get(RoleViewModel.class);
 
@@ -198,7 +198,6 @@ public class RegisterFragment extends Fragment {
                 TextUtils.isEmpty(binding.confirmPasswordEditText.getText()) &&
                 TextUtils.isEmpty(binding.nameEditText.getText()) &&
                 TextUtils.isEmpty(binding.lastNameEditText.getText()) &&
-                TextUtils.isEmpty(binding.addressEditText.getText()) &&
                 TextUtils.isEmpty(binding.addressEditText.getText()) &&
                 TextUtils.isEmpty(binding.numberEditText.getText());
     }

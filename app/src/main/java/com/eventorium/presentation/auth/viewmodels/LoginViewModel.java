@@ -3,8 +3,8 @@ package com.eventorium.presentation.auth.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.auth.dtos.LoginRequestDto;
-import com.eventorium.data.auth.dtos.LoginResponseDto;
+import com.eventorium.data.auth.models.LoginRequest;
+import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.services.WebSocketService;
@@ -25,7 +25,7 @@ public class LoginViewModel extends ViewModel {
         this.authRepository = authRepository;
     }
 
-    public LiveData<Result<LoginResponseDto>> login(LoginRequestDto dto) {
+    public LiveData<Result<LoginResponse>> login(LoginRequest dto) {
         return authRepository.login(dto);
     }
 

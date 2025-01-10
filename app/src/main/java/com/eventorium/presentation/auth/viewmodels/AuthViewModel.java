@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.models.User;
-import com.eventorium.data.auth.repositories.UserRepository;
+import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.util.Result;
 
 import javax.inject.Inject;
@@ -15,12 +15,12 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class UserViewModel extends ViewModel {
-    UserRepository repository;
+public class AuthViewModel extends ViewModel {
+    private final AuthRepository repository;
 
     @Inject
-    public UserViewModel(UserRepository userRepository) {
-        this.repository = userRepository;
+    public AuthViewModel(AuthRepository repository) {
+        this.repository = repository;
     }
 
     public LiveData<Result<User>> createAccount(User user) {

@@ -22,8 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.auth.dtos.LoginRequestDto;
-import com.eventorium.data.auth.dtos.LoginResponseDto;
+import com.eventorium.data.auth.models.LoginRequest;
+import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -43,7 +43,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText emailEditText;
     private TextInputEditText passwordEditText;
 
-    private LoginResponseDto response;
+    private LoginResponse response;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -81,7 +81,7 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        LoginRequestDto dto = new LoginRequestDto(email, password);
+        LoginRequest dto = new LoginRequest(email, password);
         loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 response = result.getData();

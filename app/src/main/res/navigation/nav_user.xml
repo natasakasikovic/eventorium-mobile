@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/accountDetailsFragment"
-        android:name="com.eventorium.presentation.user.fragments.AccountDetails"
+        android:name="com.eventorium.presentation.user.fragments.AccountDetailsFragment"
         android:label="fragment_account_details"
         tools:layout="@layout/fragment_account_details">
         <action

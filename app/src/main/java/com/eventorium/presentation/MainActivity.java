@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void logOutUser() {
+    public void logOutUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();

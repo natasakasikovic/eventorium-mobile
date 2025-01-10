@@ -1,4 +1,4 @@
-package com.eventorium.data.auth.dtos;
+package com.eventorium.data.auth.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequestDto {
-    private String email;
-    private String password;
+public class LoginResponse {
+    private String jwt;
+    private Long expiresIn;
 }
