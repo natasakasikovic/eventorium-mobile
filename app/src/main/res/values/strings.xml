@@ -153,4 +153,7 @@
     <string name="continue_">Continue</string>
     <string name="join_the_eventorium_community">Join the Eventorium Community</string>
     <string name="profile_photo_not_added">The profile photo has not been added. You can update it later.</string>
+    <string name="upgrade_account">Upgrade Account</string>
+    <string name="deactivate_account">Deactivate Account</string>
+    <string name="change_password">Change Password</string>
 </resources>

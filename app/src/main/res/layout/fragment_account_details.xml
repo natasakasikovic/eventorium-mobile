@@ -42,7 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
         android:paddingStart="40dp"
-        android:onClick="navigateToEditAccount"/>
+        android:fontFamily="@font/jejumyeongjo" />
 
     <TextView
         android:id="@+id/fullName"
@@ -53,7 +53,8 @@
         app:layout_constraintTop_toBottomOf="@id/profileImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.5"
+        android:fontFamily="@font/jejumyeongjo" />
 
     <TextView
         android:id="@+id/addressCity"
@@ -66,7 +67,8 @@
         app:layout_constraintTop_toBottomOf="@id/fullName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.5"
+        android:fontFamily="@font/jejumyeongjo" />
 
 
     <TextView
@@ -79,7 +81,8 @@
         app:layout_constraintTop_toBottomOf="@id/addressCity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.5"
+        android:fontFamily="@font/jejumyeongjo" />
 
     <TextView
         android:id="@+id/email"
@@ -90,5 +93,6 @@
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/phoneNumber"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/jejumyeongjo"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

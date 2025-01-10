@@ -14,21 +14,30 @@
             android:layout_width="240dp"
             android:layout_height="255dp"
             android:layout_marginTop="84dp"
-            android:contentDescription="Profile picture of the user"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ic_edit"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_background"
-            android:contentDescription="Edit profile picture"
-            android:src="@drawable/ic_edit"
+        <ProgressBar
+            android:id="@+id/profileImageLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="184dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.528"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/profilePhotoEdit"
+            android:layout_width="80dp"
+            app:iconSize="32dp"
+            android:layout_height="60dp"
+            app:backgroundTint="#FFFFFF"
+            app:icon="@drawable/ic_edit"
+            app:iconTint="@color/md_theme_primary"
             app:layout_constraintBottom_toBottomOf="@id/profileImage"
             app:layout_constraintEnd_toEndOf="@id/profileImage" />
 
@@ -55,11 +64,11 @@
                     android:id="@+id/emailText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cillian@gmail.com"
                     android:textColor="@color/md_theme_primary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:fontFamily="@font/jejumyeongjo"/>
 
                 <Button
                     android:id="@+id/changePasswordButton"
@@ -67,12 +76,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/md_theme_primary"
-                    android:text="Change Password"
+                    android:text="@string/change_password"
                     android:textAllCaps="false"
                     app:layout_constraintTop_toBottomOf="@id/emailText"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    style="@style/Widget.MaterialComponents.Button"/>
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:fontFamily="@font/jejumyeongjo"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -101,13 +111,13 @@
                     android:id="@+id/nameInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Name">
+                    android:hint="@string/name">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/nameEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cillian"/>
+                        android:fontFamily="@font/jejumyeongjo"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -115,13 +125,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Last Name">
+                    android:hint="@string/lastname">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/lastNameEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Murphy"/>
+                        android:fontFamily="@font/jejumyeongjo"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -129,27 +139,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Address">
+                    android:hint="@string/address">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/addressEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="New Street, 11"/>
+                        android:fontFamily="@font/jejumyeongjo"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cityInputLayout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tvCityLabel"
                     android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_marginTop="20dp"
-                    android:hint="City">
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:text="@string/city"
+                    android:gravity="start"/>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cityEditText"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/city"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@color/md_theme_secondaryContainer">
+
+                    <Spinner
+                        android:id="@+id/spinnerCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Birmingham"/>
+                        android:fontFamily="@font/jejumyeongjo"
+                        android:spinnerMode="dropdown" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -157,14 +178,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Phone Number">
+                    android:hint="@string/phone_number">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/phoneEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="phone"
-                        android:text="0121568952"/>
+                        android:fontFamily="@font/jejumyeongjo"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
@@ -172,10 +193,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Save"
+                    android:text="@string/save"
                     android:backgroundTint="@color/md_theme_primary"
                     android:textColor="@android:color/white"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/jejumyeongjo"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -195,22 +217,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
-                android:text="Upgrade Account"
+                android:text="@string/upgrade_account"
                 android:textAllCaps="false"
                 android:drawableEnd="@drawable/ic_arrow_upward"
                 android:backgroundTint="@color/md_theme_primary"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:fontFamily="@font/jejumyeongjo"/>
 
             <Button
                 android:id="@+id/deactivateAccountButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Deactivate Account"
+                android:text="@string/deactivate_account"
                 android:textAllCaps="false"
                 android:backgroundTint="@color/md_theme_primary"
                 android:textColor="@android:color/white"
-                android:drawableEnd="@drawable/ic_close"/>
+                android:drawableEnd="@drawable/ic_close"
+                android:fontFamily="@font/jejumyeongjo"/>
 
         </LinearLayout>
 

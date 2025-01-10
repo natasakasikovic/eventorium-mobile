@@ -199,7 +199,6 @@ public class RegisterFragment extends Fragment {
                 TextUtils.isEmpty(binding.nameEditText.getText()) &&
                 TextUtils.isEmpty(binding.lastNameEditText.getText()) &&
                 TextUtils.isEmpty(binding.addressEditText.getText()) &&
-                TextUtils.isEmpty(binding.addressEditText.getText()) &&
                 TextUtils.isEmpty(binding.numberEditText.getText());
     }
 
