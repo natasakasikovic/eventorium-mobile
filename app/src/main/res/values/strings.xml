@@ -36,6 +36,10 @@
         Important: Your activation link will expire after 24 hours. If you do not activate your account within this time, you will need to repeat the registration process.\n\n
         Thank you for choosing Eventorium!
     </string>
+    <string name="password_changed_title">Password changed</string>
+    <string name="logout_reason">
+        Your password has been successfully changed. For security reasons, please log in again to ensure your account is protected.
+    </string>
     <string name="ok_button">OK</string>
     <string name="service_and_product_provider">Service and Product Provider</string>
     <string name="event_organizer">Event Organizer</string>

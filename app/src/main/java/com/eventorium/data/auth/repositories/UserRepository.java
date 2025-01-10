@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.auth.models.AccountDetails;
+import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.util.ErrorResponse;
@@ -140,6 +141,33 @@ public class UserRepository {
         });
 
         return result;
+    }
+
+    public LiveData<Result<Void>> changePassword(ChangePasswordRequest request) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        service.changePassword(request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful())
+                    liveData.postValue(Result.success(null));
+                else {
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return liveData;
     }
 
 }

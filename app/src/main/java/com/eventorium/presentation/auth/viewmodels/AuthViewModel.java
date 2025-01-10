@@ -16,7 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class AuthViewModel extends ViewModel {
-    AuthRepository repository;
+    private final AuthRepository repository;
 
     @Inject
     public AuthViewModel(AuthRepository repository) {
