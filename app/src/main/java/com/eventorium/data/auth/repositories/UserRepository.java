@@ -63,6 +63,33 @@ public class UserRepository {
         return liveData;
     }
 
+    public LiveData<Result<AccountDetails>> getUser(Long id) {
+        MutableLiveData<Result<AccountDetails>> liveData = new MutableLiveData<>();
+
+        service.getUser(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<AccountDetails> call, Response<AccountDetails> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(Result.success(response.body()));
+                } else {
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error("Error while loading"));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccountDetails> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return liveData;
+    }
+
     public LiveData<Bitmap> getProfilePhoto(Long id) {
         MutableLiveData<Bitmap> liveData = new MutableLiveData<>();
 

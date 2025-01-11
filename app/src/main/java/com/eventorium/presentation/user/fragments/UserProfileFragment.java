@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +14,28 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.AccountDetails;
-import com.eventorium.databinding.FragmentAccountDetailsBinding;
+import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.databinding.FragmentUserProfileBinding;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class AccountDetailsFragment extends Fragment {
+public class UserProfileFragment extends Fragment {
 
-    private FragmentAccountDetailsBinding binding;
+    private FragmentUserProfileBinding binding;
     private UserViewModel userViewModel;
 
-    public AccountDetailsFragment() { }
+    public static final String ARG_ID = "ARG_USER_ID";
 
-    public static AccountDetailsFragment newInstance() {
-        return new AccountDetailsFragment();
+    public UserProfileFragment() {}
+
+    public static UserProfileFragment newInstance(Long id) {
+        UserProfileFragment fragment = new UserProfileFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -41,7 +46,7 @@ public class AccountDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAccountDetailsBinding.inflate(inflater, container, false);
+        this.binding = FragmentUserProfileBinding.inflate(inflater, container, false);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         loadAccountDetails();
         return binding.getRoot();
@@ -50,15 +55,13 @@ public class AccountDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        binding.editAccountButton.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.action_accountDetails_to_editAccountFragment);
-        });
+        binding.blockUserButton.setOnClickListener(v -> blockUser());
+        binding.reportUserButton.setOnClickListener(v -> reportUser());
     }
 
     private void loadAccountDetails() {
-        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), result -> {
+        if (getArguments() == null) Toast.makeText(requireContext(), ErrorMessages.GENERAL_ERROR, Toast.LENGTH_SHORT).show();
+        userViewModel.getUser(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 AccountDetails accountDetails = result.getData();
                 String fullName = accountDetails.getName() + " " + accountDetails.getLastname();
@@ -83,6 +86,14 @@ public class AccountDetailsFragment extends Fragment {
                 binding.profileImage.setImageResource(R.drawable.profile_photo);
             binding.profileImageLoader.setVisibility(View.GONE);
         });
+    }
+
+    private void blockUser() {
+
+    }
+
+    private void reportUser() {
+
     }
 
 }

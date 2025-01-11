@@ -5,6 +5,12 @@
     android:id="@+id/nav_guest"
     app:startDestination="@id/homepageFragment">
 
+    <!--TODO: delete after testing-->
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile" />
+
     <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"

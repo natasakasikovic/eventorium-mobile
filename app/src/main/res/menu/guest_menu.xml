@@ -9,4 +9,10 @@
         android:id="@+id/nav_signup"
         android:title="@string/sign_up"
         android:icon="@drawable/ic_account" />
+
+    <!--TODO: delete after testing-->
+    <item
+        android:id="@+id/nav_see_other_profile"
+        android:title="See other profile"
+        android:icon="@drawable/ic_account" />
 </menu>
