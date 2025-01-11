@@ -229,6 +229,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_messages) {
             // TODO: navigate to messages fragment
             Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+        }  else if (id == R.id.nav_see_other_profile) { // TODO: DELETE! THIS IS TEMPORARY SINCE THERE IS NO CURRENTLY WAY TO COME TO PROFILE OVERVIEW!
+            Bundle args = new Bundle();
+            args.putLong("ARG_USER_ID", 1);
+            navController.navigate(R.id.otherProfileFragment, args);
         }
     }
 

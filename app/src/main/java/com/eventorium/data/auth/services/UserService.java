@@ -3,6 +3,7 @@ package com.eventorium.data.auth.services;
 import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
+import com.eventorium.data.auth.models.UserReport;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -34,4 +35,7 @@ public interface UserService {
 
     @POST("users/password")
     Call<Void> changePassword(@Body ChangePasswordRequest request);
+
+    @POST("user-reports/{offender-id}")
+    Call<Void> reportUser(@Body UserReport report, @Path("offender-id") Long id);
 }
