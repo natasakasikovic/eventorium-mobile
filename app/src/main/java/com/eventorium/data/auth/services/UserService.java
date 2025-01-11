@@ -19,6 +19,9 @@ public interface UserService {
     @GET("users/me")
     Call<AccountDetails> getCurrentUser();
 
+    @GET("users/{id}")
+    Call<AccountDetails> getUser(@Path("id") Long id);
+
     @GET("users/{id}/profile-photo")
     Call<ResponseBody> getProfilePhoto(@Path("id") Long id);
 

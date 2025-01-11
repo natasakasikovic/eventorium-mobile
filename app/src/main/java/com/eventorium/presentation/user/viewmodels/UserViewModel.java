@@ -30,6 +30,10 @@ public class UserViewModel extends ViewModel {
         return repository.getCurrentUser();
     }
 
+    public LiveData<Result<AccountDetails>> getUser(Long id) {
+        return repository.getUser(id);
+    }
+
     public LiveData<Bitmap> getProfilePhoto(Long id) {
         return repository.getProfilePhoto(id);
     }
