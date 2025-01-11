@@ -1,9 +1,5 @@
 package com.eventorium.presentation.event.fragments;
 
-import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
-
-import static java.util.stream.Collectors.toList;
-
 import android.content.Context;
 import android.os.Bundle;
 
@@ -13,8 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,27 +16,23 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.ServiceSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
-import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
-import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
 import com.eventorium.presentation.util.listeners.OnPurchaseListener;
+import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class BudgetCategoryFragment extends Fragment {
-
 
     public interface OnRemoveCategoryListener {
         void onRemoveCategory(int position, Category category);
@@ -53,6 +43,7 @@ public class BudgetCategoryFragment extends Fragment {
     private BudgetViewModel budgetViewModel;
     private OnRemoveCategoryListener onRemoveCategoryListener;
     private ProductsAdapter productsAdapter;
+    private ServicesAdapter servicesAdapter;
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
     public static final String ARG_ID = "ARG_EVENT_ID";
@@ -108,7 +99,9 @@ public class BudgetCategoryFragment extends Fragment {
         });
         binding.searchItems.setOnClickListener(v -> search());
 
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureListener());
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureProductListener());
+        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());
+
 
         return binding.getRoot();
     }
@@ -122,7 +115,17 @@ public class BudgetCategoryFragment extends Fragment {
                 .build();
     }
 
-    private OnPurchaseListener<ProductSummary> configureListener() {
+    private OnSeeMoreClick<ServiceSummary> configureServiceListener() {
+        return service -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, service.getId());
+            navController.navigate(R.id.action_budget_to_serviceDetails, args);
+        };
+    }
+
+
+    private OnPurchaseListener<ProductSummary> configureProductListener() {
         return new OnPurchaseListener<>() {
             @Override
             public void purchase(ProductSummary item) {
@@ -171,21 +174,13 @@ public class BudgetCategoryFragment extends Fragment {
 
     private void searchProducts(Long id, Double price) {
         budgetViewModel.getSuggestedProducts(id, price).observe(getViewLifecycleOwner(), products -> {
-            requireActivity().runOnUiThread(() -> {
-                productsAdapter.setData(products);
-            });
+            productsAdapter.setData(products);
         });
     }
 
     private void searchServices(Long id, Double price) {
         budgetViewModel.getSuggestedServices(id, price).observe(getViewLifecycleOwner(), services -> {
-            ServicesAdapter adapter = new ServicesAdapter(services, service -> {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                Bundle args = new Bundle();
-                args.putLong(ARG_ID, service.getId());
-                navController.navigate(R.id.action_budget_to_serviceDetails, args);
-            });
-            binding.itemsRecycleView.setAdapter(adapter);
+            binding.itemsRecycleView.setAdapter(servicesAdapter);
         });
     }
 

@@ -34,4 +34,8 @@ public class EventViewModel extends ViewModel {
     public LiveData<Result<Event>> createEvent(CreateEvent event) {
         return repository.createEvent(event);
     }
+
+    public LiveData<Result<List<Event>>> getDraftedEvents() {
+        return repository.getDraftedEvents();
+    }
 }

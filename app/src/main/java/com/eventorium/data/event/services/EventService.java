@@ -19,6 +19,9 @@ public interface EventService {
     @GET("events/top-five-events")
     Call<List<EventSummary>> getTopEvents();
 
+    @GET("events/drafted")
+    Call<List<Event>> getDraftedEvents();
+
     @POST("events")
     Call<Event> createEvent(@Body CreateEvent event);
 }

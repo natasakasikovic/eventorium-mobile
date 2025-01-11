@@ -97,4 +97,32 @@ public class EventRepository {
 
         return liveData;
     }
+
+    public LiveData<Result<List<Event>>> getDraftedEvents() {
+        MutableLiveData<Result<List<Event>>> liveData = new MutableLiveData<>();
+        service.getDraftedEvents().enqueue(new Callback<>() {
+
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    liveData.postValue(Result.success((response.body())));
+                } else {
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
+                        liveData.postValue(Result.error(errorResponse));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return liveData;
+    }
 }
