@@ -237,10 +237,6 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.loginFragment);
         } else if (id == R.id.nav_signup) {
             navController.navigate(R.id.registerFragment);
-        } else if (id == R.id.nav_see_other_profile) { // TODO: delete after testing
-            Bundle args = new Bundle();
-            args.putLong("ARG_USER_ID", 1);
-            navController.navigate(R.id.otherProfileFragment, args);
         }
     }
 
