@@ -20,4 +20,9 @@
         android:title="@string/category_proposals"
         android:icon="@drawable/ic_proposal" />
 
+    <item
+        android:id="@+id/nav_event_types"
+        android:title="Event types"
+        android:icon="@drawable/ic_overview" />
+
 </menu>
