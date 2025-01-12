@@ -217,6 +217,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryOverviewFragment);
         } else if (id == R.id.nav_category_proposals) {
             navController.navigate(R.id.categoryProposalsFragment);
+        } else if (id == R.id.nav_event_types) {
+            navController.navigate(R.id.eventTypesFragment);
         }
     }
 
