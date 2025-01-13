@@ -42,6 +42,15 @@
     <fragment
         android:id="@+id/eventTypesFragment"
         android:name="com.eventorium.presentation.event.fragments.EventTypeOverviewFragment"
-        tools:layout="@layout/fragment_event_type_overview" />
+        tools:layout="@layout/fragment_event_type_overview">
+        <action
+            android:id="@+id/action_event_types_overview_to_edit"
+            app:destination="@+id/editEventTypeFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.EditEventTypeFragment"
+        tools:layout="@layout/fragment_edit_event_type" />
 
 </navigation>

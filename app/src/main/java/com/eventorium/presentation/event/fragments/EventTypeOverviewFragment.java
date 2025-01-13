@@ -1,17 +1,22 @@
 package com.eventorium.presentation.event.fragments;
 
+import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eventorium.R;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentEventTypeOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventTypesAdapter;
@@ -56,8 +61,10 @@ public class EventTypeOverviewFragment extends Fragment {
         adapter = new EventTypesAdapter(new ArrayList<>(), new OnEditClickListener<>() {
 
             @Override
-            public void onEditClick(EventType item) {
-                Toast.makeText(requireContext(), "Not implemented", Toast.LENGTH_SHORT).show();
+            public void onEditClick(EventType eventType) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_event_types_overview_to_edit,
+                        EditEventTypeFragment.newInstance(eventType).getArguments());
             }
 
             @Override

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.event.fragments.EditEventTypeFragment">
+
+    <TextView
+        android:id="@+id/event_type_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/jejumyeongjo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEventTypeDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/event_type_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/etEventTypeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jejumyeongjo"
+            android:hint="@string/description"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/categoriesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/jejumyeongjo"
+        android:text="@string/select_suggested_categories"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tilEventTypeDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="start" />
+
+    <LinearLayout
+        android:id="@+id/suggestionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        android:background="@color/md_theme_tertiaryContainer"
+        app:layout_constraintTop_toBottomOf="@id/categoriesLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp"
+            app:boxBackgroundMode="outline"
+            android:background="@color/md_theme_tertiaryContainer"
+            app:boxStrokeColor="@color/md_theme_primary">
+
+            <Spinner
+                android:id="@+id/comboBoxCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/jejumyeongjo"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <ImageButton
+            android:id="@+id/btnAddCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/suggestionLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintHeight_max="300dp">
+
+        <LinearLayout
+            android:id="@+id/containerAddedItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/md_theme_tertiaryContainer"
+            android:padding="8dp"
+            android:divider="@android:color/darker_gray"
+            android:showDividers="middle"
+            android:fontFamily="@font/jejumyeongjo"/>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_save_changes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:fontFamily="@font/jejumyeongjo"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/md_theme_primary"
+        app:layout_constraintTop_toBottomOf="@id/scrollContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
