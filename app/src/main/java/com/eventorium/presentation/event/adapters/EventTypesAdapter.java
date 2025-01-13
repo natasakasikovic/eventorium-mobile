@@ -49,6 +49,16 @@ public class EventTypesAdapter extends RecyclerView.Adapter<EventTypesAdapter.Ev
         notifyDataSetChanged();
     }
 
+    public void removeEventTypeById(Long id) {
+        for (int i = 0; i < eventTypes.size(); i++) {
+            if (eventTypes.get(i).getId().equals(id)) {
+                eventTypes.remove(i);
+                notifyItemRemoved(i);
+                break;
+            }
+        }
+    }
+
     public class EventTypeViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView descriptionTextView;

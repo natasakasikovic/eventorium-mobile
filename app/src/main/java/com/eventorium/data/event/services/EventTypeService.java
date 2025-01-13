@@ -1,12 +1,16 @@
 package com.eventorium.data.event.services;
 
+import androidx.lifecycle.LiveData;
+
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -21,4 +25,7 @@ public interface EventTypeService {
 
     @PUT("event-types/{id}")
     Call<Void> updateEventType(@Path("id") Long id, @Body EventType eventType);
+
+    @DELETE("event-types/{id}")
+    Call<Void> delete(@Path("id") Long id);
 }

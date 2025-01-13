@@ -34,4 +34,8 @@ public class EventTypeViewModel extends ViewModel {
     public LiveData<Result<Void>> update(EventType eventType) {
         return eventTypeRepository.updateEventType(eventType);
     }
+
+    public LiveData<Result<Void>> delete(Long id) {
+        return eventTypeRepository.deleteEventType(id);
+    }
 }

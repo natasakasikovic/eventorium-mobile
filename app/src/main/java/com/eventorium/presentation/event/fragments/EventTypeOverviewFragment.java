@@ -1,7 +1,5 @@
 package com.eventorium.presentation.event.fragments;
 
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -25,6 +24,7 @@ import com.eventorium.presentation.util.listeners.OnEditClickListener;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -34,6 +34,8 @@ public class EventTypeOverviewFragment extends Fragment {
     private FragmentEventTypeOverviewBinding binding;
     private EventTypeViewModel viewModel;
     private EventTypesAdapter adapter;
+    private TextView noEventTypesText;
+    private List<EventType> eventTypes;
 
     public EventTypeOverviewFragment() {
     }
@@ -68,18 +70,33 @@ public class EventTypeOverviewFragment extends Fragment {
             }
 
             @Override
-            public void onDeleteClick(EventType item) {
-                Toast.makeText(requireContext(), "Not implemented", Toast.LENGTH_SHORT).show();
+            public void onDeleteClick(EventType eventType) {
+                deleteEventType(eventType.getId());
             }
         });
 
+        noEventTypesText = binding.noEventTypesText;
         binding.eventTypesRecycleView.setAdapter(adapter);
         loadEventTypes();
     }
 
+    private void deleteEventType(Long id) {
+        viewModel.delete(id).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                Toast.makeText(requireContext(), R.string.event_type_deleted_successfully, Toast.LENGTH_SHORT).show();
+                adapter.removeEventTypeById(id);
+                if (eventTypes.isEmpty()) noEventTypesText.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadEventTypes() {
         viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            if (eventTypes.isEmpty()) noEventTypesText.setVisibility(View.VISIBLE);
             adapter.setEventTypes(eventTypes);
+            this.eventTypes = eventTypes;
         });
     }
 

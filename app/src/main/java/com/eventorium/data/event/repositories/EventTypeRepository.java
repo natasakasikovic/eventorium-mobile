@@ -114,4 +114,31 @@ public class EventTypeRepository {
         });
         return liveData;
     }
+
+    public LiveData<Result<Void>> deleteEventType(Long id) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        eventTypeService.delete(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    liveData.postValue(Result.success(null));
+                } else {
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return liveData;
+    }
 }
