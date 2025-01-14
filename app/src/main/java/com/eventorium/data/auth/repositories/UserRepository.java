@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
+import com.eventorium.data.auth.models.UserReport;
 import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
@@ -197,4 +199,29 @@ public class UserRepository {
         return liveData;
     }
 
+    public LiveData<Result<Void>> reportUser(Long id, UserReport report) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        service.reportUser(report, id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful())
+                    liveData.postValue(Result.success(null));
+                else {
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return liveData;
+    }
 }
