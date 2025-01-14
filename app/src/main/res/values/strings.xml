@@ -162,4 +162,8 @@
     <string name="change_password">Change Password</string>
     <string name="report_user">Report user</string>
     <string name="block_user">Block user</string>
+    <string name="report_reason">Reason for reporting the user</string>
+    <string name="submit_report">SUBMIT REPORT</string>
+    <string name="report_successfully_submitted">Your report was successfully submitted!</string>
+    <string name="error_empty_report_reason">Please provide a reason for reporting the user!</string>
 </resources>

@@ -1,11 +1,15 @@
 package com.eventorium.presentation.user.fragments;
 
+import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +29,7 @@ public class UserProfileFragment extends Fragment {
 
     private FragmentUserProfileBinding binding;
     private UserViewModel userViewModel;
+    private Long id;
 
     public static final String ARG_ID = "ARG_USER_ID";
 
@@ -61,7 +66,8 @@ public class UserProfileFragment extends Fragment {
 
     private void loadAccountDetails() {
         if (getArguments() == null) Toast.makeText(requireContext(), ErrorMessages.GENERAL_ERROR, Toast.LENGTH_SHORT).show();
-        userViewModel.getUser(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
+        id = getArguments().getLong(ARG_ID);
+        userViewModel.getUser(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 AccountDetails accountDetails = result.getData();
                 String fullName = accountDetails.getName() + " " + accountDetails.getLastname();
@@ -93,7 +99,10 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void reportUser() {
-
+        NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        navController.navigate(R.id.action_profile_to_report, args);
     }
 
 }

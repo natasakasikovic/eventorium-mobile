@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
+import com.eventorium.data.auth.models.UserReport;
 import com.eventorium.data.auth.repositories.UserRepository;
 import com.eventorium.data.util.Result;
 
@@ -48,5 +49,9 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Result<Void>> changePassword(ChangePasswordRequest request) {
         return repository.changePassword(request);
+    }
+
+    public LiveData<Result<Void>> reportUser (Long id, UserReport report) {
+        return repository.reportUser(id, report);
     }
 }
