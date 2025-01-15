@@ -9,7 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.util.ErrorResponse;
+import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,4 +89,56 @@ public class EventTypeRepository {
         return liveData;
     }
 
+    public LiveData<Result<Void>> updateEventType(EventType eventType) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        eventTypeService.updateEventType(eventType.getId(), eventType).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    liveData.postValue(Result.success(null));
+                } else {
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException exception) {
+                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return liveData;
+    }
+
+    public LiveData<Result<Void>> deleteEventType(Long id) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        eventTypeService.delete(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    liveData.postValue(Result.success(null));
+                } else {
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return liveData;
+    }
 }
