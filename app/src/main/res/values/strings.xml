@@ -150,6 +150,8 @@
     <string name="item_has_been_updated_successfully">Item has been updated successfully!</string>
     <string name="download">Download</string>
     <string name="new_event">New event</string>
+    <string name="send">Send</string>
+    <string name="type_a_message">Type a message</string>
     <string name="add_new_category">Add new category</string>
     <string name="planned_amount">Planned amount</string>
     <string name="search">Search</string>

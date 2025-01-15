@@ -39,7 +39,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void openWebSocket() {
-        webSocketService.connect(authRepository.getUserId());
+        webSocketService.connect(authRepository.getUserId(), authRepository.getUserRole());
     }
 
     public void closeWebSocket() {

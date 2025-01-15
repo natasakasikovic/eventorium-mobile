@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_product_details" />
 
     <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
+
+    <fragment
         android:id="@+id/homepageFragment"
         android:name="com.eventorium.presentation.homepage.HomeFragment"
         android:label="fragment_homepage"
@@ -37,6 +43,9 @@
         <action
             android:id="@+id/action_homepage_to_products_overview"
             app:destination="@id/productsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_chat"
+            app:destination="@id/chatFragment"/>
 
     </fragment>
 

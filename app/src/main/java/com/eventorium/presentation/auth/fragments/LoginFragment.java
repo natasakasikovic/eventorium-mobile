@@ -111,10 +111,8 @@ public class LoginFragment extends Fragment {
         requestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
-                    if (isGranted) {
-                        loginViewModel.openWebSocket();
-                    }
                     navigateToHome();
+                    loginViewModel.openWebSocket();
                 }
         );
     }
@@ -122,10 +120,10 @@ public class LoginFragment extends Fragment {
     public void requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
-            loginViewModel.openWebSocket();
             navigateToHome();
+            loginViewModel.openWebSocket();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

@@ -1,4 +1,6 @@
-package com.eventorium.data.util.models;
+package com.eventorium.data.interaction.models;
+
+import com.eventorium.data.util.models.NotificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

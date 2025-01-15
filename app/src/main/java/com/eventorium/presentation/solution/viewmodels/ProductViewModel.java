@@ -48,8 +48,8 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImages(id);
     }
 
-    public boolean isLoggedIn()  {
-        return authRepository.isLoggedIn();
+    public String getUserRole()  {
+        return authRepository.getUserRole();
     }
     public LiveData<Boolean> isFavourite(Long id) {
         return accountProductRepository.isFavouriteProduct(id);
