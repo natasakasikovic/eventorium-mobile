@@ -171,4 +171,5 @@
     <string name="reports">reports</string>
     <string name="success">Success!</string>
     <string name="suspension_success">User successfully suspended!</string>
+    <string name="general_error">Oops! Something went wrong! Please, try again later!</string>
 </resources>

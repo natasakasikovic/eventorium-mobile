@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -101,17 +102,16 @@ public class AuthRepository {
         MutableLiveData<Result<LoginResponse>> liveData = new MutableLiveData<>();
         authService.login(dto).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null)
                     handleSuccessfulResponse(response.body(), liveData);
-                } else {
-                    handleErrorResponse(response, liveData);
-                }
+                else
+                   handleErrorResponse(response, liveData);
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                liveData.postValue(Result.error("An error occurred. Please try again later."));
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
         return liveData;
@@ -123,16 +123,12 @@ public class AuthRepository {
     }
 
     private void handleErrorResponse(Response<LoginResponse> response, MutableLiveData<Result<LoginResponse>> liveData) {
-        String errorMessage = getErrorMessage(response.code());
-        liveData.postValue(Result.error(errorMessage));
-    }
-
-    private String getErrorMessage(int errorCode) {
-        return switch (errorCode) {
-            case 401 -> "Invalid credentials. Please try again.";
-            case 403 -> "Account is not verified. Check your email.";
-            default -> "An error occurred. Please try again later.";
-        };
+        try {
+            String errorMessage = response.errorBody().string();
+            liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorMessage)));
+        } catch (IOException e) {
+            liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+        }
     }
 
     private void saveJwtToken(String jwtToken) {

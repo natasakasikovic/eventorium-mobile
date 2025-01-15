@@ -68,21 +68,21 @@ public class UserReportDetailsFragment extends Fragment {
         binding.acceptButton.setOnClickListener(v -> viewModel.updateStatus(report.getId(), new UpdateReportStatusRequest(Status.ACCEPTED))
                 .observe(getViewLifecycleOwner(), result -> {
                     if (result.getError() != null) {
-                        Toast.makeText(requireContext(), R.string.suspension_success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                         navigateBack();
                     }
                     else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.suspension_success, Toast.LENGTH_SHORT).show();
                 }  ));
 
         binding.declineButton.setOnClickListener(v -> viewModel.updateStatus(report.getId(), new UpdateReportStatusRequest(Status.DECLINED))
                 .observe(getViewLifecycleOwner(), result -> {
                     if (result.getError() != null) {
-                        Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                         navigateBack();
                     }
                     else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
                 }));
     }
 
