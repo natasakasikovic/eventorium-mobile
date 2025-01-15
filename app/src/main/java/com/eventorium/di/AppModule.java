@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import com.eventorium.BuildConfig;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.auth.repositories.RoleRepository;
+import com.eventorium.data.auth.repositories.UserReportRepository;
 import com.eventorium.data.auth.repositories.UserRepository;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.auth.services.RoleService;
+import com.eventorium.data.auth.services.UserReportService;
 import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
@@ -324,4 +326,16 @@ public class AppModule {
         return retrofit.create(CompanyService.class);
     }
 
+    @Provides
+    @Singleton
+    public static UserReportRepository provideUserReportRepository(UserReportService service) {
+        return new UserReportRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public UserReportService provideUserReportService(Retrofit retrofit) {
+        return retrofit.create(UserReportService.class);
+    }
 }

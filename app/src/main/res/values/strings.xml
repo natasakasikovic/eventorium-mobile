@@ -166,4 +166,9 @@
     <string name="submit_report">SUBMIT REPORT</string>
     <string name="report_successfully_submitted">Your report was successfully submitted!</string>
     <string name="error_empty_report_reason">Please provide a reason for reporting the user!</string>
+    <string name="user_reports">User reports</string>
+    <string name="report_details">Report details</string>
+    <string name="reports">reports</string>
+    <string name="success">Success!</string>
+    <string name="suspension_success">User successfully suspended!</string>
 </resources>
