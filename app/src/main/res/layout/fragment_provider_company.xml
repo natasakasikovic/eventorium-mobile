@@ -59,6 +59,15 @@
             android:layout_marginBottom="10dp" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/workingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jejumyeongjo"
+            android:drawableStart="@drawable/ic_hour"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:layout_marginBottom="10dp" />
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

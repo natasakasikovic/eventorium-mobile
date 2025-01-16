@@ -67,6 +67,8 @@ public class ProviderCompanyFragment extends Fragment {
                 Company company = result.getData();
                 binding.name.setText(company.getName());
                 binding.email.setText(company.getEmail());
+                String workingHours = company.getOpeningHours() + " - " + company.getClosingHours();
+                binding.workingHours.setText(workingHours);
                 binding.description.setText(company.getDescription());
                 String address = company.getAddress() + " " + company.getCity().getName();
                 binding.address.setText(address);
