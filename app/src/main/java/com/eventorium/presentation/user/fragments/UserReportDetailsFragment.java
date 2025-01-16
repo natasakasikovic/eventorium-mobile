@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UpdateReportStatusRequest;
 import com.eventorium.data.auth.models.UserReportResponse;
+import com.eventorium.data.util.Result;
 import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentUserReportDetailsBinding;
 import com.eventorium.presentation.user.viewmodels.UserReportViewModel;
@@ -66,24 +67,18 @@ public class UserReportDetailsFragment extends Fragment {
 
     private void setUpListeners() {
         binding.acceptButton.setOnClickListener(v -> viewModel.updateStatus(report.getId(), new UpdateReportStatusRequest(Status.ACCEPTED))
-                .observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() != null) {
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-                        navigateBack();
-                    }
-                    else
-                        Toast.makeText(requireContext(), R.string.suspension_success, Toast.LENGTH_SHORT).show();
-                }  ));
-
+                .observe(getViewLifecycleOwner(), this::handleResult));
         binding.declineButton.setOnClickListener(v -> viewModel.updateStatus(report.getId(), new UpdateReportStatusRequest(Status.DECLINED))
-                .observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() != null) {
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-                        navigateBack();
-                    }
-                    else
-                        Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                }));
+                .observe(getViewLifecycleOwner(), this::handleResult));
+    }
+
+    private void handleResult(Result<Void> result) {
+        if (result.getError() != null)
+            Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+        else {
+            Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
+            navigateBack();
+        }
     }
 
     private void navigateBack(){
