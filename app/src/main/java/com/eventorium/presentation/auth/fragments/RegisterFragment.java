@@ -139,7 +139,7 @@ public class RegisterFragment extends Fragment {
                 uploadProfilePhoto(response.getData());
                 nextStep(response.getData());
             } else  {
-                Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
+                showErrorInfo(response.getError());
             }
         });
     }
@@ -154,6 +154,13 @@ public class RegisterFragment extends Fragment {
             showInfoDialog();
             navController.popBackStack(R.id.homepageFragment, false);
         }
+    }
+
+    private void showErrorInfo(String error) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(error)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void showInfoDialog() {
@@ -178,7 +185,7 @@ public class RegisterFragment extends Fragment {
         user = new User();
         user.setEmail(binding.emailEditText.getText().toString());
         user.setPassword(binding.passwordEditText.getText().toString());
-        user.setConfirmPassword(binding.confirmPasswordEditText.getText().toString());
+        user.setPasswordConfirmation(binding.confirmPasswordEditText.getText().toString());
         selectedRole = (Role) binding.spinnerRole.getSelectedItem();
         user.setRoles(Collections.singletonList(selectedRole));
 
