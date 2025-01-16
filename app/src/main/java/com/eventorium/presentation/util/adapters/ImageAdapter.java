@@ -41,7 +41,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         public ImageViewHolder(ImageView itemView) {
             super(itemView);
             imageView = itemView;
-            imageView.setPadding(0, 0, 30, 0);
+            imageView.setPadding(15, 0, 15, 0);
         }
     }
 }

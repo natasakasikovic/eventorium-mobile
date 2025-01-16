@@ -66,17 +66,13 @@
         tools:layout="@layout/fragment_price_list"/>
 
     <fragment
-        android:id="@+id/company_categories_fragment"
-        android:name="com.eventorium.presentation.company.fragments.ManageCategoriesFragment"
-        android:label="company_categories_fragment"
-        tools:layout="@layout/fragment_manage_categories"/>
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.ProviderCompanyFragment"
+        android:label="fragment_company_details"
+        tools:layout="@layout/fragment_provider_company" />
 
     <action
         android:id="@+id/action_companyDetails_to_editCompanyFragment"
         app:destination="@id/companyEditFragment" />
-
-    <action
-        android:id="@+id/action_companyDetails_to_manageCategoriesFragment"
-        app:destination="@id/company_categories_fragment" />
 
 </navigation>

@@ -1,6 +1,9 @@
 package com.eventorium.data.company.repositories;
 
+import static java.util.stream.Collectors.toList;
+
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -85,6 +89,57 @@ public class CompanyRepository {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 result.postValue(false);
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<Company>> getCompany() {
+        MutableLiveData<Result<Company>> result = new MutableLiveData<>();
+        service.getCompany().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Company> call, Response<Company> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Company> call, Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<Result<List<Bitmap>>> getImages(Long id) {
+        MutableLiveData<Result<List<Bitmap>>> result = new MutableLiveData<>();
+        service.getImages(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ImageResponseDto>> call, Response<List<ImageResponseDto>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(
+                            response.body().stream()
+                                    .map(ImageResponseDto::getData)
+                                    .map(FileUtil::convertToBitmap)
+                                    .collect(toList())
+                    ));
+                } else {
+                    result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ImageResponseDto>> call, Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
             }
         });
 

@@ -1,6 +1,7 @@
 package com.eventorium.presentation.company.viewmodels;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
@@ -33,5 +34,13 @@ public class CompanyViewModel extends ViewModel {
 
     public LiveData<Boolean> uploadImages(Long companyId, Context context, List<Uri> uris) {
         return repository.uploadImages(companyId, context, uris);
+    }
+
+    public LiveData<Result<Company>> getCompany() {
+        return repository.getCompany();
+    }
+
+    public LiveData<Result<List<Bitmap>>> getImages(Long id) {
+        return repository.getImages(id);
     }
 }

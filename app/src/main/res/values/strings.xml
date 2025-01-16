@@ -175,4 +175,6 @@
     <string name="report_details">Report details</string>
     <string name="reports">reports</string>
     <string name="success">Action successfully completed!</string>
+    <string name="gallery">Gallery</string>
+    <string name="no_images">no images found</string>
 </resources>
