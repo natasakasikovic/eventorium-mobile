@@ -40,6 +40,21 @@
     </fragment>
 
     <fragment
+        android:id="@+id/userReportsOverviewFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportsOverviewFragment"
+        android:layout="@layout/fragment_user_reports_overview" >
+        <action
+            android:id="@+id/action_reports_overview_to_details"
+            app:destination="@+id/reportDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportDetailsFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportDetailsFragment"
+        android:label="fragment_user_report_details"
+        tools:layout="@layout/fragment_user_report_details"/>
+
+    <fragment
         android:id="@+id/eventTypesFragment"
         android:name="com.eventorium.presentation.event.fragments.EventTypeOverviewFragment"
         tools:layout="@layout/fragment_event_type_overview">

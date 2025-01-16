@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.auth.models.UserReport;
+import com.eventorium.data.auth.models.UserReportRequest;
 import com.eventorium.databinding.FragmentUserReportBinding;
-import com.eventorium.presentation.user.viewmodels.UserViewModel;
+import com.eventorium.presentation.user.viewmodels.UserReportViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -27,7 +27,7 @@ public class UserReportFragment extends Fragment {
 
     private static final String ARG_ID = "ARG_USER_ID";
     private FragmentUserReportBinding binding;
-    private UserViewModel viewModel;
+    private UserReportViewModel viewModel;
     private  Long offenderId;
 
     public UserReportFragment() { }
@@ -46,7 +46,7 @@ public class UserReportFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserReportBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        viewModel = new ViewModelProvider(this).get(UserReportViewModel.class);
         return binding.getRoot();
     }
 
@@ -60,16 +60,15 @@ public class UserReportFragment extends Fragment {
         binding.reportUserButton.setOnClickListener(v -> {
             String reportReason = binding.reportReasonInput.getText().toString();
 
-            if (isReportReasonValid(reportReason)) {
+            if (isReportReasonValid(reportReason))
                 submitReport(reportReason);
-            } else {
+            else
                 Toast.makeText(requireContext(), R.string.error_empty_report_reason, Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
     private void submitReport(String reportReason) {
-        UserReport report = new UserReport(reportReason);
+        UserReportRequest report = new UserReportRequest(reportReason);
         viewModel.reportUser(offenderId, report).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null) {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();

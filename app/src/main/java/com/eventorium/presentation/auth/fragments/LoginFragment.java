@@ -1,6 +1,7 @@
 package com.eventorium.presentation.auth.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -86,15 +87,17 @@ public class LoginFragment extends Fragment {
             if (result.getError() == null) {
                 response = result.getData();
                 requestNotificationPermission();
-            } else {
-                Toast.makeText(
-                        requireContext(),
-                        result.getError(),
-                        Toast.LENGTH_LONG
-                ).show();
-            }
+            } else
+                showInfoDialog(result.getError());
         });
 
+    }
+
+    private void showInfoDialog(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void navigateToHome() {
