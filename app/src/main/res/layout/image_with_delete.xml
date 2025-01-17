@@ -9,15 +9,16 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_weight="1"
         android:contentDescription="@string/photos"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:maxHeight="300dp" />
 
     <ImageButton
         android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/photos"
         app:tint="@color/md_theme_primary"
