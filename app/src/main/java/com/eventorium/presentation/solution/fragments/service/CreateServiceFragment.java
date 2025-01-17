@@ -1,5 +1,11 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import static java.util.stream.Collectors.toList;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +29,7 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -29,9 +37,11 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.util.ImageUpload;
 import com.eventorium.presentation.util.adapters.ChecklistAdapter;
+import com.eventorium.presentation.util.adapters.ImageAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,6 +50,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -48,7 +59,7 @@ public class CreateServiceFragment extends Fragment {
     private FragmentCreateServiceBinding binding;
     private final List<Uri> imageUris = new ArrayList<>();
     private ImageUpload imageUpload;
-    private LinearLayout imageContainer;
+    private ImageAdapter imageAdapter;
     private ServiceViewModel serviceViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
@@ -68,17 +79,16 @@ public class CreateServiceFragment extends Fragment {
         categoryViewModel = provider.get(CategoryViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
         imageUpload = new ImageUpload(this, imageUris -> {
-            imageContainer.removeAllViews();
-            for (Uri uri : imageUris) {
-                ImageView imageView = new ImageView(requireContext());
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                imageView.setPadding(50, 0, 50, 0);
-                imageView.setImageURI(uri);
-                imageContainer.addView(imageView);
-            }
-            this.imageUris.addAll(imageUris);
+            imageAdapter.insert(imageUris.stream().map(uri -> {
+                try {
+                    return ImageDecoder.decodeBitmap(
+                            ImageDecoder.createSource(requireContext().getContentResolver(), uri)
+                    );
+                } catch (IOException e) {
+                    return null;
+                }
+            }).filter(Objects::nonNull)
+            .collect(Collectors.toList()));
         });
     }
 
@@ -98,22 +108,20 @@ public class CreateServiceFragment extends Fragment {
     private TextInputEditText reservationDate;
     private TextInputEditText cancellationDate;
     private void createDatePickers() {
+        setupReservationPicker();
+        setupCancellationPicker();
+    }
+
+    private void setupReservationPicker() {
         reservationDate = binding.serviceReservationDeadlineText;
-        cancellationDate = binding.serviceCancellationDeadlineText;
 
         MaterialDatePicker<Long> reservationPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a Date")
-                .build();
-        MaterialDatePicker<Long> cancellationPicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select a Date")
                 .build();
 
 
         reservationDate.setOnClickListener(v ->
                 reservationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-
-        cancellationDate.setOnClickListener(v ->
-                cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
 
         reservationPicker.addOnPositiveButtonClickListener(selection -> {
             LocalDate selectedDate = Instant.ofEpochMilli(selection)
@@ -122,6 +130,16 @@ public class CreateServiceFragment extends Fragment {
             String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
             reservationDate.setText(formattedDate);
         });
+    }
+
+    private void setupCancellationPicker() {
+        cancellationDate = binding.serviceCancellationDeadlineText;
+        MaterialDatePicker<Long> cancellationPicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a Date")
+                .build();
+
+        cancellationDate.setOnClickListener(v ->
+                cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
 
         cancellationPicker.addOnPositiveButtonClickListener(selection -> {
             LocalDate selectedDate = Instant.ofEpochMilli(selection)
@@ -139,8 +157,9 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void setupImagePicker() {
-        imageContainer = binding.photosContainer;
+        imageAdapter = new ImageAdapter(new ArrayList<>(), true);
         binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
+        binding.photosContainer.setAdapter(imageAdapter);
     }
 
     private void loadCategories() {
@@ -226,30 +245,7 @@ public class CreateServiceFragment extends Fragment {
             LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
             LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
 
-            if(cancellationDate.isBefore(LocalDate.now())) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.reservation_date_in_past,
-                        Toast.LENGTH_LONG
-                ).show();
-                return null;
-            }
-
-            if(reservationDate.isBefore(LocalDate.now())) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.cancellation_date_in_past,
-                        Toast.LENGTH_LONG
-                ).show();
-                return null;
-            }
-
-            if(cancellationDate.isBefore(reservationDate)) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.cancellation_after_reservation,
-                        Toast.LENGTH_LONG
-                ).show();
+            if(!validateDates(cancellationDate, reservationDate)) {
                 return null;
             }
 
@@ -277,6 +273,36 @@ public class CreateServiceFragment extends Fragment {
             ).show();
             return null;
         }
+    }
+
+    private boolean validateDates(LocalDate cancellationDate, LocalDate reservationDate) {
+        if(cancellationDate.isBefore(LocalDate.now())) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.reservation_date_in_past,
+                    Toast.LENGTH_LONG
+            ).show();
+            return false;
+        }
+
+        if(reservationDate.isBefore(LocalDate.now())) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.cancellation_date_in_past,
+                    Toast.LENGTH_LONG
+            ).show();
+            return false;
+        }
+
+        if(cancellationDate.isBefore(reservationDate)) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.cancellation_after_reservation,
+                    Toast.LENGTH_LONG
+            ).show();
+            return false;
+        }
+        return true;
     }
 
     private void handleUpload(boolean successfulUpload) {
