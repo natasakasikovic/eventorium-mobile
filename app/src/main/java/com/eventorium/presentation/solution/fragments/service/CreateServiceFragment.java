@@ -21,20 +21,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.models.service.CreateService;
-import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
+import com.eventorium.presentation.util.ImageItem;
 import com.eventorium.presentation.util.ImageUpload;
 import com.eventorium.presentation.util.adapters.ChecklistAdapter;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
@@ -79,16 +77,20 @@ public class CreateServiceFragment extends Fragment {
         categoryViewModel = provider.get(CategoryViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
         imageUpload = new ImageUpload(this, imageUris -> {
-            imageAdapter.insert(imageUris.stream().map(uri -> {
-                try {
-                    return ImageDecoder.decodeBitmap(
-                            ImageDecoder.createSource(requireContext().getContentResolver(), uri)
-                    );
-                } catch (IOException e) {
-                    return null;
-                }
-            }).filter(Objects::nonNull)
-            .collect(Collectors.toList()));
+            imageAdapter.insert(imageUris.stream()
+                    .map(uri -> {
+                        try {
+                            Bitmap bitmap = ImageDecoder.decodeBitmap(
+                                    ImageDecoder.createSource(requireContext().getContentResolver(), uri)
+                            );
+                            return new ImageItem(bitmap, uri);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList()));
+            this.imageUris.addAll(imageUris);
         });
     }
 
@@ -157,7 +159,7 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void setupImagePicker() {
-        imageAdapter = new ImageAdapter(new ArrayList<>(), true);
+        imageAdapter = new ImageAdapter(new ArrayList<>(), imageUris::remove);
         binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
         binding.photosContainer.setAdapter(imageAdapter);
     }

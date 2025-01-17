@@ -1,5 +1,7 @@
 package com.eventorium.presentation.solution.fragments.product;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
+import com.eventorium.presentation.util.ImageItem;
 import com.eventorium.presentation.util.adapters.ImageAdapter;
 import com.google.android.material.button.MaterialButton;
 
@@ -130,7 +133,7 @@ public class ProductDetailsFragment extends Fragment {
             binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
 
                 productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
-                    binding.images.setAdapter(new ImageAdapter(images));
+                    binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
                 });
             }
         }

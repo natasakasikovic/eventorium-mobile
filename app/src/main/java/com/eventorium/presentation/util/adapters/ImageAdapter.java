@@ -14,27 +14,26 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eventorium.Eventorium;
 import com.eventorium.R;
+import com.eventorium.presentation.util.ImageItem;
+import com.eventorium.presentation.util.listeners.OnImageDeleteListener;
 
-import java.io.IOException;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private final List<Bitmap> images;
+    private final List<ImageItem> images;
+    private OnImageDeleteListener imageDeleteListener;
     private static final int NON_DELETABLE = 0;
     private static final int DELETABLE = 1;
 
-    private boolean isDeletable = false;
-
-    public ImageAdapter(List<Bitmap> images) {
+    public ImageAdapter(List<ImageItem> images) {
         this.images = images;
     }
 
-    public ImageAdapter(List<Bitmap> images, boolean isDeletable) {
+    public ImageAdapter(List<ImageItem> images, OnImageDeleteListener imageDeleteListener) {
         this.images = images;
-        this.isDeletable = isDeletable;
+        this.imageDeleteListener = imageDeleteListener;
     }
 
     @NonNull
@@ -51,9 +50,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.imageView.setImageBitmap(images.get(position));
-        if (isDeletable && holder.deleteButton != null) {
+        holder.imageView.setImageBitmap(images.get(position).getBitmap());
+        if (imageDeleteListener != null && holder.deleteButton != null) {
             holder.deleteButton.setOnClickListener(v -> {
+                imageDeleteListener.delete(images.get(position).getUri());
                 images.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, images.size());
@@ -63,7 +63,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return isDeletable ? DELETABLE : NON_DELETABLE;
+        return imageDeleteListener != null ? DELETABLE : NON_DELETABLE;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         return images.size();
     }
 
-    public void insert(List<Bitmap> images) {
+    public void insert(List<ImageItem> images) {
         this.images.addAll(images);
         notifyDataSetChanged();
     }
@@ -84,11 +84,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            imageView.setPadding(0, 0, 30, 0);
         }
 
         public ImageViewHolder(ImageView itemView) {
             super(itemView);
             imageView = itemView;
+            imageView.setPadding(0, 0, 30, 0);
         }
 
     }
