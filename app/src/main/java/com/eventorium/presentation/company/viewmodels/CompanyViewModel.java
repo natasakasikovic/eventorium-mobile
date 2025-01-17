@@ -43,4 +43,8 @@ public class CompanyViewModel extends ViewModel {
     public LiveData<Result<List<Bitmap>>> getImages(Long id) {
         return repository.getImages(id);
     }
+
+    public LiveData<Result<Company>> update(Company company) {
+        return repository.update(company);
+    }
 }

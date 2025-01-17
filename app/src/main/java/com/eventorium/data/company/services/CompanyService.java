@@ -13,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
@@ -30,4 +31,7 @@ public interface CompanyService {
 
     @GET("companies/{id}/images")
     Call<List<ImageResponseDto>> getImages(@Path("id") Long id);
+
+    @PUT("companies")
+    Call<Company> update(@Body Company company);
 }

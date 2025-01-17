@@ -146,4 +146,29 @@ public class CompanyRepository {
         return result;
     }
 
+    public LiveData<Result<Company>> update(Company company) {
+        MutableLiveData<Result<Company>> result = new MutableLiveData<>();
+        service.update(company).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Company> call, Response<Company> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Company> call, Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
 }

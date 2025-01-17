@@ -1,4 +1,4 @@
-package com.eventorium.presentation.user;
+package com.eventorium.presentation.user.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
