@@ -1,6 +1,5 @@
 package com.eventorium.presentation.solution.fragments.pricelist;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +15,8 @@ import android.widget.Toast;
 
 import com.eventorium.databinding.FragmentPriceListBinding;
 import com.eventorium.presentation.solution.viewmodels.PriceListViewModel;
-import com.eventorium.presentation.util.adapters.PriceListPagerAdapter;
+import com.eventorium.presentation.shared.adapters.PriceListPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.io.File;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

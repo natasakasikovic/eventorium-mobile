@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.listeners;
+package com.eventorium.presentation.solution.listeners;
 
 public interface OnManageListener<T> {
     void onDeleteClick(T item);

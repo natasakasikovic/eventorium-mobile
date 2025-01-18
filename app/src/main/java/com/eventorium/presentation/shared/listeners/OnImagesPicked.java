@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.listeners;
+package com.eventorium.presentation.shared.listeners;
 
 import android.net.Uri;
 

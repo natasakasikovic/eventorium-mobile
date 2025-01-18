@@ -18,11 +18,9 @@ import android.view.ViewGroup;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
-import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
-import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
 
 import java.util.Objects;
 

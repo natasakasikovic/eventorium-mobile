@@ -24,7 +24,7 @@ import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.databinding.FragmentEditServiceBinding;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.adapters.ChecklistAdapter;
+import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 

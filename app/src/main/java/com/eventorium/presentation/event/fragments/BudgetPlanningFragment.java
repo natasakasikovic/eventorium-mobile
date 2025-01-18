@@ -15,7 +15,7 @@ import com.eventorium.R;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.databinding.FragmentBudgetPlanningBinding;
-import com.eventorium.presentation.util.adapters.BudgetPagerAdapter;
+import com.eventorium.presentation.shared.adapters.BudgetPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class BudgetPlanningFragment extends Fragment {

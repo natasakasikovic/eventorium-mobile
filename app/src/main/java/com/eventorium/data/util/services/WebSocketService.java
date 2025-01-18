@@ -13,9 +13,8 @@ import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.interaction.models.Notification;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
-import com.eventorium.presentation.chat.fragments.ChatFragment;
-import com.eventorium.presentation.util.listeners.OnMessageReceive;
-import com.eventorium.presentation.util.services.NotificationService;
+import com.eventorium.presentation.shared.listeners.OnMessageReceive;
+import com.eventorium.presentation.shared.services.NotificationService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

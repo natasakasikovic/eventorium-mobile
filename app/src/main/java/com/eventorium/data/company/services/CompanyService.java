@@ -3,6 +3,7 @@ package com.eventorium.data.company.services;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -34,4 +36,7 @@ public interface CompanyService {
 
     @PUT("companies")
     Call<Company> update(@Body Company company);
+
+    @HTTP(method = "DELETE", path = "companies/images", hasBody = true)
+    Call<Void> removeImages(@Body List<RemoveImageRequest> removedImages);
 }

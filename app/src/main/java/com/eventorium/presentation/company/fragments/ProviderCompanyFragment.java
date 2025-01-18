@@ -1,6 +1,5 @@
 package com.eventorium.presentation.company.fragments;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,8 @@ import com.eventorium.R;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.databinding.FragmentProviderCompanyBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
-import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class ProviderCompanyFragment extends Fragment {
     private void loadImages(Long id) {
         viewModel.getImages(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
-                List<Bitmap> images = result.getData();
+                List<ImageItem> images = result.getData();
                 if (images.isEmpty()) binding.noImages.setVisibility(View.VISIBLE);
                 else binding.images.setAdapter(new ImageAdapter(images));
                 binding.loader.setVisibility(View.GONE);

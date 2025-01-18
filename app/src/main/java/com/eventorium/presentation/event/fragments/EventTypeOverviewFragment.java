@@ -20,7 +20,7 @@ import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentEventTypeOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventTypesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
-import com.eventorium.presentation.util.listeners.OnEditClickListener;
+import com.eventorium.presentation.shared.listeners.OnEditClickListener;
 
 
 import java.util.ArrayList;

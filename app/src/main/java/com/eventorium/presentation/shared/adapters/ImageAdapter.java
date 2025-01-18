@@ -1,10 +1,5 @@
-package com.eventorium.presentation.util.adapters;
+package com.eventorium.presentation.shared.adapters;
 
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.presentation.util.ImageItem;
-import com.eventorium.presentation.util.listeners.OnImageDeleteListener;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.listeners.OnImageDeleteListener;
 
 import java.util.List;
 
@@ -53,7 +48,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         holder.imageView.setImageBitmap(images.get(position).getBitmap());
         if (imageDeleteListener != null && holder.deleteButton != null) {
             holder.deleteButton.setOnClickListener(v -> {
-                imageDeleteListener.delete(images.get(position).getUri());
+                ImageItem item = images.get(position);
+                imageDeleteListener.delete(new ImageItem(item.getId(), item.getBitmap(), item.getUri()));
                 images.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, images.size());
@@ -84,7 +80,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             deleteButton = itemView.findViewById(R.id.deleteButton);
-            imageView.setPadding(0, 0, 30, 0);
+            imageView.setPadding(15, 0, 15, 0);
         }
 
         public ImageViewHolder(ImageView itemView) {

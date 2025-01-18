@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ImageResponseDto {
+    private Long id;
     private String data;
     private String contentType;
 }

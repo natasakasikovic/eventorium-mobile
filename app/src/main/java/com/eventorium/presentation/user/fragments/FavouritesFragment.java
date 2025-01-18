@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.databinding.FragmentFavouritesBinding;
-import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
+import com.eventorium.presentation.shared.adapters.FavouritesPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class FavouritesFragment extends Fragment {

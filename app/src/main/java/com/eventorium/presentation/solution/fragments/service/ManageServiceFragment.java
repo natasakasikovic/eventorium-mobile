@@ -34,7 +34,7 @@ import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.listeners.OnManageListener;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;

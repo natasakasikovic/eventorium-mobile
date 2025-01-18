@@ -94,8 +94,6 @@
                     android:spinnerMode="dropdown" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -140,6 +138,65 @@
                     android:focusable="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/jejumyeongjo"
+                android:text="@string/gallery"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textSize="20dp"
+                android:textAlignment="center"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <ProgressBar
+                    android:id="@+id/loader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/images"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scrollbars="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_gravity="center"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/newImagesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/newImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scrollbars="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_gravity="center"/>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/uploadButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/upload"
+                android:backgroundTint="@color/md_theme_primary"
+                android:fontFamily="@font/jejumyeongjo"
+                android:layout_marginBottom="15dp"
+                android:layout_gravity="center"/>
         </LinearLayout>
     </ScrollView>
 
@@ -149,7 +206,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:backgroundTint="@color/md_theme_primary"
-        android:text="Save"
+        android:text="@string/save"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

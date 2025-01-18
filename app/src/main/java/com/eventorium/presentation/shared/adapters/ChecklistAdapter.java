@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.adapters;
+package com.eventorium.presentation.shared.adapters;
 
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -14,10 +14,7 @@ import com.eventorium.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.adapters;
+package com.eventorium.presentation.shared.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -6,9 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.presentation.event.fragments.BudgetItemsFragment;
-import com.eventorium.presentation.event.fragments.FavouriteEventsFragment;
-import com.eventorium.presentation.solution.fragments.product.FavouriteProductsFragment;
-import com.eventorium.presentation.solution.fragments.service.FavouriteServicesFragment;
 
 public class BudgetPagerAdapter extends FragmentStateAdapter {
 

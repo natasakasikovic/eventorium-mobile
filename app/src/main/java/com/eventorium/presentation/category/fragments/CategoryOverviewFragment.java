@@ -21,7 +21,7 @@ import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.databinding.FragmentCategoryOverviewBinding;
 import com.eventorium.presentation.category.adapters.CategoriesAdapter;
-import com.eventorium.presentation.util.listeners.OnEditClickListener;
+import com.eventorium.presentation.shared.listeners.OnEditClickListener;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 

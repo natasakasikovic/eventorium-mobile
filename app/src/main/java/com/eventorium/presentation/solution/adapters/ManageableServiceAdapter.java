@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.service.ServiceSummary;
-import com.eventorium.presentation.util.listeners.OnManageListener;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
 

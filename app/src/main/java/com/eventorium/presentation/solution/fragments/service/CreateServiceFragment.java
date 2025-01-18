@@ -1,11 +1,8 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import static java.util.stream.Collectors.toList;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +28,10 @@ import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.ImageItem;
+import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.util.ImageUpload;
-import com.eventorium.presentation.util.adapters.ChecklistAdapter;
-import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -159,7 +155,9 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void setupImagePicker() {
-        imageAdapter = new ImageAdapter(new ArrayList<>(), imageUris::remove);
+        imageAdapter = new ImageAdapter(new ArrayList<>(), imageItem -> {
+            imageUris.remove(imageItem.getUri());
+        });
         binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
         binding.photosContainer.setAdapter(imageAdapter);
     }

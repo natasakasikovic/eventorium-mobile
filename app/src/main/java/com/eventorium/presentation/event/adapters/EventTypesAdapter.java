@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.presentation.util.listeners.OnEditClickListener;
+import com.eventorium.presentation.shared.listeners.OnEditClickListener;
 
 import java.util.List;
 

@@ -3,9 +3,7 @@ package com.eventorium.data.company.repositories;
 import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -18,10 +16,11 @@ import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -74,7 +73,6 @@ public class CompanyRepository {
         try {
             parts = FileUtil.getImagesFromUris(context, uris, "images");
         } catch (IOException e) {
-            Log.e("IMAGES_ERROR", Objects.requireNonNull(e.getLocalizedMessage()));
             result.setValue(false);
             return result;
         }
@@ -120,16 +118,15 @@ public class CompanyRepository {
         return result;
     }
 
-    public LiveData<Result<List<Bitmap>>> getImages(Long id) {
-        MutableLiveData<Result<List<Bitmap>>> result = new MutableLiveData<>();
+    public LiveData<Result<List<ImageItem>>> getImages(Long id) {
+        MutableLiveData<Result<List<ImageItem>>> result = new MutableLiveData<>();
         service.getImages(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ImageResponseDto>> call, Response<List<ImageResponseDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.postValue(Result.success(
                             response.body().stream()
-                                    .map(ImageResponseDto::getData)
-                                    .map(FileUtil::convertToBitmap)
+                                    .map(image -> new ImageItem(image.getId(), FileUtil.convertToBitmap(image.getData())))
                                     .collect(toList())
                     ));
                 } else {
@@ -168,6 +165,28 @@ public class CompanyRepository {
                 result.postValue(Result.error(t.getMessage()));
             }
         });
+        return result;
+    }
+
+    public LiveData<Result<Void>> removeImages(List<RemoveImageRequest> removedImages) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.removeImages(removedImages).enqueue(new Callback<>() {
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    result.postValue(Result.success(null));
+                } else {
+                    result.postValue(Result.error("Error while deleting images"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+
         return result;
     }
 

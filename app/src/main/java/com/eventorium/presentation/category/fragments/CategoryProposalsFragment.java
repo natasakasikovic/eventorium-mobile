@@ -25,7 +25,7 @@ import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
 import com.eventorium.presentation.category.adapters.CategoryProposalsAdapter;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
-import com.eventorium.presentation.util.listeners.OnReviewProposalListener;
+import com.eventorium.presentation.category.listeners.OnReviewProposalListener;
 import com.eventorium.presentation.category.viewmodels.CategoryProposalViewModel;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 

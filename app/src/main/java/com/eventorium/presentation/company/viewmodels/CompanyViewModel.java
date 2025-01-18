@@ -1,7 +1,6 @@
 package com.eventorium.presentation.company.viewmodels;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
@@ -11,6 +10,8 @@ import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.repositories.CompanyRepository;
 import com.eventorium.data.util.Result;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.util.List;
 
@@ -40,11 +41,15 @@ public class CompanyViewModel extends ViewModel {
         return repository.getCompany();
     }
 
-    public LiveData<Result<List<Bitmap>>> getImages(Long id) {
+    public LiveData<Result<List<ImageItem>>> getImages(Long id) {
         return repository.getImages(id);
     }
 
     public LiveData<Result<Company>> update(Company company) {
         return repository.update(company);
+    }
+
+    public LiveData<Result<Void>> removeImages(List<RemoveImageRequest> removedImages) {
+        return repository.removeImages(removedImages);
     }
 }
