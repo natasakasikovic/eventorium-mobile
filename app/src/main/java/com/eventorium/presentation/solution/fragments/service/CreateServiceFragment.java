@@ -155,9 +155,8 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void setupImagePicker() {
-        imageAdapter = new ImageAdapter(new ArrayList<>(), imageItem -> {
-            imageUris.remove(imageItem.getUri());
-        });
+        imageAdapter = new ImageAdapter(new ArrayList<>(),
+                imageItem -> imageUris.remove(imageItem.getUri()));
         binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
         binding.photosContainer.setAdapter(imageAdapter);
     }

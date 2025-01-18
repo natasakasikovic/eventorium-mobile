@@ -2,7 +2,8 @@ package com.eventorium.presentation.company.fragments;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,32 +14,32 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.provider.OpenableColumns;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCompanyRegisterBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.eventorium.presentation.util.ImageUpload;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -49,8 +50,8 @@ public class CompanyRegisterFragment extends Fragment {
     private CompanyViewModel viewModel;
     private CityViewModel cityViewModel;
 
+    private ImageAdapter imageAdapter;
     private ImageUpload imageUpload;
-    private LinearLayout imageContainer;
     private final List<Uri> imageUris = new ArrayList<>();
 
 
@@ -77,8 +78,7 @@ public class CompanyRegisterFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(CompanyViewModel.class);
         cityViewModel = provider.get(CityViewModel.class);
-
-        setupImagesUpload();
+        setupImageUpload();
     }
 
 
@@ -105,9 +105,23 @@ public class CompanyRegisterFragment extends Fragment {
         });
     }
 
-    private void setupImagePicker() {
-        imageContainer = binding.photosContainer;
-        binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
+    private void setupImageUpload() {
+        imageUpload = new ImageUpload(this, imageUris -> {
+            imageAdapter.insert(imageUris.stream()
+                    .map(uri -> {
+                        try {
+                            Bitmap bitmap = ImageDecoder.decodeBitmap(
+                                    ImageDecoder.createSource(requireContext().getContentResolver(), uri)
+                            );
+                            return new ImageItem(bitmap, uri);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList()));
+            this.imageUris.addAll(imageUris);
+        });
     }
 
     private void setupTimePickers() {
@@ -149,7 +163,9 @@ public class CompanyRegisterFragment extends Fragment {
             if (response.getData() != null) {
                 if (!imageUris.isEmpty()) {
                     viewModel.uploadImages(response.getData().getId(), getContext(), imageUris)
-                            .observe(getViewLifecycleOwner(), this::handleUpload);
+                            .observe(getViewLifecycleOwner(), success -> {
+                                if (!success) Toast.makeText(requireContext(), "Error while uploading images", Toast.LENGTH_SHORT).show();
+                            });
                 }
                 showInfoDialog();
                 NavController navController = Navigation.findNavController(requireActivity(),
@@ -193,64 +209,12 @@ public class CompanyRegisterFragment extends Fragment {
                 .show();
     }
 
-    private void handleUpload(boolean successful) {
-        if (!successful) {
-            Toast.makeText(requireContext(),
-                    "Images upload failed. Please update images later.",
-                    Toast.LENGTH_LONG).show();
-        }
+    private void setupImagePicker() {
+        imageAdapter = new ImageAdapter(new ArrayList<>(),
+                imageItem -> imageUris.remove(imageItem.getUri()));
+        binding.uploadButton.setOnClickListener(v -> imageUpload.openGallery(true));
+        binding.newImages.setAdapter(imageAdapter);
     }
 
-
-    private void setupImagesUpload() {
-        imageUpload = new ImageUpload(this, imageUris -> {
-            imageContainer.removeAllViews();
-            this.imageUris.clear();
-            long totalSize = 0;
-            int maxSize = getResources().getInteger(R.integer.max_request_size);
-            long maxRequestSizeInBytes = maxSize * 1024L * 1024L;
-
-            for (Uri uri : imageUris) {
-                if (shouldAddImage(uri, maxRequestSizeInBytes, totalSize)) {
-                    totalSize += getImageSize(uri);
-                    addImageToView(uri);
-                }
-            }
-        });
-    }
-
-    private boolean shouldAddImage(Uri uri, long maxRequestSizeInBytes, long totalSize) {
-        long fileSize = getImageSize(uri);
-        if (fileSize + totalSize > maxRequestSizeInBytes) {
-            Toast.makeText(requireContext(),
-                    "Some photos or the total size exceed the allowed limit.",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
-
-    private long getImageSize(Uri uri) {
-        try (Cursor cursor = requireContext().getContentResolver()
-                .query(uri, null, null, null, null)) {
-            if (cursor != null) {
-                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-                cursor.moveToFirst();
-                return cursor.getLong(sizeIndex);
-            }
-        } catch (Exception e) {
-            Log.e("IMAGE ERROR", "Error while getting image size", e);
-        }
-        return 0;
-    }
-
-    private void addImageToView(Uri uri) {
-        ImageView imageView = new ImageView(requireContext());
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(1000, 1000);
-        imageView.setLayoutParams(layoutParams);
-        imageView.setImageURI(uri);
-        imageContainer.addView(imageView);
-        this.imageUris.add(uri);
-    }
 
 }
