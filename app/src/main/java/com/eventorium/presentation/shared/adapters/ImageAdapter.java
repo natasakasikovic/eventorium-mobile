@@ -48,8 +48,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         holder.imageView.setImageBitmap(images.get(position).getBitmap());
         if (imageDeleteListener != null && holder.deleteButton != null) {
             holder.deleteButton.setOnClickListener(v -> {
-                ImageItem item = images.get(position);
-                imageDeleteListener.delete(new ImageItem(item.getId(), item.getBitmap(), item.getUri()));
+                imageDeleteListener.delete(images.get(position));
                 images.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, images.size());
