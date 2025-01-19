@@ -1,9 +1,6 @@
 package com.eventorium.presentation.chat.viewmodels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
@@ -11,7 +8,7 @@ import com.eventorium.data.interaction.models.ChatMessage;
 import com.eventorium.data.interaction.models.ChatMessageRequest;
 import com.eventorium.data.interaction.repositories.ChatRepository;
 import com.eventorium.data.util.services.WebSocketService;
-import com.eventorium.presentation.util.listeners.OnMessageReceive;
+import com.eventorium.presentation.shared.listeners.OnMessageReceive;
 
 import java.util.List;
 

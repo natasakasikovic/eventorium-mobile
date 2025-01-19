@@ -73,12 +73,6 @@
         tools:layout="@layout/fragment_login" />
 
     <fragment
-        android:id="@+id/companyDetailsFragment"
-        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
-        android:label="fragment_company_details"
-        tools:layout="@layout/fragment_company_details" />
-
-    <fragment
         android:id="@+id/eventsOverviewFragment"
         android:name="com.eventorium.presentation.event.fragments.EventOverviewFragment"
         android:label="fragment_event_overview"

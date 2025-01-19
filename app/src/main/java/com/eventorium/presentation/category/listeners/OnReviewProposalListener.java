@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.listeners;
+package com.eventorium.presentation.category.listeners;
 
 import com.eventorium.data.category.models.Category;
 

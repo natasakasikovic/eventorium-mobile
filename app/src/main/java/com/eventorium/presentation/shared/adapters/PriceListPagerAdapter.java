@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.adapters;
+package com.eventorium.presentation.shared.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -3,8 +3,6 @@ package com.eventorium.data.company.models;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.shared.models.City;
 
-import java.time.LocalTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +22,7 @@ public class Company {
     private String phoneNumber;
     private String description;
     private String email;
-    private LocalTime openingHours;
-    private LocalTime closingHours;
+    private String openingHours;
+    private String closingHours;
     private User provider;
 }

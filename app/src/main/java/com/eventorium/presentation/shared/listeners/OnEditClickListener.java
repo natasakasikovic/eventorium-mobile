@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util.listeners;
+package com.eventorium.presentation.shared.listeners;
 
 public interface OnEditClickListener<T> {
     void onEditClick(T item);

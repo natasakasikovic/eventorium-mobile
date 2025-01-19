@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util;
+package com.eventorium.presentation.shared.models;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,10 +15,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ImageItem {
+    private Long id;
     private Bitmap bitmap;
     private Uri uri;
 
     public ImageItem(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public ImageItem(Bitmap bitmap, Uri uri) {
+        this.bitmap = bitmap;
+        this.uri = uri;
+    }
+
+    public ImageItem(Long id, Bitmap bitmap) {
+        this.id = id;
         this.bitmap = bitmap;
     }
 }

@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.eventorium.presentation.util.listeners.OnImagesPicked;
+import com.eventorium.presentation.shared.listeners.OnImagesPicked;
 
 import java.util.ArrayList;
 import java.util.List;

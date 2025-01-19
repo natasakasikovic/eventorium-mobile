@@ -28,7 +28,7 @@ import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
-import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
+import com.eventorium.presentation.shared.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 

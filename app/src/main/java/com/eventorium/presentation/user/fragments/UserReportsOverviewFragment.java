@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.databinding.FragmentUserReportsOverviewBinding;
-import com.eventorium.presentation.user.UserReportAdapter;
+import com.eventorium.presentation.user.adapters.UserReportAdapter;
 import com.eventorium.presentation.user.viewmodels.UserReportViewModel;
 
 import java.util.ArrayList;

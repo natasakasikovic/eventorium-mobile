@@ -1,4 +1,4 @@
-package com.eventorium.presentation.user;
+package com.eventorium.presentation.user.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserReportResponse;
-import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
+import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;
 

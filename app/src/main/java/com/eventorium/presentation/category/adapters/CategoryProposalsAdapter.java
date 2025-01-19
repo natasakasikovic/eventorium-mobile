@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.data.category.models.Category;
 
 import com.eventorium.R;
-import com.eventorium.presentation.util.listeners.OnReviewProposalListener;
+import com.eventorium.presentation.category.listeners.OnReviewProposalListener;
 
 import java.util.List;
 

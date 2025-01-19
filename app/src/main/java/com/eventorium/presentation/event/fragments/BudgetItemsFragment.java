@@ -3,7 +3,6 @@ package com.eventorium.presentation.event.fragments;
 import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
 import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,17 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
-import com.eventorium.databinding.FragmentBudgetPlanningBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
-import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
-import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
+import com.eventorium.presentation.shared.adapters.CategoryPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 

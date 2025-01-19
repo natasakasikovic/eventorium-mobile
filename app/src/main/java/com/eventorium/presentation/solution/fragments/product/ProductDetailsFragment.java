@@ -24,11 +24,9 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
-import com.eventorium.presentation.util.ImageItem;
-import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.button.MaterialButton;
-
-import java.time.format.DateTimeFormatter;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
