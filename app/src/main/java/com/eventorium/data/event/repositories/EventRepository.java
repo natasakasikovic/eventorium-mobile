@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.util.ErrorResponse;
@@ -115,5 +116,27 @@ public class EventRepository {
             }
         });
         return liveData;
+    }
+
+    public LiveData<Result<EventDetails>> getEventDetails(Long id) {
+        MutableLiveData<Result<EventDetails>> result = new MutableLiveData<>();
+
+        service.getEventDetails(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<EventDetails> call, Response<EventDetails> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading event"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventDetails> call, Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return result;
     }
 }

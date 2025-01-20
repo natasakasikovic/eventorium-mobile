@@ -45,4 +45,8 @@ public class LoginViewModel extends ViewModel {
     public void closeWebSocket() {
         webSocketService.disconnect();
     }
+
+    public boolean isLoggedIn() {
+        return authRepository.isLoggedIn();
+    }
 }

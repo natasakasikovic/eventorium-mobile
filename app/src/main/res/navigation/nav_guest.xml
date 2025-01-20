@@ -6,6 +6,40 @@
     app:startDestination="@id/homepageFragment">
 
     <fragment
+        android:id="@+id/homepageFragment"
+        android:name="com.eventorium.presentation.homepage.HomeFragment"
+        android:label="fragment_homepage"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_service_details"
+            app:destination="@id/serviceDetailsFragment"/>
+        <action
+            android:id="@+id/action_home_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_home_to_event_details"
+            app:destination="@id/eventDetailsFragment"/>
+        <action
+            android:id="@+id/action_homepage_to_services_overview"
+            app:destination="@id/serviceOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_events_overview"
+            app:destination="@id/eventsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_products_overview"
+            app:destination="@id/productsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_chat"
+            app:destination="@id/chatFragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
+
+    <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
@@ -22,32 +56,6 @@
         android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
         tools:layout="@layout/fragment_chat"
         android:label="fragment_chat" />
-
-    <fragment
-        android:id="@+id/homepageFragment"
-        android:name="com.eventorium.presentation.homepage.HomeFragment"
-        android:label="fragment_homepage"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_home_to_service_details"
-            app:destination="@id/serviceDetailsFragment"/>
-        <action
-            android:id="@+id/action_home_to_product_details"
-            app:destination="@id/productDetailsFragment"/>
-        <action
-            android:id="@+id/action_homepage_to_services_overview"
-            app:destination="@id/serviceOverviewFragment" />
-        <action
-            android:id="@+id/action_homepage_to_events_overview"
-            app:destination="@id/eventsOverviewFragment" />
-        <action
-            android:id="@+id/action_homepage_to_products_overview"
-            app:destination="@id/productsOverviewFragment" />
-        <action
-            android:id="@+id/action_homepage_to_chat"
-            app:destination="@id/chatFragment"/>
-
-    </fragment>
 
     <fragment
         android:id="@+id/registerFragment"
@@ -76,7 +84,11 @@
         android:id="@+id/eventsOverviewFragment"
         android:name="com.eventorium.presentation.event.fragments.EventOverviewFragment"
         android:label="fragment_event_overview"
-        tools:layout="@layout/fragment_event_overview" />
+        tools:layout="@layout/fragment_event_overview">
+        <action
+            android:id="@+id/action_overview_to_event_details"
+            app:destination="@+id/eventDetailsFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/productsOverviewFragment"
