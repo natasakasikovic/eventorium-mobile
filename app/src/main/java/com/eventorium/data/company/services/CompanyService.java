@@ -1,6 +1,7 @@
 package com.eventorium.data.company.services;
 
 import com.eventorium.data.company.models.Company;
+import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
@@ -30,6 +31,9 @@ public interface CompanyService {
 
     @GET("companies/my-company")
     Call<Company> getCompany();
+
+    @GET("companies/{id}")
+    Call<CompanyDetails> getCompany(@Path("id") Long id);
 
     @GET("companies/{id}/images")
     Call<List<ImageResponseDto>> getImages(@Path("id") Long id);

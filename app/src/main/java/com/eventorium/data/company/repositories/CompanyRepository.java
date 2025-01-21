@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.company.models.Company;
+import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.services.CompanyService;
 import com.eventorium.data.util.ErrorResponse;
@@ -113,6 +114,26 @@ public class CompanyRepository {
             @Override
             public void onFailure(Call<Company> call, Throwable t) {
                 result.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<Result<CompanyDetails>> getCompany(Long id) {
+        MutableLiveData<Result<CompanyDetails>> result = new MutableLiveData<>();
+        service.getCompany(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<CompanyDetails> call, Response<CompanyDetails> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading company"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CompanyDetails> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
         return result;
