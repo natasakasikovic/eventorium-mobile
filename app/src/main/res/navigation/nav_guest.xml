@@ -110,5 +110,9 @@
             app:destination="@id/serviceDetailsFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company_details" />
 
 </navigation>

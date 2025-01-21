@@ -9,4 +9,11 @@
         android:id="@+id/nav_signup"
         android:title="@string/sign_up"
         android:icon="@drawable/ic_account" />
+
+    <!-- MUST be removed once integrated into the appropriate place.
+        This is here ONLY for testing purposes. -->
+    <item
+        android:id="@+id/nav_company_details"
+        android:title="View company details"
+        android:icon="@drawable/ic_company" />
 </menu>

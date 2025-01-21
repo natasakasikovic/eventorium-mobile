@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.company.models.Company;
+import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.repositories.CompanyRepository;
 import com.eventorium.data.util.Result;
@@ -51,5 +52,9 @@ public class CompanyViewModel extends ViewModel {
 
     public LiveData<Result<Void>> removeImages(List<RemoveImageRequest> removedImages) {
         return repository.removeImages(removedImages);
+    }
+
+    public LiveData<Result<CompanyDetails>> getCompany(Long id) {
+        return repository.getCompany(id);
     }
 }
