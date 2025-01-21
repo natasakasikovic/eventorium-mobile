@@ -2,6 +2,7 @@ package com.eventorium.data.event.services;
 
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 
 import java.util.List;
@@ -10,9 +11,13 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EventService {
+
+    @GET("events/{id}")
+    Call<EventDetails> getEventDetails(@Path("id") Long id);
 
     @GET("events/all")
     Call<List<EventSummary>> getAll();

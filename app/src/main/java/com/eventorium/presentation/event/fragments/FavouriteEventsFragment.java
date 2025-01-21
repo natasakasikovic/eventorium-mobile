@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
@@ -40,17 +39,12 @@ public class FavouriteEventsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         prepareEventData();
-        binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
+        binding.eventsRecycleView.setAdapter(new EventsAdapter(events, event -> {
+
+        }));
     }
 
     public void prepareEventData() {
         events.clear();
-        events.add(new EventSummary("Concert",  "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Conference",  "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Workshop",  "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Festival",  "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
-        events.add(new EventSummary("Webinar", "Novi Sad", R.drawable.conference));
     }
 }

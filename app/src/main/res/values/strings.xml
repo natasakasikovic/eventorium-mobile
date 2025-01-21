@@ -177,4 +177,6 @@
     <string name="success">Action successfully completed!</string>
     <string name="gallery">Gallery</string>
     <string name="no_images">no images found</string>
+    <string name="add_to_calendar">Add to calendar</string>
+    <string name="planning_to_join_question">Are you planning to join this event?</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.util.Result;
@@ -35,5 +36,9 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
         return repository.searchEvents(keyword);
+    }
+
+    public LiveData<Result<EventDetails>> getEventDetails(Long id) {
+        return repository.getEventDetails(id);
     }
 }
