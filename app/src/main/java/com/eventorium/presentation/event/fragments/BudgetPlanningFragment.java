@@ -75,16 +75,13 @@ public class BudgetPlanningFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setUpListener() { // TODO: TEMPORARILY -> after agendaFragment is created, move this listener to that fragment
+    private void setUpListener() {
         binding.continueButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            if (this.privacy == Privacy.CLOSED){
-                Bundle args = new Bundle();
-                args.putLong(ARG_EVENT_ID, eventId);
-                navController.navigate(R.id.action_budget_to_invitations, args); // TODO: Update to navigate from agenda to invitations! :)
-            } else {
-                // TODO: show some dialog with text such as Event successfully created if eventType is OPEN
-            }
+            Bundle args = new Bundle();
+            args.putLong(ARG_EVENT_ID, eventId);
+            args.putParcelable(ARG_EVENT_PRIVACY, privacy);
+            navController.navigate(R.id.action_budget_to_agenda, args);
         });
     }
 

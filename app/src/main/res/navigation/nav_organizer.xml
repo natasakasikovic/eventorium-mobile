@@ -43,7 +43,19 @@
             android:id="@+id/action_budget_to_serviceDetails"
             app:destination="@+id/budgetServiceDetailsFragment"/>
         <action
-            android:id="@+id/action_budget_to_invitations"
+            android:id="@+id/action_budget_to_agenda"
+            app:destination="@+id/agendaFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/agendaFragment"
+        android:name="com.eventorium.presentation.event.fragments.agenda.AgendaFragment"
+        tools:layout="@layout/fragment_agenda">
+        <action
+            android:id="@+id/action_agenda_to_events_overview"
+            app:destination="@+id/eventsOverviewFragment"/>
+        <action
+            android:id="@+id/action_agenda_to_invitations"
             app:destination="@+id/eventInvitationsFragment"/>
     </fragment>
 
