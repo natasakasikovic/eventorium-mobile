@@ -100,7 +100,9 @@ public class AgendaFragment extends Fragment implements OnActivityCreatedListene
     private void navigate() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         if (privacy.equals(Privacy.CLOSED)) {
-            navController.navigate(R.id.action_agenda_to_invitations);
+            Bundle args = new Bundle();
+            args.putLong(ARG_EVENT_ID, id);
+            navController.navigate(R.id.action_agenda_to_invitations, args);
         } else {
             Toast.makeText(requireContext(), "Event created successfully", Toast.LENGTH_SHORT).show();
             navController.popBackStack(R.id.homepageFragment, false);
