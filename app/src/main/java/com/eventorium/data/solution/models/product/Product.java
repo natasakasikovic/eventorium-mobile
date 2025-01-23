@@ -22,7 +22,6 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private String specialties;
     private Double price;
     private Double discount;
     private Status status;
