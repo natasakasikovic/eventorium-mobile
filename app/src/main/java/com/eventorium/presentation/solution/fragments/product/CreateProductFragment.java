@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +99,7 @@ public class CreateProductFragment extends Fragment {
             binding.eventTypeRecycleView.setAdapter(eventTypeAdapter);
         });
     }
+
     private void setupImageUpload() {
         imageUpload = new ImageUpload(this, imageUris -> {
             imageAdapter.insert(imageUris.stream()
@@ -123,11 +123,30 @@ public class CreateProductFragment extends Fragment {
         CreateProduct product = loadFormFields();
         productViewModel.createProduct(product).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
-                Toast.makeText(requireContext(), "Created!", Toast.LENGTH_SHORT).show();
+                if (imageUris.isEmpty()) displaySuccessMessage();
+                else uploadImages(result.getData().getId());
             } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                displayErrorMessage(result.getError());
             }
         });
+    }
+
+    private void uploadImages(Long id) {
+        productViewModel.uploadImages(id, requireContext(), imageUris).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                displaySuccessMessage();
+            } else {
+                displayErrorMessage(result.getError());
+            }
+        });
+    }
+
+    private void displaySuccessMessage() {
+        Toast.makeText(requireContext(), "Product successfully created", Toast.LENGTH_SHORT).show();
+    }
+
+    private void displayErrorMessage(String error) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
     }
 
     private CreateProduct loadFormFields() {

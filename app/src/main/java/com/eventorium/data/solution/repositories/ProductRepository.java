@@ -2,8 +2,10 @@ package com.eventorium.data.solution.repositories;
 
 import static java.util.stream.Collectors.toList;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +68,40 @@ public class ProductRepository {
         return result;
     }
 
+    public LiveData<Result<Void>> uploadImages(Long id, Context context, List<Uri> uris) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        List<MultipartBody.Part> parts;
+
+        try {
+            parts = FileUtil.getImagesFromUris(context, uris, "images");
+        } catch (IOException e) {
+            result.postValue(Result.error("Error while uploading images."));
+            return result;
+        }
+
+        productService.uploadImages(id, parts).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    result.postValue(Result.success(null));
+                } else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error("Error while uploading images"));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.postValue(Result.error("Error while uploading images"));
+            }
+        });
+
+        return result;
+    }
 
     public LiveData<Product> getProduct(Long id) {
         MutableLiveData<Product> result = new MutableLiveData<>();
