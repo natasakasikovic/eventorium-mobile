@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -34,6 +35,10 @@ public class ProductViewModel extends ViewModel {
         this.authRepository = authRepository;
         this.productRepository = productRepository;
         this.accountProductRepository = accountProductRepository;
+    }
+
+    public LiveData<Result<Product>> createProduct(CreateProduct product) {
+        return productRepository.createProduct(product);
     }
 
     public LiveData<Product> getProduct(Long id) {

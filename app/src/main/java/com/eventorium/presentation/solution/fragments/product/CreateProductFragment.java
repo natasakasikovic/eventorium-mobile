@@ -8,13 +8,17 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.databinding.FragmentCreateProductBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -41,6 +45,7 @@ public class CreateProductFragment extends Fragment {
     private ProductViewModel productViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
+    ChecklistAdapter<EventType> eventTypeAdapter;
 
     public CreateProductFragment() { }
 
@@ -77,7 +82,9 @@ public class CreateProductFragment extends Fragment {
     }
 
     private void loadCategories() {
+        Category suggestion = Category.builder().id(null).name("I would like to suggest category").build();
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            categories.add(0, suggestion);
             ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<>(
                     requireContext(),
                     android.R.layout.simple_dropdown_item_1line,
@@ -89,7 +96,8 @@ public class CreateProductFragment extends Fragment {
 
     private void loadEventTypes() {
         eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
-            binding.eventTypeRecycleView.setAdapter(new ChecklistAdapter<>(eventTypes));
+            eventTypeAdapter = new ChecklistAdapter<>(eventTypes);
+            binding.eventTypeRecycleView.setAdapter(eventTypeAdapter);
         });
     }
     private void setupImageUpload() {
@@ -112,6 +120,35 @@ public class CreateProductFragment extends Fragment {
     }
 
     private void create() {
+        CreateProduct product = loadFormFields();
+        productViewModel.createProduct(product).observe(getViewLifecycleOwner(), result -> {
+            if (result.getData() != null) {
+                Toast.makeText(requireContext(), "Created!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
+    private CreateProduct loadFormFields() {
+        return CreateProduct.builder()
+                .name(binding.name.getText().toString())
+                .description(binding.description.getText().toString())
+                .price(Double.parseDouble(String.valueOf(binding.price.getText())))
+                .discount(Double.parseDouble(String.valueOf(binding.discount.getText())))
+                .category(getCategory())
+                .eventTypes(eventTypeAdapter.getSelectedItems())
+                .isAvailable(binding.availabilityBox.isChecked())
+                .isAvailable(binding.visibilityBox.isChecked())
+                .build();
+    }
+
+    private Category getCategory() {
+        Category category = (Category) binding.categorySpinner.getSelectedItem();
+        if (category.getId() == null) {
+            category.setName(binding.suggestedCategoryName.getText().toString());
+            category.setDescription(binding.suggestedCategoryDescription.getText().toString());
+        }
+        return category;
     }
 }

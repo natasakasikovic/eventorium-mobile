@@ -10,13 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.ProductService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,10 +35,34 @@ public class ProductRepository {
 
     private final ProductService productService;
 
-
     @Inject
     public ProductRepository(ProductService productService) {
         this.productService = productService;
+    }
+
+    public LiveData<Result<Product>> createProduct(CreateProduct request) {
+        MutableLiveData<Result<Product>> result = new MutableLiveData<>();
+        productService.createProduct(request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    try {
+                        String errResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
     }
 
 

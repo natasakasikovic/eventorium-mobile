@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.util.dtos.ImageResponseDto;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -48,4 +50,7 @@ public interface ProductService {
 
     @GET("products/search/all")
     Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
+
+    @POST("products")
+    Call<Product> createProduct(@Body CreateProduct product);
 }
