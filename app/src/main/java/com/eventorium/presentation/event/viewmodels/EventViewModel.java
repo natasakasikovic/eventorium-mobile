@@ -3,6 +3,7 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
@@ -40,5 +41,9 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<EventDetails>> getEventDetails(Long id) {
         return repository.getEventDetails(id);
+    }
+
+    public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
+        return repository.createAgenda(id, agenda);
     }
 }

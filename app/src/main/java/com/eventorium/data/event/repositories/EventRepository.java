@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
@@ -97,6 +98,23 @@ public class EventRepository {
         });
 
         return liveData;
+    }
+
+    public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.createAgenda(id, agenda).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) result.postValue(Result.success(null));
+                else result.postValue(Result.error(ErrorMessages.INVALID_ACTIVITY));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
     }
 
     public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
