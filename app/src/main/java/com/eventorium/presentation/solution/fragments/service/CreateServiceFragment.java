@@ -258,6 +258,8 @@ public class CreateServiceFragment extends Fragment {
                     .reservationDeadline(reservationDate)
                     .minDuration(duration.get(0).intValue())
                     .maxDuration(duration.get(1).intValue())
+                    .isAvailable(binding.availabilityBox.isChecked())
+                    .isVisible(binding.visibilityBox.isChecked())
                     .type(type)
                     .eventTypes(((ChecklistAdapter<EventType>)
                             (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))

@@ -33,4 +33,6 @@ public class CreateService {
     private LocalDate cancellationDeadline;
     private Integer minDuration;
     private Integer maxDuration;
+    private Boolean isAvailable;
+    private Boolean isVisible;
 }
