@@ -126,7 +126,6 @@ public class ProductDetailsFragment extends Fragment {
             binding.productPrice.setText(product.getPrice().toString());
             binding.productDescription.setText(product.getDescription());
             binding.productCategory.setText("Category: " + product.getCategory().getName());
-            binding.productSpecialties.setText(product.getSpecialties());
             binding.rating.setText(product.getRating().toString());
             binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
 

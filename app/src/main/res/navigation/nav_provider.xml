@@ -42,10 +42,11 @@
     </fragment>
 
     <fragment
-        android:id="@+id/invitationsFragment"
-        android:name="com.eventorium.presentation.event.fragments.EventInvitationFragment"
-        android:label="event_invitation_fragment"
-        tools:layout="@layout/fragment_event_invitation" />
+        android:id="@+id/createProductFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.CreateProductFragment"
+        tools:layout="@layout/fragment_create_product">
+        <!--TODO: add action to productOverview-->
+    </fragment>
 
     <fragment
         android:id="@+id/manageServiceDetailsFragment"

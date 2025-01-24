@@ -179,4 +179,7 @@
     <string name="no_images">no images found</string>
     <string name="add_to_calendar">Add to calendar</string>
     <string name="planning_to_join_question">Are you planning to join this event?</string>
+    <string name="new_product">New product</string>
+    <string name="enter_information_about_product">Enter information about product..</string>
+    <string name="images">Images</string>
 </resources>

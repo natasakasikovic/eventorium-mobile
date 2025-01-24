@@ -17,6 +17,11 @@
         android:title="@string/new_service" />
 
     <item
+        android:id="@+id/nav_new_product"
+        android:icon="@drawable/ic_plus"
+        android:title="@string/new_product" />
+
+    <item
         android:id="@+id/nav_price_list"
         android:icon="@drawable/ic_price_list"
         android:title="@string/price_list" />
