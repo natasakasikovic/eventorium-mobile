@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/favourites"
-        android:name="com.eventorium.presentation.user.fragments.FavouritesFragment"
+        android:name="com.eventorium.presentation.favourites.fragments.FavouritesFragment"
         tools:layout="@layout/fragment_favourites"
         android:label="fragment_favourites">
         <action

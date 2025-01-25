@@ -1,4 +1,4 @@
-package com.eventorium.presentation.solution.fragments.service;
+package com.eventorium.presentation.favourites.fragments;
 
 import android.os.Bundle;
 
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteServicesBinding;
-import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

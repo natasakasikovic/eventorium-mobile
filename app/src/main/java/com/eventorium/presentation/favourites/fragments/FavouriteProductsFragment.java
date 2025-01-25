@@ -1,4 +1,4 @@
-package com.eventorium.presentation.solution.fragments.product;
+package com.eventorium.presentation.favourites.fragments;
 
 import android.os.Bundle;
 
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentFavouriteProductsBinding;
-import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

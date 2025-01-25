@@ -1,12 +1,12 @@
-package com.eventorium.presentation.shared.adapters;
+package com.eventorium.presentation.favourites.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.eventorium.presentation.event.fragments.FavouriteEventsFragment;
-import com.eventorium.presentation.solution.fragments.product.FavouriteProductsFragment;
-import com.eventorium.presentation.solution.fragments.service.FavouriteServicesFragment;
+import com.eventorium.presentation.favourites.fragments.FavouriteEventsFragment;
+import com.eventorium.presentation.favourites.fragments.FavouriteProductsFragment;
+import com.eventorium.presentation.favourites.fragments.FavouriteServicesFragment;
 
 public class FavouritesPagerAdapter extends FragmentStateAdapter {
 

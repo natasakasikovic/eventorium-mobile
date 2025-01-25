@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.favourites.fragments;
 
 import android.os.Bundle;
 
