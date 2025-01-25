@@ -5,15 +5,21 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eventorium.R;
+import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -26,6 +32,7 @@ public class EventDetailsFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private Long id;
     private EventDetails event;
+    private MessageSender organizer;
 
     public EventDetailsFragment() { }
 
@@ -49,10 +56,18 @@ public class EventDetailsFragment extends Fragment {
         loginViewModel = provider.get(LoginViewModel.class);
         if (!loginViewModel.isLoggedIn()) {
             binding.actions.setVisibility(View.GONE);
+            binding.chatButton.setVisibility(View.GONE);
         }
+        binding.chatButton.setOnClickListener(v -> navigateToChat());
         return binding.getRoot();
     }
 
+    private void navigateToChat() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putParcelable(ChatFragment.ARG_RECIPIENT, organizer);
+        navController.navigate(R.id.chatFragment, args);
+    }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -64,6 +79,8 @@ public class EventDetailsFragment extends Fragment {
         viewModel.getEventDetails(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 event = result.getData();
+                ChatUserDetails sender = event.getOrganizer();
+                organizer = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
                 binding.eventName.setText(event.getName());
                 binding.eventType.setText("Event type: " + event.getEventType());
                 binding.privacyType.setText("Privacy type: " + event.getPrivacy());
