@@ -18,10 +18,12 @@ import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.company.repositories.CompanyRepository;
 import com.eventorium.data.company.services.CompanyService;
+import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.event.repositories.InvitationRepository;
+import com.eventorium.data.event.services.AccountEventService;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
@@ -217,8 +219,7 @@ public class AppModule {
             WebSocketService webSocketService,
             AuthService service,
             SharedPreferences sharedPreferences
-    )
-    {
+    ) {
         return new AuthRepository(webSocketService, service, sharedPreferences);
     }
 
@@ -354,5 +355,18 @@ public class AppModule {
     @Inject
     public UserReportService provideUserReportService(Retrofit retrofit) {
         return retrofit.create(UserReportService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static AccountEventRepository provideAccountEventRepository(AccountEventService service) {
+        return new AccountEventRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public AccountEventService provideAccountEventService(Retrofit retrofit) {
+        return retrofit.create(AccountEventService.class);
     }
 }
