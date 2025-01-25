@@ -43,13 +43,36 @@
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
-        tools:layout="@layout/fragment_service_details" />
+        tools:layout="@layout/fragment_service_details">
+    </fragment>
 
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
         android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" />
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <action
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
 
     <fragment
         android:id="@+id/chatFragment"

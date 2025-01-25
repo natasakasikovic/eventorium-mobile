@@ -1,7 +1,8 @@
 package com.eventorium.data.solution.models.product;
 
-import com.eventorium.data.auth.models.Provider;
+import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.util.models.Status;
 
@@ -29,6 +30,7 @@ public class Product {
     private Boolean visible;
     private List<EventType> eventTypes;
     private Category category;
-    private Provider provider;
+    private ChatUserDetails provider;
+    private CompanyDetails company;
     private Double rating;
 }
