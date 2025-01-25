@@ -1,5 +1,9 @@
 package com.eventorium.data.event.services;
 
+import com.eventorium.data.event.models.EventSummary;
+
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
@@ -17,4 +21,7 @@ public interface AccountEventService {
 
     @DELETE("account/events/favourites/{id}")
     Call<ResponseBody> removeFromFavourites(@Path("id") Long id);
+
+    @GET("account/events/favourites")
+    Call<List<EventSummary>> getFavouriteEvents();
 }

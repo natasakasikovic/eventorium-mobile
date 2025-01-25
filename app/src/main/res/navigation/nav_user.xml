@@ -15,7 +15,11 @@
         <action
             android:id="@+id/action_favServices_to_serviceDetailsFragment"
             app:destination="@id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_fav_to_event_details"
+            app:destination="@id/eventDetailsFragment"/>
     </fragment>
+
 
     <fragment
         android:id="@+id/bookingCalendarFragment"
@@ -53,5 +57,10 @@
         android:name="com.eventorium.presentation.user.fragments.AccountEditFragment"
         android:label="fragment_account_edit"
         tools:layout="@layout/fragment_account_edit" />
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
 
 </navigation>

@@ -1,5 +1,35 @@
 package com.eventorium.presentation.favourites.viewmodels;
 
-public class FavouritesViewModel {
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.repositories.AccountEventRepository;
+import com.eventorium.data.solution.repositories.AccountProductRepository;
+import com.eventorium.data.solution.repositories.AccountServiceRepository;
+import com.eventorium.data.util.Result;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class FavouritesViewModel extends ViewModel {
+
+    private final AccountEventRepository eventRepository;
+    private final AccountProductRepository productRepository;
+    private final AccountServiceRepository serviceRepository;
+
+    @Inject
+    public FavouritesViewModel(AccountEventRepository eventRepository, AccountProductRepository productRepository, AccountServiceRepository serviceRepository) {
+        this.eventRepository = eventRepository;
+        this.productRepository = productRepository;
+        this.serviceRepository = serviceRepository;
+    }
+
+    public LiveData<Result<List<EventSummary>>> getFavouriteEvents() {
+        return eventRepository.getFavouriteEvents();
+    }
 }
