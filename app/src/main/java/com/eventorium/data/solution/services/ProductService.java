@@ -36,20 +36,8 @@ public interface ProductService {
     @GET("products/suggestions")
     Call<List<ProductSummary>> getSuggestions(@Query("categoryId") Long id, @Query("price") Double price);
 
-    @GET("account/products/favourites")
-    Call<List<ProductSummary>> getFavouriteProduct();
-
-    @GET("account/products/favourites/{id}")
-    Call<Boolean> isFavouriteProduct(@Path("id") Long id);
-
     @GET("products/top-five-products")
     Call<List<ProductSummary>> getTopProducts();
-
-    @POST("account/products/favourites/{id}")
-    Call<Product> addFavouriteProduct(@Path("id") Long id);
-
-    @DELETE("account/products/favourites/{id}")
-    Call<ResponseBody> removeFavouriteProduct(@Path("id") Long id);
 
     @GET("products/search/all")
     Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);

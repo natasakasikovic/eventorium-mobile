@@ -37,6 +37,7 @@ import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
+import com.eventorium.data.solution.services.AccountProductService;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
@@ -226,8 +227,15 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AccountProductRepository provideAccountProductRepository(ProductService service) {
+    public static AccountProductRepository provideAccountProductRepository(AccountProductService service) {
         return new AccountProductRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public AccountProductService provideAccountProductService(Retrofit retrofit) {
+        return retrofit.create(AccountProductService.class);
     }
 
     @Provides

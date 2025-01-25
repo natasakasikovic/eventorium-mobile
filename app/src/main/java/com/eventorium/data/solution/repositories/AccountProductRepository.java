@@ -7,8 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.product.Product;
-import com.eventorium.data.solution.services.ProductService;
-
+import com.eventorium.data.solution.services.AccountProductService;
 import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
@@ -18,10 +17,10 @@ import retrofit2.Response;
 
 public class AccountProductRepository {
 
-    private final ProductService service;
+    private final AccountProductService service;
 
     @Inject
-    public AccountProductRepository(ProductService service) {
+    public AccountProductRepository(AccountProductService service) {
         this.service = service;
     }
 
