@@ -13,11 +13,14 @@
         tools:layout="@layout/fragment_favourites"
         android:label="fragment_favourites">
         <action
-            android:id="@+id/action_favServices_to_serviceDetailsFragment"
-            app:destination="@id/serviceDetailsFragment" />
-        <action
             android:id="@+id/action_fav_to_event_details"
             app:destination="@id/eventDetailsFragment"/>
+        <action
+            android:id="@+id/action_fav_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_fav_to_service_details"
+            app:destination="@id/serviceDetailsFragment" />
     </fragment>
 
 
@@ -62,5 +65,15 @@
         android:id="@+id/eventDetailsFragment"
         android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
         tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        tools:layout="@layout/fragment_product_details" />
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        tools:layout="@layout/fragment_service_details" />
 
 </navigation>

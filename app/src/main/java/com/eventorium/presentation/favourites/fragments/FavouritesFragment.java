@@ -14,6 +14,9 @@ import com.eventorium.databinding.FragmentFavouritesBinding;
 import com.eventorium.presentation.favourites.adapters.FavouritesPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class FavouritesFragment extends Fragment {
 
     private FragmentFavouritesBinding binding;

@@ -56,23 +56,25 @@ public class FavouriteEventsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadFavouriteEvents();
-
     }
 
     public void loadFavouriteEvents() {
         viewModel.getFavouriteEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 events = result.getData();
-                binding.eventsRecycleView.setAdapter(new EventsAdapter(events, event -> {
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                    Bundle args = new Bundle();
-                    args.putLong(ARG_EVENT_ID, event.getId());
-                    navController.navigate(R.id.action_fav_to_event_details, args);
-                }));
+                setupAdapter();
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void setupAdapter() {
+        binding.eventsRecycleView.setAdapter(new EventsAdapter(events, event -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_EVENT_ID, event.getId());
+            navController.navigate(R.id.action_fav_to_event_details, args);
+        }));
     }
 }
