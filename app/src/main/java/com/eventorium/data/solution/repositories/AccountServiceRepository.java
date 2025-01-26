@@ -10,6 +10,7 @@ import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
+import com.eventorium.data.util.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,6 +179,26 @@ public class AccountServiceRepository {
             }
         });
 
+        return result;
+    }
+
+    public LiveData<Result<List<ServiceSummary>>> getFavouriteServices() {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getFavouriteServices().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ServiceSummary>> call, Response<List<ServiceSummary>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading favourite services"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ServiceSummary>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading favourite services"));
+            }
+        });
         return result;
     }
 

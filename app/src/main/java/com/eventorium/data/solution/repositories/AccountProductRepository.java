@@ -7,7 +7,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.product.Product;
-import com.eventorium.data.solution.services.ProductService;
+import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.services.AccountProductService;
+import com.eventorium.data.util.Result;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,10 +22,10 @@ import retrofit2.Response;
 
 public class AccountProductRepository {
 
-    private final ProductService service;
+    private final AccountProductService service;
 
     @Inject
-    public AccountProductRepository(ProductService service) {
+    public AccountProductRepository(AccountProductService service) {
         this.service = service;
     }
 
@@ -90,6 +94,27 @@ public class AccountProductRepository {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getFavouriteProducts() {
+        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
+        service.getFavouriteProducts().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading favourite products"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading favourite products"));
             }
         });
 
