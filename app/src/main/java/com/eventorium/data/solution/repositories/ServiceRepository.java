@@ -202,17 +202,18 @@ public class ServiceRepository {
         return liveData;
     }
 
-    public LiveData<Result<Void>> deleteService(Long id) {
-        MutableLiveData<Result<Void>> successful = new MutableLiveData<>();
+    public LiveData<Boolean> deleteService(Long id) {
+        MutableLiveData<Boolean> successful = new MutableLiveData<>();
         serviceService.deleteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Void> call,
                     @NonNull Response<Void> response
             ) {
-                if (!response.isSuccessful()) {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    successful.postValue(Result.error(response.message()));
+                if (response.isSuccessful()) {
+                    successful.postValue(true);
+                } else {
+                    successful.postValue(false);
                 }
             }
 
@@ -221,8 +222,7 @@ public class ServiceRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                successful.postValue(Result.error(t.getMessage()));
+                successful.postValue(false);
             }
         });
         return successful;
