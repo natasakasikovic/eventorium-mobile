@@ -1,7 +1,6 @@
 package com.eventorium.presentation;
 
-import static com.eventorium.presentation.company.fragments.CompanyDetailsFragment.ARG_COMPANY_ID;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setupStatusBarAndToolbar();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
             actionBar.setHomeButtonEnabled(true);
@@ -81,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent() != null) {
             handleIntent(getIntent());
         }
-        refresh("GUEST");
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role", null);
+        if (role == null) refresh("GUEST");
+        else refresh(role.toUpperCase());
     }
 
     public void refresh(String role) {
@@ -254,10 +257,6 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.loginFragment);
         } else if (id == R.id.nav_signup) {
             navController.navigate(R.id.registerFragment);
-        } else if (id == R.id.nav_company_details) { // TODO: DELETE! THIS IS TEMPORARY SINCE THERE IS NO CURRENTLY WAY TO COME TO COMPANY OVERVIEW!
-            Bundle args = new Bundle();
-            args.putLong(ARG_COMPANY_ID, 2);
-            navController.navigate(R.id.companyDetailsFragment, args);
         }
     }
 

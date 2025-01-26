@@ -18,14 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.auth.models.Provider;
+import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
+import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -41,6 +43,7 @@ public class ProductDetailsFragment extends Fragment {
     private boolean isFavourite;
     private Long id;
     private MessageSender provider;
+    private Long companyId;
 
     public ProductDetailsFragment() {
     }
@@ -83,7 +86,23 @@ public class ProductDetailsFragment extends Fragment {
 
         favouriteButton.setOnClickListener(v -> handleIsFavourite());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
+        binding.providerButton.setOnClickListener(v -> navigateToProvider());
+        binding.companyButton.setOnClickListener(v -> navigateToCompany());
         return binding.getRoot();
+    }
+
+    private void navigateToCompany() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(CompanyDetailsFragment.ARG_COMPANY_ID, companyId);
+        navController.navigate(R.id.action_productDetails_to_company, args);
+    }
+
+    private void navigateToProvider() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(UserProfileFragment.ARG_ID, provider.getId());
+        navController.navigate(R.id.action_productDetails_to_provider, args);
     }
 
     private void renderButtons() {
@@ -120,20 +139,23 @@ public class ProductDetailsFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     private void loadProductDetails(Product product) {
         if (product != null) {
-            Provider sender = product.getProvider();
+            ChatUserDetails sender = product.getProvider();
             provider = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
+            companyId = product.getCompany().getId();
+
             binding.productName.setText(product.getName());
             binding.productPrice.setText(product.getPrice().toString());
             binding.productDescription.setText(product.getDescription());
             binding.productCategory.setText("Category: " + product.getCategory().getName());
             binding.rating.setText(product.getRating().toString());
             binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
+            binding.companyName.setText(product.getCompany().getName());
 
-                productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
-                    binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
-                });
-            }
+            productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
+                binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
+            });
         }
+    }
 
     private void handleIsFavourite() {
         if(isFavourite) {
