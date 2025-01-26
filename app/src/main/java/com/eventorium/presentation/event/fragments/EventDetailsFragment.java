@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.eventorium.R;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.google.android.material.button.MaterialButton;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -26,6 +28,8 @@ public class EventDetailsFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private Long id;
     private EventDetails event;
+    private boolean isFavourite;
+    private MaterialButton favButton;
 
     public EventDetailsFragment() { }
 
@@ -50,6 +54,7 @@ public class EventDetailsFragment extends Fragment {
         if (!loginViewModel.isLoggedIn()) {
             binding.actions.setVisibility(View.GONE);
         }
+        favButton = binding.favButton;
         return binding.getRoot();
     }
 
@@ -72,8 +77,48 @@ public class EventDetailsFragment extends Fragment {
                 binding.address.setText(event.getAddress());
                 binding.city.setText(event.getCity());
                 binding.date.setText(event.getDate());
+                setupFavIcon();
+                setupFavButton();
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupFavIcon() {
+        if (!loginViewModel.isLoggedIn()) return;
+        viewModel.isFavourite(id).observe(getViewLifecycleOwner(), isFav -> {
+            isFavourite = isFav;
+            favButton.setIconResource(isFavourite ? R.drawable.ic_favourite : R.drawable.ic_not_favourite);
+        });
+    }
+
+    private void setupFavButton() {
+        favButton.setOnClickListener(v -> {
+            if (isFavourite) {
+                removeFromFavourites();
+            } else {
+                addToFavourites();
+            }
+        });
+    }
+
+    private void addToFavourites() {
+        viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() != null) {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            } else {
+                favButton.setIconResource(R.drawable.ic_favourite);
+            }
+        });
+    }
+
+    private void removeFromFavourites() {
+        viewModel.removeFromFavourites(id).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() != null) {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            } else {
+                favButton.setIconResource(R.drawable.ic_not_favourite);
             }
         });
     }

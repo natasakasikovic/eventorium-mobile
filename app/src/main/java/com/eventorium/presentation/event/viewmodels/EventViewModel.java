@@ -8,6 +8,7 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.util.Result;
 
@@ -21,10 +22,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class EventViewModel extends ViewModel {
 
     private final EventRepository repository;
+    private final AccountEventRepository accountEventRepository;
 
     @Inject
-    public EventViewModel(EventRepository eventRepository) {
+    public EventViewModel(EventRepository eventRepository, AccountEventRepository accountEventRepository) {
         this.repository = eventRepository;
+        this.accountEventRepository = accountEventRepository;
     }
 
     public LiveData<Result<List<EventSummary>>> getEvents(){
@@ -45,5 +48,17 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
         return repository.createAgenda(id, agenda);
+    }
+
+    public LiveData<Boolean> isFavourite(Long id) {
+        return accountEventRepository.isFavouriteEvent(id);
+    }
+
+    public LiveData<Result<Void>> addToFavourites(Long id) {
+        return accountEventRepository.addToFavourites(id);
+    }
+
+    public LiveData<Result<Void>> removeFromFavourites(Long id) {
+        return accountEventRepository.removeFromFavourites(id);
     }
 }
