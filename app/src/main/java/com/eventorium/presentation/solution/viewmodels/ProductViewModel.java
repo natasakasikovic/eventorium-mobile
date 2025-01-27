@@ -70,7 +70,7 @@ public class ProductViewModel extends ViewModel {
         return accountProductRepository.removeFavouriteProduct(id);
     }
 
-    public LiveData<String> addFavouriteProduct(Long id) {
+    public LiveData<Result<Void>> addFavouriteProduct(Long id) {
         return accountProductRepository.addFavouriteProduct(id);
     }
 

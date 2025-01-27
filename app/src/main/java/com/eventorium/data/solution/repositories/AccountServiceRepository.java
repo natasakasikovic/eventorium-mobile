@@ -134,24 +134,24 @@ public class AccountServiceRepository {
         return result;
     }
 
-    public LiveData<String> addFavouriteService(Long id) {
-        MutableLiveData<String> result = new MutableLiveData<>();
+    public LiveData<Result<Void>> addFavouriteService(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
         service.addFavouriteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<Service> call,
-                    @NonNull Response<Service> response
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body().getName());
-                } else {
+                if (!response.isSuccessful()) {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(Result.error(response.message()));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Service> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
+                result.postValue(Result.error(t.getMessage()));
             }
         });
 

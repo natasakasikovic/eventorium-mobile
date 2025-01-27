@@ -110,15 +110,21 @@ public class ServiceDetailsFragment extends Fragment {
                     }
                 });
             } else {
-                serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), name -> {
-                    if(name != null) {
+                serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() != null) {
                         isFavourite = true;
                         favouriteButton.setIconResource(R.drawable.ic_favourite);
                         Toast.makeText(
                                 requireContext(),
                                 getString(R.string.added_service)
-                                        + name
+                                        + binding.serviceName.getText() + " "
                                         + getString(R.string.to_favourites),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    } else {
+                        Toast.makeText(
+                                requireContext(),
+                                result.getError(),
                                 Toast.LENGTH_SHORT
                         ).show();
                     }

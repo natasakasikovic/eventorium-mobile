@@ -21,7 +21,7 @@ public interface AccountProductService {
     Call<List<ProductSummary>> getFavouriteProducts();
 
     @POST("account/products/favourites/{id}")
-    Call<Product> addFavouriteProduct(@Path("id") Long id);
+    Call<ResponseBody> addFavouriteProduct(@Path("id") Long id);
 
     @DELETE("account/products/favourites/{id}")
     Call<ResponseBody> removeFavouriteProduct(@Path("id") Long id);
