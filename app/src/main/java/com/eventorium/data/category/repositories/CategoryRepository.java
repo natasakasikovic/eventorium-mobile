@@ -9,8 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -113,8 +116,8 @@ public class CategoryRepository {
         return liveData;
     }
 
-    public LiveData<Boolean> deleteCategory(Long id) {
-        MutableLiveData<Boolean> successful = new MutableLiveData<>();
+    public LiveData<Result<Void>> deleteCategory(Long id) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
         categoryService.deleteCategory(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -122,9 +125,14 @@ public class CategoryRepository {
                     @NonNull Response<Void> response
             ) {
                 if (response.isSuccessful()) {
-                    successful.postValue(true);
+                    liveData.postValue(Result.success(null));
                 } else {
-                    successful.postValue(false);
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
                 }
             }
 
@@ -133,9 +141,9 @@ public class CategoryRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                successful.postValue(false);
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
-        return successful;
+        return liveData;
     }
 }

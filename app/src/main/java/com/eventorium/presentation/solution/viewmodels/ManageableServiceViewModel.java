@@ -90,7 +90,7 @@ public class ManageableServiceViewModel extends ViewModel {
     }
 
 
-    public LiveData<Boolean> deleteService(Long serviceId) {
+    public LiveData<Result<Void>> deleteService(Long serviceId) {
         return serviceRepository.deleteService(serviceId);
     }
 

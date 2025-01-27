@@ -46,7 +46,7 @@ public class CategoryViewModel extends ViewModel {
         return isLoading;
     }
 
-    public LiveData<Boolean> deleteCategory(Long id) {
+    public LiveData<Result<Void>> deleteCategory(Long id) {
         return categoryRepository.deleteCategory(id);
     }
 

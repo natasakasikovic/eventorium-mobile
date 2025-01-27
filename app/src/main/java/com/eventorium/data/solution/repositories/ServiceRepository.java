@@ -17,8 +17,10 @@ import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.io.IOException;
@@ -51,10 +53,15 @@ public class ServiceRepository {
                     @NonNull Call<ServiceSummary> call,
                     @NonNull Response<ServiceSummary> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     result.postValue(Result.success(response.body().getId()));
                 } else {
-                    result.postValue(Result.error(response.message()));
+                    try {
+                        String errResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
                 }
             }
 
@@ -202,8 +209,8 @@ public class ServiceRepository {
         return liveData;
     }
 
-    public LiveData<Boolean> deleteService(Long id) {
-        MutableLiveData<Boolean> successful = new MutableLiveData<>();
+    public LiveData<Result<Void>> deleteService(Long id) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
         serviceService.deleteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -211,9 +218,14 @@ public class ServiceRepository {
                     @NonNull Response<Void> response
             ) {
                 if (response.isSuccessful()) {
-                    successful.postValue(true);
+                    liveData.postValue(Result.success(null));
                 } else {
-                    successful.postValue(false);
+                    try {
+                        String error = response.errorBody().string();
+                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                    } catch (IOException e) {
+                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
                 }
             }
 
@@ -222,10 +234,10 @@ public class ServiceRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                successful.postValue(false);
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
-        return successful;
+        return liveData;
     }
 
     public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
