@@ -54,7 +54,11 @@
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
-        tools:layout="@layout/fragment_product_details" />
+        tools:layout="@layout/fragment_product_details" >
+        <action
+            android:id="@+id/action_productDetails_to_budget"
+            app:destination="@id/budgetPlanning"/>
+    </fragment>
 
     <fragment
         android:id="@+id/serviceDetailsFragment"

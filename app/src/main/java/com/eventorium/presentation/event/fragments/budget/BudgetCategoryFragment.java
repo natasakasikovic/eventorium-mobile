@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.budget;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,13 +17,17 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
+import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 
 import java.util.ArrayList;
@@ -46,20 +50,33 @@ public class BudgetCategoryFragment extends Fragment {
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
     public static final String ARG_ID = "ARG_EVENT_ID";
+    public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
     private static final String ARG_POSITION = "position";
+    private static final String ARG_PRIVACY = "ARG_PRIVACY";
     private Category category;
     private int position;
     private Long eventId;
+    private EventType eventType;
+
+    private Privacy privacy;
 
     public BudgetCategoryFragment() {
     }
 
-    public static BudgetCategoryFragment newInstance(Category category, Long eventId, int position) {
+    public static BudgetCategoryFragment newInstance(
+            Privacy privacy,
+            EventType eventType,
+            Category category,
+            Long eventId,
+            int position
+    ) {
         BudgetCategoryFragment fragment = new BudgetCategoryFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CATEGORY, category);
+        args.putParcelable(ARG_EVENT_TYPE, eventType);
         args.putInt(ARG_POSITION, position);
         args.putLong(ARG_ID, eventId);
+        args.putParcelable(ARG_PRIVACY, privacy);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,6 +99,8 @@ public class BudgetCategoryFragment extends Fragment {
             category = getArguments().getParcelable(ARG_CATEGORY);
             position = getArguments().getInt(ARG_POSITION);
             eventId = getArguments().getLong(ARG_ID);
+            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
+            privacy = getArguments().getParcelable(ARG_PRIVACY);
         }
         budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
     }
@@ -98,7 +117,16 @@ public class BudgetCategoryFragment extends Fragment {
         });
         binding.searchItems.setOnClickListener(v -> search());
 
-//        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureProductListener());
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), productSummary -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_ID, productSummary.getId());
+            args.putLong(ProductDetailsFragment.ARG_EVENT_ID, eventId);
+            args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, Double.parseDouble(String.valueOf(binding.plannedAmount.getText())));
+            args.putParcelable(ProductDetailsFragment.ARG_EVENT_TYPE, eventType);
+            args.putParcelable(ARG_PRIVACY, privacy);
+            navController.navigate(R.id.action_budget_to_productDetails, args);
+        });
 //        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());
 
 
@@ -112,47 +140,6 @@ public class BudgetCategoryFragment extends Fragment {
                 .itemId(item.getId())
                 .plannedAmount(plannedAmount)
                 .build();
-    }
-
-    private OnSeeMoreClick<ServiceSummary> configureServiceListener() {
-        return service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_budget_to_serviceDetails, args);
-        };
-    }
-
-
-    private OnPurchaseListener<ProductSummary> configureProductListener() {
-        return new OnPurchaseListener<>() {
-            @Override
-            public void purchase(ProductSummary item) {
-                Double plannedAmount = Double.parseDouble(String.valueOf(binding.plannedAmount.getText()));
-                budgetViewModel.purchaseProduct(
-                        eventId,
-                        getBudgetItem(plannedAmount, item)
-                ).observe(getViewLifecycleOwner(), product -> {
-                    if(product.getError() == null) {
-
-                    } else {
-                        Toast.makeText(
-                                requireContext(),
-                                product.getError(),
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                });
-            }
-
-            @Override
-            public void navigateToDetails(ProductSummary item) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                Bundle args = new Bundle();
-                args.putLong(ARG_ID, item.getId());
-                navController.navigate(R.id.action_budget_to_productDetails, args);
-            }
-        };
     }
 
     private void search() {

@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.budget;
 
 import android.os.Bundle;
 

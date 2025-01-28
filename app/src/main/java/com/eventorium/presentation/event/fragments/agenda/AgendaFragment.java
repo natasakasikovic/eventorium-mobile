@@ -1,7 +1,5 @@
 package com.eventorium.presentation.event.fragments.agenda;
 
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_PRIVACY;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -39,6 +37,9 @@ public class AgendaFragment extends Fragment implements OnActivityCreatedListene
     private EventViewModel eventViewModel;
     private Long id;
     private Privacy privacy;
+
+    public static String ARG_EVENT_ID = "ARG_EVENT_ID";
+    public static String ARG_EVENT_PRIVACY = "ARG_EVENT_PRIVACY";
 
     public AgendaFragment() { }
 

@@ -19,11 +19,18 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
+import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
+import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
+import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
@@ -37,12 +44,23 @@ public class ProductDetailsFragment extends Fragment {
 
     private FragmentProductDetailsBinding binding;
     private ProductViewModel productViewModel;
+    private BudgetViewModel budgetViewModel;
+    private EventViewModel eventViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
+    public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
+    public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
+    public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
+    public static final String ARG_PRIVACY = "ARG_PRIVACY";
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     private Long id;
+    private Long eventId;
+    private Double plannedAmount;
     private MessageSender provider;
+    private Category category;
+    private EventType eventType;
+    private Privacy privacy;
     private Long companyId;
 
     public ProductDetailsFragment() {
@@ -56,13 +74,37 @@ public class ProductDetailsFragment extends Fragment {
         return fragment;
     }
 
+    public static ProductDetailsFragment newInstance(
+        Long id,
+        Double plannedAmount,
+        Long eventId,
+        EventType eventType,
+        Privacy privacy
+    ) {
+        ProductDetailsFragment fragment = new ProductDetailsFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        args.putLong(ARG_EVENT_ID, eventId);
+        args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
+        args.putParcelable(ARG_EVENT_TYPE, eventType);
+        args.putParcelable(ARG_PRIVACY, privacy);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             id = getArguments().getLong(ARG_ID);
+            eventId = getArguments().getLong(ARG_EVENT_ID, -1);
+            plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT, -1);
+            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
         }
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        productViewModel = provider.get(ProductViewModel.class);
+        budgetViewModel = provider.get(BudgetViewModel.class);
+        eventViewModel = provider.get(EventViewModel.class);
     }
 
     @SuppressLint("SetTextI18n")
@@ -88,6 +130,7 @@ public class ProductDetailsFragment extends Fragment {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
+        binding.purchaseButton.setOnClickListener(v -> onPurchase());
         return binding.getRoot();
     }
 
@@ -103,6 +146,53 @@ public class ProductDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(UserProfileFragment.ARG_ID, provider.getId());
         navController.navigate(R.id.action_productDetails_to_provider, args);
+    }
+
+    private void onPurchase() {
+        if(eventId != -1 && plannedAmount != -1) {
+            purchaseProduct(eventId, plannedAmount);
+        } else {
+            draftedPurchase();
+        }
+    }
+
+    private void draftedPurchase() {
+
+    }
+
+    private void purchaseProduct(Long eventId, Double plannedAmount) {
+        BudgetItem item = BudgetItem.builder()
+                .itemId(id)
+                .plannedAmount(plannedAmount)
+                .category(category)
+                .build();
+
+        budgetViewModel.purchaseProduct(eventId, item).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.successfully_purchased_product,
+                        Toast.LENGTH_SHORT
+                ).show();
+                navigateToBudget();
+            } else {
+                showError(result.getError());
+            }
+        });
+    }
+
+    private void navigateToBudget() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        navController.navigate(R.id.action_productDetails_to_budget, args);
+    }
+
+    private void showError(String message) {
+        Toast.makeText(
+                requireContext(),
+                message,
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     private void renderButtons() {
@@ -142,6 +232,7 @@ public class ProductDetailsFragment extends Fragment {
             ChatUserDetails sender = product.getProvider();
             provider = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
             companyId = product.getCompany().getId();
+            category = product.getCategory();
 
             binding.productName.setText(product.getName());
             binding.productPrice.setText(product.getPrice().toString());

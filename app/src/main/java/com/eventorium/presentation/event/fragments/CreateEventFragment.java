@@ -1,9 +1,5 @@
 package com.eventorium.presentation.event.fragments;
 
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_PRIVACY;
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -143,9 +139,6 @@ public class CreateEventFragment extends Fragment {
             if (response.getData() != null) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
-                args.putLong(ARG_EVENT_ID, response.getData().getId());
-                args.putParcelable(ARG_EVENT_TYPE, response.getData().getType());
-                args.putParcelable(ARG_EVENT_PRIVACY, response.getData().getPrivacy());
                 navController.navigate(R.id.action_create_to_budgetPlanning, args);
             } else {
                 Toast.makeText(

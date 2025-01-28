@@ -1,6 +1,8 @@
 package com.eventorium.data.solution.models.service;
 
+import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.util.models.ReservationType;
 import com.eventorium.data.util.models.Status;
@@ -37,5 +39,7 @@ public class Service {
     private Integer minDuration;
     private Integer maxDuration;
     private Boolean available;
+    private ChatUserDetails provider;
+    private CompanyDetails company;
     private Boolean visible;
 }

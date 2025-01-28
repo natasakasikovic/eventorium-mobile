@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/budgetPlanning"
-        android:name="com.eventorium.presentation.event.fragments.BudgetPlanningFragment"
+        android:name="com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment"
         android:label="service_booking_fragment"
         tools:layout="@layout/fragment_budget_planning">
         <action

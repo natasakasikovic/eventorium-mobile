@@ -1,11 +1,7 @@
-package com.eventorium.presentation.event.fragments;
-
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_TYPE;
+package com.eventorium.presentation.event.fragments.budget;
 
 import static java.util.stream.Collectors.toList;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +19,7 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.Privacy;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
@@ -50,6 +47,9 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     private List<Category> otherCategories = new ArrayList<>();
     private List<Category> purchasedCategories;
 
+    public static String ARG_EVENT_ID = "ARG_EVENT_ID";
+    public static String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
+
     public BudgetItemsFragment() {
     }
 
@@ -66,8 +66,6 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            eventId = getArguments().getLong(ARG_EVENT_ID);
-            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         categoryViewModel = provider.get(CategoryViewModel.class);
@@ -133,7 +131,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
             ).show();
             return;
         }
-        adapter.addFragment(BudgetCategoryFragment.newInstance(category, eventId, plannedCategories.size()), category.getName());
+//        adapter.addFragment(BudgetCategoryFragment.newInstance(), category.getName());
         plannedCategories.add(category);
         otherCategories.remove(category);
     }
@@ -143,9 +141,9 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
         if(eventType != null) {
             eventType.getSuggestedCategories()
                     .forEach(category -> {
-                        adapter.addFragment(
-                                BudgetCategoryFragment.newInstance(category, eventId, plannedCategories.size()),
-                                category.getName());
+//                        adapter.addFragment(
+//                                BudgetCategoryFragment.newInstance( category, eventId, plannedCategories.size()),
+//                                category.getName());
                         plannedCategories.add(category);
                     });
         }

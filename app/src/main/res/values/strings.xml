@@ -188,4 +188,6 @@
     <string name="new_product">New product</string>
     <string name="enter_information_about_product">Enter information about product..</string>
     <string name="images">Images</string>
+    <string name="reserve">Reserve</string>
+    <string name="successfully_purchased_product">Successfully purchased product!</string>
 </resources>

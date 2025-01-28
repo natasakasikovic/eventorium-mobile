@@ -72,6 +72,8 @@ public class ServiceDetailsFragment extends Fragment {
                 binding.servicePrice.setText(service.getPrice().toString());
                 binding.serviceDescription.setText(service.getDescription());
                 binding.serviceCategory.setText("Category: " + service.getCategory().getName());
+                binding.providerName.setText(service.getProvider().getName() + " " + service.getProvider().getLastname());
+                binding.companyName.setText(service.getCompany().getName());
                 binding.serviceSpecialties.setText(service.getSpecialties());
                 binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
                         ? service.getMinDuration() + "h"

@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.budget;
 
 import android.os.Bundle;
 
@@ -12,33 +12,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.databinding.FragmentBudgetPlanningBinding;
+import com.eventorium.presentation.event.fragments.agenda.AgendaFragment;
 import com.eventorium.presentation.shared.adapters.BudgetPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class BudgetPlanningFragment extends Fragment {
 
     private FragmentBudgetPlanningBinding binding;
-    public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
-    public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
-    public static final String ARG_EVENT_PRIVACY = "ARG_EVENT_PRIVACY";
+    public static final String ARG_EVENT = "ARG_EVENT";
 
-    private Long eventId;
-    private EventType eventType;
-    private Privacy privacy;
+    private Event event;
     private BudgetPagerAdapter adapter;
 
     public BudgetPlanningFragment() {
     }
 
-    public static BudgetPlanningFragment newInstance(EventType eventType, Long eventId, Privacy privacy) {
+    public static BudgetPlanningFragment newInstance(Event event) {
         BudgetPlanningFragment fragment = new BudgetPlanningFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_EVENT_TYPE, eventType);
-        args.putLong(ARG_EVENT_ID, eventId);
-        args.putParcelable(ARG_EVENT_PRIVACY, privacy);
+        args.putParcelable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,9 +43,7 @@ public class BudgetPlanningFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            eventId = getArguments().getLong(ARG_EVENT_ID);
-            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
-            privacy = getArguments().getParcelable(ARG_EVENT_PRIVACY);
+            event = getArguments().getParcelable(ARG_EVENT);
         }
     }
 
@@ -57,7 +51,7 @@ public class BudgetPlanningFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetPlanningBinding.inflate(inflater, container, false);
-        adapter = new BudgetPagerAdapter(this, eventType, eventId);
+//        adapter = new BudgetPagerAdapter(this, event);
         binding.viewPager.setAdapter(adapter);
         setUpListener();
 
@@ -79,8 +73,7 @@ public class BudgetPlanningFragment extends Fragment {
         binding.continueButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, eventId);
-            args.putParcelable(ARG_EVENT_PRIVACY, privacy);
+//            args.putLong(AgendaFragment.E, eventId);
             navController.navigate(R.id.action_budget_to_agenda, args);
         });
     }
