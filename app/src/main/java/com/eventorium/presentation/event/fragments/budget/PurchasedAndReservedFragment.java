@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.databinding.FragmentPurchasedAndReservedBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
 import java.util.ArrayList;
 
@@ -27,17 +29,17 @@ public class PurchasedAndReservedFragment extends Fragment {
     private FragmentPurchasedAndReservedBinding binding;
     private BudgetViewModel budgetViewModel;
     private ProductsAdapter productsAdapter;
-    public static final String ARG_ID = "ARG_EVENT_ID";
+    public static final String ARG_EVENT = "ARG_EVENT";
 
-    private Long eventId;
+    private Event event;
 
     public PurchasedAndReservedFragment() {
     }
 
-    public static PurchasedAndReservedFragment newInstance(Long eventId) {
+    public static PurchasedAndReservedFragment newInstance(Event event) {
         PurchasedAndReservedFragment fragment = new PurchasedAndReservedFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_ID, eventId);
+        args.putParcelable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +48,7 @@ public class PurchasedAndReservedFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            eventId = getArguments().getLong(ARG_ID);
+            event = getArguments().getParcelable(ARG_EVENT);
         }
         budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
     }
@@ -56,7 +58,7 @@ public class PurchasedAndReservedFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPurchasedAndReservedBinding.inflate(inflater, container, false);
         configureAdapter();
-        budgetViewModel.getPurchasedProducts(eventId).observe(getViewLifecycleOwner(), products -> {
+        budgetViewModel.getPurchasedProducts(event.getId()).observe(getViewLifecycleOwner(), products -> {
             if(products.getError() == null) {
                 productsAdapter.setData(products.getData());
             }
@@ -68,7 +70,7 @@ public class PurchasedAndReservedFragment extends Fragment {
         productsAdapter = new ProductsAdapter(new ArrayList<>(), product -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
+            args.putLong(ProductDetailsFragment.ARG_ID, product.getId());
             navController.navigate(R.id.action_budget_to_productDetails, args);
         });
         binding.productsRecycleView.setAdapter(productsAdapter);

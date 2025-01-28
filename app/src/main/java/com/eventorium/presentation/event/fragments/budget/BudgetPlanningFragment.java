@@ -26,7 +26,6 @@ public class BudgetPlanningFragment extends Fragment {
     public static final String ARG_EVENT = "ARG_EVENT";
 
     private Event event;
-    private BudgetPagerAdapter adapter;
 
     public BudgetPlanningFragment() {
     }
@@ -51,7 +50,7 @@ public class BudgetPlanningFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetPlanningBinding.inflate(inflater, container, false);
-//        adapter = new BudgetPagerAdapter(this, event);
+        BudgetPagerAdapter adapter = new BudgetPagerAdapter(this, event);
         binding.viewPager.setAdapter(adapter);
         setUpListener();
 
@@ -73,7 +72,8 @@ public class BudgetPlanningFragment extends Fragment {
         binding.continueButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
-//            args.putLong(AgendaFragment.E, eventId);
+            args.putLong(AgendaFragment.ARG_EVENT_ID, event.getId());
+            args.putParcelable(AgendaFragment.ARG_EVENT_PRIVACY, event.getPrivacy());
             navController.navigate(R.id.action_budget_to_agenda, args);
         });
     }

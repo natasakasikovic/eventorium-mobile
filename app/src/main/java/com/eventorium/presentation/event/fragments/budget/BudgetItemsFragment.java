@@ -18,6 +18,7 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
@@ -40,24 +41,22 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     private BudgetViewModel budgetViewModel;
     private CategoryPagerAdapter adapter;
     private ArrayAdapter<Category> categoryAdapter;
-    private EventType eventType;
-    private Long eventId;
+
+    private Event event;
 
     private final List<Category> plannedCategories = new ArrayList<>();
     private List<Category> otherCategories = new ArrayList<>();
     private List<Category> purchasedCategories;
 
-    public static String ARG_EVENT_ID = "ARG_EVENT_ID";
-    public static String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
+    public static String ARG_EVENT = "ARG_EVENT";
 
     public BudgetItemsFragment() {
     }
 
-    public static BudgetItemsFragment newInstance(EventType eventType, Long eventId) {
+    public static BudgetItemsFragment newInstance(Event event) {
         BudgetItemsFragment fragment = new BudgetItemsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_EVENT_TYPE, eventType);
-        args.putLong(ARG_EVENT_ID, eventId);
+        args.putParcelable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,6 +65,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
+            event = getArguments().getParcelable(ARG_EVENT);
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         categoryViewModel = provider.get(CategoryViewModel.class);
@@ -111,7 +111,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
 
 
     private void restoreBudget() {
-        budgetViewModel.getBudget(eventId).observe(getViewLifecycleOwner(), result -> {
+        budgetViewModel.getBudget(event.getId()).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null && !result.getData().getItems().isEmpty()) {
                 Budget budget = result.getData();
                 purchasedCategories =  budget.getItems().stream()
@@ -131,19 +131,19 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
             ).show();
             return;
         }
-//        adapter.addFragment(BudgetCategoryFragment.newInstance(), category.getName());
+        adapter.addFragment(BudgetCategoryFragment.newInstance(event, category, plannedCategories.size()), category.getName());
         plannedCategories.add(category);
         otherCategories.remove(category);
     }
 
     private void loadSuggestedCategories() {
         adapter = new CategoryPagerAdapter(this);
-        if(eventType != null) {
-            eventType.getSuggestedCategories()
+        if(event.getType() != null) {
+            event.getType() .getSuggestedCategories()
                     .forEach(category -> {
-//                        adapter.addFragment(
-//                                BudgetCategoryFragment.newInstance( category, eventId, plannedCategories.size()),
-//                                category.getName());
+                        adapter.addFragment(
+                                BudgetCategoryFragment.newInstance(event, category ,plannedCategories.size()),
+                                category.getName());
                         plannedCategories.add(category);
                     });
         }

@@ -4,27 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.presentation.event.fragments.budget.BudgetItemsFragment;
 import com.eventorium.presentation.event.fragments.budget.PurchasedAndReservedFragment;
 
 public class BudgetPagerAdapter extends FragmentStateAdapter {
 
-    private final EventType eventType;
-    private final Long eventId;
-    public BudgetPagerAdapter(@NonNull Fragment fragment, EventType eventType, Long eventId) {
+    private final Event event;
+    public BudgetPagerAdapter(@NonNull Fragment fragment, Event event) {
         super(fragment);
-        this.eventType = eventType;
-        this.eventId = eventId;
+        this.event = event;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
         if(position == 0) {
-            return BudgetItemsFragment.newInstance(eventType, eventId);
+            return BudgetItemsFragment.newInstance(event);
         }
-        return PurchasedAndReservedFragment.newInstance(eventId);
+        return PurchasedAndReservedFragment.newInstance(event);
     }
 
     @Override

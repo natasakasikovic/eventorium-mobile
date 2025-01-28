@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.solution.models.product.ProductSummary;
@@ -49,34 +50,22 @@ public class BudgetCategoryFragment extends Fragment {
     private ServicesAdapter servicesAdapter;
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
-    public static final String ARG_ID = "ARG_EVENT_ID";
-    public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
-    private static final String ARG_POSITION = "position";
-    private static final String ARG_PRIVACY = "ARG_PRIVACY";
+    private static final String ARG_POSITION = "ARG_POS";
+    public static final String ARG_EVENT = "ARG_EVENT";
     private Category category;
+    private Event event;
     private int position;
-    private Long eventId;
-    private EventType eventType;
 
-    private Privacy privacy;
 
     public BudgetCategoryFragment() {
     }
 
-    public static BudgetCategoryFragment newInstance(
-            Privacy privacy,
-            EventType eventType,
-            Category category,
-            Long eventId,
-            int position
-    ) {
+    public static BudgetCategoryFragment newInstance(Event event, Category category, int position) {
         BudgetCategoryFragment fragment = new BudgetCategoryFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CATEGORY, category);
-        args.putParcelable(ARG_EVENT_TYPE, eventType);
         args.putInt(ARG_POSITION, position);
-        args.putLong(ARG_ID, eventId);
-        args.putParcelable(ARG_PRIVACY, privacy);
+        args.putParcelable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,9 +87,7 @@ public class BudgetCategoryFragment extends Fragment {
         if(getArguments() != null) {
             category = getArguments().getParcelable(ARG_CATEGORY);
             position = getArguments().getInt(ARG_POSITION);
-            eventId = getArguments().getLong(ARG_ID);
-            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
-            privacy = getArguments().getParcelable(ARG_PRIVACY);
+            event = getArguments().getParcelable(ARG_EVENT);
         }
         budgetViewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
     }
@@ -120,11 +107,8 @@ public class BudgetCategoryFragment extends Fragment {
         productsAdapter = new ProductsAdapter(new ArrayList<>(), productSummary -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
-            args.putLong(ARG_ID, productSummary.getId());
-            args.putLong(ProductDetailsFragment.ARG_EVENT_ID, eventId);
             args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, Double.parseDouble(String.valueOf(binding.plannedAmount.getText())));
-            args.putParcelable(ProductDetailsFragment.ARG_EVENT_TYPE, eventType);
-            args.putParcelable(ARG_PRIVACY, privacy);
+            args.putParcelable(ProductDetailsFragment.ARG_EVENT, event);
             navController.navigate(R.id.action_budget_to_productDetails, args);
         });
 //        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());

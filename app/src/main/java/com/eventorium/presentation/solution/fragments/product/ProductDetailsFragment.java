@@ -21,6 +21,7 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.interaction.models.MessageSender;
@@ -48,19 +49,16 @@ public class ProductDetailsFragment extends Fragment {
     private EventViewModel eventViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
-    public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
-    public static final String ARG_EVENT_TYPE = "ARG_EVENT_TYPE";
-    public static final String ARG_PRIVACY = "ARG_PRIVACY";
+    public static final String ARG_EVENT = "ARG_EVENT";
+
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     private Long id;
-    private Long eventId;
     private Double plannedAmount;
     private MessageSender provider;
+    private Event event;
     private Category category;
-    private EventType eventType;
-    private Privacy privacy;
     private Long companyId;
 
     public ProductDetailsFragment() {
@@ -76,18 +74,14 @@ public class ProductDetailsFragment extends Fragment {
 
     public static ProductDetailsFragment newInstance(
         Long id,
-        Double plannedAmount,
-        Long eventId,
-        EventType eventType,
-        Privacy privacy
+        Event event,
+        Double plannedAmount
     ) {
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_ID, id);
-        args.putLong(ARG_EVENT_ID, eventId);
         args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
-        args.putParcelable(ARG_EVENT_TYPE, eventType);
-        args.putParcelable(ARG_PRIVACY, privacy);
+        args.putParcelable(ARG_EVENT, event);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,9 +91,8 @@ public class ProductDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             id = getArguments().getLong(ARG_ID);
-            eventId = getArguments().getLong(ARG_EVENT_ID, -1);
             plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT, -1);
-            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
+            event = getArguments().getParcelable(ARG_EVENT);
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         productViewModel = provider.get(ProductViewModel.class);
@@ -149,8 +142,8 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void onPurchase() {
-        if(eventId != -1 && plannedAmount != -1) {
-            purchaseProduct(eventId, plannedAmount);
+        if(event != null) {
+            purchaseProduct(event, plannedAmount);
         } else {
             draftedPurchase();
         }
@@ -160,14 +153,14 @@ public class ProductDetailsFragment extends Fragment {
 
     }
 
-    private void purchaseProduct(Long eventId, Double plannedAmount) {
+    private void purchaseProduct(Event event, Double plannedAmount) {
         BudgetItem item = BudgetItem.builder()
                 .itemId(id)
                 .plannedAmount(plannedAmount)
                 .category(category)
                 .build();
 
-        budgetViewModel.purchaseProduct(eventId, item).observe(getViewLifecycleOwner(), result -> {
+        budgetViewModel.purchaseProduct(event.getId(), item).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
                 Toast.makeText(
                         requireContext(),

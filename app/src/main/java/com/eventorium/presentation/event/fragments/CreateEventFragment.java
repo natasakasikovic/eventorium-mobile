@@ -20,6 +20,7 @@ import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCreateEventBinding;
+import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
@@ -139,6 +140,7 @@ public class CreateEventFragment extends Fragment {
             if (response.getData() != null) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
+                args.putParcelable(BudgetPlanningFragment.ARG_EVENT, response.getData());
                 navController.navigate(R.id.action_create_to_budgetPlanning, args);
             } else {
                 Toast.makeText(
