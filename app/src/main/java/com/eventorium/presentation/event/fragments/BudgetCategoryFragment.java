@@ -17,14 +17,14 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
+import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.util.listeners.OnPurchaseListener;
-import com.eventorium.presentation.util.listeners.OnSeeMoreClick;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -36,7 +36,6 @@ public class BudgetCategoryFragment extends Fragment {
 
     public interface OnRemoveCategoryListener {
         void onRemoveCategory(int position, Category category);
-        void onPurchasedRemoveCategory(int position, Category category);
     }
 
     private FragmentBudgetCategoryBinding binding;
@@ -99,8 +98,8 @@ public class BudgetCategoryFragment extends Fragment {
         });
         binding.searchItems.setOnClickListener(v -> search());
 
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureProductListener());
-        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());
+//        productsAdapter = new ProductsAdapter(new ArrayList<>(), configureProductListener());
+//        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());
 
 
         return binding.getRoot();
@@ -135,10 +134,7 @@ public class BudgetCategoryFragment extends Fragment {
                         getBudgetItem(plannedAmount, item)
                 ).observe(getViewLifecycleOwner(), product -> {
                     if(product.getError() == null) {
-                        productsAdapter.remove(item);
-                        if (onRemoveCategoryListener != null) {
-                            onRemoveCategoryListener.onPurchasedRemoveCategory(position, category);
-                        }
+
                     } else {
                         Toast.makeText(
                                 requireContext(),
@@ -174,7 +170,7 @@ public class BudgetCategoryFragment extends Fragment {
 
     private void searchProducts(Long id, Double price) {
         budgetViewModel.getSuggestedProducts(id, price).observe(getViewLifecycleOwner(), products -> {
-            productsAdapter.setData(products);
+//            productsAdapter.setData(products);
         });
     }
 

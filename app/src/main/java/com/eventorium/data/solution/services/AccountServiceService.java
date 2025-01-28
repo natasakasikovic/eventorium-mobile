@@ -1,7 +1,7 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 
 import java.util.List;
 import java.util.Map;

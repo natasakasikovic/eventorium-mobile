@@ -6,10 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.dtos.ServiceFilterDto;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceFilter;
+import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
+import com.eventorium.data.util.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,7 +85,7 @@ public class AccountServiceRepository {
         return liveData;
     }
 
-    public LiveData<List<ServiceSummary>> filterServices(ServiceFilterDto filter) {
+    public LiveData<List<ServiceSummary>> filterServices(ServiceFilter filter) {
         MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(new ArrayList<>());
 
         service.filterManageableServices(getFilterParams(filter)).enqueue(new Callback<>() {
@@ -181,7 +182,27 @@ public class AccountServiceRepository {
         return result;
     }
 
-    private Map<String, String> getFilterParams(ServiceFilterDto filter) {
+    public LiveData<Result<List<ServiceSummary>>> getFavouriteServices() {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getFavouriteServices().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ServiceSummary>> call, Response<List<ServiceSummary>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading favourite services"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ServiceSummary>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading favourite services"));
+            }
+        });
+        return result;
+    }
+
+    private Map<String, String> getFilterParams(ServiceFilter filter) {
         Map<String, String> params = new HashMap<>();
 
         if (filter.getCategory() != null) {

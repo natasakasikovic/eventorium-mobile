@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class EventSummary implements Parcelable {
-
+    private Long id;
     private String name;
     private String city;
     private Integer photo;

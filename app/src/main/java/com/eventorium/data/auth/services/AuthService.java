@@ -1,8 +1,8 @@
 package com.eventorium.data.auth.services;
 
 
-import com.eventorium.data.auth.dtos.LoginRequestDto;
-import com.eventorium.data.auth.dtos.LoginResponseDto;
+import com.eventorium.data.auth.models.LoginRequest;
+import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.data.auth.models.User;
 
 import okhttp3.MultipartBody;
@@ -17,7 +17,7 @@ import retrofit2.http.Path;
 public interface AuthService {
 
     @POST("auth/login")
-    Call<LoginResponseDto> login(@Body LoginRequestDto loginRequestDto);
+    Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
     @POST("auth/registration")
     Call<User> createAccount(@Body User user);

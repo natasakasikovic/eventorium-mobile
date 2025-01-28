@@ -1,9 +1,9 @@
 package com.eventorium.presentation.auth.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,18 +23,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.auth.dtos.LoginRequestDto;
-import com.eventorium.data.auth.dtos.LoginResponseDto;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.services.WebSocketService;
+import com.eventorium.data.auth.models.LoginRequest;
+import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -48,7 +44,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText emailEditText;
     private TextInputEditText passwordEditText;
 
-    private LoginResponseDto response;
+    private LoginResponse response;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -86,20 +82,22 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        LoginRequestDto dto = new LoginRequestDto(email, password);
+        LoginRequest dto = new LoginRequest(email, password);
         loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 response = result.getData();
                 requestNotificationPermission();
-            } else {
-                Toast.makeText(
-                        requireContext(),
-                        result.getError(),
-                        Toast.LENGTH_LONG
-                ).show();
-            }
+            } else
+                showInfoDialog(result.getError());
         });
 
+    }
+
+    private void showInfoDialog(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void navigateToHome() {
@@ -116,10 +114,8 @@ public class LoginFragment extends Fragment {
         requestNotificationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
-                    if (isGranted) {
-                        loginViewModel.openWebSocket();
-                    }
                     navigateToHome();
+                    loginViewModel.openWebSocket();
                 }
         );
     }
@@ -127,10 +123,10 @@ public class LoginFragment extends Fragment {
     public void requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
-            loginViewModel.openWebSocket();
             navigateToHome();
+            loginViewModel.openWebSocket();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

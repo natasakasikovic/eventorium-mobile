@@ -18,14 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
 import com.eventorium.presentation.category.adapters.CategoryProposalsAdapter;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
-import com.eventorium.presentation.util.listeners.OnReviewProposalListener;
+import com.eventorium.presentation.category.listeners.OnReviewProposalListener;
 import com.eventorium.presentation.category.viewmodels.CategoryProposalViewModel;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
@@ -72,20 +72,12 @@ public class CategoryProposalsFragment extends Fragment {
         adapter = new CategoryProposalsAdapter(new ArrayList<>(), new OnReviewProposalListener() {
             @Override
             public void acceptCategory(Category category) {
-                proposalViewModel.updateCategoryStatus(
-                        category.getId(),
-                        new CategoryUpdateStatusDto(Status.ACCEPTED)
-                ).observe(getViewLifecycleOwner(), success
-                        -> handleResponse(category.getId(), success));
+                updateCategoryStatus(category, Status.ACCEPTED);
             }
 
             @Override
             public void declineCategory(Category category) {
-                proposalViewModel.updateCategoryStatus(
-                        category.getId(),
-                        new CategoryUpdateStatusDto(Status.DECLINED)
-                ).observe(getViewLifecycleOwner(), success
-                        -> handleResponse(category.getId(), success));
+                updateCategoryStatus(category, Status.DECLINED);
             }
 
             @Override
@@ -103,13 +95,17 @@ public class CategoryProposalsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void updateCategoryStatus(Category category, Status status) {
+        proposalViewModel.updateCategoryStatus(
+                category.getId(),
+                new UpdateCategoryStatus(status)
+        ).observe(getViewLifecycleOwner(), success
+                -> handleResponse(category.getId(), success));
+    }
+
     private void handleResponse(Long id, boolean success) {
         if(success) {
-            Toast.makeText(
-                    requireContext(),
-                    R.string.successfully_set_the_category,
-                    Toast.LENGTH_SHORT
-            ).show();
+
             proposalViewModel.refreshProposals(id);
         } else {
             Toast.makeText(
@@ -146,6 +142,29 @@ public class CategoryProposalsFragment extends Fragment {
 
         EditText nameEditText = dialogView.findViewById(R.id.categoryNameEditText);
         EditText descriptionEditText = dialogView.findViewById(R.id.categoryDescriptionEditText);
+        Spinner existingCategoriesSpinner = createCategorySpinner(dialogView);
+
+        nameEditText.setText(category.getName());
+        descriptionEditText.setText(category.getDescription());
+
+        AlertDialog alertDialog = new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String categoryName = existingCategoriesSpinner.getSelectedItem().toString();
+                    String newName = nameEditText.getText().toString();
+                    String newDescription = descriptionEditText.getText().toString();
+
+                    updateCategoryProposal(category, categoryName, existingCategoriesSpinner);
+                    saveCategory(category.getId(), new CategoryRequest(newName, newDescription));
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        alertDialog.show();
+        resizeDialog(alertDialog);
+    }
+
+    private Spinner createCategorySpinner(View dialogView) {
         Spinner existingCategoriesSpinner = dialogView.findViewById(R.id.existingCategories);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -156,49 +175,39 @@ public class CategoryProposalsFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         existingCategoriesSpinner.setAdapter(adapter);
         existingCategoriesSpinner.setTag(categoryViewModel.getCategories().getValue());
+        return existingCategoriesSpinner;
+    }
 
-        nameEditText.setText(category.getName());
-        descriptionEditText.setText(category.getDescription());
-
-        AlertDialog alertDialog = new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
-                .setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
-                    String categoryName = existingCategoriesSpinner.getSelectedItem().toString();
-                    if(!categoryName.isEmpty()) {
-                        Category selectedCategory = ((List<Category>) existingCategoriesSpinner.getTag())
-                                .stream()
-                                .filter(c -> c.getName().equals(categoryName))
-                                .findFirst().get();
-                        proposalViewModel.changeCategory(
-                                category.getId(),
-                                new CategoryRequestDto(
-                                        selectedCategory.getName(),
-                                        selectedCategory.getDescription()
-                                )
-                        ).observe(getViewLifecycleOwner(), success
-                                -> handleResponse(category.getId(), success));
-                        return;
-                    }
-                    String newName = nameEditText.getText().toString();
-                    String newDescription = descriptionEditText.getText().toString();
-
-                    proposalViewModel.updateCategoryProposal(
-                            category.getId(),
-                            new CategoryRequestDto(newName, newDescription)
-                    ).observe(getViewLifecycleOwner(), success
-                            -> handleResponse(category.getId(), success));
-
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-
-        alertDialog.show();
-
-
+    private void resizeDialog(AlertDialog alertDialog) {
         int width = (int) (requireContext().getResources().getDisplayMetrics().widthPixels * 0.9);
         Objects.requireNonNull(alertDialog.getWindow())
                 .setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
 
+    private void updateCategoryProposal(Category category, String categoryName, Spinner spinner) {
+        if(!categoryName.isEmpty()) {
+            Category selectedCategory = getSelectedCategory(spinner, categoryName);
+            proposalViewModel.changeCategory(
+                    category.getId(),
+                    new CategoryRequest(
+                            selectedCategory.getName(),
+                            selectedCategory.getDescription()
+                    )
+            ).observe(getViewLifecycleOwner(), success
+                    -> handleResponse(category.getId(), success));
+        }
+    }
+
+    private Category getSelectedCategory(Spinner spinner, String categoryName) {
+        return ((List<Category>) spinner.getTag())
+                .stream()
+                .filter(c -> c.getName().equals(categoryName))
+                .findFirst().get();
+    }
+
+    private void saveCategory(Long id, CategoryRequest dto) {
+        proposalViewModel.updateCategoryProposal(id, dto)
+                .observe(getViewLifecycleOwner(), success -> handleResponse(id, success));
     }
 
     @Override

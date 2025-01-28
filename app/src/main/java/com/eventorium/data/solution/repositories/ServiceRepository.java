@@ -12,12 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.dtos.CreateServiceRequestDto;
-import com.eventorium.data.solution.dtos.ServiceSummaryResponseDto;
-import com.eventorium.data.solution.dtos.UpdateServiceRequestDto;
-import com.eventorium.data.solution.mappers.ServiceMapper;
-import com.eventorium.data.solution.models.Service;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.UpdateService;
+import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
@@ -45,29 +43,27 @@ public class ServiceRepository {
         this.serviceService = serviceService;
     }
 
-    public LiveData<Long> createService(CreateServiceRequestDto dto) {
-        MutableLiveData<Long> result = new MutableLiveData<>();
+    public LiveData<Result<Long>> createService(CreateService dto) {
+        MutableLiveData<Result<Long>> result = new MutableLiveData<>();
         serviceService.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<ServiceSummaryResponseDto> call,
-                    @NonNull Response<ServiceSummaryResponseDto> response
+                    @NonNull Call<ServiceSummary> call,
+                    @NonNull Response<ServiceSummary> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body().getId());
+                    result.postValue(Result.success(response.body().getId()));
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
+                    result.postValue(Result.error(response.message()));
                 }
             }
 
             @Override
             public void onFailure(
-                    @NonNull Call<ServiceSummaryResponseDto> call,
+                    @NonNull Call<ServiceSummary> call,
                     @NonNull Throwable t
             ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
+                result.postValue(Result.error(t.getMessage()));
             }
         });
         return result;
@@ -232,7 +228,7 @@ public class ServiceRepository {
         return successful;
     }
 
-    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateServiceRequestDto dto) {
+    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
         MutableLiveData<Result<ServiceSummary>> liveData = new MutableLiveData<>();
         serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
             @Override
@@ -241,7 +237,7 @@ public class ServiceRepository {
                     @NonNull Response<Service> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(ServiceMapper.fromService(response.body())));
+                    liveData.postValue(Result.success(getServiceSummary(response.body())));
                 } else {
                     liveData.postValue(Result.error(response.message()));
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
@@ -280,6 +276,15 @@ public class ServiceRepository {
         return liveData;
     }
 
+    private ServiceSummary getServiceSummary(Service service) {
+        return ServiceSummary.builder()
+                .id(service.getId())
+                .name(service.getName())
+                .price(service.getPrice())
+                .build();
+    }
+
+
     public LiveData<Result<List<ServiceSummary>>> getServices() {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
 
@@ -315,6 +320,23 @@ public class ServiceRepository {
             @Override
             public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
 
+            }
+        });
+        return liveData;
+    }
+
+    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
+        MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
+        serviceService.searchServices(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    liveData.postValue(Result.success(response.body()));
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
+                liveData.postValue(Result.error(t.getMessage()));
             }
         });
         return liveData;

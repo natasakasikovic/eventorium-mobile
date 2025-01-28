@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.PriceListItem;
-import com.eventorium.presentation.util.listeners.OnSaveListener;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
+import com.eventorium.presentation.solution.listeners.OnSaveListener;
 
 import java.util.List;
 import java.util.Objects;

@@ -26,6 +26,12 @@
             tools:layout="@layout/fragment_service_details" />
 
     <fragment
+        android:id="@+id/eventInvitationsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventInvitationFragment"
+        android:label="fragment_event_invitations"
+        tools:layout="@layout/fragment_event_invitation"/>
+
+    <fragment
         android:id="@+id/budgetPlanning"
         android:name="com.eventorium.presentation.event.fragments.BudgetPlanningFragment"
         android:label="service_booking_fragment"
@@ -36,6 +42,21 @@
         <action
             android:id="@+id/action_budget_to_serviceDetails"
             app:destination="@+id/budgetServiceDetailsFragment"/>
+        <action
+            android:id="@+id/action_budget_to_agenda"
+            app:destination="@+id/agendaFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/agendaFragment"
+        android:name="com.eventorium.presentation.event.fragments.agenda.AgendaFragment"
+        tools:layout="@layout/fragment_agenda">
+        <action
+            android:id="@+id/action_agenda_to_events_overview"
+            app:destination="@+id/eventsOverviewFragment"/>
+        <action
+            android:id="@+id/action_agenda_to_invitations"
+            app:destination="@+id/eventInvitationsFragment"/>
     </fragment>
 
     <fragment

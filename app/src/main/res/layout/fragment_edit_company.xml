@@ -23,18 +23,18 @@
             android:spacing="16dp">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Eventura Solutions"
                 android:fontFamily="@font/jejumyeongjo"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:paddingBottom="20dp" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="eventura@example.com"
                 android:fontFamily="@font/jejumyeongjo"
                 android:drawableStart="@drawable/ic_mail"
                 android:textAppearance="?attr/textAppearanceBody2"
@@ -43,10 +43,11 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:hint="@string/description">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top|start"
@@ -54,98 +55,148 @@
                     android:inputType="textMultiLine"
                     android:lines="7"
                     android:padding="8dp"
-                    android:scrollbars="vertical"
-                    android:text="Eventura Solutions specializes in providing comprehensive event planning and coordination services, along with high-quality event-related products to make every occasion unforgettable." />
+                    android:scrollbars="vertical" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Address"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:hint="@string/address">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:text="Street, 10" />
+                    android:inputType="textPostalAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvCityLabel"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/jejumyeongjo"
+                android:text="@string/city"
+                android:gravity="start"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="20dp"
+                android:background="@color/md_theme_secondaryContainer">
+
+                <Spinner
+                    android:id="@+id/spinnerCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:spinnerMode="dropdown" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="City"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="20dp"
+                android:hint="@string/phone_number">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="City" />
+                    android:layout_marginBottom="20dp"
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/openingTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone number"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:hint="Opens">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/openingTimeEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:text="+381 123 456" />
+                    android:inputType="none"
+                    android:focusable="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <HorizontalScrollView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/closingTimeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:background="@color/md_theme_tertiaryContainer">
+                android:layout_marginBottom="20dp"
+                android:hint="Closes">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/closingTimeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/jejumyeongjo"
+                android:text="@string/gallery"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textSize="20dp"
+                android:textAlignment="center"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <ProgressBar
+                    android:id="@+id/loader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:spacing="8dp">
+                    android:layout_gravity="center"/>
 
-                    <FrameLayout
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginEnd="8dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/images"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scrollbars="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_gravity="center"/>
+            </androidx.cardview.widget.CardView>
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@android:drawable/ic_menu_gallery" />
-
-                        <ImageView
-                            android:id="@+id/btn_remove_photo"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="top|end"
-                            android:src="@drawable/ic_close"
-                            android:background="?attr/selectableItemBackgroundBorderless" />
-                    </FrameLayout>
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <Button
-                android:id="@+id/add_image"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/newImagesCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/md_theme_tertiaryContainer"
-                app:iconGravity="textStart"
-                android:contentDescription="Edit"
-                app:backgroundTint="@color/md_theme_tertiaryContainer"
-                app:icon="@drawable/ic_add"
-                app:iconSize="25dp"
-                app:iconTint="@color/md_theme_primary"
-                android:paddingBottom="10dp"
-                android:layout_marginBottom="20dp" />
+                android:layout_margin="20dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/newImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scrollbars="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_gravity="center"/>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/uploadButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/upload"
+                android:backgroundTint="@color/md_theme_primary"
+                android:fontFamily="@font/jejumyeongjo"
+                android:layout_marginBottom="15dp"
+                android:layout_gravity="center"/>
         </LinearLayout>
     </ScrollView>
 
@@ -155,7 +206,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:backgroundTint="@color/md_theme_primary"
-        android:text="Save"
+        android:text="@string/save"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

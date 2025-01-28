@@ -1,7 +1,7 @@
 package com.eventorium.presentation.homepage;
 
 import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
-
+import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,13 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.util.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
     private HomepageViewModel viewModel;
     private ServicesAdapter serviceAdapter;
     private ProductsAdapter productsAdapter;
+    private EventsAdapter eventsAdapter;
 
     public HomeFragment() { }
 
@@ -51,28 +53,39 @@ public class HomeFragment extends Fragment {
 
         configureServiceAdapter();
         configureProductAdapter();
+        configureEventAdapter();
 
         binding.servicesRecycleView.setAdapter(serviceAdapter);
         binding.productsRecycleView.setAdapter(productsAdapter);
+        binding.eventsRecycleView.setAdapter(eventsAdapter);
 
         return binding.getRoot();
     }
 
     private void configureProductAdapter() {
         productsAdapter = new ProductsAdapter( new ArrayList<>(), product -> {
-            NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
+            args.putLong(ProductDetailsFragment.ARG_ID, product.getId());
             navController.navigate(R.id.action_home_to_product_details, args);
         });
     }
 
     private void configureServiceAdapter() {
         serviceAdapter = new ServicesAdapter( new ArrayList<>(), service -> {
-            NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ARG_ID, service.getId());
             navController.navigate(R.id.action_home_to_service_details, args);
+        });
+    }
+
+    private void configureEventAdapter() {
+        eventsAdapter = new EventsAdapter(new ArrayList<>(), event -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_EVENT_ID, event.getId());
+            navController.navigate(R.id.action_home_to_event_details, args);
         });
     }
 
@@ -91,7 +104,7 @@ public class HomeFragment extends Fragment {
     private void observeTopEvents() {
         viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> binding.eventsRecycleView.setAdapter(new EventsAdapter(data)) // TODO: change
+                data -> eventsAdapter.setData(data)
         ));
     }
 

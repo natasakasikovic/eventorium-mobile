@@ -1,6 +1,6 @@
 package com.eventorium.data.event.models;
 
-import com.eventorium.data.category.dtos.CategoryResponseDto;
+import com.eventorium.data.category.models.Category;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,5 +28,5 @@ public class CreateEventType {
 
     @SerializedName("suggestedCategories")
     @Expose
-    private List<CategoryResponseDto> suggestedCategories;
+    private List<Category> suggestedCategories;
 }

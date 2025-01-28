@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
@@ -67,15 +67,15 @@ public class CategoryProposalViewModel extends ViewModel {
                 .collect(toList()));
     }
 
-    public LiveData<Boolean> updateCategoryStatus(Long id, CategoryUpdateStatusDto dto) {
+    public LiveData<Boolean> updateCategoryStatus(Long id, UpdateCategoryStatus dto) {
         return categoryProposalRepository.updateCategoryStatus(id, dto);
     }
 
-    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequestDto dto) {
+    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequest dto) {
         return categoryProposalRepository.updateCategoryProposal(id, dto);
     }
 
-    public LiveData<Boolean> changeCategory(Long id, CategoryRequestDto dto) {
+    public LiveData<Boolean> changeCategory(Long id, CategoryRequest dto) {
         return categoryProposalRepository.changeCategory(id, dto);
     }
 }

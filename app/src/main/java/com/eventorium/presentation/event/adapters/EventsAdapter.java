@@ -3,6 +3,7 @@ package com.eventorium.presentation.event.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,14 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
-    private final List<EventSummary> events;
+    private List<EventSummary> events;
+    private final OnSeeMoreClick<EventSummary> listener;
 
-    public EventsAdapter(List<EventSummary> events) {
+    public EventsAdapter(List<EventSummary> events, OnSeeMoreClick<EventSummary> listener) {
         this.events = events;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,6 +37,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         EventSummary event = events.get(position);
         holder.nameTextView.setText(event.getName());
         holder.cityTextView.setText(event.getCity());
+        holder.seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
         // TODO: Consider implementing generic photos for events based on event type in the backend
         //holder.photoImageView.setImageResource(event.getPhoto());
     }
@@ -42,9 +47,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         return events.size();
     }
 
+    public void setData(List<EventSummary> data) {
+        events = data;
+        notifyDataSetChanged();
+    }
+
     public static class EventViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView cityTextView;
+
+        Button seeMoreButton;
         ImageView photoImageView;
 
         public EventViewHolder(View itemView) {
@@ -52,6 +64,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             nameTextView = itemView.findViewById(R.id.event_name);
             cityTextView = itemView.findViewById(R.id.event_city);
             photoImageView = itemView.findViewById(R.id.event_photo);
+            seeMoreButton = itemView.findViewById(R.id.see_more_button);
         }
     }
 }

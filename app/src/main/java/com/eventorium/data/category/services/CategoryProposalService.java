@@ -1,8 +1,8 @@
 package com.eventorium.data.category.services;
 
-import com.eventorium.data.category.dtos.CategoryRequestDto;
-import com.eventorium.data.category.dtos.CategoryResponseDto;
-import com.eventorium.data.category.dtos.CategoryUpdateStatusDto;
+import com.eventorium.data.category.models.CategoryRequest;
+import com.eventorium.data.category.models.UpdateCategoryStatus;
+import com.eventorium.data.category.models.Category;
 
 import java.util.List;
 
@@ -16,23 +16,23 @@ import retrofit2.http.Path;
 public interface CategoryProposalService {
 
     @GET("categories/pending/all")
-    Call<List<CategoryResponseDto>> getServiceProposals();
+    Call<List<Category>> getServiceProposals();
 
     @PATCH("categories/pending/{id}")
-    Call<CategoryResponseDto> updateCategoryStatus(
+    Call<Category> updateCategoryStatus(
             @Path("id") Long id,
-            @Body CategoryUpdateStatusDto dto
+            @Body UpdateCategoryStatus dto
     );
 
     @PUT("categories/pending/{id}")
-    Call<CategoryResponseDto> updateCategoryProposal(
+    Call<Category> updateCategoryProposal(
             @Path("id") Long id,
-            @Body CategoryRequestDto dto
+            @Body CategoryRequest dto
     );
 
     @PUT("categories/pending/{id}/change")
-    Call<CategoryResponseDto> changeCategoryProposal(
+    Call<Category> changeCategoryProposal(
             @Path("id") Long id,
-            @Body CategoryRequestDto dto
+            @Body CategoryRequest dto
     );
 }

@@ -1,15 +1,16 @@
 package com.eventorium.presentation.solution.viewmodels;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
-import com.eventorium.data.solution.models.Product;
-import com.eventorium.data.solution.models.ProductSummary;
-import com.eventorium.data.solution.models.Service;
+import com.eventorium.data.solution.models.product.CreateProduct;
+import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.util.Result;
@@ -38,6 +39,14 @@ public class ProductViewModel extends ViewModel {
         this.accountProductRepository = accountProductRepository;
     }
 
+    public LiveData<Result<Product>> createProduct(CreateProduct product) {
+        return productRepository.createProduct(product);
+    }
+
+    public LiveData<Result<Void>> uploadImages(Long id, Context context, List<Uri> uris) {
+        return productRepository.uploadImages(id, context, uris);
+    }
+
     public LiveData<Product> getProduct(Long id) {
         return productRepository.getProduct(id);
     }
@@ -46,12 +55,12 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImage(id);
     }
 
-    public LiveData<List<Bitmap>> getServiceImages(Long id) {
+    public LiveData<List<Bitmap>> getProductImages(Long id) {
         return productRepository.getProductImages(id);
     }
 
-    public boolean isLoggedIn()  {
-        return authRepository.isLoggedIn();
+    public String getUserRole()  {
+        return authRepository.getUserRole();
     }
     public LiveData<Boolean> isFavourite(Long id) {
         return accountProductRepository.isFavouriteProduct(id);
@@ -69,4 +78,7 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProducts();
     }
 
+    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
+        return productRepository.searchProducts(keyword);
+    }
 }

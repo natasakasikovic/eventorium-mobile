@@ -1,5 +1,7 @@
 package com.eventorium.presentation.auth.fragments;
 
+import static com.eventorium.presentation.company.fragments.CompanyRegisterFragment.ARG_PROVIDER_ID;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -28,7 +30,7 @@ import com.eventorium.data.auth.models.Role;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentRegisterBinding;
-import com.eventorium.presentation.auth.viewmodels.UserViewModel;
+import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.auth.viewmodels.RoleViewModel;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 
@@ -40,7 +42,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
-    private UserViewModel viewModel;
+    private AuthViewModel viewModel;
     private CityViewModel cityViewModel;
     private RoleViewModel roleViewModel;
 
@@ -48,6 +50,7 @@ public class RegisterFragment extends Fragment {
     private Uri selectedImageUri;
 
     private User user;
+    private Role selectedRole;
 
 
     public static RegisterFragment newInstance() {
@@ -58,7 +61,7 @@ public class RegisterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
-        viewModel = viewModelProvider.get(UserViewModel.class);
+        viewModel = viewModelProvider.get(AuthViewModel.class);
         cityViewModel = viewModelProvider.get(CityViewModel.class);
         roleViewModel = viewModelProvider.get(RoleViewModel.class);
 
@@ -133,18 +136,31 @@ public class RegisterFragment extends Fragment {
         getFormFields();
         viewModel.createAccount(user).observe(getViewLifecycleOwner(), response -> {
             if (response.getData() != null) {
-                showInfoDialog();
                 uploadProfilePhoto(response.getData());
-                navigateToHome();
+                nextStep(response.getData());
             } else  {
-                Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
+                showErrorInfo(response.getError());
             }
         });
     }
 
-    private void navigateToHome() {
+    private void nextStep(User user) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        navController.popBackStack(R.id.homepageFragment, false);
+        if (selectedRole.getName().equals("PROVIDER")) {
+            Bundle args = new Bundle();
+            args.putLong(ARG_PROVIDER_ID, user.getId());
+            navController.navigate(R.id.companyRegisterFragment, args);
+        } else {
+            showInfoDialog();
+            navController.popBackStack(R.id.homepageFragment, false);
+        }
+    }
+
+    private void showErrorInfo(String error) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(error)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     private void showInfoDialog() {
@@ -169,8 +185,9 @@ public class RegisterFragment extends Fragment {
         user = new User();
         user.setEmail(binding.emailEditText.getText().toString());
         user.setPassword(binding.passwordEditText.getText().toString());
-        user.setConfirmPassword(binding.confirmPasswordEditText.getText().toString());
-        user.setRoles(Collections.singletonList((Role) binding.spinnerRole.getSelectedItem()));
+        user.setPasswordConfirmation(binding.confirmPasswordEditText.getText().toString());
+        selectedRole = (Role) binding.spinnerRole.getSelectedItem();
+        user.setRoles(Collections.singletonList(selectedRole));
 
         Person person = new Person();
         person.setName(binding.nameEditText.getText().toString());
@@ -188,7 +205,6 @@ public class RegisterFragment extends Fragment {
                 TextUtils.isEmpty(binding.confirmPasswordEditText.getText()) &&
                 TextUtils.isEmpty(binding.nameEditText.getText()) &&
                 TextUtils.isEmpty(binding.lastNameEditText.getText()) &&
-                TextUtils.isEmpty(binding.addressEditText.getText()) &&
                 TextUtils.isEmpty(binding.addressEditText.getText()) &&
                 TextUtils.isEmpty(binding.numberEditText.getText());
     }

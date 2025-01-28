@@ -6,37 +6,51 @@ import android.content.SharedPreferences;
 import com.eventorium.BuildConfig;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.auth.repositories.RoleRepository;
+import com.eventorium.data.auth.repositories.UserReportRepository;
 import com.eventorium.data.auth.repositories.UserRepository;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.auth.services.RoleService;
+import com.eventorium.data.auth.services.UserReportService;
 import com.eventorium.data.auth.services.UserService;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.category.services.CategoryService;
+import com.eventorium.data.company.repositories.CompanyRepository;
+import com.eventorium.data.company.services.CompanyService;
+import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.event.repositories.InvitationRepository;
+import com.eventorium.data.event.services.AccountEventService;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
+import com.eventorium.data.event.services.InvitationService;
+import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.interaction.services.ChatService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
+import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
+import com.eventorium.data.solution.services.AccountProductService;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.util.AuthInterceptor;
+import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
 import com.eventorium.data.util.services.WebSocketService;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -65,6 +79,7 @@ public class AppModule {
     public static Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
 
         return new Retrofit.Builder()
@@ -94,6 +109,13 @@ public class AppModule {
                 .build();
     }
 
+
+    @Provides
+    @Singleton
+    public Context provideContext(@ApplicationContext Context context) {
+        return context;
+    }
+
     @Provides
     @Singleton
     public static SharedPreferences provideSharedPreferences(@ApplicationContext Context context) {
@@ -102,8 +124,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static AuthInterceptor provideAuthInterceptor(SharedPreferences sharedPreferences) {
-        return new AuthInterceptor(sharedPreferences);
+    public static AuthInterceptor provideAuthInterceptor(SharedPreferences sharedPreferences, @ApplicationContext Context context) {
+        return new AuthInterceptor(sharedPreferences, context);
     }
 
     @Provides
@@ -153,6 +175,12 @@ public class AppModule {
 
     @Provides
     @Singleton
+    public ProductRepository provideProductRepository(ProductService productService) {
+        return new ProductRepository(productService);
+    }
+
+    @Provides
+    @Singleton
     @Inject
     public AccountServiceService provideAccountServiceService(Retrofit retrofit) {
         return retrofit.create(AccountServiceService.class);
@@ -192,16 +220,22 @@ public class AppModule {
             WebSocketService webSocketService,
             AuthService service,
             SharedPreferences sharedPreferences
-    )
-    {
+    ) {
         return new AuthRepository(webSocketService, service, sharedPreferences);
     }
 
 
     @Provides
     @Singleton
-    public static AccountProductRepository provideAccountProductRepository(ProductService service) {
+    public static AccountProductRepository provideAccountProductRepository(AccountProductService service) {
         return new AccountProductRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public AccountProductService provideAccountProductService(Retrofit retrofit) {
+        return retrofit.create(AccountProductService.class);
     }
 
     @Provides
@@ -256,6 +290,18 @@ public class AppModule {
 
     @Provides
     @Singleton
+    public static ChatRepository provideChatRepository(ChatService chatService){
+        return new ChatRepository(chatService);
+    }
+
+    @Provides
+    @Singleton
+    public ChatService provideChatService(Retrofit retrofit){
+        return retrofit.create(ChatService.class);
+    }
+
+    @Provides
+    @Singleton
     public static RoleRepository provideRoleRepository(RoleService service){
         return new RoleRepository(service);
     }
@@ -269,7 +315,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static UserRepository provideUserRepository(AuthService service){
+    public static UserRepository provideUserRepository(UserService service){
         return new UserRepository(service);
     }
 
@@ -278,5 +324,57 @@ public class AppModule {
     @Inject
     public UserService provideUserService(Retrofit retrofit){
         return retrofit.create(UserService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static InvitationRepository provideInvitationRepository(InvitationService service) {
+        return new InvitationRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public InvitationService provideInvitationService(Retrofit retrofit) {
+        return retrofit.create(InvitationService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static CompanyRepository provideCompanyRepository(CompanyService service) {
+        return new CompanyRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public CompanyService provideCompanyService(Retrofit retrofit) {
+        return retrofit.create(CompanyService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static UserReportRepository provideUserReportRepository(UserReportService service) {
+        return new UserReportRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public UserReportService provideUserReportService(Retrofit retrofit) {
+        return retrofit.create(UserReportService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static AccountEventRepository provideAccountEventRepository(AccountEventService service) {
+        return new AccountEventRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public AccountEventService provideAccountEventService(Retrofit retrofit) {
+        return retrofit.create(AccountEventService.class);
     }
 }

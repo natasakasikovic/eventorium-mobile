@@ -26,15 +26,15 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.solution.dtos.ServiceFilterDto;
-import com.eventorium.data.solution.models.ServiceSummary;
+import com.eventorium.data.solution.models.service.ServiceFilter;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.listeners.OnManageListener;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -189,7 +189,7 @@ public class ManageServiceFragment extends Fragment {
         Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.categorySelector)));
         EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.eventTypeSelector)));
 
-        ServiceFilterDto filter = ServiceFilterDto.builder()
+        ServiceFilter filter = ServiceFilter.builder()
                 .availability(availability)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)

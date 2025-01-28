@@ -42,10 +42,11 @@
     </fragment>
 
     <fragment
-        android:id="@+id/invitationsFragment"
-        android:name="com.eventorium.presentation.event.fragments.EventInvitationFragment"
-        android:label="event_invitation_fragment"
-        tools:layout="@layout/fragment_event_invitation" />
+        android:id="@+id/createProductFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.CreateProductFragment"
+        tools:layout="@layout/fragment_create_product">
+        <!--TODO: add action to productOverview-->
+    </fragment>
 
     <fragment
         android:id="@+id/manageServiceDetailsFragment"
@@ -66,17 +67,13 @@
         tools:layout="@layout/fragment_price_list"/>
 
     <fragment
-        android:id="@+id/company_categories_fragment"
-        android:name="com.eventorium.presentation.company.fragments.ManageCategoriesFragment"
-        android:label="company_categories_fragment"
-        tools:layout="@layout/fragment_manage_categories"/>
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.ProviderCompanyFragment"
+        android:label="fragment_company_details"
+        tools:layout="@layout/fragment_provider_company" />
 
     <action
         android:id="@+id/action_companyDetails_to_editCompanyFragment"
         app:destination="@id/companyEditFragment" />
-
-    <action
-        android:id="@+id/action_companyDetails_to_manageCategoriesFragment"
-        app:destination="@id/company_categories_fragment" />
 
 </navigation>

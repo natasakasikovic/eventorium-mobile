@@ -1,5 +1,7 @@
 package com.eventorium.presentation;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,9 +25,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
+import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
-import com.eventorium.presentation.util.viewmodels.SplashScreenViewModel;
+import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.shared.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -36,7 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 100;
     private SplashScreenViewModel viewModel;
     private LoginViewModel loginViewModel;
     private ActivityMainBinding binding;
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setupStatusBarAndToolbar();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
             actionBar.setHomeButtonEnabled(true);
@@ -74,7 +77,14 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
         setContentView(binding.getRoot());
-        refresh("GUEST");
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+        }
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role", null);
+        if (role == null) refresh("GUEST");
+        else refresh(role.toUpperCase());
     }
 
     public void refresh(String role) {
@@ -197,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.createServiceFragment);
         } else if (id == R.id.nav_price_list) {
             navController.navigate(R.id.priceList);
+        } else if (id == R.id.nav_new_product) {
+            navController.navigate(R.id.createProductFragment);
         }
     }
 
@@ -214,9 +226,13 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_create_category) {
             navController.navigate(R.id.createCategoryFragment);
         } else if (id == R.id.nav_categories) {
-            navController.navigate(R.id.createCategoryFragment);
+            navController.navigate(R.id.categoryOverviewFragment);
         } else if (id == R.id.nav_category_proposals) {
             navController.navigate(R.id.categoryProposalsFragment);
+        } else if (id == R.id.nav_event_types) {
+            navController.navigate(R.id.eventTypesFragment);
+        } else if (id == R.id.nav_user_reports){
+        navController.navigate(R.id.userReportsOverviewFragment);
         }
     }
 
@@ -229,6 +245,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_messages) {
             // TODO: navigate to messages fragment
             Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+        }  else if (id == R.id.nav_see_other_profile) { // TODO: DELETE! THIS IS TEMPORARY SINCE THERE IS NO CURRENTLY WAY TO COME TO PROFILE OVERVIEW!
+            Bundle args = new Bundle();
+            args.putLong("ARG_USER_ID", 1);
+            navController.navigate(R.id.otherProfileFragment, args);
         }
     }
 
@@ -240,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void logOutUser() {
+    public void logOutUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
@@ -271,4 +291,28 @@ public class MainActivity extends AppCompatActivity {
     private void setUpMenu(int menuId) {
         navigationView.inflateMenu(menuId);
     }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String fragmentToOpen = intent.getStringExtra("openFragment");
+        if ("ChatFragment".equals(fragmentToOpen)) {
+            MessageSender recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
+            if (recipient != null) {
+                openChatFragment(recipient);
+            }
+        }
+    }
+
+    private void openChatFragment(MessageSender recipient) {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);
+        navController.navigate(R.id.action_homepage_to_chat, args);
+    }
+
 }

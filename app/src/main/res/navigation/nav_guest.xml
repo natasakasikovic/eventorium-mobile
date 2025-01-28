@@ -6,18 +6,6 @@
     app:startDestination="@id/homepageFragment">
 
     <fragment
-        android:id="@+id/serviceDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
-        android:label="fragment_service_details"
-        tools:layout="@layout/fragment_service_details" />
-
-    <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
-        android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" />
-
-    <fragment
         android:id="@+id/homepageFragment"
         android:name="com.eventorium.presentation.homepage.HomeFragment"
         android:label="fragment_homepage"
@@ -29,6 +17,9 @@
             android:id="@+id/action_home_to_product_details"
             app:destination="@id/productDetailsFragment"/>
         <action
+            android:id="@+id/action_home_to_event_details"
+            app:destination="@id/eventDetailsFragment"/>
+        <action
             android:id="@+id/action_homepage_to_services_overview"
             app:destination="@id/serviceOverviewFragment" />
         <action
@@ -37,8 +28,57 @@
         <action
             android:id="@+id/action_homepage_to_products_overview"
             app:destination="@id/productsOverviewFragment" />
+        <action
+            android:id="@+id/action_homepage_to_chat"
+            app:destination="@id/chatFragment"/>
 
     </fragment>
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details">
+    </fragment>
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <action
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
 
     <fragment
         android:id="@+id/registerFragment"
@@ -53,7 +93,7 @@
 
     <fragment
         android:id="@+id/companyRegisterFragment"
-        android:name="com.eventorium.presentation.auth.fragments.CompanyRegisterFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyRegisterFragment"
         android:label="fragment_company_register"
         tools:layout="@layout/fragment_company_register" />
 
@@ -64,16 +104,14 @@
         tools:layout="@layout/fragment_login" />
 
     <fragment
-        android:id="@+id/companyDetailsFragment"
-        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
-        android:label="fragment_company_details"
-        tools:layout="@layout/fragment_company_details" />
-
-    <fragment
         android:id="@+id/eventsOverviewFragment"
         android:name="com.eventorium.presentation.event.fragments.EventOverviewFragment"
         android:label="fragment_event_overview"
-        tools:layout="@layout/fragment_event_overview" />
+        tools:layout="@layout/fragment_event_overview">
+        <action
+            android:id="@+id/action_overview_to_event_details"
+            app:destination="@+id/eventDetailsFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/productsOverviewFragment"
@@ -95,5 +133,9 @@
             app:destination="@id/serviceDetailsFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company_details" />
 
 </navigation>

@@ -1,5 +1,7 @@
 package com.eventorium.presentation.solution.fragments.service;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -10,14 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.button.MaterialButton;
 
 import java.time.format.DateTimeFormatter;
@@ -80,7 +81,7 @@ public class ServiceDetailsFragment extends Fragment {
                 binding.rating.setText(service.getRating().toString());
 
                 serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
-                    binding.images.setAdapter(new ImageAdapter(images));
+                    binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
                 });
             }
         });

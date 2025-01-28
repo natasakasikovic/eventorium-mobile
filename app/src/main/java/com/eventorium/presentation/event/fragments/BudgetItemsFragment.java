@@ -24,17 +24,13 @@ import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
-import com.eventorium.databinding.FragmentBudgetPlanningBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
-import com.eventorium.presentation.util.adapters.CategoryPagerAdapter;
-import com.eventorium.presentation.util.adapters.FavouritesPagerAdapter;
+import com.eventorium.presentation.shared.adapters.CategoryPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -169,12 +165,5 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
 
         plannedCategories.remove(category);
         otherCategories.add(category);
-    }
-
-    @Override
-    public void onPurchasedRemoveCategory(int position, Category category) {
-        adapter.removeFragment(position);
-        plannedCategories.remove(category);
-        otherCategories.remove(category);
     }
 }

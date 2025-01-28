@@ -9,13 +9,20 @@
 
     <fragment
         android:id="@+id/favourites"
-        android:name="com.eventorium.presentation.user.fragments.FavouritesFragment"
+        android:name="com.eventorium.presentation.favourites.fragments.FavouritesFragment"
         tools:layout="@layout/fragment_favourites"
         android:label="fragment_favourites">
         <action
-            android:id="@+id/action_favServices_to_serviceDetailsFragment"
+            android:id="@+id/action_fav_to_event_details"
+            app:destination="@id/eventDetailsFragment"/>
+        <action
+            android:id="@+id/action_fav_to_product_details"
+            app:destination="@id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_fav_to_service_details"
             app:destination="@id/serviceDetailsFragment" />
     </fragment>
+
 
     <fragment
         android:id="@+id/bookingCalendarFragment"
@@ -25,7 +32,7 @@
 
     <fragment
         android:id="@+id/accountDetailsFragment"
-        android:name="com.eventorium.presentation.user.fragments.AccountDetails"
+        android:name="com.eventorium.presentation.user.fragments.AccountDetailsFragment"
         android:label="fragment_account_details"
         tools:layout="@layout/fragment_account_details">
         <action
@@ -38,5 +45,20 @@
         android:name="com.eventorium.presentation.user.fragments.AccountEditFragment"
         android:label="fragment_account_edit"
         tools:layout="@layout/fragment_account_edit" />
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        tools:layout="@layout/fragment_product_details" />
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        tools:layout="@layout/fragment_service_details" />
 
 </navigation>

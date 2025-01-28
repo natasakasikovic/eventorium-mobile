@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.repositories.EventTypeRepository;
+import com.eventorium.data.util.Result;
 
 import java.util.List;
 
@@ -28,5 +29,13 @@ public class EventTypeViewModel extends ViewModel {
 
     public LiveData<List<EventType>> getEventTypes() {
         return eventTypeRepository.getEventTypes();
+    }
+
+    public LiveData<Result<Void>> update(EventType eventType) {
+        return eventTypeRepository.updateEventType(eventType);
+    }
+
+    public LiveData<Result<Void>> delete(Long id) {
+        return eventTypeRepository.deleteEventType(id);
     }
 }

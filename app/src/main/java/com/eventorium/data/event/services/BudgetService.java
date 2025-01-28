@@ -2,8 +2,8 @@ package com.eventorium.data.event.services;
 
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.solution.models.Product;
-import com.eventorium.data.solution.models.ProductSummary;
+import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
 
