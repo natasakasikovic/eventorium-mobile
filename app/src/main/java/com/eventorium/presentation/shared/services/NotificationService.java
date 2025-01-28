@@ -12,7 +12,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 
@@ -50,14 +50,14 @@ public class NotificationService {
     public void showChatNotification(
             String title,
             String contentText,
-            MessageSender recipient
+            UserDetails recipient
     ) {
         createNotificationChannel();
         sendNotification(buildNotification(title, contentText, configureChatIntent(recipient))
                 .build());
     }
 
-    private PendingIntent configureChatIntent(MessageSender recipient) {
+    private PendingIntent configureChatIntent(UserDetails recipient) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("openFragment", "ChatFragment");
         intent.putExtra(ChatFragment.ARG_RECIPIENT, recipient);

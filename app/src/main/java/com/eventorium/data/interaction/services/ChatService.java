@@ -1,6 +1,6 @@
 package com.eventorium.data.interaction.services;
 
-import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
 
 import java.util.List;
 

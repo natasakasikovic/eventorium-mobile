@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -42,7 +42,7 @@ public class ProductDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     private Long id;
-    private MessageSender provider;
+    private UserDetails provider;
     private Long companyId;
 
     public ProductDetailsFragment() {
@@ -140,7 +140,7 @@ public class ProductDetailsFragment extends Fragment {
     private void loadProductDetails(Product product) {
         if (product != null) {
             ChatUserDetails sender = product.getProvider();
-            provider = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
+            provider = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
             companyId = product.getCompany().getId();
 
             binding.productName.setText(product.getName());

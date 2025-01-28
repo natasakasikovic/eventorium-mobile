@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.event.models.EventDetails;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -33,7 +33,7 @@ public class EventDetailsFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private Long id;
     private EventDetails event;
-    private MessageSender organizer;
+    private UserDetails organizer;
     private boolean isFavourite;
     private MaterialButton favButton;
 
@@ -84,7 +84,7 @@ public class EventDetailsFragment extends Fragment {
             if (result.getData() != null) {
                 event = result.getData();
                 ChatUserDetails sender = event.getOrganizer();
-                organizer = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
+                organizer = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
                 binding.eventName.setText(event.getName());
                 binding.eventType.setText("Event type: " + event.getEventType());
                 binding.privacyType.setText("Privacy type: " + event.getPrivacy());

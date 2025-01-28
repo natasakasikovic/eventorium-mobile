@@ -1,12 +1,9 @@
-package com.eventorium.data.interaction.models;
+package com.eventorium.data.auth.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-
-import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.EventType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageSender implements Parcelable {
+public class UserDetails implements Parcelable {
     private Long id;
     private String name;
     private String lastname;
@@ -29,19 +26,19 @@ public class MessageSender implements Parcelable {
         return 0;
     }
 
-    public static final Creator<MessageSender> CREATOR = new Creator<MessageSender>() {
+    public static final Creator<UserDetails> CREATOR = new Creator<UserDetails>() {
         @Override
-        public MessageSender createFromParcel(Parcel in) {
-            return new MessageSender(in);
+        public UserDetails createFromParcel(Parcel in) {
+            return new UserDetails(in);
         }
 
         @Override
-        public MessageSender[] newArray(int size) {
-            return new MessageSender[size];
+        public UserDetails[] newArray(int size) {
+            return new UserDetails[size];
         }
     };
 
-    protected MessageSender(Parcel in) {
+    protected UserDetails(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
         this.lastname = in.readString();

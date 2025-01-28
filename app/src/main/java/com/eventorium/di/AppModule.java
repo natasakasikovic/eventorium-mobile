@@ -29,7 +29,9 @@ import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.interaction.repositories.ReviewRepository;
 import com.eventorium.data.interaction.services.ChatService;
+import com.eventorium.data.interaction.services.ReviewService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -377,4 +379,17 @@ public class AppModule {
     public AccountEventService provideAccountEventService(Retrofit retrofit) {
         return retrofit.create(AccountEventService.class);
     }
+
+    @Provides
+    @Singleton
+    public ReviewService provideReviewService(Retrofit retrofit) {
+        return retrofit.create(ReviewService.class);
+    }
+
+    @Provides
+    @Singleton
+    public ReviewRepository provideReviewRepository(ReviewService reviewService) {
+        return new ReviewRepository(reviewService);
+    }
+
 }
