@@ -1,6 +1,7 @@
 package com.eventorium.presentation.event.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -36,6 +38,7 @@ public class EventDetailsFragment extends Fragment {
     private MessageSender organizer;
     private boolean isFavourite;
     private MaterialButton favButton;
+    private Button addToCalendarBtn;
 
     public EventDetailsFragment() { }
 
@@ -63,6 +66,7 @@ public class EventDetailsFragment extends Fragment {
         }
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         favButton = binding.favButton;
+        addToCalendarBtn = binding.btnAddToCalendar;
         return binding.getRoot();
     }
 
@@ -95,6 +99,7 @@ public class EventDetailsFragment extends Fragment {
                 binding.date.setText(event.getDate());
                 setupFavIcon();
                 setupFavButton();
+                setupAddToCalendarButton();
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
@@ -111,31 +116,43 @@ public class EventDetailsFragment extends Fragment {
 
     private void setupFavButton() {
         favButton.setOnClickListener(v -> {
-            if (isFavourite) {
-                removeFromFavourites();
-            } else {
-                addToFavourites();
-            }
+            if (isFavourite) removeFromFavourites();
+            else addToFavourites();
+        });
+    }
+
+    private void setupAddToCalendarButton() {
+        this.addToCalendarBtn.setOnClickListener(v -> {
+            viewModel.addToCalendar(id).observe(getViewLifecycleOwner(), result -> {
+                if (result.getError() == null) {
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle(R.string.activation_dialog_title)
+                            .setMessage(R.string.added_to_calendar)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            .show();
+                } else {
+                    Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
     private void addToFavourites() {
         viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() != null) {
+            if (result.getError() != null)
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else {
+            else
                 favButton.setIconResource(R.drawable.ic_favourite);
-            }
+
         });
     }
 
     private void removeFromFavourites() {
         viewModel.removeFromFavourites(id).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() != null) {
+            if (result.getError() != null)
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else {
+            else
                 favButton.setIconResource(R.drawable.ic_not_favourite);
-            }
         });
     }
 }

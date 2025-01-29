@@ -187,4 +187,7 @@
     <string name="images">Images</string>
     <string name="no_plans">No plans for the selected date.</string>
     <string name="to_attend">Events You Plan to Attend:</string>
+    <string name="added_to_calendar">
+        The event has been successfully added to your calendar. We are counting on your attendance. If there are any changes regarding the event, you will be notified via email. We look forward to seeing you!
+    </string>
 </resources>

@@ -61,4 +61,8 @@ public class EventViewModel extends ViewModel {
     public LiveData<Result<Void>> removeFromFavourites(Long id) {
         return accountEventRepository.removeFromFavourites(id);
     }
+
+    public LiveData<Result<Void>> addToCalendar(Long id) {
+        return accountEventRepository.addToCalendar(id);
+    }
 }
