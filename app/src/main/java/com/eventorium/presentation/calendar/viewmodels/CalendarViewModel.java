@@ -26,4 +26,8 @@ public class CalendarViewModel extends ViewModel {
         return eventRepository.getAttendingEvents();
     }
 
+    public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
+        return eventRepository.getOrganizerEvents();
+    }
+
 }

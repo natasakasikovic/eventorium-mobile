@@ -39,4 +39,7 @@ public interface EventService {
 
     @GET("account/events/my-attending-events")
     Call<List<CalendarEvent>> getAttendingEvents();
+
+    @GET("account/events/my-events")
+    Call<List<CalendarEvent>> getOrganizerEvents();
 }

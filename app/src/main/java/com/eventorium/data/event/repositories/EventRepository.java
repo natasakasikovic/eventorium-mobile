@@ -180,4 +180,26 @@ public class EventRepository {
 
         return result;
     }
+
+    public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getOrganizerEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events organized by you."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events organized by you."));
+            }
+        });
+
+        return result;
+    }
 }

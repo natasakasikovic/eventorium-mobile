@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.databinding.FragmentCalendarBinding;
+import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.calendar.utils.EventDecorator;
 import com.eventorium.presentation.calendar.viewmodels.CalendarViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -31,9 +32,11 @@ public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding binding;
     private CalendarViewModel viewModel;
+    private AuthViewModel authViewModel;
 
     private List<CalendarEvent> attendingEvents;
-    MaterialCalendarView calendarView;
+    private List<CalendarEvent> organizerEvents;
+    private MaterialCalendarView calendarView;
 
     public CalendarFragment() { }
 
@@ -44,7 +47,9 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(CalendarViewModel.class);
+        authViewModel = provider.get(AuthViewModel.class);
     }
 
     @Override
@@ -58,6 +63,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         getAttendingEvents();
+        getOrganizerEvents();
     }
 
     private void setupCalendarView() {
@@ -67,19 +73,25 @@ public class CalendarFragment extends Fragment {
 
     private void onDateSelected(CalendarDay date, boolean selected) {
         if (selected) {
-            List<CalendarEvent> events = filterEvents(date);
-            DateDetailsBottomSheetFragment details = DateDetailsBottomSheetFragment.newInstance(events);
+            List<CalendarEvent> events = filterEvents(attendingEvents, date);
+            DateDetailsBottomSheetFragment details;
+            if (authViewModel.getUserRole().equals("EVENT_ORGANIZER")) {
+                List<CalendarEvent> filteredEvents = filterEvents(organizerEvents, date);
+                details = DateDetailsBottomSheetFragment.newInstance(events, filteredEvents);
+            } else {
+                details = DateDetailsBottomSheetFragment.newInstance(events);
+            }
             details.show(getChildFragmentManager(), details.getTag());
         }
     }
 
-    private List<CalendarEvent> filterEvents(CalendarDay calendarDate) {
-        if (attendingEvents == null) {
+    private List<CalendarEvent> filterEvents(List<CalendarEvent> events, CalendarDay calendarDate) {
+        if (events == null) {
             return List.of();
         }
 
         LocalDate date = LocalDate.of(calendarDate.getYear(), calendarDate.getMonth() + 1, calendarDate.getDay());
-        return attendingEvents.stream()
+        return events.stream()
                 .filter(event -> event.getDate().equals(date))
                 .collect(Collectors.toList());
     }
@@ -88,19 +100,31 @@ public class CalendarFragment extends Fragment {
         viewModel.getAttendingEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 attendingEvents = result.getData();
-                markDates(attendingEvents);
+                markDates(attendingEvents, Color.BLUE, Color.GRAY);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void markDates(List<CalendarEvent> events) {
+    private void getOrganizerEvents() {
+        if (!authViewModel.getUserRole().equals("EVENT_ORGANIZER")) return;
+        viewModel.getOrganizerEvents().observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                organizerEvents = result.getData();
+                markDates(organizerEvents, Color.BLUE, Color.WHITE);
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void markDates(List<CalendarEvent> events, int foregroundColor, int backgroundColor) {
         for (CalendarEvent event: events) {
             CalendarDay eventDate = CalendarDay.from(event.getDate().getYear(),
                                                      event.getDate().getMonthValue() - 1,
                                                      event.getDate().getDayOfMonth());
-            calendarView.addDecorator(new EventDecorator(Color.MAGENTA, eventDate));
+            calendarView.addDecorator(new EventDecorator(foregroundColor, backgroundColor, eventDate));
         }
     }
 
