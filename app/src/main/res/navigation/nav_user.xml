@@ -26,8 +26,8 @@
 
     <fragment
         android:id="@+id/bookingCalendarFragment"
-        android:name="com.eventorium.presentation.user.fragments.BookingCalendarFragment"
-        tools:layout="@layout/fragment_booking_calendar"
+        android:name="com.eventorium.presentation.calendar.fragments.CalendarFragment"
+        tools:layout="@layout/fragment_calendar"
         android:label="fragment_booking_calendar" />
 
     <fragment
