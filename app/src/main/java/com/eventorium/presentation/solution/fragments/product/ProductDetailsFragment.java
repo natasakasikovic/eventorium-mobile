@@ -177,7 +177,8 @@ public class ProductDetailsFragment extends Fragment {
     private void navigateToBudget() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        navController.navigate(R.id.action_productDetails_to_budget, args);
+        args.putParcelable(BudgetPlanningFragment.ARG_EVENT, event);
+        navController.navigate(R.id.budgetPlanning, args);
     }
 
     private void showError(String message) {

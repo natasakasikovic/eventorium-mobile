@@ -139,7 +139,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     private void loadSuggestedCategories() {
         adapter = new CategoryPagerAdapter(this);
         if(event.getType() != null) {
-            event.getType() .getSuggestedCategories()
+            event.getType().getSuggestedCategories()
                     .forEach(category -> {
                         adapter.addFragment(
                                 BudgetCategoryFragment.newInstance(event, category ,plannedCategories.size()),

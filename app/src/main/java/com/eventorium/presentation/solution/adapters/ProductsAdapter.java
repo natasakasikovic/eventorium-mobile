@@ -76,8 +76,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             imageView.setImageBitmap(product.getImage());
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
-            float alpha = product.getAvailable() ? 1f : 0.5f;
-            layout.setAlpha(alpha);
+            if(product.getAvailable() != null) {
+                float alpha = product.getAvailable() ? 1f : 0.5f;
+                layout.setAlpha(alpha);
+            }
 
             setDiscountLabel(product);
         }
