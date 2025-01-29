@@ -185,4 +185,6 @@
     <string name="new_product">New product</string>
     <string name="enter_information_about_product">Enter information about product..</string>
     <string name="images">Images</string>
+    <string name="no_plans">No plans for the selected date.</string>
+    <string name="to_attend">Events You Plan to Attend:</string>
 </resources>

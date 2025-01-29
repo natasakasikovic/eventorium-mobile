@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
@@ -152,6 +153,28 @@ public class EventRepository {
             @Override
             public void onFailure(Call<EventDetails> call, Throwable t) {
                 result.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarEvent>>> getAttendingEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getAttendingEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events."));
             }
         });
 

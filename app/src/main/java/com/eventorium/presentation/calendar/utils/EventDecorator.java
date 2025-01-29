@@ -1,4 +1,4 @@
-package com.eventorium.presentation.calendar.models;
+package com.eventorium.presentation.calendar.utils;
 
 import android.text.style.ForegroundColorSpan;
 
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class EventDecorator implements DayViewDecorator  {
+public class EventDecorator implements DayViewDecorator {
     private final int color;
     private final List<CalendarDay> dates;
 

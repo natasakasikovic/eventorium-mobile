@@ -23,12 +23,14 @@
             app:destination="@id/serviceDetailsFragment" />
     </fragment>
 
-
     <fragment
-        android:id="@+id/bookingCalendarFragment"
+        android:id="@+id/calendarFragment"
         android:name="com.eventorium.presentation.calendar.fragments.CalendarFragment"
-        tools:layout="@layout/fragment_calendar"
-        android:label="fragment_booking_calendar" />
+        tools:layout="@layout/fragment_calendar">
+        <action
+            android:id="@+id/action_calendar_to_event_details"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/accountDetailsFragment"

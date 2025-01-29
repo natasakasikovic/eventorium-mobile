@@ -1,35 +1,44 @@
 package com.eventorium.presentation.calendar.fragments;
 
+import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
+
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.databinding.FragmentDateDetailsBottomSheetBinding;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.eventorium.R;
+import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.databinding.FragmentDateDetailsBottomSheetBinding;
+import com.eventorium.presentation.calendar.adapters.CalendarEventsAdapter;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
-    private static final String ARG_DATE = "date";
     private FragmentDateDetailsBottomSheetBinding binding;
 
-    public DateDetailsBottomSheetFragment() { }
-
-    public static DateDetailsBottomSheetFragment newInstance(CalendarDay date) {
+    public static DateDetailsBottomSheetFragment newInstance(List<CalendarEvent> attendingEvents) {
         DateDetailsBottomSheetFragment fragment = new DateDetailsBottomSheetFragment();
         Bundle args = new Bundle();
-        args.putInt("year", date.getYear());
-        args.putInt("month", date.getMonth());
-        args.putInt("day", date.getDay());
+        args.putParcelableArrayList("attending", new ArrayList<>(attendingEvents));
         fragment.setArguments(args);
         return fragment;
     }
 
+    public DateDetailsBottomSheetFragment() { }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -37,10 +46,24 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         binding = FragmentDateDetailsBottomSheetBinding.inflate(inflater, container, false);
         if (getArguments() != null) {
-            int year = getArguments().getInt("year");
-            int month = getArguments().getInt("month");
-            int day = getArguments().getInt("day");
+            List<CalendarEvent> events = getArguments().getParcelableArrayList("attending");
+            if (events != null && !events.isEmpty())
+                displayEvents(events);
+            else {
+                binding.noEventsText.setVisibility(View.VISIBLE);
+                binding.eventsTitle.setVisibility(View.GONE);
+            }
         }
         return binding.getRoot();
+    }
+
+    private void displayEvents(List<CalendarEvent> events) {
+        CalendarEventsAdapter adapter = new CalendarEventsAdapter(events, event -> {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            Bundle args = new Bundle();
+            args.putLong(ARG_EVENT_ID, event.getId());
+            navController.navigate(R.id.action_calendar_to_event_details, args);
+        });
+        binding.attendingEvents.setAdapter(adapter);
     }
 }
