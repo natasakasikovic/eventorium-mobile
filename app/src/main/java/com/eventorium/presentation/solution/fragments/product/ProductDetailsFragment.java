@@ -22,8 +22,6 @@ import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
@@ -150,7 +148,11 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void draftedPurchase() {
-
+        NavController navController = Navigation.findNavController(requireView());
+        Bundle args = new Bundle();
+        args.putParcelable(PurchaseProductFragment.ARG_CATEGORY, category);
+        args.putLong(PurchaseProductFragment.ARG_PRODUCT_ID, id);
+        navController.navigate(R.id.purchaseProduct, args);
     }
 
     private void purchaseProduct(Event event, Double plannedAmount) {

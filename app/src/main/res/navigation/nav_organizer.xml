@@ -48,6 +48,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/purchaseProduct"
+        android:name="com.eventorium.presentation.solution.fragments.product.PurchaseProductFragment"
+        tools:layout="@layout/fragment_purchase_product">
+        <action
+            android:id="@+id/action_purchaseProduct_to_productDetails"
+            app:destination="@+id/productDetailsFragment"
+            />
+    </fragment>
+
+    <fragment
         android:id="@+id/agendaFragment"
         android:name="com.eventorium.presentation.event.fragments.agenda.AgendaFragment"
         tools:layout="@layout/fragment_agenda">

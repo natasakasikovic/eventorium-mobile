@@ -190,4 +190,6 @@
     <string name="images">Images</string>
     <string name="reserve">Reserve</string>
     <string name="successfully_purchased_product">Successfully purchased product!</string>
+    <string name="select_event">Select event</string>
+    <string name="purchase_product">Purchase product</string>
 </resources>

@@ -86,5 +86,11 @@ public class Event implements Parcelable {
             return new Event[size];
         }
     };
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 

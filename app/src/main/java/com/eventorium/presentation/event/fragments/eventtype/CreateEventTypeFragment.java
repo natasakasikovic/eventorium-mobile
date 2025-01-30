@@ -1,12 +1,8 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.eventtype;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -17,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,8 +21,8 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.databinding.FragmentEditEventTypeBinding;
+import com.eventorium.data.event.models.CreateEventType;
+import com.eventorium.databinding.FragmentCreateEventTypeBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 
@@ -35,43 +32,40 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class EditEventTypeFragment extends Fragment {
+public class CreateEventTypeFragment extends Fragment {
 
-    private FragmentEditEventTypeBinding binding;
-    private static final String ARG_EVENT_TYPE = "eventType";
-    private EventType eventType;
+    private FragmentCreateEventTypeBinding binding;
+    private EditText nameTextEdit;
+    private EditText descriptionTextEdit;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
 
     private Category selectedCategory;
+
     private List<Category> selectedCategories = new ArrayList<>();
     private List<Category> allCategories = new ArrayList<>();
 
-    public EditEventTypeFragment() {
-    }
+    public CreateEventTypeFragment() { }
 
-    public static EditEventTypeFragment newInstance(EventType eventType) {
-        EditEventTypeFragment fragment = new EditEventTypeFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_EVENT_TYPE, eventType);
-        fragment.setArguments(args);
-        return fragment;
+    public static CreateEventTypeFragment newInstance() {
+        return new CreateEventTypeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-            eventType = getArguments().getParcelable(ARG_EVENT_TYPE);
-        ViewModelProvider provider = new ViewModelProvider(this);
-        eventTypeViewModel = provider.get(EventTypeViewModel.class);
-        categoryViewModel = provider.get(CategoryViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentEditEventTypeBinding.inflate(inflater, container, false);
+        binding = FragmentCreateEventTypeBinding.inflate(inflater, container, false);
+
+        nameTextEdit = binding.etEventTypeName;
+        descriptionTextEdit = binding.etEventTypeDescription;
+
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             allCategories = categories;
             ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<>(
@@ -83,19 +77,16 @@ public class EditEventTypeFragment extends Fragment {
         });
 
         binding.btnAddCategory.setOnClickListener(v -> addCategoryToContainer());
-        binding.btnSaveChanges.setOnClickListener(v -> saveChanges());
+        binding.createEventType.setOnClickListener(v -> createEventType());
         return binding.getRoot();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        fillForm();
-    }
+    private void addCategoryToContainer() {
 
-    private void addCategoryToContainer(Category category) {
-        if (!selectedCategories.contains(category)) {
-            selectedCategories.add(category);
+        selectedCategory = (Category) binding.comboBoxCategories.getSelectedItem();
+
+        if (!selectedCategories.contains(selectedCategory) && allCategories.contains(selectedCategory)) {
+            selectedCategories.add(selectedCategory);
 
             LinearLayout itemLayout = new LinearLayout(getContext());
             itemLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -103,15 +94,13 @@ public class EditEventTypeFragment extends Fragment {
             itemLayout.setPadding(8, 8, 8, 8);
 
             TextView categoryName = new TextView(getContext());
-            categoryName.setText(category.getName());
+            categoryName.setText(selectedCategory.getName());
             categoryName.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-            Typeface customFont = ResourcesCompat.getFont(requireContext(), R.font.jejumyeongjo);
-            categoryName.setTypeface(customFont);
 
             ImageButton btnRemove = new ImageButton(getContext());
             btnRemove.setImageResource(R.drawable.ic_close);
             btnRemove.setBackgroundColor(Color.TRANSPARENT);
-            btnRemove.setTag(category);
+            btnRemove.setTag(selectedCategory);
 
             btnRemove.setOnClickListener(v -> {
                 Category categoryToRemove = (Category) v.getTag();
@@ -125,46 +114,42 @@ public class EditEventTypeFragment extends Fragment {
         }
     }
 
-    private void addCategoryToContainer() {
-        selectedCategory = (Category) binding.comboBoxCategories.getSelectedItem();
-        addCategoryToContainer(selectedCategory);
-    }
-
     private void removeCategoryFromContainer(Category category, LinearLayout itemLayout) {
         selectedCategories.remove(category);
         binding.containerAddedItems.removeView(itemLayout);
     }
 
-    private void saveChanges() {
+    private void createEventType() {
+        String name = binding.etEventTypeName.getText().toString();
         String description = binding.etEventTypeDescription.getText().toString();
-        if (description.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.please_fill_in_all_fields, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (selectedCategories.isEmpty()) {
-            Toast.makeText(requireContext(), R.string.select_at_least_one_category, Toast.LENGTH_SHORT).show();
+
+        if (name.isEmpty() || description.isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
             return;
         }
 
-        eventType.setDescription(description);
-        eventType.setSuggestedCategories(selectedCategories);
-        eventTypeViewModel.update(eventType).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                Toast.makeText(requireContext(), "Success!", Toast.LENGTH_SHORT).show();
+        CreateEventType eventType = new CreateEventType(name, description, selectedCategories);
+        eventTypeViewModel.createEventType(eventType).observe(getViewLifecycleOwner(), response -> {
+            if (response != null) {
+                Toast.makeText(
+                        requireContext(),
+                        "Event type created successfully",
+                        Toast.LENGTH_SHORT
+                ).show();
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                navController.navigateUp();
+                navController.navigate(R.id.eventTypesFragment);
             } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        requireContext(),
+                        R.string.failed_to_create_category,
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
-    }
-
-    private void fillForm() {
-        binding.eventTypeName.setText(eventType.getName());
-        binding.etEventTypeDescription.setText(eventType.getDescription());
-        for (Category cat : eventType.getSuggestedCategories()) {
-            addCategoryToContainer(cat);
-        }
     }
 
     @Override
