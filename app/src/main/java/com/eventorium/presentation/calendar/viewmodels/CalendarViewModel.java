@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.util.Result;
 
 import java.util.List;
@@ -30,4 +31,7 @@ public class CalendarViewModel extends ViewModel {
         return eventRepository.getOrganizerEvents();
     }
 
+    public LiveData<Result<List<CalendarReservation>>> getReservations() {
+        return eventRepository.getReservations();
+    }
 }

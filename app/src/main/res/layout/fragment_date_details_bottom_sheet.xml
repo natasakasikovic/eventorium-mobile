@@ -49,10 +49,31 @@
         android:layout_gravity="center"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:fontFamily="@font/jejumyeongjo"/>
+        android:fontFamily="@font/jejumyeongjo"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/organizedEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/reservations_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/reservations"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/jejumyeongjo"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reservations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

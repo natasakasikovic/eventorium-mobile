@@ -13,8 +13,10 @@ import androidx.navigation.Navigation;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.databinding.FragmentDateDetailsBottomSheetBinding;
 import com.eventorium.presentation.calendar.adapters.CalendarEventsAdapter;
+import com.eventorium.presentation.calendar.adapters.CalendarReservationsAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -44,6 +46,16 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         return fragment;
     }
 
+    public static DateDetailsBottomSheetFragment newInstance(List<CalendarEvent> events,
+                                                             ArrayList<CalendarReservation> reservations) {
+        DateDetailsBottomSheetFragment fragment = new DateDetailsBottomSheetFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("attending", new ArrayList<>(events));
+        args.putParcelableArrayList("reservations", reservations);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public DateDetailsBottomSheetFragment() { }
 
     @Override
@@ -58,6 +70,7 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             loadAttendingEvents();
             loadOrganizedEvents();
+            loadReservations();
         }
         return binding.getRoot();
     }
@@ -77,11 +90,17 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     private void loadOrganizedEvents() {
         List<CalendarEvent> events = getArguments().getParcelableArrayList("organized");
         if (events != null && !events.isEmpty()) {
+            binding.organizedEventsTitle.setVisibility(View.VISIBLE);
             CalendarEventsAdapter adapter = displayEvents(events);
             binding.organizedEvents.setAdapter(adapter);
         }
-        else {
-            binding.organizedEventsTitle.setVisibility(View.GONE);
+    }
+
+    private void loadReservations() {
+        List<CalendarReservation> reservations = getArguments().getParcelableArrayList("reservations");
+        if (reservations != null && !reservations.isEmpty()) {
+            binding.reservationsTitle.setVisibility(View.VISIBLE);
+            binding.reservations.setAdapter(new CalendarReservationsAdapter(reservations));
         }
     }
 
@@ -93,4 +112,5 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
             navController.navigate(R.id.action_calendar_to_event_details, args);
         });
     }
+
 }

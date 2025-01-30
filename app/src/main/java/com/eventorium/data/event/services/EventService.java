@@ -6,6 +6,7 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.solution.models.service.CalendarReservation;
 
 import java.util.List;
 
@@ -42,4 +43,7 @@ public interface EventService {
 
     @GET("account/events/my-events")
     Call<List<CalendarEvent>> getOrganizerEvents();
+
+    @GET("provider-reservations")
+    Call<List<CalendarReservation>> getReservations();
 }

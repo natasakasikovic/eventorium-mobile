@@ -1,27 +1,27 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.solution.models.service;
 
+import android.os.Parcel;
 import android.os.Parcelable;
-
 import lombok.*;
 
 import java.time.LocalDate;
-
-import android.os.Parcel;
 import java.time.format.DateTimeFormatter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
-public class CalendarEvent implements Parcelable {
+public class CalendarReservation implements Parcelable {
     private Long id;
-    private String name;
+    private String eventName;
+    private String serviceName;
     private LocalDate date;
 
-    protected CalendarEvent(Parcel in) {
+    protected CalendarReservation(Parcel in) {
         if (in.readByte() == 0) id = null;
         else id = in.readLong();
 
-        name = in.readString();
+        eventName = in.readString();
+        serviceName = in.readString();
         String dateString = in.readString();
         date = (dateString != null) ? LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE) : null;
     }
@@ -33,7 +33,8 @@ public class CalendarEvent implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeLong(id);
         }
-        dest.writeString(name);
+        dest.writeString(eventName);
+        dest.writeString(serviceName);
         dest.writeString(date != null ? date.format(DateTimeFormatter.ISO_LOCAL_DATE) : null);
     }
 
@@ -42,16 +43,15 @@ public class CalendarEvent implements Parcelable {
         return 0;
     }
 
-    public static final Creator<CalendarEvent> CREATOR = new Creator<>() {
+    public static final Creator<CalendarReservation> CREATOR = new Creator<>() {
         @Override
-        public CalendarEvent createFromParcel(Parcel in) {
-            return new CalendarEvent(in);
+        public CalendarReservation createFromParcel(Parcel in) {
+            return new CalendarReservation(in);
         }
 
         @Override
-        public CalendarEvent[] newArray(int size) {
-            return new CalendarEvent[size];
+        public CalendarReservation[] newArray(int size) {
+            return new CalendarReservation[size];
         }
     };
-
 }
