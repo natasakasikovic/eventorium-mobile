@@ -112,7 +112,6 @@ public class EventRepository {
                     try {
                         String errorResponse = response.errorBody().string();
                         liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                        liveData.postValue(Result.error(errorResponse));
                     } catch (IOException e) {
                         liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
                     }

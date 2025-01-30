@@ -9,8 +9,11 @@ import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,10 +55,15 @@ public class BudgetRepository {
                     @NonNull Call<T> call,
                     @NonNull Response<T> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success((response.body())));
                 } else {
-                    result.postValue(Result.error(response.message()));
+                    try {
+                        String errorResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
+                    }
                 }
             }
 
