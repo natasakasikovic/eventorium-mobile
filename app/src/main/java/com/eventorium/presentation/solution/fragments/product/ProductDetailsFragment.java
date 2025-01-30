@@ -44,7 +44,6 @@ public class ProductDetailsFragment extends Fragment {
     private FragmentProductDetailsBinding binding;
     private ProductViewModel productViewModel;
     private BudgetViewModel budgetViewModel;
-    private EventViewModel eventViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
@@ -95,7 +94,6 @@ public class ProductDetailsFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         productViewModel = provider.get(ProductViewModel.class);
         budgetViewModel = provider.get(BudgetViewModel.class);
-        eventViewModel = provider.get(EventViewModel.class);
     }
 
     @SuppressLint("SetTextI18n")
@@ -103,11 +101,12 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
-        renderButtons();
-
         favouriteButton = binding.favButton;
-        productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
 
+        renderButtons();
+        setupButtons();
+
+        productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
         productViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
@@ -117,12 +116,15 @@ public class ProductDetailsFragment extends Fragment {
             );
         });
 
+        return binding.getRoot();
+    }
+
+    private void setupButtons() {
         favouriteButton.setOnClickListener(v -> handleIsFavourite());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.purchaseButton.setOnClickListener(v -> onPurchase());
-        return binding.getRoot();
     }
 
     private void navigateToCompany() {

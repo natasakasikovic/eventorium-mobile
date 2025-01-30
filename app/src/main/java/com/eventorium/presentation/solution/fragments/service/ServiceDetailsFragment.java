@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
@@ -34,7 +35,8 @@ public class ServiceDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
-
+    public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
+    public static final String ARG_EVENT = "ARG_EVENT";
 
 
     public ServiceDetailsFragment() {
@@ -47,6 +49,21 @@ public class ServiceDetailsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static ServiceDetailsFragment newInstance(
+        Long id,
+        Event event,
+        Double plannedAmount
+    ) {
+        ServiceDetailsFragment fragment = new ServiceDetailsFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
+        args.putParcelable(ARG_EVENT, event);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -30,6 +30,7 @@ import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class BudgetCategoryFragment extends Fragment {
     private FragmentBudgetCategoryBinding binding;
     private BudgetViewModel budgetViewModel;
     private ProductViewModel productViewModel;
+    private ServiceViewModel serviceViewModel;
     private OnRemoveCategoryListener onRemoveCategoryListener;
     private ProductsAdapter productsAdapter;
     private ServicesAdapter servicesAdapter;
@@ -95,6 +97,7 @@ public class BudgetCategoryFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         budgetViewModel = provider.get(BudgetViewModel.class);
         productViewModel = provider.get(ProductViewModel.class);
+        serviceViewModel = provider.get(ServiceViewModel.class);
     }
 
     @Override
@@ -109,18 +112,28 @@ public class BudgetCategoryFragment extends Fragment {
         });
         binding.searchItems.setOnClickListener(v -> search());
 
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), productSummary -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ProductDetailsFragment.ARG_ID, productSummary.getId());
-            args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, Double.parseDouble(String.valueOf(binding.plannedAmount.getText())));
-            args.putParcelable(ProductDetailsFragment.ARG_EVENT, event);
-            navController.navigate(R.id.action_budget_to_productDetails, args);
-        });
-//        servicesAdapter = new ServicesAdapter(new ArrayList<>(), configureServiceListener());
-
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), this::navigateToProductDetails);
+        servicesAdapter = new ServicesAdapter(new ArrayList<>(), this::navigateToServiceDetails);
 
         return binding.getRoot();
+    }
+
+    private void navigateToServiceDetails(ServiceSummary serviceSummary) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(ProductDetailsFragment.ARG_ID, serviceSummary.getId());
+        args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, Double.parseDouble(String.valueOf(binding.plannedAmount.getText())));
+        args.putParcelable(ProductDetailsFragment.ARG_EVENT, event);
+        navController.navigate(R.id.action_budget_to_serviceDetails, args);
+    }
+
+    private void navigateToProductDetails(ProductSummary productSummary) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(ProductDetailsFragment.ARG_ID, productSummary.getId());
+        args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, Double.parseDouble(String.valueOf(binding.plannedAmount.getText())));
+        args.putParcelable(ProductDetailsFragment.ARG_EVENT, event);
+        navController.navigate(R.id.action_budget_to_productDetails, args);
     }
 
 
@@ -133,6 +146,7 @@ public class BudgetCategoryFragment extends Fragment {
             binding.itemsRecycleView.setAdapter(productsAdapter);
             searchProducts(category.getId(), price);
         } else {
+            binding.itemsRecycleView.setAdapter(servicesAdapter);
             searchServices(category.getId(), price);
         }
     }
@@ -158,9 +172,24 @@ public class BudgetCategoryFragment extends Fragment {
         );
     }
 
+    private void loadServiceImages(List<ServiceSummary> services) {
+        services.forEach(service -> serviceViewModel.getServiceImage(service.getId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        service.setImage(image);
+                        int position = services.indexOf(service);
+                        if (position != -1) {
+                            servicesAdapter.notifyItemChanged(position);
+                        }
+                    }
+                })
+        );
+    }
+
     private void searchServices(Long id, Double price) {
-        budgetViewModel.getSuggestedServices(id, price).observe(getViewLifecycleOwner(), services -> {
-            binding.itemsRecycleView.setAdapter(servicesAdapter);
+        budgetViewModel.getSuggestedServices(id, event.getId(), price).observe(getViewLifecycleOwner(), services -> {
+            servicesAdapter.setData(services);
+            loadServiceImages(services);
         });
     }
 
