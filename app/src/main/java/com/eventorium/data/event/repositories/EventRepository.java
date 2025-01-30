@@ -204,24 +204,5 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<List<CalendarReservation>>> getReservations() {
-        MutableLiveData<Result<List<CalendarReservation>>> result = new MutableLiveData<>();
 
-        service.getReservations().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<CalendarReservation>> call, Response<List<CalendarReservation>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    result.postValue(Result.error("Error while loading service reservations"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarReservation>> call, Throwable t) {
-                result.postValue(Result.error("Error while loading service reservations"));
-            }
-        });
-        return result;
-    }
 }
