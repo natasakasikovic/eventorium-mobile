@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_favourite) {
                 navController.navigate(R.id.favourites);
             } else if (id == R.id.nav_calendar) {
-                navController.navigate(R.id.bookingCalendarFragment);
+                navController.navigate(R.id.calendarFragment);
             }
             return true;
         });

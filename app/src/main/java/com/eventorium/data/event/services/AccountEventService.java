@@ -24,4 +24,7 @@ public interface AccountEventService {
 
     @GET("account/events/favourites")
     Call<List<EventSummary>> getFavouriteEvents();
+
+    @POST("account/events/{id}/attendance")
+    Call<Void> addToCalendar(@Path("id") Long id);
 }

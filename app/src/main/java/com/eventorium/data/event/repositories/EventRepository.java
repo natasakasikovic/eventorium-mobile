@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
+import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
@@ -155,6 +157,71 @@ public class EventRepository {
             }
         });
 
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarEvent>>> getAttendingEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getAttendingEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events."));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getOrganizerEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events organized by you."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events organized by you."));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarReservation>>> getReservations() {
+        MutableLiveData<Result<List<CalendarReservation>>> result = new MutableLiveData<>();
+
+        service.getReservations().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarReservation>> call, Response<List<CalendarReservation>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading service reservations"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarReservation>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading service reservations"));
+            }
+        });
         return result;
     }
 }

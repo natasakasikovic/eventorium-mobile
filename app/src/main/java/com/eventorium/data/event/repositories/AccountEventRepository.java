@@ -110,4 +110,21 @@ public class AccountEventRepository {
         });
         return result;
     }
+
+    public LiveData<Result<Void>> addToCalendar(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.addToCalendar(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) result.postValue(Result.success(null));
+                else result.postValue(Result.error("Error while adding event to calendar"));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
+    }
 }

@@ -1,10 +1,12 @@
 package com.eventorium.data.event.services;
 
 import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.solution.models.service.CalendarReservation;
 
 import java.util.List;
 
@@ -35,4 +37,13 @@ public interface EventService {
 
     @GET("events/search/all")
     Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
+
+    @GET("account/events/my-attending-events")
+    Call<List<CalendarEvent>> getAttendingEvents();
+
+    @GET("account/events/my-events")
+    Call<List<CalendarEvent>> getOrganizerEvents();
+
+    @GET("provider-reservations")
+    Call<List<CalendarReservation>> getReservations();
 }
