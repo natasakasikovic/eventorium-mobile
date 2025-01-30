@@ -5,13 +5,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.interaction.models.review.CreateReview;
+import com.eventorium.data.interaction.models.review.ManageReview;
 import com.eventorium.data.interaction.models.review.Review;
+import com.eventorium.data.interaction.models.review.UpdateReview;
 import com.eventorium.data.interaction.services.ReviewService;
 import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -57,4 +60,49 @@ public class ReviewRepository {
         return result;
     }
 
+    public LiveData<Result<List<ManageReview>>> getPendingReviews() {
+        MutableLiveData<Result<List<ManageReview>>> result = new MutableLiveData<>();
+        reviewService.getPendingReviews().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<ManageReview>> call,
+                    @NonNull Response<List<ManageReview>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Failed to load reviews"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ManageReview>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<Result<Void>> updateReview(Long id, UpdateReview request) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        reviewService.updateReview(id, request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<Review> call,
+                    @NonNull Response<Review> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(null));
+                } else {
+                    result.postValue(Result.error("Failed to update review"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Review> call, @NonNull Throwable t) {
+                result.postValue(Result.error(t.getMessage()));
+            }
+        });
+        return result;
+    }
 }

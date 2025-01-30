@@ -232,7 +232,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
         } else if (id == R.id.nav_user_reports){
-        navController.navigate(R.id.userReportsOverviewFragment);
+            navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_manage_reviews) {
+            navController.navigate(R.id.manageReviewsFragment);
         }
     }
 

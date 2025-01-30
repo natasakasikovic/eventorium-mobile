@@ -1,6 +1,7 @@
 package com.eventorium.data.interaction.services;
 
 import com.eventorium.data.interaction.models.review.CreateReview;
+import com.eventorium.data.interaction.models.review.ManageReview;
 import com.eventorium.data.interaction.models.review.Review;
 import com.eventorium.data.interaction.models.review.UpdateReview;
 
@@ -15,15 +16,16 @@ import retrofit2.http.Path;
 
 public interface ReviewService {
 
-    @GET("/reviews/pending/all")
-    Call<List<Review>> getPendingReviews();
+    @GET("reviews/pending/all")
+    Call<List<ManageReview>> getPendingReviews();
 
-    @POST("/products/{product-id}/reviews")
+    @POST("products/{product-id}/reviews")
     Call<Review> createProductReview(@Path("product-id") Long id, @Body CreateReview request);
 
-    @POST("/services/{service-id}/reviews")
+    @POST("services/{service-id}/reviews")
     Call<Review> createServiceReview(@Path("service-id") Long id, @Body CreateReview request);
 
-    @PATCH("/reviews/{id}")
+    @PATCH("reviews/{id}")
     Call<Review> updateReview(@Path("id") Long id, @Body UpdateReview request);
+
 }

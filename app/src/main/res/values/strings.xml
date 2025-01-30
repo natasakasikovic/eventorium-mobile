@@ -186,4 +186,6 @@
     <string name="enter_information_about_product">Enter information about product..</string>
     <string name="images">Images</string>
     <string name="added_product">"Added product "</string>
+    <string name="reviews">Reviews</string>
+    <string name="review_management">Review management</string>
 </resources>
