@@ -17,16 +17,20 @@
         android:id="@+id/categoryProposalsFragment"
         android:name="com.eventorium.presentation.category.fragments.CategoryProposalsFragment"
         android:label="fragment_category_proposals"
-        tools:layout="@layout/fragment_category_proposals" />
+        tools:layout="@layout/fragment_category_proposals">
+        <action
+            android:id="@+id/action_categoryProposalsFragment_self"
+            app:destination="@id/categoryProposalsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createCategoryFragment"
         android:name="com.eventorium.presentation.category.fragments.CreateCategoryFragment"
         android:label="fragment_create_category"
-        tools:layout="@layout/fragment_create_category" >
+        tools:layout="@layout/fragment_create_category">
         <action
             android:id="@+id/action_create_to_categoryOverview"
-            app:destination="@+id/categoryOverviewFragment"/>
+            app:destination="@+id/categoryOverviewFragment" />
     </fragment>
 
     <fragment
@@ -42,7 +46,7 @@
     <fragment
         android:id="@+id/userReportsOverviewFragment"
         android:name="com.eventorium.presentation.user.fragments.UserReportsOverviewFragment"
-        android:layout="@layout/fragment_user_reports_overview" >
+        android:layout="@layout/fragment_user_reports_overview">
         <action
             android:id="@+id/action_reports_overview_to_details"
             app:destination="@+id/reportDetailsFragment" />
@@ -52,7 +56,7 @@
         android:id="@+id/reportDetailsFragment"
         android:name="com.eventorium.presentation.user.fragments.UserReportDetailsFragment"
         android:label="fragment_user_report_details"
-        tools:layout="@layout/fragment_user_report_details"/>
+        tools:layout="@layout/fragment_user_report_details" />
 
     <fragment
         android:id="@+id/eventTypesFragment"
@@ -60,7 +64,7 @@
         tools:layout="@layout/fragment_event_type_overview">
         <action
             android:id="@+id/action_event_types_overview_to_edit"
-            app:destination="@+id/editEventTypeFragment"/>
+            app:destination="@+id/editEventTypeFragment" />
     </fragment>
 
     <fragment
@@ -71,6 +75,16 @@
     <fragment
         android:id="@+id/manageReviewsFragment"
         android:name="com.eventorium.presentation.review.fragments.ManageReviewFragment"
-        tools:layout="@layout/fragment_manage_review" />
+        tools:layout="@layout/fragment_manage_review">
+        <action
+            android:id="@+id/action_manageReviews_to_userProfile"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_manageReviews_to_serviceDetails"
+            app:destination="@+id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_manageReviews_to_productDetails"
+            app:destination="@+id/productDetailsFragment" />
+    </fragment>
 
 </navigation>

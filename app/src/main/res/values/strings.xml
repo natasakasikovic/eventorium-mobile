@@ -188,4 +188,5 @@
     <string name="added_product">"Added product "</string>
     <string name="reviews">Reviews</string>
     <string name="review_management">Review management</string>
+    <string name="successfully_updated_review">Successfully updated review!</string>
 </resources>

@@ -14,6 +14,7 @@ import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,8 +61,8 @@ public class ReviewRepository {
         return result;
     }
 
-    public LiveData<Result<List<ManageReview>>> getPendingReviews() {
-        MutableLiveData<Result<List<ManageReview>>> result = new MutableLiveData<>();
+    public LiveData<List<ManageReview>> getPendingReviews() {
+        MutableLiveData<List<ManageReview>> liveData = new MutableLiveData<>();
         reviewService.getPendingReviews().enqueue(new Callback<>() {
             @Override
             public void onResponse(
@@ -69,18 +70,18 @@ public class ReviewRepository {
                     @NonNull Response<List<ManageReview>> response
             ) {
                 if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
+                    liveData.postValue(response.body());
                 } else {
-                    result.postValue(Result.error("Failed to load reviews"));
+                    liveData.postValue(new ArrayList<>());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<ManageReview>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                liveData.postValue(new ArrayList<>());
             }
         });
-        return result;
+        return liveData;
     }
 
     public LiveData<Result<Void>> updateReview(Long id, UpdateReview request) {

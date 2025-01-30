@@ -14,15 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.review.ManageReview;
 import com.eventorium.data.interaction.models.review.Review;
+import com.eventorium.presentation.review.listeners.OnReviewListener;
 
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private List<ManageReview> reviews;
+    private final OnReviewListener listener;
 
-    public ReviewAdapter(List<ManageReview> reviews) {
+    public ReviewAdapter(List<ManageReview> reviews, OnReviewListener listener) {
         this.reviews = reviews;
+        this.listener = listener;
     }
 
     @NonNull
@@ -48,7 +51,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         notifyDataSetChanged();
     }
 
-    public static class ReviewViewHolder extends RecyclerView.ViewHolder {
+    public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
         Button userButton;
         TextView userTextView;
@@ -69,7 +72,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             feedbackTextView = itemView.findViewById(R.id.feedbackText);
             ratingTextView = itemView.findViewById(R.id.ratingText);
             acceptButton = itemView.findViewById(R.id.acceptButton);
-            declineButton = itemView.findViewById(R.id.deleteButton);
+            declineButton = itemView.findViewById(R.id.declineButton);
         }
 
         @SuppressLint("SetTextI18n")
@@ -78,6 +81,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             solutionTextView.setText(review.getSolution().getName());
             feedbackTextView.setText(review.getFeedback());
             ratingTextView.setText(review.getRating().toString() + "/5");
+
+            userButton.setOnClickListener(v -> listener.navigateToProvider(review.getUser()));
+            solutionButton.setOnClickListener(v -> listener.navigateToSolution(review.getSolution()));
+            acceptButton.setOnClickListener(v -> listener.acceptReview(review.getId()));
+            declineButton.setOnClickListener(v -> listener.declineReview(review.getId()));
         }
     }
 }
