@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +20,17 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
+import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -38,6 +43,8 @@ public class EventDetailsFragment extends Fragment {
     private Long id;
     private EventDetails event;
     private MessageSender organizer;
+    private RecyclerView agenda;
+    private ActivitiesAdapter adapter;
     private boolean isFavourite;
     private MaterialButton favButton;
     private Button addToCalendarBtn;
@@ -71,6 +78,7 @@ public class EventDetailsFragment extends Fragment {
         favButton = binding.favButton;
         addToCalendarBtn = binding.btnAddToCalendar;
         exportBtn = binding.btnExport;
+        loadAgenda();
         return binding.getRoot();
     }
 
@@ -179,5 +187,25 @@ public class EventDetailsFragment extends Fragment {
             else
                 favButton.setIconResource(R.drawable.ic_not_favourite);
         });
+    }
+
+    private void loadAgenda() {
+        agenda = binding.agenda;
+        viewModel.getAgenda(id).observe(getViewLifecycleOwner(), result -> {
+            List<Activity> activities = result.getData();
+            if (activities != null) {
+                if (activities.isEmpty()) {
+                    binding.agendaTitle.setVisibility(View.GONE);
+                    binding.agenda.setVisibility(View.GONE);
+                } else {
+                    adapter = new ActivitiesAdapter(activities, null);
+                    adapter.setDeleteButtonVisibility(false);
+                    agenda.setAdapter(adapter);
+                }
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

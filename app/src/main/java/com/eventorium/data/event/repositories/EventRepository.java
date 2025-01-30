@@ -234,4 +234,26 @@ public class EventRepository {
 
         return result;
     }
+
+    public LiveData<Result<List<Activity>>> getAgenda(Long id) {
+        MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
+
+        service.getAgenda(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading event agenda"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Activity>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading event agenda"));
+            }
+        });
+
+        return result;
+    }
 }
