@@ -9,6 +9,7 @@ import com.eventorium.data.event.models.EventSummary;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -42,4 +43,7 @@ public interface EventService {
 
     @GET("account/events/my-events")
     Call<List<CalendarEvent>> getOrganizerEvents();
+
+    @GET("events/{id}/pdf")
+    Call<ResponseBody> exportToPdf(@Path("id") Long id);
 }
