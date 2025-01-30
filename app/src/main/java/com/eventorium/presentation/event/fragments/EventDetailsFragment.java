@@ -76,6 +76,7 @@ public class EventDetailsFragment extends Fragment {
         args.putParcelable(ChatFragment.ARG_RECIPIENT, organizer);
         navController.navigate(R.id.chatFragment, args);
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

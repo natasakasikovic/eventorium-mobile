@@ -3,7 +3,6 @@ package com.eventorium.presentation.calendar.fragments;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,40 +27,23 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     private FragmentDateDetailsBottomSheetBinding binding;
 
-    public static DateDetailsBottomSheetFragment newInstance(List<CalendarEvent> attendingEvents) {
-        DateDetailsBottomSheetFragment fragment = new DateDetailsBottomSheetFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("attending", new ArrayList<>(attendingEvents));
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static DateDetailsBottomSheetFragment newInstance(List<CalendarEvent> attendingEvents,
-                                                             List<CalendarEvent> organizedEvents) {
+                                                             List<CalendarEvent> organizedEvents,
+                                                             List<CalendarReservation> reservations) {
         DateDetailsBottomSheetFragment fragment = new DateDetailsBottomSheetFragment();
         Bundle args = new Bundle();
+
         args.putParcelableArrayList("attending", new ArrayList<>(attendingEvents));
-        args.putParcelableArrayList("organized", new ArrayList<>(organizedEvents));
+        if (organizedEvents != null)
+            args.putParcelableArrayList("organized", new ArrayList<>(organizedEvents));
+        if (reservations != null)
+            args.putParcelableArrayList("reservations", new ArrayList<>(reservations));
+
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static DateDetailsBottomSheetFragment newInstance(List<CalendarEvent> events,
-                                                             ArrayList<CalendarReservation> reservations) {
-        DateDetailsBottomSheetFragment fragment = new DateDetailsBottomSheetFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList("attending", new ArrayList<>(events));
-        args.putParcelableArrayList("reservations", reservations);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public DateDetailsBottomSheetFragment() { }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public DateDetailsBottomSheetFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,10 +60,9 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
     private void loadAttendingEvents() {
         List<CalendarEvent> events = getArguments().getParcelableArrayList("attending");
         if (events != null && !events.isEmpty()) {
-            CalendarEventsAdapter adapter = displayEvents(events);
+            CalendarEventsAdapter adapter = new CalendarEventsAdapter(events, this::navigateToEventDetails);
             binding.attendingEvents.setAdapter(adapter);
-        }
-        else {
+        } else {
             binding.noEventsText.setVisibility(View.VISIBLE);
             binding.eventsTitle.setVisibility(View.GONE);
         }
@@ -91,7 +72,7 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         List<CalendarEvent> events = getArguments().getParcelableArrayList("organized");
         if (events != null && !events.isEmpty()) {
             binding.organizedEventsTitle.setVisibility(View.VISIBLE);
-            CalendarEventsAdapter adapter = displayEvents(events);
+            CalendarEventsAdapter adapter = new CalendarEventsAdapter(events, this::navigateToEventDetails);
             binding.organizedEvents.setAdapter(adapter);
         }
     }
@@ -104,13 +85,10 @@ public class DateDetailsBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
-    private CalendarEventsAdapter displayEvents(List<CalendarEvent> events) {
-        return new CalendarEventsAdapter(events, event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_calendar_to_event_details, args);
-        });
+    private void navigateToEventDetails(CalendarEvent event) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(ARG_EVENT_ID, event.getId());
+        navController.navigate(R.id.action_calendar_to_event_details, args);
     }
-
 }

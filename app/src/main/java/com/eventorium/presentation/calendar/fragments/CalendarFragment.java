@@ -23,7 +23,6 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class CalendarFragment extends Fragment {
 
     private List<CalendarEvent> attendingEvents;
     private List<CalendarEvent> organizerEvents;
-    private ArrayList<CalendarReservation> reservations;
+    private List<CalendarReservation> reservations;
     private MaterialCalendarView calendarView;
 
     public CalendarFragment() { }
@@ -76,19 +75,25 @@ public class CalendarFragment extends Fragment {
     }
 
     private void onDateSelected(CalendarDay date, boolean selected) {
-        if (selected) {
-            List<CalendarEvent> events = filterEvents(attendingEvents, date);
-            DateDetailsBottomSheetFragment details;
-            if (authViewModel.getUserRole().equals("EVENT_ORGANIZER")) {
-                List<CalendarEvent> filteredEvents = filterEvents(organizerEvents, date);
-                details = DateDetailsBottomSheetFragment.newInstance(events, filteredEvents);
-            } else if (authViewModel.getUserRole().equals("PROVIDER")) {
-                ArrayList<CalendarReservation> reservations = (ArrayList<CalendarReservation>) filterReservations(date);
-                details = DateDetailsBottomSheetFragment.newInstance(events, reservations);
-            } else {
-                details = DateDetailsBottomSheetFragment.newInstance(events);
-            }
-            details.show(getChildFragmentManager(), details.getTag());
+        if (!selected) return;
+
+        List<CalendarEvent> events = filterEvents(attendingEvents, date);
+        List<CalendarEvent> organizerEvents = filterEvents(this.organizerEvents, date);
+        List<CalendarReservation> reservations = filterReservations(date);
+
+        DateDetailsBottomSheetFragment details = createDetailsFragment(events, organizerEvents, reservations);
+        details.show(getChildFragmentManager(), details.getTag());
+    }
+
+    private DateDetailsBottomSheetFragment createDetailsFragment(List<CalendarEvent> events,
+                                                                 List<CalendarEvent> organizerEvents,
+                                                                 List<CalendarReservation> reservations) {
+        if (authViewModel.getUserRole().equals("EVENT_ORGANIZER")) {
+            return DateDetailsBottomSheetFragment.newInstance(events, organizerEvents, null);
+        } else if (authViewModel.getUserRole().equals("PROVIDER")) {
+            return DateDetailsBottomSheetFragment.newInstance(events, null, reservations);
+        } else {
+            return DateDetailsBottomSheetFragment.newInstance(events, null, null);
         }
     }
 
@@ -137,7 +142,7 @@ public class CalendarFragment extends Fragment {
         if (!authViewModel.getUserRole().equals("PROVIDER")) return;
         viewModel.getReservations().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
-                reservations = (ArrayList<CalendarReservation>) result.getData();
+                reservations = result.getData();
                 markDates(reservations);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
@@ -150,11 +155,11 @@ public class CalendarFragment extends Fragment {
             CalendarDay eventDate = CalendarDay.from(event.getDate().getYear(),
                                                      event.getDate().getMonthValue() - 1,
                                                      event.getDate().getDayOfMonth());
-            calendarView.addDecorator(new EventDecorator(Color.BLUE, backgroundColor, eventDate));
+            calendarView.addDecorator(new EventDecorator(Color.MAGENTA, backgroundColor, eventDate));
         }
     }
 
-    private void markDates(ArrayList<CalendarReservation> reservations) {
+    private void markDates(List<CalendarReservation> reservations) {
         for (CalendarReservation reservation: reservations) {
             CalendarDay reservationDate = CalendarDay.from(reservation.getDate().getYear(),
                                                reservation.getDate().getMonthValue() - 1,
