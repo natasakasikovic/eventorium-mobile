@@ -1,8 +1,8 @@
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.event.fragments.EventDetailsFragment">
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
             android:layout_gravity="end">
 
             <com.google.android.material.button.MaterialButton
@@ -266,8 +267,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/agenda"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

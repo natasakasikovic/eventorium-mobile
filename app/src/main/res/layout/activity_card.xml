@@ -5,7 +5,7 @@
     android:layout_marginBottom="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/md_theme_tertiaryContainer">
+    android:background="@drawable/rounded_background">
 
     <TextView
         android:id="@+id/nameTextView"

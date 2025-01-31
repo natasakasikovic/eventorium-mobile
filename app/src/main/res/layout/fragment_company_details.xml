@@ -13,26 +13,6 @@
         android:orientation="vertical"
         android:spacing="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Comment company"
-            android:textColor="@color/md_theme_primary"
-            app:icon="@drawable/ic_comment"
-            app:iconSize="25dp"
-            app:iconTint="@color/md_theme_primary"
-            app:iconGravity="end"
-            app:backgroundTint="@color/md_theme_primaryContainer"
-            android:layout_gravity="end"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
