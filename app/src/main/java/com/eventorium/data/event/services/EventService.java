@@ -6,10 +6,10 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.solution.models.service.CalendarReservation;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -44,6 +44,9 @@ public interface EventService {
     @GET("account/events/my-events")
     Call<List<CalendarEvent>> getOrganizerEvents();
 
-    @GET("provider-reservations")
-    Call<List<CalendarReservation>> getReservations();
+    @GET("events/{id}/pdf")
+    Call<ResponseBody> exportToPdf(@Path("id") Long id);
+
+    @GET("events/{id}/agenda")
+    Call<List<Activity>> getAgenda(@Path("id") Long id);
 }

@@ -2,12 +2,15 @@ package com.eventorium.presentation.event.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +20,17 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
+import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -36,9 +43,12 @@ public class EventDetailsFragment extends Fragment {
     private Long id;
     private EventDetails event;
     private MessageSender organizer;
+    private RecyclerView agenda;
+    private ActivitiesAdapter adapter;
     private boolean isFavourite;
     private MaterialButton favButton;
     private Button addToCalendarBtn;
+    private Button exportBtn;
 
     public EventDetailsFragment() { }
 
@@ -62,11 +72,13 @@ public class EventDetailsFragment extends Fragment {
         loginViewModel = provider.get(LoginViewModel.class);
         if (!loginViewModel.isLoggedIn()) {
             binding.actions.setVisibility(View.GONE);
-            binding.chatButton.setVisibility(View.GONE);
+            binding.question.setVisibility(View.GONE);
         }
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         favButton = binding.favButton;
         addToCalendarBtn = binding.btnAddToCalendar;
+        exportBtn = binding.btnExport;
+        loadAgenda();
         return binding.getRoot();
     }
 
@@ -101,6 +113,7 @@ public class EventDetailsFragment extends Fragment {
                 setupFavIcon();
                 setupFavButton();
                 setupAddToCalendarButton();
+                setupExportBtn();
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
@@ -138,6 +151,25 @@ public class EventDetailsFragment extends Fragment {
         });
     }
 
+    private void setupExportBtn() {
+        this.exportBtn.setOnClickListener(v -> {
+            viewModel.exportToPdf(id, getContext()).observe(getViewLifecycleOwner(), result -> {
+                if (result.getData() != null) {
+                    openPdf(result.getData());
+                } else {
+                    Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
+
+    private void openPdf(Uri pdfUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(pdfUri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
+    }
+
     private void addToFavourites() {
         viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null)
@@ -155,5 +187,25 @@ public class EventDetailsFragment extends Fragment {
             else
                 favButton.setIconResource(R.drawable.ic_not_favourite);
         });
+    }
+
+    private void loadAgenda() {
+        agenda = binding.agenda;
+        viewModel.getAgenda(id).observe(getViewLifecycleOwner(), result -> {
+            List<Activity> activities = result.getData();
+            if (activities != null) {
+                if (activities.isEmpty()) {
+                    binding.agendaTitle.setVisibility(View.GONE);
+                    binding.agenda.setVisibility(View.GONE);
+                } else {
+                    adapter = new ActivitiesAdapter(activities, null);
+                    adapter.setDeleteButtonVisibility(false);
+                    agenda.setAdapter(adapter);
+                }
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

@@ -192,4 +192,7 @@
     </string>
     <string name="organized">Events You`ve Organized:</string>
     <string name="reservations">Reservations: </string>
+    <string name="save_event_information">Save event information:</string>
+    <string name="export_to_pdf">Export to pdf</string>
+    <string name="agenda">Agenda</string>
 </resources>

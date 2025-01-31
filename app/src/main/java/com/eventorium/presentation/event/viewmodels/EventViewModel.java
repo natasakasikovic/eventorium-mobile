@@ -1,5 +1,8 @@
 package com.eventorium.presentation.event.viewmodels;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -64,5 +67,13 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<Void>> addToCalendar(Long id) {
         return accountEventRepository.addToCalendar(id);
+    }
+
+    public LiveData<Result<Uri>> exportToPdf(Long id, Context context) {
+        return repository.exportToPdf(id, context);
+    }
+
+    public LiveData<Result<List<Activity>>> getAgenda(Long id) {
+        return repository.getAgenda(id);
     }
 }
