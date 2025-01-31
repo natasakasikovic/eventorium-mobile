@@ -30,6 +30,8 @@ import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
 import com.eventorium.data.interaction.services.ChatService;
+import com.eventorium.data.notifications.repositories.NotificationRepository;
+import com.eventorium.data.notifications.services.NotificationService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -376,5 +378,18 @@ public class AppModule {
     @Inject
     public AccountEventService provideAccountEventService(Retrofit retrofit) {
         return retrofit.create(AccountEventService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static NotificationRepository provideNotificationRepository(NotificationService service) {
+        return new NotificationRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public NotificationService provideNotificationService(Retrofit retrofit) {
+        return retrofit.create(NotificationService.class);
     }
 }
