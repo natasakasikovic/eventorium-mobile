@@ -25,6 +25,7 @@ import com.eventorium.data.event.models.Event;
 import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
@@ -44,6 +45,7 @@ public class ProductDetailsFragment extends Fragment {
     private FragmentProductDetailsBinding binding;
     private ProductViewModel productViewModel;
     private BudgetViewModel budgetViewModel;
+    private LoginViewModel loginViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
@@ -94,6 +96,7 @@ public class ProductDetailsFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         productViewModel = provider.get(ProductViewModel.class);
         budgetViewModel = provider.get(BudgetViewModel.class);
+        loginViewModel = provider.get(LoginViewModel.class);
     }
 
     @SuppressLint("SetTextI18n")
@@ -194,7 +197,7 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void renderButtons() {
-        String role = productViewModel.getUserRole();
+        String role = loginViewModel.getUserRole();
         if(role == null || role.isEmpty()) {
             binding.favButton.setVisibility(View.GONE);
             binding.chatButton.setVisibility(View.GONE);
@@ -203,6 +206,8 @@ public class ProductDetailsFragment extends Fragment {
         }
         if(!role.equals("EVENT_ORGANIZER")) {
             binding.chatButton.setVisibility(View.GONE);
+        } else {
+            binding.purchaseButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -243,6 +248,10 @@ public class ProductDetailsFragment extends Fragment {
             productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
                 binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
             });
+
+            if(!product.getAvailable()) {
+                binding.purchaseButton.setClickable(false);
+            }
         }
     }
 

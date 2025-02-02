@@ -38,13 +38,10 @@ public class Event implements Parcelable {
 
     protected Event(Parcel in) {
         id = (in.readByte() == 0) ? null : in.readLong();
-        name = in.readString();
-        description = in.readString();
         date = (LocalDate) in.readSerializable();
         privacy = in.readParcelable(Privacy.class.getClassLoader());
         maxParticipants = in.readByte() == 0 ? null : in.readInt();
         type = in.readParcelable(EventType.class.getClassLoader());
-        address = in.readString();
     }
 
     @Override
@@ -56,8 +53,6 @@ public class Event implements Parcelable {
             dest.writeLong(id);
         }
 
-        dest.writeString(name);
-        dest.writeString(description);
         dest.writeSerializable(date);
         dest.writeParcelable(privacy, flags);
         if (maxParticipants == null) {
@@ -67,7 +62,6 @@ public class Event implements Parcelable {
             dest.writeInt(maxParticipants);
         }
         dest.writeParcelable(type, flags);
-        dest.writeString(address);
     }
 
     @Override

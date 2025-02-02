@@ -237,13 +237,15 @@
                         android:textSize="16sp"/>
                 </LinearLayout>
                 <Button
+                    android:id="@+id/reserveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/reserve"
                     android:backgroundTint="@color/md_theme_primary"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
@@ -31,12 +32,16 @@ public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding binding;
     private ServiceViewModel serviceViewModel;
-
+    private LoginViewModel loginViewModel;
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
     public static final String ARG_EVENT = "ARG_EVENT";
+
+    private Long id;
+    private Double plannedAmount;
+    private Event event;
 
 
     public ServiceDetailsFragment() {
@@ -68,7 +73,15 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
+        if(getArguments() != null) {
+            id = getArguments().getLong(ARG_ID);
+            plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT);
+            event = getArguments().getParcelable(ARG_EVENT);
+        }
+
+        ViewModelProvider provider = new ViewModelProvider(this);
+        serviceViewModel = provider.get(ServiceViewModel.class);
+        loginViewModel = provider.get(LoginViewModel.class);
     }
 
     @SuppressLint("SetTextI18n")
@@ -76,12 +89,11 @@ public class ServiceDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-        assert getArguments() != null;
         favouriteButton = binding.favButton;
-        if(!serviceViewModel.isLoggedIn()) {
+        if(!loginViewModel.isLoggedIn()) {
             favouriteButton.setVisibility(View.GONE);
         }
-        serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
+        serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 
@@ -102,10 +114,14 @@ public class ServiceDetailsFragment extends Fragment {
                 serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
                     binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
                 });
+
+                if(!service.getAvailable()) {
+                    binding.reserveButton.setClickable(false);
+                }
             }
         });
 
-        serviceViewModel.isFavourite(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
+        serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
                     result
@@ -115,7 +131,6 @@ public class ServiceDetailsFragment extends Fragment {
         });
 
         favouriteButton.setOnClickListener(v -> {
-            Long id = getArguments().getLong(ARG_ID);
             if(isFavourite) {
                 serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
                     if(result) {

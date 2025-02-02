@@ -24,17 +24,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class ProductViewModel extends ViewModel {
 
-    private final AuthRepository authRepository;
     private final ProductRepository productRepository;
     private final AccountProductRepository accountProductRepository;
 
     @Inject
     public ProductViewModel(
             AccountProductRepository accountProductRepository,
-            AuthRepository authRepository,
             ProductRepository productRepository
     ) {
-        this.authRepository = authRepository;
         this.productRepository = productRepository;
         this.accountProductRepository = accountProductRepository;
     }
@@ -59,9 +56,6 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImages(id);
     }
 
-    public String getUserRole()  {
-        return authRepository.getUserRole();
-    }
     public LiveData<Boolean> isFavourite(Long id) {
         return accountProductRepository.isFavouriteProduct(id);
     }

@@ -12,26 +12,19 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
-import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
-import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.util.listeners.OnPurchaseListener;
 
 import java.util.ArrayList;
 import java.util.List;
