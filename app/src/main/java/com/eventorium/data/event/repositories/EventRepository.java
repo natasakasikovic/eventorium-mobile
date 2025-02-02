@@ -1,16 +1,21 @@
 package com.eventorium.data.event.repositories;
 
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.util.ErrorResponse;
+import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
@@ -19,6 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -179,6 +185,99 @@ public class EventRepository {
             @Override
             public void onFailure(Call<EventDetails> call, Throwable t) {
                 result.postValue(Result.error(t.getMessage()));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarEvent>>> getAttendingEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getAttendingEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events."));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
+        MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
+
+        service.getOrganizerEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading events organized by you."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading events organized by you."));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<Uri>> exportToPdf(Long id, Context context) {
+        MutableLiveData<Result<Uri>> result = new MutableLiveData<>();
+        service.exportToPdf(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        Uri uri = FileUtil.savePdfToDownloads(context, response.body());
+                        if (uri != null) result.postValue(Result.success(uri));
+                        else result.postValue(Result.error("Failed to export pdf."));
+                    } catch (IOException e) {
+                        result.postValue(Result.error("Failed to export pdf."));
+                    }
+                } else {
+                    result.postValue(Result.error("Failed to export pdf."));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.postValue(Result.error("Failed to export pdf."));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<Activity>>> getAgenda(Long id) {
+        MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
+
+        service.getAgenda(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading event agenda"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Activity>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading event agenda"));
             }
         });
 

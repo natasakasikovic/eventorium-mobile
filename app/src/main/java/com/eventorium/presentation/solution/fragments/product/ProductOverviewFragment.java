@@ -56,11 +56,7 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            if(products.getError() == null) {
-                adapter.setData(products.getData());
-            }
-        });
+
         observeProducts();
         setUpListener();
     }

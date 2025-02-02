@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_favourite) {
                 navController.navigate(R.id.favourites);
             } else if (id == R.id.nav_calendar) {
-                navController.navigate(R.id.bookingCalendarFragment);
+                navController.navigate(R.id.calendarFragment);
             }
             return true;
         });
@@ -240,8 +240,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.nav_logout) {
             logOutUser();
         } else if (id == R.id.nav_notification) {
-            // TODO: navigate to notifications fragment
-            Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+            navController.navigate(R.id.notificationsFragment);
         } else if (id == R.id.nav_messages) {
             // TODO: navigate to messages fragment
             Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();

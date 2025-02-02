@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
@@ -56,4 +57,7 @@ public interface ServiceService {
 
     @GET("services/search/all")
     Call<List<ServiceSummary>> searchServices(@Query("keyword") String keyword);
+
+    @GET("provider-reservations")
+    Call<List<CalendarReservation>> getReservations();
 }

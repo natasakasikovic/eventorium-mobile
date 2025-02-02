@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
@@ -340,5 +341,26 @@ public class ServiceRepository {
             }
         });
         return liveData;
+    }
+
+    public LiveData<Result<List<CalendarReservation>>> getReservations() {
+        MutableLiveData<Result<List<CalendarReservation>>> result = new MutableLiveData<>();
+
+        serviceService.getReservations().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CalendarReservation>> call, Response<List<CalendarReservation>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error("Error while loading service reservations"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarReservation>> call, Throwable t) {
+                result.postValue(Result.error("Error while loading service reservations"));
+            }
+        });
+        return result;
     }
 }
