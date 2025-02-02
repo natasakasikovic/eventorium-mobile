@@ -141,7 +141,7 @@ public class CategoryRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
         return liveData;

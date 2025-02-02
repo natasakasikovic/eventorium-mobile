@@ -234,7 +234,7 @@ public class ServiceRepository {
                     @NonNull Call<Void> call,
                     @NonNull Throwable t
             ) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
         return liveData;

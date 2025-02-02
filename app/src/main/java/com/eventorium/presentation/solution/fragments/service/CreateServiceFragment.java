@@ -116,18 +116,15 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void loadCategories() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                new ArrayList<>(List.of(""))
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        Category suggestion = Category.builder().id(null).name("I would like to suggest category").build();
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
-            adapter.notifyDataSetChanged();
-            binding.categorySelector.setAdapter(adapter);
-            binding.categorySelector.setTag(categories);
+            categories.add(0, suggestion);
+            ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    categories
+            );
+            binding.categorySelector.setAdapter(categoryAdapter);
         });
     }
 
@@ -138,18 +135,10 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private Category getCategory() {
-        String categoryName = binding.categorySelector.getSelectedItem().toString();
-        Category category;
-        if(!categoryName.isEmpty()) {
-            category = ((List<Category>) binding.categorySelector.getTag())
-                    .stream()
-                    .filter(c -> c.getName().equals(categoryName))
-                    .findFirst().get();
-        } else {
-            category = new Category(
-                    null,
-                    String.valueOf(binding.suggestCategoryNameText.getText()),
-                    String.valueOf(binding.suggestCategoryDescriptionText.getText()));
+        Category category = (Category) binding.categorySelector.getSelectedItem();
+        if (category.getId() == null) {
+            category.setName(String.valueOf(binding.suggestCategoryNameText.getText()));
+            category.setDescription(String.valueOf(binding.suggestCategoryDescriptionText.getText()));
         }
         return category;
     }
