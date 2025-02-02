@@ -2,12 +2,14 @@ package com.eventorium.presentation.event.fragments.budget;
 
 import static java.util.stream.Collectors.toList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,6 +112,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
     }
 
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void restoreBudget() {
         budgetViewModel.getBudget(event.getId()).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null && !result.getData().getItems().isEmpty()) {
@@ -117,6 +120,8 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
                 purchasedCategories =  budget.getItems().stream()
                         .map(BudgetItem::getCategory)
                         .collect(toList());
+                binding.plannedAmount.setText("Planned amount: " + String.format("%.2f", budget.getPlannedAmount()));
+                binding.spentAmount.setText("Spent amount: " + String.format("%.2f", budget.getSpentAmount()));
             }
         });
 
