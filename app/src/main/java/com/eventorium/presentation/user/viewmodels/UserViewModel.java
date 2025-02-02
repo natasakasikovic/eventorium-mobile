@@ -49,4 +49,8 @@ public class UserViewModel extends ViewModel {
     public LiveData<Result<Void>> changePassword(ChangePasswordRequest request) {
         return repository.changePassword(request);
     }
+
+    public LiveData<Result<Void>> blockUser(Long id) {
+        return repository.blockUser(id);
+    }
 }
