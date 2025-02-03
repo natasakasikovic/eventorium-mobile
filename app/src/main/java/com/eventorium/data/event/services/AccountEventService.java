@@ -24,4 +24,7 @@ public interface AccountEventService {
 
     @GET("account/events/favourites")
     Call<List<EventSummary>> getFavouriteEvents();
+
+    @GET("account/events/my-events")
+    Call<List<EventSummary>> getOrganizerEvents();
 }

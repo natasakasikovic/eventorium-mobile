@@ -1,5 +1,6 @@
 package com.eventorium.data.event.repositories;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -23,6 +24,27 @@ public class AccountEventRepository {
 
     public AccountEventRepository(AccountEventService service) {
         this.service = service;
+    }
+
+    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
+        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
+        service.getOrganizerEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<EventSummary>> call,
+                    @NonNull Response<List<EventSummary>> response
+            ) {
+                if (response.body() != null && response.isSuccessful()) {
+                    result.postValue(Result.success(response.body()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventSummary>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
     }
 
     public LiveData<Boolean> isFavouriteEvent(Long id) {
