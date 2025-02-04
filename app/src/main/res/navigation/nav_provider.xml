@@ -67,7 +67,7 @@
         tools:layout="@layout/fragment_price_list"/>
 
     <fragment
-        android:id="@+id/companyDetailsFragment"
+        android:id="@+id/providerCompanyFragment"
         android:name="com.eventorium.presentation.company.fragments.ProviderCompanyFragment"
         android:label="fragment_company_details"
         tools:layout="@layout/fragment_provider_company" />
