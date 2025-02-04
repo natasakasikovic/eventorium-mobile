@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
         } else if (id == R.id.nav_company) {
-            navController.navigate(R.id.companyDetailsFragment);
+            navController.navigate(R.id.providerCompanyFragment);
         } else if (id == R.id.nav_new_service) {
             navController.navigate(R.id.createServiceFragment);
         } else if (id == R.id.nav_price_list) {
