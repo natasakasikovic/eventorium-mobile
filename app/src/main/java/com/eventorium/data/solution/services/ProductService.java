@@ -6,6 +6,7 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -18,6 +19,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface ProductService {
 
@@ -48,4 +50,7 @@ public interface ProductService {
     @Multipart
     @POST("products/{id}/images")
     Call<ResponseBody> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
+
+    @GET("products/filter/all")
+    Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
 }
