@@ -102,11 +102,18 @@ public class UserProfileFragment extends Fragment {
 
     private void blockUser() {
         userViewModel.blockUser(id).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null)
+            if (result.getError() == null) {
                 Toast.makeText(requireContext(), "User is successfully blocked!", Toast.LENGTH_SHORT).show();
+                navigateToHomepage();
+            }
             else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void navigateToHomepage() {
+        NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+        navController.popBackStack(R.id.homepageFragment, false);
     }
 
     private void navigateToReportUser() {
