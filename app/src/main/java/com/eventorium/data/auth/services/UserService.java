@@ -34,4 +34,7 @@ public interface UserService {
 
     @POST("users/password")
     Call<Void> changePassword(@Body ChangePasswordRequest request);
+
+    @POST("user-blocking/{user-id}")
+    Call<Void> blockUser(@Path("user-id") Long id);
 }
