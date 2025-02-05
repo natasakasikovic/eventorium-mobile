@@ -195,4 +195,6 @@
     <string name="save_event_information">Save event information:</string>
     <string name="export_to_pdf">Export to pdf</string>
     <string name="agenda">Agenda</string>
+    <string name="account_deactivated">Account deactivation is complete. You no longer have access to the account.</string>
+    <string name="deactivate_confirmation">Are you sure you want to deactivate your account? Please note that once deactivated, your account cannot be restored.</string>
 </resources>

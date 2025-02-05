@@ -1,6 +1,7 @@
 package com.eventorium.presentation.user.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -27,6 +29,8 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentAccountEditBinding;
+import com.eventorium.presentation.MainActivity;
+import com.eventorium.presentation.shared.dialogs.ConfirmationDialog;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
@@ -37,7 +41,7 @@ public class AccountEditFragment extends Fragment {
 
     private FragmentAccountEditBinding binding;
     private ArrayAdapter<City> cityArrayAdapter;
-    private UserViewModel userViewModel;
+    private UserViewModel viewModel;
     private CityViewModel cityViewModel;
     private Person updateRequest;
     private Uri selectedImageUri = null;
@@ -53,7 +57,7 @@ public class AccountEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
-        userViewModel = provider.get(UserViewModel.class);
+        viewModel = provider.get(UserViewModel.class);
         cityViewModel = provider.get(CityViewModel.class);
 
         pickImageLauncher = registerForActivityResult(
@@ -74,6 +78,7 @@ public class AccountEditFragment extends Fragment {
         setCities();
         setupSaveButton();
         setupImagePicker();
+        setupDeactivateButton();
         loadAccountDetails();
         return binding.getRoot();
     }
@@ -105,13 +110,44 @@ public class AccountEditFragment extends Fragment {
         });
     }
 
-    public void showChangePasswordDialog() {
+    private void showChangePasswordDialog() {
         PasswordEditFragment dialogFragment = PasswordEditFragment.newInstance();
         dialogFragment.show(getParentFragmentManager(), "PasswordEditDialog");
     }
 
+    private void setupDeactivateButton() {
+        Button btn = binding.deactivateAccountButton;
+        btn.setOnClickListener(v -> showConfirmationDialog());
+    }
+
+    public void showConfirmationDialog() {
+        new ConfirmationDialog(requireContext())
+                .setMessage(getString(R.string.deactivate_confirmation))
+                .setOnConfirmButtonListener(this::deactivate)
+                .show();
+    }
+
+    private void deactivate() {
+        viewModel.deactivateAccount().observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                showMessage(getString(R.string.account_deactivated));
+                MainActivity mainActivity = (MainActivity) requireActivity();
+                mainActivity.logOutUser();
+            } else {
+                showMessage(result.getError());
+            }
+        });
+    }
+
+    private void showMessage(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
     private void loadAccountDetails() {
-        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), result -> {
+        viewModel.getCurrentUser().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 AccountDetails accountDetails = result.getData();
                 binding.nameEditText.setText(accountDetails.getName());
@@ -133,7 +169,7 @@ public class AccountEditFragment extends Fragment {
 
     private void loadProfilePhoto(Long userId) {
         binding.profileImageLoader.setVisibility(View.VISIBLE);
-        userViewModel.getProfilePhoto(userId).observe(getViewLifecycleOwner(), profilePhoto -> {
+        viewModel.getProfilePhoto(userId).observe(getViewLifecycleOwner(), profilePhoto -> {
             if (profilePhoto != null)
                 binding.profileImage.setImageBitmap(profilePhoto);
             else
@@ -150,7 +186,7 @@ public class AccountEditFragment extends Fragment {
             }
 
             getFormFields();
-             userViewModel.update(updateRequest).observe(getViewLifecycleOwner(), result -> {
+            viewModel.update(updateRequest).observe(getViewLifecycleOwner(), result -> {
                  if (result.getError() == null) {
                      if (selectedImageUri != null) uploadProfilePhoto();
                      else navigateToAccountDetails();
@@ -179,8 +215,8 @@ public class AccountEditFragment extends Fragment {
     }
 
     private void uploadProfilePhoto() {
-        userViewModel.updateProfilePhoto(getContext(), selectedImageUri)
-                .observe(getViewLifecycleOwner(), success ->{
+        viewModel.updateProfilePhoto(getContext(), selectedImageUri)
+                .observe(getViewLifecycleOwner(), success -> {
                     if (!success) Toast.makeText(requireContext(),
                             R.string.profile_photo_not_added,
                             Toast.LENGTH_LONG).show();

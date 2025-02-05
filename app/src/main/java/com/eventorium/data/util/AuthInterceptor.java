@@ -49,7 +49,7 @@ public class AuthInterceptor implements Interceptor {
             String responseBodyString = responseBody != null ? responseBody.string() : "";
 
             if (responseBodyString.contains("Token expired")) {
-                sharedPreferences.edit().remove("user").apply();
+                sharedPreferences.edit().clear().apply();
 
                 Intent intent = new Intent(context, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

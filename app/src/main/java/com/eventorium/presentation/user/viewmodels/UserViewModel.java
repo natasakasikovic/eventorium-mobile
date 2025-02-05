@@ -53,4 +53,8 @@ public class UserViewModel extends ViewModel {
     public LiveData<Result<Void>> blockUser(Long id) {
         return repository.blockUser(id);
     }
+
+    public LiveData<Result<Void>> deactivateAccount() {
+        return repository.deactivateAccount();
+    }
 }
