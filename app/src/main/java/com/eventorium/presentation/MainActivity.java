@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String role = sharedPreferences.getString("role", null);
         if (role == null) refresh("GUEST");
-        else refresh(role.toUpperCase());
+        else refresh(role);
     }
 
     public void refresh(String role) {
