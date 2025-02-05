@@ -1,5 +1,6 @@
 package com.eventorium.presentation.solution.fragments.product;
 
+import static com.eventorium.R.*;
 import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
@@ -16,14 +17,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
+import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +47,8 @@ public class ProductOverviewFragment extends Fragment {
 
     private FragmentProductOverviewBinding binding;
     private ProductViewModel viewModel;
+    private EventTypeViewModel eventTypeViewModel;
+    private CategoryViewModel categoryViewModel;
     private ProductsAdapter adapter;
 
     public ProductOverviewFragment() { }
@@ -45,7 +60,8 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+
+        initializeViewModels();
 
         configureAdapter();
         binding.productsRecycleView.setAdapter(adapter);
@@ -53,12 +69,18 @@ public class ProductOverviewFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void initializeViewModels() {
+        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         observeProducts();
-        setUpListener();
+        setUpListeners();
     }
 
     private void configureAdapter(){
@@ -75,14 +97,13 @@ public class ProductOverviewFragment extends Fragment {
             if (result.getError() == null) {
                 adapter.setData(result.getData());
                 loadProductImages(result.getData());
-            } else {
+            } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-            }
         });
     }
 
-    private void setUpListener(){
-        binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    private void setUpListeners() {
+        binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
@@ -98,6 +119,119 @@ public class ProductOverviewFragment extends Fragment {
                 return false;
             }
         });
+
+        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
+    }
+
+    private void createBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.products_filter, null);
+
+        loadCategories(dialogView.findViewById(R.id.spinnerCategory));
+        loadEventTypes(dialogView.findViewById(R.id.spinnerEventType));
+
+        bottomSheetDialog.setContentView(dialogView);
+        bottomSheetDialog.setOnDismissListener(dialog -> onBottomSheetDismiss((BottomSheetDialog) dialog));
+
+        bottomSheetDialog.show();
+    }
+
+    private void onBottomSheetDismiss(BottomSheetDialog dialogView) {
+
+        TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
+        String name = nameEditText.getText().toString().trim();
+
+        TextInputEditText descriptionEditText = dialogView.findViewById(id.descriptionEditText);
+        String description = descriptionEditText.getText().toString().trim();
+
+        boolean availability = ((CheckBox) dialogView.findViewById(R.id.availabilityBox)).isChecked();
+
+        Double minPrice = parsePrice(dialogView.findViewById(R.id.minPriceEditText));
+        Double maxPrice = parsePrice(dialogView.findViewById(R.id.maxPriceEditText));
+
+        Category category = getFromSpinner(dialogView.findViewById(R.id.spinnerCategory));
+        EventType eventType = getFromSpinner(dialogView.findViewById(R.id.spinnerEventType));
+
+        ProductFilter filter = ProductFilter.builder()
+                .name(name)
+                .description(description)
+                .availability(availability)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .category(category != null ? category.getName() : null)
+                .type(eventType != null ? eventType.getName() : null)
+                .build();
+
+
+        observeFilteringProducts(filter);
+    }
+
+    private void observeFilteringProducts(ProductFilter filter) {
+        viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                adapter.setData(result.getData());
+                loadProductImages(result.getData());
+            } else
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private Double parsePrice(TextInputEditText textInput) {
+        String priceText = textInput.getText() != null ? textInput.getText().toString().trim() : "";
+
+        if (priceText.isEmpty()) return null;
+
+        try {
+            return Double.parseDouble(priceText);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private <T> T getFromSpinner(Spinner spinner) {
+        String name = spinner.getSelectedItem() != null ? spinner.getSelectedItem().toString().trim() : "";
+
+        if (name.isEmpty())
+            return null;
+
+        List<T> items = (List<T>) spinner.getTag();
+        if (items == null)
+            return null;
+
+        return items.stream().filter(item -> name.equals(getItemName(item))).findFirst().orElse(null);
+    }
+
+    private <T> String getItemName(T item) {
+        try {
+            Method method = item.getClass().getMethod("getName");
+            return (String) method.invoke(item);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return "";
+        }
+    }
+
+    private void loadEventTypes(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>(List.of("")));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            adapter.addAll(eventTypes.stream().map(EventType::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(eventTypes);
+        });
+    }
+
+    private void loadCategories(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>(List.of("")));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
+            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(categories);
+        });
     }
 
     private void loadProductImages(List<ProductSummary> products) {
@@ -106,9 +240,8 @@ public class ProductOverviewFragment extends Fragment {
                     if (image != null){
                         product.setImage(image);
                         int position = products.indexOf(product);
-                        if (position != -1) {
+                        if (position != -1)
                             adapter.notifyItemChanged(position);
-                        }
                     }
                 })
         );
@@ -119,5 +252,4 @@ public class ProductOverviewFragment extends Fragment {
         super.onDestroy();
         binding = null;
     }
-
 }
