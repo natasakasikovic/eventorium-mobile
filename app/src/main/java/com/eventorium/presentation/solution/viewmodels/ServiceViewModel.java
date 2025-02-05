@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
@@ -90,4 +91,7 @@ public class ServiceViewModel extends ViewModel {
         return serviceRepository.searchServices(keyword);
     }
 
+    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
+        return serviceRepository.filterServices(filter);
+    }
 }

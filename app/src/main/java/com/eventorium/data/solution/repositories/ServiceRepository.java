@@ -14,18 +14,24 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.FileUtil;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 import com.eventorium.data.util.dtos.ImageResponseDto;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -37,16 +43,16 @@ import retrofit2.Response;
 
 public class ServiceRepository {
 
-    private final ServiceService serviceService;
+    private final ServiceService service;
 
     @Inject
-    public ServiceRepository(ServiceService serviceService) {
-        this.serviceService = serviceService;
+    public ServiceRepository(ServiceService service) {
+        this.service = service;
     }
 
     public LiveData<Result<Long>> createService(CreateService dto) {
         MutableLiveData<Result<Long>> result = new MutableLiveData<>();
-        serviceService.createService(dto).enqueue(new Callback<>() {
+        service.createService(dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<ServiceSummary> call,
@@ -72,7 +78,7 @@ public class ServiceRepository {
 
     public LiveData<Service> getService(Long id) {
         MutableLiveData<Service> result = new MutableLiveData<>();
-        serviceService.getService(id).enqueue(new Callback<>() {
+        service.getService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Service> call,
@@ -101,7 +107,7 @@ public class ServiceRepository {
 
     public LiveData<Bitmap> getServiceImage(Long id) {
         MutableLiveData<Bitmap> result = new MutableLiveData<>();
-        serviceService.getServiceImage(id).enqueue(new Callback<>() {
+        service.getServiceImage(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<ResponseBody> call,
@@ -143,7 +149,7 @@ public class ServiceRepository {
             return result;
         }
 
-        serviceService.uploadImages(serviceId, parts).enqueue(new Callback<>() {
+        service.uploadImages(serviceId, parts).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<ResponseBody> call,
@@ -172,7 +178,7 @@ public class ServiceRepository {
     public LiveData<List<Bitmap>> getServiceImages(Long id) {
         MutableLiveData<List<Bitmap>> liveData = new MutableLiveData<>();
 
-        serviceService.getServiceImages(id).enqueue(new Callback<>() {
+        service.getServiceImages(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<List<ImageResponseDto>> call,
@@ -205,7 +211,7 @@ public class ServiceRepository {
 
     public LiveData<Result<Void>> deleteService(Long id) {
         MutableLiveData<Result<Void>> successful = new MutableLiveData<>();
-        serviceService.deleteService(id).enqueue(new Callback<>() {
+        service.deleteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Void> call,
@@ -231,7 +237,7 @@ public class ServiceRepository {
 
     public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
         MutableLiveData<Result<ServiceSummary>> liveData = new MutableLiveData<>();
-        serviceService.updateService(serviceId, dto).enqueue(new Callback<>() {
+        service.updateService(serviceId, dto).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Service> call,
@@ -261,7 +267,7 @@ public class ServiceRepository {
     public LiveData<Result<List<ServiceSummary>>> getTopServices(){
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
 
-        serviceService.getTopServices().enqueue(new Callback<>() {
+        service.getTopServices().enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
                 if (response.isSuccessful() && response.body() != null){
@@ -289,7 +295,7 @@ public class ServiceRepository {
     public LiveData<Result<List<ServiceSummary>>> getServices() {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
 
-        serviceService.getServices().enqueue(new Callback<>() {
+        service.getServices().enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<ServiceSummary>> call,
                                    @NonNull Response<List<ServiceSummary>> response) {
@@ -307,7 +313,7 @@ public class ServiceRepository {
 
     public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Double price) {
         MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        serviceService.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+        service.getSuggestions(categoryId, price).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<List<ServiceSummary>> call,
@@ -328,7 +334,7 @@ public class ServiceRepository {
 
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-        serviceService.searchServices(keyword).enqueue(new Callback<>() {
+        service.searchServices(keyword).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
                 if (response.body() != null && response.isSuccessful()) {
@@ -346,7 +352,7 @@ public class ServiceRepository {
     public LiveData<Result<List<CalendarReservation>>> getReservations() {
         MutableLiveData<Result<List<CalendarReservation>>> result = new MutableLiveData<>();
 
-        serviceService.getReservations().enqueue(new Callback<>() {
+        service.getReservations().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<CalendarReservation>> call, Response<List<CalendarReservation>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -362,5 +368,56 @@ public class ServiceRepository {
             }
         });
         return result;
+    }
+
+    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+
+        service.filterServices(getFilterParams(filter)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
+                if (response.isSuccessful() && response.body() != null)
+                    result.postValue(Result.success(response.body()));
+                else
+                    handleErrorResponse(response, result);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+
+        return result;
+    }
+
+    private void handleErrorResponse(Response<List<ServiceSummary>> response, MutableLiveData<Result<List<ServiceSummary>>> result) {
+        try {
+            String errResponse = response.errorBody().string();
+            result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+        } catch (IOException e) {
+            result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+        }
+    }
+
+    private Map<String, String> getFilterParams(ServiceFilter filter) {
+        Map<String, String> params = new HashMap<>();
+
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
+        addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "type", filter.getType());
+        addParamIfNotNull(params, "minPrice", filter.getMinPrice());
+        addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
+        addParamIfNotNull(params, "availability", filter.getAvailability());;
+
+        return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
 }
