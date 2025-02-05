@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
 import com.eventorium.data.util.ErrorResponse;
@@ -14,7 +15,10 @@ import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -171,5 +175,54 @@ public class AccountProductRepository {
         });
 
         return result;
+    }
+
+    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
+        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
+
+        service.filterProducts(getFilterParams(filter)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
+                if (response.isSuccessful() && response.body() != null)
+                    result.postValue(Result.success(response.body()));
+                else {
+                    try {
+                        String errResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+
+
+        return result;
+    }
+
+    private Map<String, String> getFilterParams(ProductFilter filter) {
+        Map<String, String> params = new HashMap<>();
+
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
+        addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "type", filter.getType());
+        addParamIfNotNull(params, "minPrice", filter.getMinPrice());
+        addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
+        addParamIfNotNull(params, "availability", filter.getAvailability());;
+
+        return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
 }

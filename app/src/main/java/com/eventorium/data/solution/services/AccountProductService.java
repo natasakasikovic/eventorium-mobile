@@ -4,6 +4,7 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -12,6 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface AccountProductService {
 
@@ -32,4 +34,7 @@ public interface AccountProductService {
 
     @GET("account/products/search/all")
     Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
+
+    @GET("account/products/filter/all")
+    Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
 }

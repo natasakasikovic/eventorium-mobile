@@ -3,6 +3,7 @@ package com.eventorium.presentation.solution.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.util.Result;
@@ -28,5 +29,9 @@ public class ManageableProductViewModel extends ViewModel {
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         return repository.searchProducts(keyword);
+    }
+
+    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
+        return repository.filterProducts(filter);
     }
 }
