@@ -22,7 +22,6 @@ public abstract class BaseProductAdapter<T extends BaseProductAdapter.BaseProduc
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-
     public void setData(List<ProductSummary> data) {
         productSummaries = data;
         notifyDataSetChanged();

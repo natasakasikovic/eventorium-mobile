@@ -112,11 +112,11 @@ public class AccountProductRepository {
         service.getFavouriteProducts().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null)
                     result.postValue(Result.success(response.body()));
-                } else {
+                else
                     result.postValue(Result.error("Error while loading favourite products"));
-                }
+
             }
 
             @Override
@@ -134,9 +134,9 @@ public class AccountProductRepository {
         service.getProducts().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null)
                     result.postValue(Result.success(response.body()));
-                } else {
+                else {
                     try {
                         String err = response.errorBody().string();
                         result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
@@ -161,11 +161,10 @@ public class AccountProductRepository {
         service.searchProducts(keyword).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null)
                     result.postValue(Result.success(response.body()));
-                } else {
+                else
                     result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                }
             }
 
             @Override

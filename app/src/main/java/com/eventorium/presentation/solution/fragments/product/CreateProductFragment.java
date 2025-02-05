@@ -127,19 +127,16 @@ public class CreateProductFragment extends Fragment {
             if (result.getData() != null) {
                 if (imageUris.isEmpty()) navigateToProductOverview();
                 else uploadImages(result.getData().getId());
-            } else {
-                displayErrorMessage(result.getError());
             }
+            else displayErrorMessage(result.getError());
+
         });
     }
 
     private void uploadImages(Long id) {
         productViewModel.uploadImages(id, requireContext(), imageUris).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                navigateToProductOverview();
-            } else {
-                displayErrorMessage(result.getError());
-            }
+            if (result.getError() == null) navigateToProductOverview();
+            else displayErrorMessage(result.getError());
         });
     }
 
