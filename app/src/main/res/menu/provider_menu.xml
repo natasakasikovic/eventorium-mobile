@@ -2,19 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_services"
-        android:title="@string/services"
-        android:icon="@drawable/ic_info" />
-
-    <item
         android:id="@+id/nav_company"
         android:title="@string/your_company"
         android:icon="@drawable/ic_company"/>
 
     <item
+        android:id="@+id/nav_services"
+        android:title="@string/your_services"
+        android:icon="@drawable/ic_info" />
+
+    <item
         android:id="@+id/nav_new_service"
         android:icon="@drawable/ic_plus"
         android:title="@string/new_service" />
+
+    <item
+        android:id="@+id/nav_products"
+        android:icon="@drawable/ic_info"
+        android:title="@string/your_products" />
 
     <item
         android:id="@+id/nav_new_product"
@@ -25,4 +30,5 @@
         android:id="@+id/nav_price_list"
         android:icon="@drawable/ic_price_list"
         android:title="@string/price_list" />
+
 </menu>

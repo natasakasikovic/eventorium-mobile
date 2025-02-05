@@ -11,12 +11,6 @@
             android:title="@string/messages"
             android:icon="@drawable/ic_message" />
 
-        <!--TODO: DELETE, TEMPORARY!-->
-        <item
-            android:id="@+id/nav_see_other_profile"
-            android:title="See other profile"
-            android:icon="@drawable/ic_account" />
-
         <item
             android:id="@+id/nav_logout"
             android:title="@string/log_out"

@@ -34,4 +34,8 @@ public class AuthViewModel extends ViewModel {
     public String getUserRole() {
         return repository.getUserRole();
     }
+
+    public Long getUserId() {
+        return repository.getUserId();
+    }
 }

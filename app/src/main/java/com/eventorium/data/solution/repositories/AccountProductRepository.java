@@ -9,8 +9,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
+import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -115,6 +118,33 @@ public class AccountProductRepository {
             @Override
             public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
                 result.postValue(Result.error("Error while loading favourite products"));
+            }
+        });
+
+        return result;
+    }
+
+    public LiveData<Result<List<ProductSummary>>> getProducts() {
+        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
+
+        service.getProducts().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 

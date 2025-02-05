@@ -26,4 +26,6 @@ public interface AccountProductService {
     @DELETE("account/products/favourites/{id}")
     Call<ResponseBody> removeFavouriteProduct(@Path("id") Long id);
 
+    @GET("account/products/all")
+    Call<List<ProductSummary>> getProducts();
 }
