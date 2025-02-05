@@ -107,8 +107,10 @@ public class ProductOverviewFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null)
+                    if (result.getError() == null) {
                         adapter.setData(result.getData());
+                        loadProductImages(result.getData());
+                    }
                     else
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
                 });

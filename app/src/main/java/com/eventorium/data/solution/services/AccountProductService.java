@@ -11,6 +11,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface AccountProductService {
 
@@ -28,4 +29,7 @@ public interface AccountProductService {
 
     @GET("account/products/all")
     Call<List<ProductSummary>> getProducts();
+
+    @GET("account/products/search/all")
+    Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
 }

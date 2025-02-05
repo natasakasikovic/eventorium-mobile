@@ -150,4 +150,26 @@ public class AccountProductRepository {
 
         return result;
     }
+
+    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
+        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
+
+        service.searchProducts(keyword).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(Result.success(response.body()));
+                } else {
+                    result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+
+        return result;
+    }
 }

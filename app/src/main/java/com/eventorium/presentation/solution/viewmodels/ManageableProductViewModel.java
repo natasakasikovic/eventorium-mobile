@@ -15,14 +15,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class ManageableProductViewModel extends ViewModel {
-    private final AccountProductRepository accountProductRepository;
+    private final AccountProductRepository repository;
 
     @Inject
-    public ManageableProductViewModel(AccountProductRepository accountProductRepository) {
-        this.accountProductRepository = accountProductRepository;
+    public ManageableProductViewModel(AccountProductRepository repository) {
+        this.repository = repository;
     }
 
     public LiveData<Result<List<ProductSummary>>> getProducts() {
-        return accountProductRepository.getProducts();
+        return repository.getProducts();
+    }
+
+    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
+        return repository.searchProducts(keyword);
     }
 }

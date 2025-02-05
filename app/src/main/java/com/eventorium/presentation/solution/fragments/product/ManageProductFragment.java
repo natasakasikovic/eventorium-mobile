@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -48,26 +49,31 @@ public class ManageProductFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ViewModelProvider provider = new ViewModelProvider(this);
-        viewModel = provider.get(ManageableProductViewModel.class);
-        productViewModel = provider.get(ProductViewModel.class);
+        initializeViewModels();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
+        setUpAdapter();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupAdapter();
         loadProducts();
+        setUpListeners();
     }
 
-    private void setupAdapter() {
+    private void initializeViewModels() {
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(ManageableProductViewModel.class);
+        productViewModel = provider.get(ProductViewModel.class);
+    }
+
+    private void setUpAdapter() {
         recyclerView = binding.productsRecycleView;
         adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<ProductSummary>() {
             @Override
@@ -111,5 +117,27 @@ public class ManageProductFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         navController.navigate(R.id.action_manage_product_to_product_details,
                 ProductDetailsFragment.newInstance(product.getId()).getArguments());
+    }
+
+    private void setUpListeners() {
+        binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
+            @Override
+            public boolean onQueryTextChange(String keyword) {
+                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null) {
+                        products = result.getData();
+                        adapter.setData(products);
+                        loadImages();
+                    }
+                    else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+        });
     }
 }
