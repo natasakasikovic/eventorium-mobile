@@ -14,7 +14,7 @@
             android:id="@+id/reviewsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/reviews"
+            android:text="@string/comments"
             android:textSize="28sp"
             android:textColor="@color/md_theme_primary"
             android:fontFamily="@font/jejumyeongjo"
@@ -41,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/reviewsRecycleView"
+                android:id="@+id/commentsRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

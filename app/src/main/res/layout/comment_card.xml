@@ -45,7 +45,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/solutionButton"
+                android:id="@+id/commentableButton"
                 style="?attr/materialIconButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,15 +53,16 @@
                 app:icon="@drawable/ic_info" />
 
             <TextView
-                android:id="@+id/solutionText"
+                android:id="@+id/commentableText"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/jejumyeongjo"
                 android:textSize="16sp"/>
         </LinearLayout>
+
         <TextView
-            android:id="@+id/feedbackText"
+            android:id="@+id/commentText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="5"
@@ -70,26 +71,6 @@
             android:fontFamily="@font/jejumyeongjo"
             android:padding="16dp"
             android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/ratingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/jejumyeongjo"
-                android:textSize="16sp"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                app:drawableStartCompat="@drawable/ic_star" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -118,8 +99,6 @@
                 app:icon="@drawable/ic_decline"/>
 
         </LinearLayout>
-
-
     </LinearLayout>
 
 

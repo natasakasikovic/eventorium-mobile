@@ -1,4 +1,4 @@
-package com.eventorium.data.interaction.models.review;
+package com.eventorium.data.interaction.models.comment;
 
 import com.eventorium.data.util.models.Status;
 
@@ -13,6 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateReview {
+public class UpdateComment {
     private Status status;
 }

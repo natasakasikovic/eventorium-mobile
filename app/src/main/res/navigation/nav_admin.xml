@@ -74,8 +74,8 @@
 
     <fragment
         android:id="@+id/manageReviewsFragment"
-        android:name="com.eventorium.presentation.review.fragments.ManageReviewFragment"
-        tools:layout="@layout/fragment_manage_review">
+        android:name="com.eventorium.presentation.review.fragments.ManageCommentFragment"
+        tools:layout="@layout/fragment_manage_comment">
         <action
             android:id="@+id/action_manageReviews_to_userProfile"
             app:destination="@+id/otherProfileFragment" />

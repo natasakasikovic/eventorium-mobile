@@ -23,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ReviewFragment extends Fragment {
 
     private FragmentReviewBinding binding;
-    private EventViewModel eventViewModel;
     private BudgetViewModel budgetViewModel;
 
     public ReviewFragment() {
@@ -37,7 +36,6 @@ public class ReviewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
-        eventViewModel = provider.get(EventViewModel.class);
         budgetViewModel = provider.get(BudgetViewModel.class);
     }
 
@@ -45,18 +43,7 @@ public class ReviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReviewBinding.inflate(inflater, container, false);
-        loadEvents();
         return binding.getRoot();
-    }
-
-    private void loadEvents() {
-        eventViewModel.getOrganizerEvents().observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null) {
-
-            } else {
-                showError(result.getError());
-            }
-        });
     }
 
     private void showError(String error) {

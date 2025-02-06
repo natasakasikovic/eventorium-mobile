@@ -1,6 +1,7 @@
 package com.eventorium.data.interaction.models.review;
 
-public enum SolutionType {
+public enum ReviewType {
     PRODUCT,
-    SERVICE
+    SERVICE,
+    EVENT
 }

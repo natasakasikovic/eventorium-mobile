@@ -1,4 +1,4 @@
-package com.eventorium.data.interaction.models.review;
+package com.eventorium.data.interaction.models.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SolutionReview {
-    private Long id;
-    private String name;
-    private SolutionType solutionType;
+public class CreateComment {
+    private String comment;
 }

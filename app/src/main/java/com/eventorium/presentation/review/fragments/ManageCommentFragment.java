@@ -15,18 +15,14 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
-import com.eventorium.data.interaction.models.review.SolutionReview;
-import com.eventorium.data.interaction.models.review.SolutionType;
-import com.eventorium.data.interaction.models.review.UpdateReview;
+import com.eventorium.data.interaction.models.comment.Commentable;
+import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.models.Status;
-import com.eventorium.databinding.FragmentManageReviewBinding;
-import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
-import com.eventorium.presentation.review.adapters.ReviewAdapter;
+import com.eventorium.databinding.FragmentManageCommentBinding;
+import com.eventorium.presentation.review.adapters.CommentAdapter;
 import com.eventorium.presentation.review.listeners.OnReviewListener;
-import com.eventorium.presentation.review.viewmodels.ReviewViewModel;
-import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
-import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
+import com.eventorium.presentation.review.viewmodels.CommentViewModel;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 
 import java.util.ArrayList;
@@ -34,32 +30,32 @@ import java.util.ArrayList;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ManageReviewFragment extends Fragment {
+public class ManageCommentFragment extends Fragment {
 
-    private FragmentManageReviewBinding binding;
-    private ReviewViewModel reviewViewModel;
-    private ReviewAdapter adapter;
+    private FragmentManageCommentBinding binding;
+    private CommentViewModel commentViewModel;
+    private CommentAdapter adapter;
 
-    public ManageReviewFragment() {
+    public ManageCommentFragment() {
     }
-    public static ManageReviewFragment newInstance() {
-        return new ManageReviewFragment();
+    public static ManageCommentFragment newInstance() {
+        return new ManageCommentFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
+        commentViewModel = new ViewModelProvider(this).get(CommentViewModel.class);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding  = FragmentManageReviewBinding.inflate(inflater, container, false);
-        adapter = new ReviewAdapter(new ArrayList<>(), configureAdapter());
-        binding.reviewsRecycleView.setAdapter(adapter);
+        binding  = FragmentManageCommentBinding.inflate(inflater, container, false);
+        adapter = new CommentAdapter(new ArrayList<>(), configureAdapter());
+        binding.commentsRecycleView.setAdapter(adapter);
 
-        loadReviews();
+        loadComments();
         return binding.getRoot();
     }
 
@@ -75,27 +71,19 @@ public class ManageReviewFragment extends Fragment {
             }
 
             @Override
-            public void navigateToSolution(SolutionReview solution) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                Bundle args = new Bundle();
-                if(solution.getSolutionType() == SolutionType.PRODUCT) {
-                    args.putLong(ProductDetailsFragment.ARG_ID, solution.getId());
-                    navController.navigate(R.id.action_manageReviews_to_productDetails, args);
-                } else {
-                    args.putLong(ServiceDetailsFragment.ARG_ID, solution.getId());
-                    navController.navigate(R.id.action_manageReviews_to_serviceDetails, args);
-                }
+            public void navigateToCommentable(ReviewType type, Commentable commentable) {
+
             }
 
             @Override
             public void acceptReview(Long id) {
-                reviewViewModel.updateReview(id, Status.ACCEPTED)
+                commentViewModel.updateComment(id, Status.ACCEPTED)
                         .observe(getViewLifecycleOwner(), result -> handleUpdateResult(id, result));
             }
 
             @Override
             public void declineReview(Long id) {
-                reviewViewModel.updateReview(id, Status.DECLINED)
+                commentViewModel.updateComment(id, Status.DECLINED)
                         .observe(getViewLifecycleOwner(), result -> handleUpdateResult(id, result));
             }
 
@@ -106,7 +94,7 @@ public class ManageReviewFragment extends Fragment {
                             getString(R.string.successfully_updated_review),
                             Toast.LENGTH_SHORT
                     ).show();
-                    reviewViewModel.removeReview(id);
+                    commentViewModel.removeComment(id);
                 } else {
                     Toast.makeText(
                             requireContext(),
@@ -118,10 +106,10 @@ public class ManageReviewFragment extends Fragment {
         };
     }
 
-    private void loadReviews() {
-        reviewViewModel.getPendingReviews();
-        reviewViewModel.getReviews().observe(getViewLifecycleOwner(), reviews -> {
-            adapter.setData(reviews);
+    private void loadComments() {
+        commentViewModel.getPendingComments();
+        commentViewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
+            adapter.setData(comments);
         });
     }
 
