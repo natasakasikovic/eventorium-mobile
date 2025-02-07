@@ -190,4 +190,7 @@
     <string name="comment_management">Comment management</string>
     <string name="successfully_updated_comment">Successfully updated comment!</string>
     <string name="comments">Comments</string>
+    <string name="rate">Rate</string>
+    <string name="comment">Comment</string>
+    <string name="review">Review</string>
 </resources>

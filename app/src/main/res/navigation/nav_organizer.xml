@@ -14,18 +14,6 @@
         tools:layout="@layout/fragment_service_booking" />
 
     <fragment
-        android:id="@+id/budgetProductDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
-        android:label="fragment_product_details"
-        tools:layout="@layout/fragment_product_details" />
-
-    <fragment
-            android:id="@+id/budgetServiceDetailsFragment"
-            android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
-            android:label="fragment_product_details"
-            tools:layout="@layout/fragment_service_details" />
-
-    <fragment
         android:id="@+id/eventInvitationsFragment"
         android:name="com.eventorium.presentation.event.fragments.EventInvitationFragment"
         android:label="fragment_event_invitations"
@@ -38,10 +26,10 @@
         tools:layout="@layout/fragment_budget_planning">
         <action
             android:id="@+id/action_budget_to_productDetails"
-            app:destination="@+id/budgetProductDetailsFragment"/>
+            app:destination="@+id/productDetailsFragment"/>
         <action
             android:id="@+id/action_budget_to_serviceDetails"
-            app:destination="@+id/budgetServiceDetailsFragment"/>
+            app:destination="@+id/serviceDetailsFragment"/>
         <action
             android:id="@+id/action_budget_to_agenda"
             app:destination="@+id/agendaFragment" />
@@ -60,6 +48,19 @@
     </fragment>
 
     <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.eventorium.presentation.review.fragments.ReviewFragment"
+        android:label="review_fragment"
+        tools:layout="@layout/fragment_review">
+        <action
+            android:id="@+id/action_review_to_productDetails"
+            app:destination="@+id/productDetailsFragment"/>
+        <action
+            android:id="@+id/action_review_to_serviceDetails"
+            app:destination="@+id/serviceDetailsFragment"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/createEventFragment"
         android:name="com.eventorium.presentation.event.fragments.CreateEventFragment"
         android:label="create_event_fragment"
@@ -69,5 +70,48 @@
             app:destination="@id/budgetPlanning"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <action
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company_details" />
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details"/>
 
 </navigation>

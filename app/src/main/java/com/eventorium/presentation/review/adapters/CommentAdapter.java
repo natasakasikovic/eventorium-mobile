@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.Commentable;
-import com.eventorium.presentation.review.listeners.OnReviewListener;
+import com.eventorium.presentation.review.listeners.OnManageCommentListener;
 
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ReviewViewHolder> {
 
     private List<Comment> comments;
-    private final OnReviewListener listener;
+    private final OnManageCommentListener listener;
 
-    public CommentAdapter(List<Comment> comments, OnReviewListener listener) {
+    public CommentAdapter(List<Comment> comments, OnManageCommentListener listener) {
         this.comments = comments;
         this.listener = listener;
     }
@@ -82,8 +82,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ReviewVi
             Commentable commentable = comment.getCommentable();
 
             userButton.setOnClickListener(v -> listener.navigateToProvider(comment.getUser()));
-            acceptButton.setOnClickListener(v -> listener.acceptReview(comment.getId()));
-            declineButton.setOnClickListener(v -> listener.declineReview(comment.getId()));
+            acceptButton.setOnClickListener(v -> listener.acceptComment(comment.getId()));
+            declineButton.setOnClickListener(v -> listener.declineComment(comment.getId()));
             commentableButton.setOnClickListener(v -> listener.navigateToCommentable(comment.getType(), commentable));
         }
     }

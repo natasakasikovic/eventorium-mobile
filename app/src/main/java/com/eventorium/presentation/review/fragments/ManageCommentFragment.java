@@ -22,7 +22,7 @@ import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentManageCommentBinding;
 import com.eventorium.presentation.event.fragments.EventDetailsFragment;
 import com.eventorium.presentation.review.adapters.CommentAdapter;
-import com.eventorium.presentation.review.listeners.OnReviewListener;
+import com.eventorium.presentation.review.listeners.OnManageCommentListener;
 import com.eventorium.presentation.review.viewmodels.CommentViewModel;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
@@ -63,8 +63,8 @@ public class ManageCommentFragment extends Fragment {
     }
 
 
-    private OnReviewListener configureAdapter() {
-        return new OnReviewListener() {
+    private OnManageCommentListener configureAdapter() {
+        return new OnManageCommentListener() {
             @Override
             public void navigateToProvider(UserDetails provider) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
@@ -94,13 +94,13 @@ public class ManageCommentFragment extends Fragment {
             }
 
             @Override
-            public void acceptReview(Long id) {
+            public void acceptComment(Long id) {
                 commentViewModel.updateComment(id, Status.ACCEPTED)
                         .observe(getViewLifecycleOwner(), result -> handleUpdateResult(id, result));
             }
 
             @Override
-            public void declineReview(Long id) {
+            public void declineComment(Long id) {
                 commentViewModel.updateComment(id, Status.DECLINED)
                         .observe(getViewLifecycleOwner(), result -> handleUpdateResult(id, result));
             }
