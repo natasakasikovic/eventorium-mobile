@@ -231,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports){
-        navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_user_reports) {
+            navController.navigate(R.id.userReportsOverviewFragment);
         }
     }
 
@@ -248,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putLong("ARG_USER_ID", 1);
             navController.navigate(R.id.otherProfileFragment, args);
+        } else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.userInvitationsFragment);
         }
     }
 
