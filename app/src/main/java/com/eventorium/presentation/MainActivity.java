@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.eventTypesFragment);
         } else if (id == R.id.nav_user_reports){
             navController.navigate(R.id.userReportsOverviewFragment);
-        } else if (id == R.id.nav_manage_reviews) {
+        } else if (id == R.id.nav_manage_comments) {
             navController.navigate(R.id.manageCommentsFragment);
         }
     }

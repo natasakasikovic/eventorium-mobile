@@ -23,7 +23,6 @@
             app:destination="@id/serviceDetailsFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/bookingCalendarFragment"
         android:name="com.eventorium.presentation.user.fragments.BookingCalendarFragment"
@@ -51,5 +50,10 @@
         android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
         tools:layout="@layout/fragment_event_details" />
 
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
 
 </navigation>

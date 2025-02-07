@@ -20,9 +20,12 @@ import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentManageCommentBinding;
+import com.eventorium.presentation.event.fragments.EventDetailsFragment;
 import com.eventorium.presentation.review.adapters.CommentAdapter;
 import com.eventorium.presentation.review.listeners.OnReviewListener;
 import com.eventorium.presentation.review.viewmodels.CommentViewModel;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
+import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 
 import java.util.ArrayList;
@@ -67,12 +70,27 @@ public class ManageCommentFragment extends Fragment {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
                 args.putLong(UserProfileFragment.ARG_ID, provider.getId());
-                navController.navigate(R.id.action_manageComments_to_userProfile, args);
+                navController.navigate(R.id.otherProfileFragment, args);
             }
 
             @Override
             public void navigateToCommentable(ReviewType type, Commentable commentable) {
-
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                switch(type) {
+                    case PRODUCT -> {
+                        args.putLong(ProductDetailsFragment.ARG_ID, commentable.getId());
+                        navController.navigate(R.id.productDetailsFragment, args);
+                    }
+                    case SERVICE -> {
+                        args.putLong(ServiceDetailsFragment.ARG_ID, commentable.getId());
+                        navController.navigate(R.id.serviceDetailsFragment, args);
+                    }
+                    case EVENT -> {
+                        args.putLong(EventDetailsFragment.ARG_EVENT_ID, commentable.getId());
+                        navController.navigate(R.id.eventDetailsFragment, args);
+                    }
+                }
             }
 
             @Override
@@ -91,7 +109,7 @@ public class ManageCommentFragment extends Fragment {
                 if(result.getError() == null) {
                     Toast.makeText(
                             requireContext(),
-                            getString(R.string.successfully_updated_review),
+                            getString(R.string.successfully_updated_comment),
                             Toast.LENGTH_SHORT
                     ).show();
                     commentViewModel.removeComment(id);
