@@ -7,11 +7,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.event.fragments.EventDetailsFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
         android:padding="16dp"
         android:background="?android:attr/colorBackground">
 
@@ -21,8 +19,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="end">
+            android:layout_gravity="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/favButton"
@@ -30,16 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_not_favourite"
-                android:layout_marginEnd="-15dp"
                 app:iconTint="@android:color/black"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/chatButton"
-                style="?attr/materialIconButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_chat"
-                app:iconTint="@android:color/black" />
 
         </LinearLayout>
 
@@ -47,7 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/actions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/eventName"
@@ -55,14 +48,21 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="20sp"
+            android:layout_marginTop="16dp"
             android:paddingBottom="8dp"
-            android:fontFamily="@font/jejumyeongjo"/>
+            android:fontFamily="@font/jejumyeongjo"
+            app:layout_constraintTop_toBottomOf="@id/actions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
+            android:id="@+id/types"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/eventName"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/eventType"
@@ -84,7 +84,11 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/types"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/description"
@@ -92,14 +96,32 @@
             android:layout_height="wrap_content"
             android:textSize="17sp"
             android:paddingBottom="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="15dp"
-            android:fontFamily="@font/jejumyeongjo"/>
+            android:fontFamily="@font/jejumyeongjo"
+            app:layout_constraintTop_toBottomOf="@id/types"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:id="@+id/details_info_delimiter"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/details"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
+            android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="25dp">
+            android:paddingBottom="25dp"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -188,20 +210,64 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/organizer_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/details_info_delimiter"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="end">
+
+
+            <Button
+                android:id="@+id/organizerBtn"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_account"
+                app:iconTint="@android:color/black" />
+
+            <TextView
+                android:id="@+id/organizerName"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/jejumyeongjo"
+                android:textSize="16sp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chatButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                app:icon="@drawable/ic_chat"
+                app:iconTint="@android:color/black" />
+        </LinearLayout>
+
         <View
+            android:id="@+id/info_question_delimiter"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/organizer_info"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
             android:id="@+id/question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/info_question_delimiter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -223,12 +289,16 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/exportDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/question"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -250,10 +320,15 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/delimiter"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/exportDetails"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/agendaTitle"
@@ -262,12 +337,22 @@
             android:text="@string/agenda"
             android:gravity="center"
             android:textSize="19sp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/delimiter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:fontFamily="@font/jejumyeongjo"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/agenda"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/agendaTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

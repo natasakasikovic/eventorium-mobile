@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -67,19 +70,38 @@ public class EventDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
+        setUpViewModels();
+        toggleActions();
+        setUpButtons();
+        loadAgenda();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadEventDetails();
+    }
+
+    private void setUpViewModels() {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(EventViewModel.class);
         loginViewModel = provider.get(LoginViewModel.class);
-        if (!loginViewModel.isLoggedIn()) {
-            binding.actions.setVisibility(View.GONE);
-            binding.question.setVisibility(View.GONE);
-        }
+    }
+
+    private void setUpButtons() {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         favButton = binding.favButton;
         addToCalendarBtn = binding.btnAddToCalendar;
         exportBtn = binding.btnExport;
-        loadAgenda();
-        return binding.getRoot();
+        binding.organizerBtn.setOnClickListener(v -> navigateToOrganizer());
+    }
+
+    private void toggleActions() {
+        if (!loginViewModel.isLoggedIn()) {
+            binding.actions.setVisibility(View.GONE);
+            binding.question.setVisibility(View.GONE);
+        }
     }
 
     private void navigateToChat() {
@@ -89,10 +111,11 @@ public class EventDetailsFragment extends Fragment {
         navController.navigate(R.id.chatFragment, args);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        loadEventDetails();
+    private void navigateToOrganizer() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(UserProfileFragment.ARG_ID, organizer.getId());
+        navController.navigate(R.id.action_event_details_to_organizer, args);
     }
 
     @SuppressLint("SetTextI18n")
@@ -110,6 +133,7 @@ public class EventDetailsFragment extends Fragment {
                 binding.address.setText(event.getAddress());
                 binding.city.setText(event.getCity());
                 binding.date.setText(event.getDate());
+                setOrganizerName();
                 setupFavIcon();
                 setupFavButton();
                 setupAddToCalendarButton();
@@ -118,6 +142,11 @@ public class EventDetailsFragment extends Fragment {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setOrganizerName() {
+        binding.organizerName.setText(event.getOrganizer().getName() + " " + event.getOrganizer().getLastname());
     }
 
     private void setupFavIcon() {
@@ -206,6 +235,7 @@ public class EventDetailsFragment extends Fragment {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
-
+        SnapHelper snapHelperEvents = new LinearSnapHelper();
+        snapHelperEvents.attachToRecyclerView(binding.agenda);
     }
 }
