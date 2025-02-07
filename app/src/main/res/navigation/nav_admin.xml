@@ -73,18 +73,18 @@
         tools:layout="@layout/fragment_edit_event_type" />
 
     <fragment
-        android:id="@+id/manageReviewsFragment"
+        android:id="@+id/manageCommentsFragment"
         android:name="com.eventorium.presentation.review.fragments.ManageCommentFragment"
         tools:layout="@layout/fragment_manage_comment">
         <action
-            android:id="@+id/action_manageReviews_to_userProfile"
-            app:destination="@+id/otherProfileFragment" />
+            android:id="@+id/action_manageComments_to_userProfile"
+            app:destination="@id/otherProfileFragment" />
         <action
-            android:id="@+id/action_manageReviews_to_serviceDetails"
+            android:id="@+id/action_manageComments_to_serviceDetails"
             app:destination="@+id/serviceDetailsFragment" />
         <action
-            android:id="@+id/action_manageReviews_to_productDetails"
-            app:destination="@+id/productDetailsFragment" />
+            android:id="@+id/action_manageComments_to_productDetails"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
 
 </navigation>

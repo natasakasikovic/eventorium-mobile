@@ -67,7 +67,7 @@ public class ManageCommentFragment extends Fragment {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
                 args.putLong(UserProfileFragment.ARG_ID, provider.getId());
-                navController.navigate(R.id.action_manageReviews_to_userProfile, args);
+                navController.navigate(R.id.action_manageComments_to_userProfile, args);
             }
 
             @Override
