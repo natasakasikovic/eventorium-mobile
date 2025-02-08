@@ -132,4 +132,28 @@ public class AccountEventRepository {
         });
         return result;
     }
+
+    public LiveData<Result<Void>> addToCalendar(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.addToCalendar(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) result.postValue(Result.success(null));
+                else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
+    }
 }

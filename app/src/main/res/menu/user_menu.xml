@@ -18,6 +18,11 @@
             android:icon="@drawable/ic_account" />
 
         <item
+            android:id="@+id/nav_invitations"
+            android:title="@string/your_invitations"
+            android:icon="@drawable/ic_free_cancelation" />
+
+        <item
             android:id="@+id/nav_logout"
             android:title="@string/log_out"
             android:icon="@drawable/ic_logout"

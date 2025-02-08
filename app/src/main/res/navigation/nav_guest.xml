@@ -138,4 +138,9 @@
         android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
         tools:layout="@layout/fragment_company_details" />
 
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.eventorium.presentation.notifications.fragments.NotificationsFragment"
+        tools:layout="@layout/fragment_notifications"/>
+
 </navigation>

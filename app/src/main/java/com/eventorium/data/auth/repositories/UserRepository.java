@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -56,7 +57,7 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<AccountDetails> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 
@@ -83,7 +84,7 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<AccountDetails> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 
@@ -137,7 +138,7 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
         return liveData;
@@ -190,10 +191,62 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
+                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 
         return liveData;
+    }
+
+    public LiveData<Result<Void>> blockUser(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+
+        service.blockUser(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful())
+                    result.postValue(Result.success(null));
+                else {
+                    try {
+                        String errResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
+    }
+
+    public LiveData<Result<Void>> deactivateAccount() {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+
+        service.deactivateAccount().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) result.postValue(Result.success(null));
+                else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+
+        return result;
     }
 }

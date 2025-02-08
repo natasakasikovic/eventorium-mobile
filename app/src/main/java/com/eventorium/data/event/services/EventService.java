@@ -1,6 +1,7 @@
 package com.eventorium.data.event.services;
 
 import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
@@ -8,6 +9,7 @@ import com.eventorium.data.event.models.EventSummary;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -35,4 +37,16 @@ public interface EventService {
 
     @GET("events/search/all")
     Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
+
+    @GET("account/events/my-attending-events")
+    Call<List<CalendarEvent>> getAttendingEvents();
+
+    @GET("account/events/my-events")
+    Call<List<CalendarEvent>> getOrganizerEvents();
+
+    @GET("events/{id}/pdf")
+    Call<ResponseBody> exportToPdf(@Path("id") Long id);
+
+    @GET("events/{id}/agenda")
+    Call<List<Activity>> getAgenda(@Path("id") Long id);
 }

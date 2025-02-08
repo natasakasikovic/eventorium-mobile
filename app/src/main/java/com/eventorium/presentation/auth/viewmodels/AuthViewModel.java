@@ -30,4 +30,8 @@ public class AuthViewModel extends ViewModel {
     public LiveData<Boolean> uploadProfilePhoto(Long id, Context context, Uri uri) {
         return repository.uploadPhoto(id, context, uri);
     }
+
+    public String getUserRole() {
+        return repository.getUserRole();
+    }
 }

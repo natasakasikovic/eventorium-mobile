@@ -24,10 +24,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/bookingCalendarFragment"
-        android:name="com.eventorium.presentation.user.fragments.BookingCalendarFragment"
-        tools:layout="@layout/fragment_booking_calendar"
-        android:label="fragment_booking_calendar" />
+        android:id="@+id/calendarFragment"
+        android:name="com.eventorium.presentation.calendar.fragments.CalendarFragment"
+        tools:layout="@layout/fragment_calendar">
+        <action
+            android:id="@+id/action_calendar_to_event_details"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/accountDetailsFragment"
@@ -55,5 +58,14 @@
         android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
         tools:layout="@layout/fragment_chat"
         android:label="fragment_chat" />
+
+    <fragment
+        android:id="@+id/userInvitationsFragment"
+        android:name="com.eventorium.presentation.event.fragments.UserInvitationsFragment"
+        tools:layout="@layout/fragment_user_invitations">
+        <action
+            android:id="@+id/action_invitations_to_event_details"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 
 </navigation>

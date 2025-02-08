@@ -1,7 +1,5 @@
 package com.eventorium.presentation.user.fragments;
 
-import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +18,7 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.util.constants.ErrorMessages;
 import com.eventorium.databinding.FragmentUserProfileBinding;
+import com.eventorium.presentation.shared.dialogs.ConfirmationDialog;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -60,8 +59,8 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.blockUserButton.setOnClickListener(v -> blockUser());
-        binding.reportUserButton.setOnClickListener(v -> reportUser());
+        binding.blockUserButton.setOnClickListener(v -> openBlockConfirmationDialog());
+        binding.reportUserButton.setOnClickListener(v -> navigateToReportUser());
     }
 
     private void loadAccountDetails() {
@@ -94,11 +93,30 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    private void blockUser() {
-
+    private void openBlockConfirmationDialog() {
+        new ConfirmationDialog(requireContext())
+                .setMessage("Are you sure you want to block this user? This action is permanent and cannot be undone!")
+                .setOnConfirmButtonListener(this::blockUser)
+                .show();
     }
 
-    private void reportUser() {
+    private void blockUser() {
+        userViewModel.blockUser(id).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                Toast.makeText(requireContext(), "User is successfully blocked!", Toast.LENGTH_SHORT).show();
+                navigateToHomepage();
+            }
+            else
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void navigateToHomepage() {
+        NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
+        navController.popBackStack(R.id.homepageFragment, false);
+    }
+
+    private void navigateToReportUser() {
         NavController navController = Navigation.findNavController( requireActivity(), R.id.fragment_nav_content_main );
         Bundle args = new Bundle();
         args.putLong(ARG_ID, id);

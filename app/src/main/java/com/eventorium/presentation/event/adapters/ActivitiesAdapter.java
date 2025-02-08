@@ -18,6 +18,7 @@ import java.util.List;
 public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.ActivityViewHolder> {
     private List<Activity> activities;
     private final OnActivityDeletedListener listener;
+    private boolean isDeleteButtonVisible = true;
 
     public ActivitiesAdapter(List<Activity> activities, OnActivityDeletedListener listener) {
         this.activities = activities;
@@ -39,6 +40,12 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Ac
         holder.startTimeTextView.setText(activity.getStartTime());
         holder.endTimeTextView.setText(activity.getEndTime());
         holder.locationTextView.setText(activity.getLocation());
+
+        if (isDeleteButtonVisible) {
+            holder.deleteBtn.setVisibility(View.VISIBLE);
+        } else {
+            holder.deleteBtn.setVisibility(View.GONE);
+        }
         holder.deleteBtn.setOnClickListener(v -> {
             activities.remove(holder.getAdapterPosition());
             notifyItemRemoved(holder.getAdapterPosition());
@@ -48,6 +55,11 @@ public class ActivitiesAdapter extends RecyclerView.Adapter<ActivitiesAdapter.Ac
     @Override
     public int getItemCount() {
         return activities.size();
+    }
+
+    public void setDeleteButtonVisibility(boolean isVisible) {
+        this.isDeleteButtonVisible = isVisible;
+        notifyDataSetChanged();
     }
 
     public static class ActivityViewHolder extends RecyclerView.ViewHolder {

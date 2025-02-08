@@ -194,8 +194,24 @@
     <string name="comment">Comment</string>
     <string name="review">Review</string>
     <string name="successfully_rated">Successfully rated</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="comment_is_mandatory">Comment is mandatory</string>
     <string name="successfully_create_comment">Successfully create comment</string>
+    <string name="no_plans">No plans for the selected date.</string>
+    <string name="to_attend">Events You Plan to Attend:</string>
+    <string name="added_to_calendar">
+        The event has been successfully added to your calendar. We are counting on your attendance. If there are any changes regarding the event, you will be notified via email. We look forward to seeing you!
+    </string>
+    <string name="organized">Events You`ve Organized:</string>
+    <string name="reservations">Reservations: </string>
+    <string name="save_event_information">Save event information:</string>
+    <string name="export_to_pdf">Export to pdf</string>
+    <string name="agenda">Agenda</string>
+    <string name="account_deactivated">Account deactivation is complete. You no longer have access to the account.</string>
+    <string name="deactivate_confirmation">Are you sure you want to deactivate your account? Please note that once deactivated, your account cannot be restored.</string>
+    <string name="filter_products">Filter products</string>
+    <string name="event_type">Event type</string>
+    <string name="i_will_come">I will come</string>
+    <string name="view_event">View event</string>
+    <string name="invitations">Invitations</string>
+    <string name="your_invitations">Your invitations</string>
 </resources>

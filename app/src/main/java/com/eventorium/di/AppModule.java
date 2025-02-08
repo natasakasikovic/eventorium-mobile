@@ -34,6 +34,8 @@ import com.eventorium.data.interaction.repositories.RatingRepository;
 import com.eventorium.data.interaction.services.ChatService;
 import com.eventorium.data.interaction.services.CommentService;
 import com.eventorium.data.interaction.services.RatingService;
+import com.eventorium.data.notifications.repositories.NotificationRepository;
+import com.eventorium.data.notifications.services.NotificationService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -406,4 +408,17 @@ public class AppModule {
         return new RatingRepository(ratingService);
     }
 
+
+    @Provides
+    @Singleton
+    public static NotificationRepository provideNotificationRepository(NotificationService service) {
+        return new NotificationRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    public NotificationService provideNotificationService(Retrofit retrofit) {
+        return retrofit.create(NotificationService.class);
+    }
 }
