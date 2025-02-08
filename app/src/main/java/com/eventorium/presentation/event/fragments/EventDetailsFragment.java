@@ -173,21 +173,22 @@ public class EventDetailsFragment extends Fragment {
     private void addToFavourites() {
         viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null) {
-                isFavourite = true;
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else
+            } else {
+                isFavourite = true;
                 favButton.setIconResource(R.drawable.ic_favourite);
-
+            }
         });
     }
 
     private void removeFromFavourites() {
         viewModel.removeFromFavourites(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null) {
-                isFavourite = false;
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else
+            } else {
+                isFavourite = false;
                 favButton.setIconResource(R.drawable.ic_not_favourite);
+            }
         });
     }
 
