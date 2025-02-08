@@ -10,6 +10,7 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.util.List;
 
@@ -63,13 +64,14 @@ public class AccountProductRepository {
                 if (!response.isSuccessful()) {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     result.postValue(Result.error(response.message()));
+                } else {
+                    result.setValue(Result.success(null));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 

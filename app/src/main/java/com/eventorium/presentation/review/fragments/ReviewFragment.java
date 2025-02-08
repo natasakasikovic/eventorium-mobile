@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,9 @@ import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.review.adapters.ReviewAdapter;
 import com.eventorium.presentation.review.listeners.OnReviewListener;
+import com.eventorium.presentation.review.viewmodels.RatingViewModel;
+import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
+import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 
@@ -35,6 +40,7 @@ public class ReviewFragment extends Fragment {
     private BudgetViewModel budgetViewModel;
     private ProductViewModel productViewModel;
     private ServiceViewModel serviceViewModel;
+    private RatingViewModel ratingViewModel;
     private ReviewAdapter reviewAdapter;
 
     public ReviewFragment() {
@@ -51,6 +57,7 @@ public class ReviewFragment extends Fragment {
         budgetViewModel = provider.get(BudgetViewModel.class);
         productViewModel = provider.get(ProductViewModel.class);
         serviceViewModel = provider.get(ServiceViewModel.class);
+        ratingViewModel = provider.get(RatingViewModel.class);
     }
 
     @Override
@@ -66,7 +73,15 @@ public class ReviewFragment extends Fragment {
         reviewAdapter = new ReviewAdapter(new ArrayList<>(), new OnReviewListener() {
             @Override
             public void onSeeMoreClick(SolutionReview review) {
-
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                if(review.getType().equals(ReviewType.SERVICE)) {
+                    args.putLong(ServiceDetailsFragment.ARG_ID, review.getId());
+                    navController.navigate(R.id.action_review_to_serviceDetails, args);
+                } else {
+                    args.putLong(ProductDetailsFragment.ARG_ID, review.getId());
+                    navController.navigate(R.id.action_review_to_productDetails, args);
+                }
             }
 
             @Override
@@ -75,8 +90,25 @@ public class ReviewFragment extends Fragment {
             }
 
             @Override
-            public void onRateClick(SolutionReview review) {
-
+            public void onRateClick(SolutionReview review, Integer rating) {
+                Long id = review.getId();
+                if(review.getType().equals(ReviewType.SERVICE)) {
+                    ratingViewModel.createServiceRating(id, rating).observe(getViewLifecycleOwner(), result -> {
+                        if(result.getError() == null) {
+                            showSuccessRating(review.getName());
+                        } else {
+                            showError(result.getError());
+                        }
+                    });
+                } else {
+                    ratingViewModel.createProductRating(id, rating).observe(getViewLifecycleOwner(), result -> {
+                        if(result.getError() == null) {
+                            showSuccessRating(review.getName());
+                        } else {
+                            showError(result.getError());
+                        }
+                    });
+                }
             }
         });
         binding.reviewsRecycleView.setAdapter(reviewAdapter);
@@ -99,21 +131,28 @@ public class ReviewFragment extends Fragment {
 
     private void loadImage(SolutionReview solution, List<SolutionReview> solutions) {
         if(solution.getType() == ReviewType.PRODUCT) {
-            productViewModel.getProductImage(solution.getId()).observe(getViewLifecycleOwner(), image -> {
-                if (image != null) {
-                    setImage(image, solution, solutions.indexOf(solution));
-                }
-            });
+            loadProductImage(solution, solutions);
         } else {
-            serviceViewModel.getServiceImage(solution.getId()).observe(getViewLifecycleOwner(), image -> {
-                if (image != null) {
-                    setImage(image, solution, solutions.indexOf(solution));
-                }
-            });
+            loadServiceImage(solution, solutions);
         }
     }
 
 
+    private void loadProductImage(SolutionReview solution, List<SolutionReview> solutions) {
+        productViewModel.getProductImage(solution.getId()).observe(getViewLifecycleOwner(), image -> {
+            if (image != null) {
+                setImage(image, solution, solutions.indexOf(solution));
+            }
+        });
+    }
+
+    private void loadServiceImage(SolutionReview solution, List<SolutionReview> solutions) {
+        serviceViewModel.getServiceImage(solution.getId()).observe(getViewLifecycleOwner(), image -> {
+            if (image != null) {
+                setImage(image, solution, solutions.indexOf(solution));
+            }
+        });
+    }
     private void setImage(Bitmap image, SolutionReview solution, int position) {
         if (image != null) {
             solution.setImage(image);
@@ -124,11 +163,11 @@ public class ReviewFragment extends Fragment {
     }
 
     private void showError(String error) {
-        Toast.makeText(
-                requireContext(),
-                error,
-                Toast.LENGTH_SHORT
-        ).show();
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showSuccessRating(String name) {
+        Toast.makeText(requireContext(), getString(R.string.successfully_rated) + " " + name, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -30,8 +30,10 @@ import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
 import com.eventorium.data.interaction.repositories.CommentRepository;
+import com.eventorium.data.interaction.repositories.RatingRepository;
 import com.eventorium.data.interaction.services.ChatService;
 import com.eventorium.data.interaction.services.CommentService;
+import com.eventorium.data.interaction.services.RatingService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -382,14 +384,26 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public CommentService provideReviewService(Retrofit retrofit) {
+    public CommentService provideCommentService(Retrofit retrofit) {
         return retrofit.create(CommentService.class);
     }
 
     @Provides
     @Singleton
-    public CommentRepository provideReviewRepository(CommentService commentService) {
+    public CommentRepository provideCommentRepository(CommentService commentService) {
         return new CommentRepository(commentService);
+    }
+
+    @Provides
+    @Singleton
+    public RatingService provideRatingService(Retrofit retrofit) {
+        return retrofit.create(RatingService.class);
+    }
+
+    @Provides
+    @Singleton
+    public RatingRepository provideReviewRepository(RatingService ratingService) {
+        return new RatingRepository(ratingService);
     }
 
 }

@@ -1,14 +1,11 @@
 package com.eventorium.presentation.review.adapters;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +14,6 @@ import com.eventorium.R;
 import com.eventorium.data.interaction.models.rating.Rating;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.presentation.review.listeners.OnReviewListener;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -42,19 +38,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         SolutionReview review = reviews.get(position);
-        if(review.getRating() == null) {
-            configureStarHandlers(holder, position, review);
-        }
         holder.bind(review);
-    }
-
-    private void configureStarHandlers(@NonNull ReviewViewHolder holder, int position, SolutionReview review) {
-        IntStream.range(0, holder.stars.length).forEach(i ->
-            holder.stars[i].setOnClickListener(v -> {
-                review.setRating(new Rating(i + 1));
-                notifyItemChanged(position);
-            })
-        );
     }
 
     @Override
@@ -72,6 +56,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         TextView solutionName;
         ImageView[] stars = new ImageView[5];
         Button seeMoreButton, rateButton, commentButton;
+        private int selectedRating = 0;
+        private boolean ratingLocked = false;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,12 +69,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             loadStars();
         }
 
-        private void updateStars(int rating) {
-            IntStream.range(0, stars.length).forEach(i ->
-                    stars[i].setImageResource(i < rating ? R.drawable.ic_star_filled : R.drawable.ic_star)
-            );
-        }
-
         private void loadStars() {
             stars[0] = itemView.findViewById(R.id.star1);
             stars[1] = itemView.findViewById(R.id.star2);
@@ -97,18 +77,53 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             stars[4] = itemView.findViewById(R.id.star5);
         }
 
+        private void updateStars(int rating) {
+            IntStream.range(0, stars.length).forEach(i ->
+                    stars[i].setImageResource(i < rating ? R.drawable.ic_star_filled : R.drawable.ic_star)
+            );
+        }
+
+        private void enableStarSelection() {
+            IntStream.range(0, stars.length).forEach(i ->
+                    stars[i].setOnClickListener(v -> {
+                        if (!ratingLocked) {
+                            selectedRating = i + 1;
+                            updateStars(selectedRating);
+                        }
+                    })
+            );
+        }
+
         public void bind(SolutionReview review) {
             solutionName.setText(review.getName());
-            if(review.getRating() != null) {
-                rateButton.setVisibility(View.GONE);
-                updateStars(review.getRating().getRating());
-            }
             solutionImage.setImageBitmap(review.getImage());
 
+            if (review.getRating() != null) {
+                selectedRating = review.getRating().getRating();
+                updateStars(selectedRating);
+                disableRating();
+            } else {
+                enableStarSelection();
+                rateButton.setOnClickListener(v -> {
+                    if (selectedRating > 0) {
+                        review.setRating(new Rating(selectedRating));
+                        listener.onRateClick(review, selectedRating);
+                        ratingLocked = true;
+                        disableRating();
+                    }
+                });
+            }
+
             seeMoreButton.setOnClickListener(v -> listener.onSeeMoreClick(review));
-            rateButton.setOnClickListener(v -> listener.onRateClick(review));
             commentButton.setOnClickListener(v -> listener.onCommentClick(review));
+        }
+
+        private void disableRating() {
+            ratingLocked = true;
+            rateButton.setVisibility(View.GONE);
+            for (ImageView star : stars) {
+                star.setOnClickListener(null);
+            }
         }
     }
 }
-
