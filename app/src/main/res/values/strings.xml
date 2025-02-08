@@ -203,4 +203,6 @@
     <string name="view_event">View event</string>
     <string name="invitations">Invitations</string>
     <string name="your_invitations">Your invitations</string>
+    <string name="guests">Guests:</string>
+    <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
 </resources>
