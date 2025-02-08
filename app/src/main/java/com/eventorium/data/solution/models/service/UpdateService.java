@@ -24,8 +24,8 @@ public class UpdateService {
     private Double discount;
     private List<Long> eventTypesIds;
     private ReservationType type;
-    private LocalDate reservationDeadline;
-    private LocalDate cancellationDeadline;
+    private Integer reservationDeadline;
+    private Integer cancellationDeadline;
     private Integer minDuration;
     private Integer maxDuration;
     private Boolean available;
