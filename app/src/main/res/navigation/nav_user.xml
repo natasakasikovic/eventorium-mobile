@@ -67,4 +67,13 @@
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         tools:layout="@layout/fragment_service_details" />
 
+    <fragment
+        android:id="@+id/userInvitationsFragment"
+        android:name="com.eventorium.presentation.event.fragments.UserInvitationsFragment"
+        tools:layout="@layout/fragment_user_invitations">
+        <action
+            android:id="@+id/action_invitations_to_event_details"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+
 </navigation>

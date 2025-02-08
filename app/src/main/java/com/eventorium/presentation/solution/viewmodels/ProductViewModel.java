@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
@@ -74,5 +75,9 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         return productRepository.searchProducts(keyword);
+    }
+
+    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
+        return productRepository.filterProducts(filter);
     }
 }

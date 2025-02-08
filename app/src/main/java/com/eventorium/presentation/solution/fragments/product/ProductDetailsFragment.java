@@ -256,33 +256,38 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void handleIsFavourite() {
-        if(isFavourite) {
-            productViewModel.removeFavouriteProduct(id).observe(getViewLifecycleOwner(), result -> {
-                if(result) {
-                    isFavourite = false;
-                    favouriteButton.setIconResource(R.drawable.ic_not_favourite);
-                    Toast.makeText(
-                            requireContext(),
-                            R.string.removed_service_from_favourites,
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            });
-        } else {
-            productViewModel.addFavouriteProduct(id).observe(getViewLifecycleOwner(), name -> {
-                if(name != null) {
-                    isFavourite = true;
-                    favouriteButton.setIconResource(R.drawable.ic_favourite);
-                    Toast.makeText(
-                            requireContext(),
-                            getString(R.string.added_service)
-                                    + name
-                                    + getString(R.string.to_favourites),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            });
-        }
+        if(isFavourite) removeFromFavourites();
+        else addToFavourites();
+    }
+
+    private void addToFavourites() {
+        productViewModel.addFavouriteProduct(id).observe(getViewLifecycleOwner(), name -> {
+            if(name != null) {
+                isFavourite = true;
+                favouriteButton.setIconResource(R.drawable.ic_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_service)
+                                + name
+                                + getString(R.string.to_favourites),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void removeFromFavourites() {
+        productViewModel.removeFavouriteProduct(id).observe(getViewLifecycleOwner(), result -> {
+            if(result) {
+                isFavourite = false;
+                favouriteButton.setIconResource(R.drawable.ic_not_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        R.string.removed_service_from_favourites,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
     }
 
     @Override

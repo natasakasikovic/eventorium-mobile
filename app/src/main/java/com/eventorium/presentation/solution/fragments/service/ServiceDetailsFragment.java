@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.Event;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
@@ -84,7 +85,6 @@ public class ServiceDetailsFragment extends Fragment {
         loginViewModel = provider.get(LoginViewModel.class);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,75 +92,82 @@ public class ServiceDetailsFragment extends Fragment {
         favouriteButton = binding.favButton;
         if(!loginViewModel.isLoggedIn()) {
             favouriteButton.setVisibility(View.GONE);
+        } else {
+            setupFavouriteListeners();
         }
         serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
-
-                binding.serviceName.setText(service.getName());
-                binding.servicePrice.setText(service.getPrice().toString());
-                binding.serviceDescription.setText(service.getDescription());
-                binding.serviceCategory.setText("Category: " + service.getCategory().getName());
-                binding.providerName.setText(service.getProvider().getName() + " " + service.getProvider().getLastname());
-                binding.companyName.setText(service.getCompany().getName());
-                binding.serviceSpecialties.setText(service.getSpecialties());
-                binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
-                        ? service.getMinDuration() + "h"
-                        : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
-                binding.reservationDeadline.setText("Reservation deadline: " + service.getReservationDeadline().format(formatter));
-                binding.cancellationDeadline.setText("Cancellation deadline: " + service.getCancellationDeadline().format(formatter));
-                binding.rating.setText(service.getRating().toString());
-
-                serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
-                    binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
-                });
-
-                if(!service.getAvailable()) {
-                    binding.reserveButton.setClickable(false);
-                }
-            }
-        });
-
-        serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
-            isFavourite = result;
-            favouriteButton.setIconResource(
-                    result
-                    ? R.drawable.ic_favourite
-                    : R.drawable.ic_not_favourite
-            );
-        });
-
-        favouriteButton.setOnClickListener(v -> {
-            if(isFavourite) {
-                serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
-                    if(result) {
-                        isFavourite = false;
-                        favouriteButton.setIconResource(R.drawable.ic_not_favourite);
-                        Toast.makeText(
-                                requireContext(),
-                                R.string.removed_service_from_favourites,
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                });
-            } else {
-                serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), name -> {
-                    if(name != null) {
-                        isFavourite = true;
-                        favouriteButton.setIconResource(R.drawable.ic_favourite);
-                        Toast.makeText(
-                                requireContext(),
-                                getString(R.string.added_service)
-                                        + name
-                                        + getString(R.string.to_favourites),
-                                Toast.LENGTH_SHORT
-                        ).show();
-                    }
-                });
+                displayServiceDate(service);
             }
         });
 
         return binding.getRoot();
+    }
+
+
+    private void setupFavouriteListeners() {
+        serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
+            isFavourite = result;
+            favouriteButton.setIconResource(
+                    result
+                            ? R.drawable.ic_favourite
+                            : R.drawable.ic_not_favourite
+            );
+        });
+
+        favouriteButton.setOnClickListener(v -> {
+            if (isFavourite) removeFromFavourites();
+            else addToFavourites();
+        });
+    }
+
+    private void addToFavourites() {
+        serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), name -> {
+            if (name != null) {
+                isFavourite = true;
+                favouriteButton.setIconResource(R.drawable.ic_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_service)
+                                + name
+                                + getString(R.string.to_favourites),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void removeFromFavourites() {
+        serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+            if (result) {
+                isFavourite = false;
+                favouriteButton.setIconResource(R.drawable.ic_not_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        R.string.removed_service_from_favourites,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void displayServiceDate(Service service) {
+        binding.serviceName.setText(service.getName());
+        binding.servicePrice.setText(service.getPrice().toString());
+        binding.serviceDescription.setText(service.getDescription());
+        binding.serviceCategory.setText("Category: " + service.getCategory().getName());
+        binding.serviceSpecialties.setText(service.getSpecialties());
+        binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
+                ? service.getMinDuration() + "h"
+                : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
+        binding.reservationDeadline.setText("Reservation deadline: " + service.getReservationDeadline() + " days");
+        binding.cancellationDeadline.setText("Cancellation deadline: " + service.getCancellationDeadline() + " days");
+        binding.rating.setText(service.getRating().toString());
+
+        serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
+            binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
+        });
     }
 
     @Override

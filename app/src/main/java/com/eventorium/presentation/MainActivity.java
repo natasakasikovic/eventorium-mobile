@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String role = sharedPreferences.getString("role", null);
         if (role == null) refresh("GUEST");
-        else refresh(role.toUpperCase());
+        else refresh(role);
     }
 
     public void refresh(String role) {
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.nav_services) {
             navController.navigate(R.id.manageServicesFragment);
         } else if (id == R.id.nav_company) {
-            navController.navigate(R.id.companyDetailsFragment);
+            navController.navigate(R.id.providerCompanyFragment);
         } else if (id == R.id.nav_new_service) {
             navController.navigate(R.id.createServiceFragment);
         } else if (id == R.id.nav_price_list) {
@@ -231,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports){
-        navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_user_reports) {
+            navController.navigate(R.id.userReportsOverviewFragment);
         }
     }
 
@@ -248,6 +248,8 @@ public class MainActivity extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putLong("ARG_USER_ID", 1);
             navController.navigate(R.id.otherProfileFragment, args);
+        } else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.userInvitationsFragment);
         }
     }
 

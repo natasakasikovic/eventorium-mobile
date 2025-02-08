@@ -46,15 +46,15 @@ public class CategoryViewModel extends ViewModel {
         return isLoading;
     }
 
-    public LiveData<Boolean> deleteCategory(Long id) {
-        LiveData<Boolean> result =  categoryRepository.deleteCategory(id);
-        if(result != null && Boolean.TRUE.equals(result.getValue())) {
-            categories.postValue(Objects.requireNonNull(categories.getValue())
-                    .stream()
-                    .filter(category -> !Objects.equals(category.getId(), id))
-                    .collect(toList()));
-        }
-        return result;
+    public LiveData<Result<Void>> deleteCategory(Long id) {
+        return categoryRepository.deleteCategory(id);
+    }
+
+    public void removeCategory(Long id) {
+        categories.postValue(Objects.requireNonNull(categories.getValue())
+                .stream()
+                .filter(category -> !Objects.equals(category.getId(), id))
+                .collect(toList()));
     }
 
     public LiveData<Result<Category>> createCategory(CategoryRequest category) {

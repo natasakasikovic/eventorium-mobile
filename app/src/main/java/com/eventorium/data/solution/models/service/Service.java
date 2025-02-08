@@ -34,8 +34,8 @@ public class Service {
     private Double rating;
     private Category category;
     private ReservationType type;
-    private LocalDate reservationDeadline;
-    private LocalDate cancellationDeadline;
+    private Integer reservationDeadline;
+    private Integer cancellationDeadline;
     private Integer minDuration;
     private Integer maxDuration;
     private Boolean available;

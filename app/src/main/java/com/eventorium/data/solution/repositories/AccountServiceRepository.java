@@ -11,6 +11,7 @@ import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,6 +146,7 @@ public class AccountServiceRepository {
                 if(response.isSuccessful() && response.body() != null) {
                     result.postValue(response.body().getName());
                 } else {
+                    result.postValue(null);
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                 }
             }
@@ -169,6 +171,7 @@ public class AccountServiceRepository {
                 if(response.isSuccessful()) {
                     result.postValue(true);
                 } else {
+                    result.postValue(null);
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                 }
             }
