@@ -44,17 +44,22 @@ public class CommentViewModel extends ViewModel {
     }
 
 
-    public LiveData<Result<Comment>> createProductComment(Long id, CreateComment request) {
-        return commentRepository.createProductComment(id, request);
+    public LiveData<Result<Comment>> createProductComment(Long id, String comment) {
+        return commentRepository.createProductComment(id, new CreateComment(comment));
     }
 
-    public LiveData<Result<Comment>> createServiceComment(Long id, CreateComment request) {
-        return commentRepository.createServiceComment(id, request);
+    public LiveData<Result<Comment>> createServiceComment(Long id, String comment) {
+        return commentRepository.createServiceComment(id, new CreateComment(comment));
+    }
+
+    public LiveData<Result<Comment>> createEventComment(Long id, String comment) {
+        return commentRepository.createEventComment(id, new CreateComment(comment));
     }
 
     public LiveData<Result<Void>> updateComment(Long id, Status status) {
         return commentRepository.updateComment(id, new UpdateComment(status));
     }
+
 
     @Override
     protected void onCleared() {

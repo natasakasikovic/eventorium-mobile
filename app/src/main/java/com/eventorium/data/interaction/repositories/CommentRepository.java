@@ -43,6 +43,11 @@ public class CommentRepository {
         return result;
     }
 
+    public LiveData<Result<Comment>> createEventComment(Long id, CreateComment request) {
+        MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
+        commentService.createServiceComment(id, request).enqueue(handleRequest(result));
+        return result;
+    }
     public LiveData<List<Comment>> getPendingComments() {
         MutableLiveData<List<Comment>> liveData = new MutableLiveData<>();
         commentService.getPendingComments().enqueue(new Callback<>() {

@@ -86,28 +86,21 @@ public class ReviewFragment extends Fragment {
 
             @Override
             public void onCommentClick(SolutionReview review) {
-
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                args.putLong(CommentFragment.ARG_COMMENTABLE_ID, review.getId());
+                args.putString(CommentFragment.ARG_NAME, review.getName());
+                args.putParcelable(CommentFragment.ARG_TYPE, review.getType());
+                navController.navigate(R.id.action_review_to_comment, args);
             }
 
             @Override
             public void onRateClick(SolutionReview review, Integer rating) {
                 Long id = review.getId();
                 if(review.getType().equals(ReviewType.SERVICE)) {
-                    ratingViewModel.createServiceRating(id, rating).observe(getViewLifecycleOwner(), result -> {
-                        if(result.getError() == null) {
-                            showSuccessRating(review.getName());
-                        } else {
-                            showError(result.getError());
-                        }
-                    });
+                    rateService(id, rating, review.getName());
                 } else {
-                    ratingViewModel.createProductRating(id, rating).observe(getViewLifecycleOwner(), result -> {
-                        if(result.getError() == null) {
-                            showSuccessRating(review.getName());
-                        } else {
-                            showError(result.getError());
-                        }
-                    });
+                    rateProduct(id, rating, review.getName());
                 }
             }
         });
@@ -127,6 +120,26 @@ public class ReviewFragment extends Fragment {
 
     private void loadImages(List<SolutionReview> solutions) {
         solutions.forEach(solution -> loadImage(solution, solutions));
+    }
+
+    private void rateService(Long id, Integer rating, String name) {
+        ratingViewModel.createServiceRating(id, rating).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                showSuccessRating(name);
+            } else {
+                showError(result.getError());
+            }
+        });
+    }
+
+    private void rateProduct(Long id, Integer rating, String name) {
+        ratingViewModel.createProductRating(id, rating).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                showSuccessRating(name);
+            } else {
+                showError(result.getError());
+            }
+        });
     }
 
     private void loadImage(SolutionReview solution, List<SolutionReview> solutions) {

@@ -194,4 +194,8 @@
     <string name="comment">Comment</string>
     <string name="review">Review</string>
     <string name="successfully_rated">Successfully rated</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comment_is_mandatory">Comment is mandatory</string>
+    <string name="successfully_create_comment">Successfully create comment</string>
 </resources>
