@@ -21,6 +21,6 @@ public class Reservation {
     private Long serviceId;
     private String serviceName;
     private LocalDate date;
-    private LocalTime startingTime;
-    private LocalTime endingTime;
+    private String startingTime;
+    private String endingTime;
 }

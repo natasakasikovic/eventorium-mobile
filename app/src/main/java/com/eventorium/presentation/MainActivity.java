@@ -209,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.priceList);
         } else if (id == R.id.nav_new_product) {
             navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_manage_reservations) {
+            navController.navigate(R.id.manageReservationFragment);
         }
     }
 

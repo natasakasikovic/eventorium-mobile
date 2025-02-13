@@ -10,6 +10,7 @@ import com.eventorium.data.solution.services.ReservationService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,9 +28,26 @@ public class ReservationRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<Reservation>>> getPendingReservations() {
-        MutableLiveData<Result<List<Reservation>>> result = new MutableLiveData<>();
-        service.getPendingReservations().enqueue(handleRequest(result));
+    public LiveData<List<Reservation>> getPendingReservations() {
+        MutableLiveData<List<Reservation>> result = new MutableLiveData<>();
+        service.getPendingReservations().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<Reservation>> call,
+                    @NonNull Response<List<Reservation>> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    result.postValue(response.body());
+                } else {
+                    result.postValue(new ArrayList<>());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Reservation>> call, @NonNull Throwable t) {
+                result.postValue(new ArrayList<>());
+            }
+        });
         return result;
     }
 

@@ -35,7 +35,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         return new ProductViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         ProductSummary product = productSummaries.get(position);
