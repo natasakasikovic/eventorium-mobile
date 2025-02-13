@@ -77,6 +77,10 @@ public class EventViewModel extends ViewModel {
         return repository.exportToPdf(id, context);
     }
 
+    public LiveData<Result<Uri>> exportGuestListToPdf(Long id, Context context) {
+        return repository.exportGuestListToPdf(id, context);
+    }
+
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         return repository.getAgenda(id);
     }

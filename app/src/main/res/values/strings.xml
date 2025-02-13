@@ -210,4 +210,6 @@
     <string name="successfully_purchased_product">Successfully purchased product!</string>
     <string name="select_event">Select event</string>
     <string name="purchase_product">Purchase product</string>
+    <string name="guests">Guests:</string>
+    <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
 </resources>
