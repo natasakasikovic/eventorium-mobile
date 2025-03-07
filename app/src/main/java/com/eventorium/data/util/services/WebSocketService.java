@@ -9,7 +9,7 @@ import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
 import com.eventorium.data.interaction.models.ChatMessage;
 import com.eventorium.data.interaction.models.ChatMessageRequest;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.interaction.models.UserDetails;
 import com.eventorium.data.interaction.models.Notification;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
@@ -90,7 +90,7 @@ public class WebSocketService {
                 chatMessageListener.onNewChatMessage(chatMessage);
             });
         } else {
-            MessageSender sender = chatMessage.getSender();
+            UserDetails sender = chatMessage.getSender();
             notificationService.showChatNotification(
                     sender.getName() + " " + sender.getLastname(),
                     chatMessage.getMessage(),

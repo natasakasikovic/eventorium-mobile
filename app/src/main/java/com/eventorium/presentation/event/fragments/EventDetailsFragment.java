@@ -24,7 +24,7 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.EventDetails;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.interaction.models.UserDetails;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -45,7 +45,7 @@ public class EventDetailsFragment extends Fragment {
     private AuthViewModel authViewModel;
     private Long id;
     private EventDetails event;
-    private MessageSender organizer;
+    private UserDetails organizer;
     private RecyclerView agenda;
     private ActivitiesAdapter adapter;
     private boolean isFavourite;
@@ -161,7 +161,7 @@ public class EventDetailsFragment extends Fragment {
 
     private void setOrganizer() {
         ChatUserDetails sender = event.getOrganizer();
-        organizer = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
+        organizer = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
     }
 
     private void setupFavIcon() {

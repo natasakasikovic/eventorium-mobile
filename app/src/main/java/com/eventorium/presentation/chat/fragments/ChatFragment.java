@@ -11,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
 import com.eventorium.data.interaction.models.ChatMessage;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.interaction.models.UserDetails;
 import com.eventorium.databinding.FragmentChatBinding;
 import com.eventorium.presentation.chat.adapters.ChatAdapter;
 import com.eventorium.presentation.chat.viewmodels.ChatViewModel;
@@ -32,12 +31,12 @@ public class ChatFragment extends Fragment {
 
     private ChatAdapter adapter;
     private Long senderId;
-    private MessageSender recipient;
+    private UserDetails recipient;
 
     public ChatFragment() {
     }
 
-    public static ChatFragment newInstance(MessageSender sender) {
+    public static ChatFragment newInstance(UserDetails sender) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_RECIPIENT, sender);
@@ -70,17 +69,19 @@ public class ChatFragment extends Fragment {
         adapter = new ChatAdapter(senderId, new ArrayList<>());
         binding.chatTitle.setText(recipient.getName() + " " + recipient.getLastname());
         binding.chatRecyclerView.setAdapter(adapter);
-        binding.sendButton.setOnClickListener(v -> {
-            String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
-            if(!message.isEmpty()) {
-                ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
-                chatViewModel.sendMessage(chatMessage);
-                adapter.addMessage(chatMessage);
-                binding.messageInputEditText.setText("");
-            }
-        });
+        binding.sendButton.setOnClickListener(v -> sendMessage());
         loadMessages();
         return binding.getRoot();
+    }
+
+    private void sendMessage() {
+        String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
+        if(!message.isEmpty()) {
+            ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
+            chatViewModel.sendMessage(chatMessage);
+            adapter.addMessage(chatMessage);
+            binding.messageInputEditText.setText("");
+        }
     }
 
     private void loadMessages() {

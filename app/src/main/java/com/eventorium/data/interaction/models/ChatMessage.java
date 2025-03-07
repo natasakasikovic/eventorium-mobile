@@ -1,10 +1,5 @@
 package com.eventorium.data.interaction.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.eventorium.data.event.models.EventType;
-
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +20,7 @@ public class ChatMessage {
     private Long recipientId;
     private String message;
     private LocalDateTime timestamp;
-    private MessageSender sender;
+    private UserDetails sender;
 
     public ChatMessage(Long senderId, Long recipientId, String message) {
         this.senderId = senderId;
@@ -33,7 +28,7 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public ChatMessage(Long senderId, Long recipientId, String message, MessageSender sender) {
+    public ChatMessage(Long senderId, Long recipientId, String message, UserDetails sender) {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.message = message;
