@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
-import com.eventorium.data.interaction.models.UserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.chat.fragments.ChatFragment;

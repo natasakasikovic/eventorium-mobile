@@ -1,4 +1,4 @@
-package com.eventorium.data.interaction.models;
+package com.eventorium.data.auth.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

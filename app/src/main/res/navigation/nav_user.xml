@@ -48,15 +48,20 @@
         tools:layout="@layout/fragment_chat"
         android:label="fragment_chat" />
 
-    <!-- TODO: Add user navigation once previous pull requests are merged   -->
     <fragment
         android:id="@+id/chatRoomsFragment"
         android:name="com.eventorium.presentation.chat.fragments.ChatRoomFragment"
         android:label="fragment_chat_rooms"
         tools:layout="@layout/fragment_chat_room">
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
         <action
-            android:id="@+id/action_chatRooms_to_chat"
-            app:destination="@id/chatFragment"/>
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
     </fragment>
 
     <fragment
@@ -88,5 +93,11 @@
             android:id="@+id/action_invitations_to_event_details"
             app:destination="@id/eventDetailsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
 
 </navigation>

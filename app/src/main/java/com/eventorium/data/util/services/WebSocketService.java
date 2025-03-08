@@ -9,7 +9,7 @@ import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
 import com.eventorium.data.interaction.models.ChatMessage;
 import com.eventorium.data.interaction.models.ChatMessageRequest;
-import com.eventorium.data.interaction.models.UserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.Notification;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.eventorium.data.util.adapters.LocalDateTimeAdapter;

@@ -12,7 +12,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.eventorium.data.interaction.models.UserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 

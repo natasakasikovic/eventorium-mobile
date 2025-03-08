@@ -1,5 +1,7 @@
 package com.eventorium.data.interaction.models;
 
+import com.eventorium.data.auth.models.UserDetails;
+
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;

@@ -15,11 +15,12 @@ import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.ChatRoom;
-import com.eventorium.data.interaction.models.UserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentChatRoomBinding;
 import com.eventorium.presentation.chat.adapters.ChatRoomAdapter;
 import com.eventorium.presentation.chat.listeners.OnChatRoomClickListener;
 import com.eventorium.presentation.chat.viewmodels.ChatRoomViewModel;
+import com.eventorium.presentation.user.fragments.UserProfileFragment;
 
 import java.util.ArrayList;
 
@@ -79,8 +80,10 @@ public class ChatRoomFragment extends Fragment {
 
             @Override
             public void navigateToUser(Long id) {
-                // TODO: Add user navigation once previous pull requests are merged
-                Log.i("TODO", "Add user navigation once previous pull requests are merged");
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                Bundle args = new Bundle();
+                args.putLong(UserProfileFragment.ARG_ID, id);
+                navController.navigate(R.id.otherProfileFragment, args);
             }
         });
     }

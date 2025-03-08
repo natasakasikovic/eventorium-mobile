@@ -24,7 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
-import com.eventorium.data.interaction.models.UserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
