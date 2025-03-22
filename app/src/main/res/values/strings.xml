@@ -199,6 +199,8 @@
     <string name="deactivate_confirmation">Are you sure you want to deactivate your account? Please note that once deactivated, your account cannot be restored.</string>
     <string name="filter_products">Filter products</string>
     <string name="event_type">Event type</string>
+    <string name="your_services">Your services</string>
+    <string name="your_products">Your products</string>
     <string name="i_will_come">I will come</string>
     <string name="view_event">View event</string>
     <string name="invitations">Invitations</string>

@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,30 +125,29 @@ public class CreateProductFragment extends Fragment {
         CreateProduct product = loadFormFields();
         productViewModel.createProduct(product).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
-                if (imageUris.isEmpty()) displaySuccessMessage();
+                if (imageUris.isEmpty()) navigateToProductOverview();
                 else uploadImages(result.getData().getId());
-            } else {
-                displayErrorMessage(result.getError());
             }
+            else displayErrorMessage(result.getError());
+
         });
     }
 
     private void uploadImages(Long id) {
         productViewModel.uploadImages(id, requireContext(), imageUris).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                displaySuccessMessage();
-            } else {
-                displayErrorMessage(result.getError());
-            }
+            if (result.getError() == null) navigateToProductOverview();
+            else displayErrorMessage(result.getError());
         });
-    }
-
-    private void displaySuccessMessage() {
-        Toast.makeText(requireContext(), "Product successfully created", Toast.LENGTH_SHORT).show();
     }
 
     private void displayErrorMessage(String error) {
         Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+    }
+
+    private void navigateToProductOverview() {
+        Toast.makeText(requireContext(), "Product successfully created", Toast.LENGTH_SHORT).show();
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.action_create_to_manage_services);
     }
 
     private CreateProduct loadFormFields() {
