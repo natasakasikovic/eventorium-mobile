@@ -44,7 +44,6 @@ public class EditServiceFragment extends Fragment {
     private FragmentEditServiceBinding binding;
 
     private ServiceViewModel serviceViewModel;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
     private ChecklistAdapter<EventType> adapter;
 
     private static final String ARG_SERVICE = "serviceSummary";
@@ -117,46 +116,16 @@ public class EditServiceFragment extends Fragment {
 
             List<Float> duration = binding.serviceDuration.getValues();
 
-            LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
-            LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
-
-            if(cancellationDate.isBefore(LocalDate.now())) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.reservation_date_in_past,
-                        Toast.LENGTH_LONG
-                ).show();
-                return null;
-            }
-
-            if(reservationDate.isBefore(LocalDate.now())) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.cancellation_date_in_past,
-                        Toast.LENGTH_LONG
-                ).show();
-                return null;
-            }
-
-            if(cancellationDate.isBefore(reservationDate)) {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.cancellation_after_reservation,
-                        Toast.LENGTH_LONG
-                ).show();
-                return null;
-            }
-
             return UpdateService.builder()
                     .name(String.valueOf(binding.serviceNameEditText.getText()))
                     .description(String.valueOf(binding.serviceDescriptionText.getText()))
                     .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
                     .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
                     .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
-                    .cancellationDeadline(cancellationDate)
+                    .cancellationDeadline(Integer.valueOf(String.valueOf(binding.serviceCancellationDeadlineText.getText())))
                     .available(binding.availabilityBox.isChecked())
                     .visible(binding.visibilityBox.isChecked())
-                    .reservationDeadline(reservationDate)
+                    .reservationDeadline(Integer.valueOf(String.valueOf(binding.serviceReservationDeadlineText.getText())))
                     .minDuration(duration.get(0).intValue())
                     .maxDuration(duration.get(1).intValue())
                     .type(type)
@@ -183,8 +152,8 @@ public class EditServiceFragment extends Fragment {
             binding.serviceDescriptionText.setText(service.getDescription());
             binding.serviceDiscountText.setText(service.getDiscount().toString());
             binding.serviceSpecificitiesText.setText(service.getSpecialties());
-            binding.serviceReservationDeadlineText.setText(service.getReservationDeadline().format(formatter));
-            binding.serviceCancellationDeadlineText.setText(service.getCancellationDeadline().format(formatter));
+            binding.serviceReservationDeadlineText.setText(service.getReservationDeadline().toString());
+            binding.serviceCancellationDeadlineText.setText(service.getCancellationDeadline().toString());
             binding.servicePriceText.setText(service.getPrice().toString());
             binding.visibilityBox.setChecked(service.getVisible());
             binding.availabilityBox.setChecked(service.getAvailable());
@@ -204,44 +173,7 @@ public class EditServiceFragment extends Fragment {
         eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
             adapter = new ChecklistAdapter<>(eventTypes);
             binding.eventTypeRecycleView.setAdapter(adapter);
-            createDatePickers();
             fillForm();
-        });
-    }
-    private TextInputEditText reservationDate;
-    private TextInputEditText cancellationDate;
-    private void createDatePickers() {
-        reservationDate = binding.serviceReservationDeadlineText;
-        cancellationDate = binding.serviceCancellationDeadlineText;
-
-        MaterialDatePicker<Long> reservationPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a Date")
-                .build();
-        MaterialDatePicker<Long> cancellationPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a Date")
-                .build();
-
-
-        reservationDate.setOnClickListener(v ->
-                reservationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-
-        cancellationDate.setOnClickListener(v ->
-                cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-
-        reservationPicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            reservationDate.setText(formattedDate);
-        });
-
-        cancellationPicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            cancellationDate.setText(formattedDate);
         });
     }
 

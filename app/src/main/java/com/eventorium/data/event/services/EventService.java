@@ -47,6 +47,9 @@ public interface EventService {
     @GET("events/{id}/pdf")
     Call<ResponseBody> exportToPdf(@Path("id") Long id);
 
+    @GET("events/{id}/guest-list-pdf")
+    Call<ResponseBody> exportGuestListToPdf(@Path("id") Long id);
+
     @GET("events/{id}/agenda")
     Call<List<Activity>> getAgenda(@Path("id") Long id);
 }

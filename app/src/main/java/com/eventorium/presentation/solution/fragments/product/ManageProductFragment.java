@@ -56,8 +56,7 @@ public class ManageProductFragment extends Fragment {
     public ManageProductFragment() { }
 
     public static ManageProductFragment newInstance() {
-        ManageProductFragment fragment = new ManageProductFragment();
-        return fragment;
+        return new ManageProductFragment();
     }
 
     @Override
@@ -91,7 +90,7 @@ public class ManageProductFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.productsRecycleView;
-        adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<ProductSummary>() {
+        adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<>() {
             @Override
             public void onDeleteClick(ProductSummary item) {}
 

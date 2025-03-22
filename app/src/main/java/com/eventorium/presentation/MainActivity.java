@@ -233,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports){
-        navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_user_reports) {
+            navController.navigate(R.id.userReportsOverviewFragment);
         }
     }
 
@@ -246,6 +246,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_messages) {
             // TODO: navigate to messages fragment
             Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
+        }  else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.userInvitationsFragment);
         }
     }
 

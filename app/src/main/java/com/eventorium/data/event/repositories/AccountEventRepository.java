@@ -117,7 +117,14 @@ public class AccountEventRepository {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) result.postValue(Result.success(null));
-                else result.postValue(Result.error("Error while adding event to calendar"));
+                else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
             }
 
             @Override
