@@ -15,13 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.button.MaterialButton;
-
-import java.time.format.DateTimeFormatter;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -34,7 +33,7 @@ public class ServiceDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
-
+    private Long serviceId;
 
 
     public ServiceDetailsFragment() {
@@ -51,54 +50,45 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            serviceId = getArguments().getLong(ARG_ID);
+        }
         serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
-        assert getArguments() != null;
         favouriteButton = binding.favButton;
         if(!serviceViewModel.isLoggedIn()) {
             favouriteButton.setVisibility(View.GONE);
+        } else {
+            setupFavouriteListeners();
         }
-        serviceViewModel.getService(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), service -> {
+        serviceViewModel.getService(serviceId).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
-
-                binding.serviceName.setText(service.getName());
-                binding.servicePrice.setText(service.getPrice().toString());
-                binding.serviceDescription.setText(service.getDescription());
-                binding.serviceCategory.setText("Category: " + service.getCategory().getName());
-                binding.serviceSpecialties.setText(service.getSpecialties());
-                binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
-                        ? service.getMinDuration() + "h"
-                        : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
-                binding.reservationDeadline.setText("Reservation deadline: " + service.getReservationDeadline().format(formatter));
-                binding.cancellationDeadline.setText("Cancellation deadline: " + service.getCancellationDeadline().format(formatter));
-                binding.rating.setText(service.getRating().toString());
-
-                serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
-                    binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
-                });
+                displayServiceDate(service);
             }
         });
 
-        serviceViewModel.isFavourite(getArguments().getLong(ARG_ID)).observe(getViewLifecycleOwner(), result -> {
+        return binding.getRoot();
+    }
+
+
+    private void setupFavouriteListeners() {
+        serviceViewModel.isFavourite(serviceId).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
                     result
-                    ? R.drawable.ic_favourite
-                    : R.drawable.ic_not_favourite
+                            ? R.drawable.ic_favourite
+                            : R.drawable.ic_not_favourite
             );
         });
 
         favouriteButton.setOnClickListener(v -> {
-            Long id = getArguments().getLong(ARG_ID);
             if(isFavourite) {
-                serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+                serviceViewModel.removeFavouriteService(serviceId).observe(getViewLifecycleOwner(), result -> {
                     if(result) {
                         isFavourite = false;
                         favouriteButton.setIconResource(R.drawable.ic_not_favourite);
@@ -110,7 +100,7 @@ public class ServiceDetailsFragment extends Fragment {
                     }
                 });
             } else {
-                serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+                serviceViewModel.addFavouriteService(serviceId).observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() != null) {
                         isFavourite = true;
                         favouriteButton.setIconResource(R.drawable.ic_favourite);
@@ -131,8 +121,25 @@ public class ServiceDetailsFragment extends Fragment {
                 });
             }
         });
+    }
 
-        return binding.getRoot();
+    @SuppressLint("SetTextI18n")
+    private void displayServiceDate(Service service) {
+        binding.serviceName.setText(service.getName());
+        binding.servicePrice.setText(service.getPrice().toString());
+        binding.serviceDescription.setText(service.getDescription());
+        binding.serviceCategory.setText("Category: " + service.getCategory().getName());
+        binding.serviceSpecialties.setText(service.getSpecialties());
+        binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
+                ? service.getMinDuration() + "h"
+                : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
+        binding.reservationDeadline.setText("Reservation deadline: " + service.getReservationDeadline() + " days");
+        binding.cancellationDeadline.setText("Cancellation deadline: " + service.getCancellationDeadline() + " days");
+        binding.rating.setText(service.getRating().toString());
+
+        serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
+            binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
+        });
     }
 
     @Override

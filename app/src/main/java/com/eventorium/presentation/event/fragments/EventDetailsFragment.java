@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +26,11 @@ import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
-import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -39,7 +42,7 @@ public class EventDetailsFragment extends Fragment {
     private FragmentEventDetailsBinding binding;
     public static String ARG_EVENT_ID = "event_id";
     private EventViewModel viewModel;
-    private LoginViewModel loginViewModel;
+    private AuthViewModel authViewModel;
     private Long id;
     private EventDetails event;
     private UserDetails organizer;
@@ -48,7 +51,8 @@ public class EventDetailsFragment extends Fragment {
     private boolean isFavourite;
     private MaterialButton favButton;
     private Button addToCalendarBtn;
-    private Button exportBtn;
+    private Button exportDetailsBtn;
+    private Button exportGuestListBtn;
 
     public EventDetailsFragment() { }
 
@@ -67,19 +71,50 @@ public class EventDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
+        setUpViewModels();
+        setUpButtons();
+        adjustUIVisibility();
+        loadAgenda();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadEventDetails();
+    }
+
+    private void setUpViewModels() {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(EventViewModel.class);
-        loginViewModel = provider.get(LoginViewModel.class);
-        if (!loginViewModel.isLoggedIn()) {
-            binding.actions.setVisibility(View.GONE);
-            binding.question.setVisibility(View.GONE);
-        }
+        authViewModel = provider.get(AuthViewModel.class);
+    }
+
+    private void setUpButtons() {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         favButton = binding.favButton;
         addToCalendarBtn = binding.btnAddToCalendar;
-        exportBtn = binding.btnExport;
-        loadAgenda();
-        return binding.getRoot();
+        exportDetailsBtn = binding.btnExportDetails;
+        exportGuestListBtn = binding.btnExportGuests;
+        binding.organizerBtn.setOnClickListener(v -> navigateToOrganizer());
+    }
+
+    private void adjustUIVisibility() {
+        if (authViewModel.getUserId() == null) {
+            hideViews(binding.actions, binding.question, binding.chatButton, binding.exportGuests);
+            return;
+        }
+
+        if (authViewModel.getUserId().equals(id))
+            hideViews(binding.chatButton, binding.organizerBtn, binding.organizerName);
+        else
+            hideViews(binding.exportGuests);
+    }
+
+    private void hideViews(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.GONE);
+        }
     }
 
     private void navigateToChat() {
@@ -89,39 +124,48 @@ public class EventDetailsFragment extends Fragment {
         navController.navigate(R.id.chatFragment, args);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        loadEventDetails();
+    private void navigateToOrganizer() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putLong(UserProfileFragment.ARG_ID, organizer.getId());
+        navController.navigate(R.id.action_event_details_to_organizer, args);
     }
 
-    @SuppressLint("SetTextI18n")
     private void loadEventDetails() {
         viewModel.getEventDetails(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 event = result.getData();
-                ChatUserDetails sender = event.getOrganizer();
-                organizer = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
-                binding.eventName.setText(event.getName());
-                binding.eventType.setText("Event type: " + event.getEventType());
-                binding.privacyType.setText("Privacy type: " + event.getPrivacy());
-                binding.description.setText(event.getDescription());
-                binding.maxParticipants.setText(event.getMaxParticipants());
-                binding.address.setText(event.getAddress());
-                binding.city.setText(event.getCity());
-                binding.date.setText(event.getDate());
+                setOrganizer();
+                fillTextViews();
                 setupFavIcon();
                 setupFavButton();
                 setupAddToCalendarButton();
-                setupExportBtn();
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                setupExportBtns();
             }
+            else showError(result.getError());
         });
     }
 
+    @SuppressLint("SetTextI18n")
+    private void fillTextViews() {
+        binding.eventName.setText(event.getName());
+        binding.eventType.setText("Event type: " + event.getEventType());
+        binding.privacyType.setText("Privacy type: " + event.getPrivacy());
+        binding.description.setText(event.getDescription());
+        binding.maxParticipants.setText(event.getMaxParticipants());
+        binding.address.setText(event.getAddress());
+        binding.city.setText(event.getCity());
+        binding.date.setText(event.getDate());
+        binding.organizerName.setText(event.getOrganizer().getName() + " " + event.getOrganizer().getLastname());
+    }
+
+    private void setOrganizer() {
+        ChatUserDetails sender = event.getOrganizer();
+        organizer = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
+    }
+
     private void setupFavIcon() {
-        if (!loginViewModel.isLoggedIn()) return;
+        if (authViewModel.getUserId() == null) return;
         viewModel.isFavourite(id).observe(getViewLifecycleOwner(), isFav -> {
             isFavourite = isFav;
             favButton.setIconResource(isFavourite ? R.drawable.ic_favourite : R.drawable.ic_not_favourite);
@@ -136,59 +180,34 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setupAddToCalendarButton() {
-        this.addToCalendarBtn.setOnClickListener(v -> {
+        this.addToCalendarBtn.setOnClickListener(v ->
             viewModel.addToCalendar(id).observe(getViewLifecycleOwner(), result -> {
-                if (result.getError() == null) {
-                    new AlertDialog.Builder(requireContext())
-                            .setTitle(R.string.activation_dialog_title)
-                            .setMessage(R.string.added_to_calendar)
-                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                            .show();
-                } else {
-                    Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-    }
-
-    private void setupExportBtn() {
-        this.exportBtn.setOnClickListener(v -> {
-            viewModel.exportToPdf(id, getContext()).observe(getViewLifecycleOwner(), result -> {
-                if (result.getData() != null) {
-                    openPdf(result.getData());
-                } else {
-                    Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
-    }
-
-    private void openPdf(Uri pdfUri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(pdfUri, "application/pdf");
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(intent);
+            if (result.getError() == null)
+                new AlertDialog.Builder(requireContext())
+                        .setTitle(R.string.activation_dialog_title)
+                        .setMessage(R.string.added_to_calendar)
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            else showError(result.getError());
+        }));
     }
 
     private void addToFavourites() {
         viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() != null) {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else {
-                isFavourite = true;
+            if (result.getError() != null)
+                showError(result.getError());
+            else
                 favButton.setIconResource(R.drawable.ic_favourite);
-            }
+
         });
     }
 
     private void removeFromFavourites() {
         viewModel.removeFromFavourites(id).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() != null) {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            } else {
-                isFavourite = false;
+            if (result.getError() != null)
+                showError(result.getError());
+            else
                 favButton.setIconResource(R.drawable.ic_not_favourite);
-            }
         });
     }
 
@@ -205,10 +224,35 @@ public class EventDetailsFragment extends Fragment {
                     adapter.setDeleteButtonVisibility(false);
                     agenda.setAdapter(adapter);
                 }
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
+            } else showError(result.getError());
         });
+        SnapHelper snapHelperEvents = new LinearSnapHelper();
+        snapHelperEvents.attachToRecyclerView(binding.agenda);
+    }
 
+    private void setupExportBtns() {
+        this.exportDetailsBtn.setOnClickListener(v ->
+            viewModel.exportToPdf(id, getContext()).observe(getViewLifecycleOwner(), result -> {
+                if (result.getData() != null) openPdf(result.getData());
+                else showError(result.getError());
+            })
+        );
+        this.exportGuestListBtn.setOnClickListener(v ->
+            viewModel.exportGuestListToPdf(id, getContext()).observe(getViewLifecycleOwner(), result -> {
+                if (result.getData() != null) openPdf(result.getData());
+                else showError(result.getError());
+            })
+        );
+    }
+
+    private void openPdf(Uri pdfUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(pdfUri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
+    }
+
+    private void showError(String error) {
+        Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

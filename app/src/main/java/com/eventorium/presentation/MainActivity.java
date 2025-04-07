@@ -209,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.priceList);
         } else if (id == R.id.nav_new_product) {
             navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_products) {
+            navController.navigate(R.id.manageProductFragment);
         }
     }
 
@@ -248,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_messages) {
             // TODO: navigate to messages fragment
             Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_invitations) {
+        }  else if (id == R.id.nav_invitations) {
             navController.navigate(R.id.userInvitationsFragment);
         }
     }

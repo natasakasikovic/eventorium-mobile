@@ -1,8 +1,5 @@
 package com.eventorium.presentation.solution.fragments.product;
 
-import static com.eventorium.R.*;
-import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -30,7 +27,9 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
-import com.eventorium.presentation.solution.adapters.ProductsAdapter;
+import com.eventorium.presentation.solution.adapters.ManageableProductAdapter;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
+import com.eventorium.presentation.solution.viewmodels.ManageableProductViewModel;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
@@ -43,63 +42,96 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class ProductOverviewFragment extends Fragment {
+public class ManageProductFragment extends Fragment {
 
     private FragmentProductOverviewBinding binding;
-    private ProductViewModel viewModel;
+    private ManageableProductViewModel viewModel;
+    private ProductViewModel productViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
-    private ProductsAdapter adapter;
+    private ManageableProductAdapter adapter;
+    private List<ProductSummary> products;
+    private RecyclerView recyclerView;
 
-    public ProductOverviewFragment() { }
+    public ManageProductFragment() { }
 
-    public static ProductOverviewFragment newInstance() {
-        return new ProductOverviewFragment();
+    public static ManageProductFragment newInstance() {
+        return new ManageProductFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initializeViewModels();
-
-        configureAdapter();
-        binding.productsRecycleView.setAdapter(adapter);
-
-        return binding.getRoot();
     }
 
-    private void initializeViewModels() {
-        viewModel = new ViewModelProvider(this).get(ProductViewModel.class);
-        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
+        setUpAdapter();
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        observeProducts();
+        loadProducts();
         setUpListeners();
     }
 
-    private void configureAdapter(){
-        adapter = new ProductsAdapter(new ArrayList<>(), product  -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_productOverview_to_productDetails, args);
+    private void initializeViewModels() {
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(ManageableProductViewModel.class);
+        productViewModel = provider.get(ProductViewModel.class);
+        eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+    }
+
+    private void setUpAdapter() {
+        recyclerView = binding.productsRecycleView;
+        adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<>() {
+            @Override
+            public void onDeleteClick(ProductSummary item) {}
+
+            @Override
+            public void onSeeMoreClick(ProductSummary item) {
+                navigateToProductDetails(item);
+            }
+
+            @Override
+            public void onEditClick(ProductSummary item) {}
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void loadProducts() {
+        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
+            if (result.getData() != null) {
+                products = result.getData();
+                adapter.setProducts(products);
+                loadImages();
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void observeProducts(){
-        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadProductImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+    private void loadImages() {
+        products.forEach(product -> productViewModel
+            .getProductImage(product.getId()).observe(getViewLifecycleOwner(), img -> {
+            if (img != null) {
+                product.setImage(img);
+                int position = products.indexOf(product);
+                adapter.notifyItemChanged(position);
+            }
+        }));
+    }
+
+    private void navigateToProductDetails(ProductSummary product) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.navigate(R.id.action_manage_product_to_product_details,
+                ProductDetailsFragment.newInstance(product.getId()).getArguments());
     }
 
     private void setUpListeners() {
@@ -108,8 +140,9 @@ public class ProductOverviewFragment extends Fragment {
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
                     if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadProductImages(result.getData());
+                        products = result.getData();
+                        adapter.setData(products);
+                        loadImages();
                     }
                     else
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
@@ -121,7 +154,6 @@ public class ProductOverviewFragment extends Fragment {
                 return false;
             }
         });
-
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
     }
 
@@ -143,7 +175,7 @@ public class ProductOverviewFragment extends Fragment {
         TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
         String name = nameEditText.getText().toString().trim();
 
-        TextInputEditText descriptionEditText = dialogView.findViewById(id.descriptionEditText);
+        TextInputEditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
         String description = descriptionEditText.getText().toString().trim();
 
         boolean availability = ((CheckBox) dialogView.findViewById(R.id.availabilityBox)).isChecked();
@@ -171,8 +203,9 @@ public class ProductOverviewFragment extends Fragment {
     private void observeFilteringProducts(ProductFilter filter) {
         viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadProductImages(result.getData());
+                products = result.getData();
+                adapter.setData(products);
+                loadImages();
             } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
         });
@@ -236,22 +269,5 @@ public class ProductOverviewFragment extends Fragment {
         });
     }
 
-    private void loadProductImages(List<ProductSummary> products) {
-        products.forEach( product -> viewModel.getProductImage(product.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1)
-                            adapter.notifyItemChanged(position);
-                    }
-                })
-        );
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
-    }
 }

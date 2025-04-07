@@ -24,7 +24,6 @@ public class RatingRepository {
 
     private final RatingService ratingService;
 
-
     @Inject
     public RatingRepository(RatingService ratingService) {
         this.ratingService = ratingService;

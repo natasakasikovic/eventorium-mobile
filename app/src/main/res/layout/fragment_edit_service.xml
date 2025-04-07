@@ -202,9 +202,7 @@
                     android:id="@+id/serviceReservationDeadlineText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="none"
+                    android:inputType="number"
                     android:fontFamily="@font/jejumyeongjo" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -226,9 +224,7 @@
                     android:id="@+id/serviceCancellationDeadlineText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="none"
+                    android:inputType="number"
                     android:fontFamily="@font/jejumyeongjo" />
             </com.google.android.material.textfield.TextInputLayout>
 
