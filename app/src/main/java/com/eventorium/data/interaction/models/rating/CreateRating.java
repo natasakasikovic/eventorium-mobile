@@ -1,6 +1,4 @@
-package com.eventorium.data.interaction.models;
-
-import java.time.LocalDateTime;
+package com.eventorium.data.interaction.models.rating;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatMessageRequest {
-    private Long senderId;
-    private Long recipientId;
-    private String message;
+public class CreateRating {
+    private Integer rating;
 }

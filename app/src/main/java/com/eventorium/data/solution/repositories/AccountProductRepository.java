@@ -59,24 +59,25 @@ public class AccountProductRepository {
         return result;
     }
 
-    public LiveData<String> addFavouriteProduct(Long id) {
-        MutableLiveData<String> result = new MutableLiveData<>();
+    public LiveData<Result<Void>> addFavouriteProduct(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
         service.addFavouriteProduct(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<Product> call,
-                    @NonNull Response<Product> response
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body().getName());
-                } else {
+                if (!response.isSuccessful()) {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(Result.error(response.message()));
+                } else {
+                    result.setValue(Result.success(null));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Product> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 

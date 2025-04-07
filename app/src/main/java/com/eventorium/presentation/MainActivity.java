@@ -25,7 +25,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -218,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
         handleUserMenuItemSelection(id);
         if (id == R.id.nav_new_event) {
             navController.navigate(R.id.createEventFragment);
+        } else if(id == R.id.nav_reviews) {
+            navController.navigate(R.id.reviewFragment);
         }
     }
 
@@ -233,8 +235,10 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports) {
+        } else if (id == R.id.nav_user_reports){
             navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_manage_comments) {
+            navController.navigate(R.id.manageCommentsFragment);
         }
     }
 
@@ -300,14 +304,14 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         String fragmentToOpen = intent.getStringExtra("openFragment");
         if ("ChatFragment".equals(fragmentToOpen)) {
-            MessageSender recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
+            UserDetails recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
             if (recipient != null) {
                 openChatFragment(recipient);
             }
         }
     }
 
-    private void openChatFragment(MessageSender recipient) {
+    private void openChatFragment(UserDetails recipient) {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
         args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);

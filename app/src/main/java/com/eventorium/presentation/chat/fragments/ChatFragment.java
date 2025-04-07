@@ -11,9 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.R;
-import com.eventorium.data.interaction.models.ChatMessage;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentChatBinding;
 import com.eventorium.presentation.chat.adapters.ChatAdapter;
 import com.eventorium.presentation.chat.viewmodels.ChatViewModel;
@@ -32,12 +31,12 @@ public class ChatFragment extends Fragment {
 
     private ChatAdapter adapter;
     private Long senderId;
-    private MessageSender recipient;
+    private UserDetails recipient;
 
     public ChatFragment() {
     }
 
-    public static ChatFragment newInstance(MessageSender sender) {
+    public static ChatFragment newInstance(UserDetails sender) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_RECIPIENT, sender);

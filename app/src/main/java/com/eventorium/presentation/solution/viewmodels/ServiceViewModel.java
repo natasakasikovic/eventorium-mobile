@@ -78,7 +78,7 @@ public class ServiceViewModel extends ViewModel {
         return accountServiceRepository.removeFavouriteService(id);
     }
 
-    public LiveData<String> addFavouriteService(Long id) {
+    public LiveData<Result<Void>> addFavouriteService(Long id) {
         return accountServiceRepository.addFavouriteService(id);
     }
 

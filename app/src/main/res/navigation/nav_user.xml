@@ -54,14 +54,10 @@
         tools:layout="@layout/fragment_event_details" />
 
     <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
-        tools:layout="@layout/fragment_product_details" />
-
-    <fragment
-        android:id="@+id/serviceDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
-        tools:layout="@layout/fragment_service_details" />
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
 
     <fragment
         android:id="@+id/userInvitationsFragment"

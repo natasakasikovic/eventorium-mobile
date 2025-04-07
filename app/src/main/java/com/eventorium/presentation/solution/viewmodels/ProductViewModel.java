@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
@@ -12,6 +13,7 @@ import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.util.Result;
@@ -28,6 +30,7 @@ public class ProductViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final ProductRepository productRepository;
     private final AccountProductRepository accountProductRepository;
+
 
     @Inject
     public ProductViewModel(
@@ -71,7 +74,7 @@ public class ProductViewModel extends ViewModel {
         return accountProductRepository.removeFavouriteProduct(id);
     }
 
-    public LiveData<String> addFavouriteProduct(Long id) {
+    public LiveData<Result<Void>> addFavouriteProduct(Long id) {
         return accountProductRepository.addFavouriteProduct(id);
     }
 
