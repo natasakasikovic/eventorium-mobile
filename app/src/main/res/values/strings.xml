@@ -188,6 +188,17 @@
     <string name="new_product">New product</string>
     <string name="enter_information_about_product">Enter information about product..</string>
     <string name="images">Images</string>
+    <string name="added_product">"Added product "</string>
+    <string name="reviews">Reviews</string>
+    <string name="comment_management">Comment management</string>
+    <string name="successfully_updated_comment">Successfully updated comment!</string>
+    <string name="comments">Comments</string>
+    <string name="rate">Rate</string>
+    <string name="comment">Comment</string>
+    <string name="review">Review</string>
+    <string name="successfully_rated">Successfully rated</string>
+    <string name="comment_is_mandatory">Comment is mandatory</string>
+    <string name="successfully_create_comment">Successfully create comment</string>
     <string name="no_plans">No plans for the selected date.</string>
     <string name="to_attend">Events You Plan to Attend:</string>
     <string name="added_to_calendar">
@@ -202,6 +213,8 @@
     <string name="deactivate_confirmation">Are you sure you want to deactivate your account? Please note that once deactivated, your account cannot be restored.</string>
     <string name="filter_products">Filter products</string>
     <string name="event_type">Event type</string>
+    <string name="your_services">Your services</string>
+    <string name="your_products">Your products</string>
     <string name="i_will_come">I will come</string>
     <string name="view_event">View event</string>
     <string name="invitations">Invitations</string>

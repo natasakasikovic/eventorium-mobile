@@ -3,6 +3,8 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.event.repositories.BudgetRepository;
+import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.repositories.BudgetRepository;
@@ -28,13 +30,13 @@ public class BudgetViewModel extends ViewModel {
 
     @Inject
     public BudgetViewModel(
+            BudgetRepository budgetRepository,
             ProductRepository productRepository,
             ServiceRepository serviceRepository,
-            BudgetRepository budgetRepository
     ) {
+        this.budgetRepository = budgetRepository;
         this.productRepository = productRepository;
         this.serviceRepository = serviceRepository;
-        this.budgetRepository = budgetRepository;
     }
 
 
@@ -57,4 +59,8 @@ public class BudgetViewModel extends ViewModel {
     public LiveData<Result<Budget>> getBudget(Long eventId) {
         return budgetRepository.getBudget(eventId);
     }
+    public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
+        return budgetRepository.getBudgetItems();
+    }
+
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.services.BudgetService;
+import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.util.ErrorResponse;
@@ -48,7 +49,13 @@ public class BudgetRepository {
         return result;
     }
 
-    public<T> Callback<T> handleResponse(MutableLiveData<Result<T>> result) {
+    public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
+        MutableLiveData<Result<List<SolutionReview>>> result = new MutableLiveData<>();
+        budgetService.getBudgetItems().enqueue(handleResponse(result));
+        return result;
+    }
+
+    private<T> Callback<T> handleResponse(MutableLiveData<Result<T>> result) {
         return new Callback<>() {
             @Override
             public void onResponse(

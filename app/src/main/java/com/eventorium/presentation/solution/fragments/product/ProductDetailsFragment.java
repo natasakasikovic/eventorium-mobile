@@ -19,10 +19,10 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.Event;
-import com.eventorium.data.interaction.models.MessageSender;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -30,7 +30,6 @@ import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
-import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
@@ -55,9 +54,9 @@ public class ProductDetailsFragment extends Fragment {
     private boolean isFavourite;
     private Long id;
     private Double plannedAmount;
-    private MessageSender provider;
     private Event event;
     private Category category;
+    private UserDetails provider;
     private Long companyId;
 
     public ProductDetailsFragment() {
@@ -107,9 +106,10 @@ public class ProductDetailsFragment extends Fragment {
         favouriteButton = binding.favButton;
 
         renderButtons();
-        setupButtons();
 
+        favouriteButton = binding.favButton;
         productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
+
         productViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
@@ -119,15 +119,12 @@ public class ProductDetailsFragment extends Fragment {
             );
         });
 
-        return binding.getRoot();
-    }
-
-    private void setupButtons() {
         favouriteButton.setOnClickListener(v -> handleIsFavourite());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.purchaseButton.setOnClickListener(v -> onPurchase());
+        return binding.getRoot();
     }
 
     private void navigateToCompany() {
@@ -233,7 +230,7 @@ public class ProductDetailsFragment extends Fragment {
     private void loadProductDetails(Product product) {
         if (product != null) {
             ChatUserDetails sender = product.getProvider();
-            provider = new MessageSender(sender.getId(), sender.getName(), sender.getLastname());
+            provider = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
             companyId = product.getCompany().getId();
             category = product.getCategory();
 

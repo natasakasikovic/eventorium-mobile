@@ -66,7 +66,11 @@
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         tools:layout="@layout/fragment_service_details" />
-
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
     <fragment
         android:id="@+id/userInvitationsFragment"
         android:name="com.eventorium.presentation.event.fragments.UserInvitationsFragment"

@@ -30,4 +30,9 @@
         android:title="@string/user_reports"
         android:icon="@drawable/ic_overview"/>
 
+    <item
+        android:id="@+id/nav_manage_comments"
+        android:title="@string/comment_management"
+        android:icon="@drawable/ic_review"/>
+
 </menu>

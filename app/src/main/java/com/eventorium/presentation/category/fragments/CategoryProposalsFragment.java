@@ -105,7 +105,6 @@ public class CategoryProposalsFragment extends Fragment {
 
     private void handleResponse(Long id, boolean success) {
         if(success) {
-
             proposalViewModel.refreshProposals(id);
         } else {
             Toast.makeText(
