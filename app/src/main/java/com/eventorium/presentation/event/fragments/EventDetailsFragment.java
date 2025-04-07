@@ -198,7 +198,6 @@ public class EventDetailsFragment extends Fragment {
                 showError(result.getError());
             else
                 favButton.setIconResource(R.drawable.ic_favourite);
-
         });
     }
 
