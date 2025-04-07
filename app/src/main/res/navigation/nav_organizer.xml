@@ -121,6 +121,13 @@
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
-        tools:layout="@layout/fragment_service_details"/>
+        tools:layout="@layout/fragment_service_details">
+        <action
+            android:id="@+id/action_serviceDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
+    </fragment>
 
 </navigation>
