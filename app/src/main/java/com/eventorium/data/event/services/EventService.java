@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 
 public interface EventService {
 
-    @GET("events/{id}")
+    @GET("events/{id}/details")
     Call<EventDetails> getEventDetails(@Path("id") Long id);
 
     @GET("events/all")

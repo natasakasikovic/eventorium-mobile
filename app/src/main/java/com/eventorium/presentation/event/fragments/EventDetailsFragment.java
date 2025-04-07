@@ -160,8 +160,7 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setOrganizer() {
-        ChatUserDetails sender = event.getOrganizer();
-        organizer = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
+        organizer = event.getOrganizer();
     }
 
     private void setupFavIcon() {
@@ -196,8 +195,10 @@ public class EventDetailsFragment extends Fragment {
         viewModel.addToFavourites(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null)
                 showError(result.getError());
-            else
+            else {
                 favButton.setIconResource(R.drawable.ic_favourite);
+                isFavourite = true;
+            }
         });
     }
 
@@ -205,8 +206,10 @@ public class EventDetailsFragment extends Fragment {
         viewModel.removeFromFavourites(id).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() != null)
                 showError(result.getError());
-            else
+            else {
                 favButton.setIconResource(R.drawable.ic_not_favourite);
+                isFavourite = false;
+            }
         });
     }
 

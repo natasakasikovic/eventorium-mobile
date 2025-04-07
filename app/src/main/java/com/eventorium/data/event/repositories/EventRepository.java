@@ -2,6 +2,7 @@ package com.eventorium.data.event.repositories;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -153,6 +154,7 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<EventDetails> call, Throwable t) {
+                Log.e("API_ERROR", t.getMessage());
                 result.postValue(Result.error(t.getMessage()));
             }
         });
