@@ -115,7 +115,7 @@ public class CommentRepository {
 
             @Override
             public void onFailure(@NonNull Call<Comment> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         };
     }

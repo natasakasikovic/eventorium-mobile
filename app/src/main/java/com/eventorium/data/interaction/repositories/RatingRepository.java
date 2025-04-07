@@ -35,7 +35,6 @@ public class RatingRepository {
         return result;
     }
 
-
     public LiveData<Result<Rating>> createProductRating(Long id, CreateRating request) {
         MutableLiveData<Result<Rating>> result = new MutableLiveData<>();
         ratingService.createProductRating(id, request).enqueue(handleRequest(result));
@@ -47,7 +46,6 @@ public class RatingRepository {
         ratingService.createEventRating(id, request).enqueue(handleRequest(result));
         return result;
     }
-
 
     private Callback<Rating> handleRequest(MutableLiveData<Result<Rating>> result) {
         return new Callback<>() {
@@ -70,7 +68,7 @@ public class RatingRepository {
 
             @Override
             public void onFailure(@NonNull Call<Rating> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         };
     }
