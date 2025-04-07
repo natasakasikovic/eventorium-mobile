@@ -79,8 +79,10 @@ public class ServiceOverviewFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null)
+                    if (result.getError() == null) {
                         adapter.setData(result.getData());
+                        loadServiceImages(result.getData());
+                    }
                     else
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
                 });
@@ -109,7 +111,7 @@ public class ServiceOverviewFragment extends Fragment {
     private void loadServiceImages(List<ServiceSummary> services) {
         services.forEach( service -> viewModel.getServiceImage(service.getId()).
                 observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
+                    if (image != null) {
                         service.setImage(image);
                         int position = services.indexOf(service);
                         if (position != -1) {

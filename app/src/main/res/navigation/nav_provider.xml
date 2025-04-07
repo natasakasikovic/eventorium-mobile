@@ -45,7 +45,36 @@
         android:id="@+id/createProductFragment"
         android:name="com.eventorium.presentation.solution.fragments.product.CreateProductFragment"
         tools:layout="@layout/fragment_create_product">
-        <!--TODO: add action to productOverview-->
+        <action
+            android:id="@+id/action_create_to_manage_services"
+            app:destination="@id/manageProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageProductFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ManageProductFragment"
+        tools:layout="@layout/fragment_product_overview">
+        <action
+            android:id="@+id/action_manage_product_to_product_details"
+            app:destination="@id/manageProductDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageServiceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="event_invitation_fragment"
+        tools:layout="@layout/fragment_service_details" />
+
+    <fragment
+        android:id="@+id/manageProductDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@id/action_productDetails_to_provider"
+            app:destination="@id/accountDetailsFragment" />
+        <action
+            android:id="@id/action_productDetails_to_company"
+            app:destination="@id/providerCompanyFragment" />
     </fragment>
 
     <fragment
@@ -99,11 +128,16 @@
         android:id="@+id/providerCompanyFragment"
         android:name="com.eventorium.presentation.company.fragments.ProviderCompanyFragment"
         android:label="fragment_company_details"
-        tools:layout="@layout/fragment_provider_company" />
+        tools:layout="@layout/fragment_provider_company" >
+        <action
+            android:id="@+id/action_companyDetails_to_editCompanyFragment"
+            app:destination="@id/companyEditFragment" />
+    </fragment>
 
-    <action
-        android:id="@+id/action_companyDetails_to_editCompanyFragment"
-        app:destination="@id/companyEditFragment" />
+    <fragment
+        android:id="@+id/accountDetailsFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile" />
 
     <fragment
         android:id="@+id/serviceDetailsFragment"

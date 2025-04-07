@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.services.ChatService;
 
 import java.util.ArrayList;

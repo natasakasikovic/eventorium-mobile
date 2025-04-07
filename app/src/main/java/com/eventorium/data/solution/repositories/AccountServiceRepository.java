@@ -11,6 +11,7 @@ import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.util.Result;
+import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,7 +114,7 @@ public class AccountServiceRepository {
 
     public LiveData<Boolean> isFavouriteService(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteService(id).enqueue(new Callback<Boolean>() {
+        service.isFavouriteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Boolean> call,
@@ -134,24 +135,24 @@ public class AccountServiceRepository {
         return result;
     }
 
-    public LiveData<String> addFavouriteService(Long id) {
-        MutableLiveData<String> result = new MutableLiveData<>();
+    public LiveData<Result<Void>> addFavouriteService(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
         service.addFavouriteService(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<Service> call,
-                    @NonNull Response<Service> response
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body().getName());
+                if (!response.isSuccessful()) {
+                    result.postValue(Result.error(response.message()));
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(Result.success(null));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<Service> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 
