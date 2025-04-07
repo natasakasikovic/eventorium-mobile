@@ -7,7 +7,6 @@ import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
@@ -32,7 +31,7 @@ public class BudgetViewModel extends ViewModel {
     public BudgetViewModel(
             BudgetRepository budgetRepository,
             ProductRepository productRepository,
-            ServiceRepository serviceRepository,
+            ServiceRepository serviceRepository
     ) {
         this.budgetRepository = budgetRepository;
         this.productRepository = productRepository;
