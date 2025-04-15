@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.service.Reservation;
-import com.eventorium.data.solution.models.service.UpdateReservation;
+import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.services.ReservationService;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;
@@ -51,7 +51,7 @@ public class ReservationRepository {
         return result;
     }
 
-    public LiveData<Result<Reservation>> updateReservation(Long id, UpdateReservation request) {
+    public LiveData<Result<Reservation>> updateReservation(Long id, UpdateReservationStatus request) {
         MutableLiveData<Result<Reservation>> result = new MutableLiveData<>();
         service.updateReservation(id, request).enqueue(handleRequest(result));
         return result;

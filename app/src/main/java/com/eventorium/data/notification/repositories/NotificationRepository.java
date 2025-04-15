@@ -1,11 +1,11 @@
-package com.eventorium.data.notifications.repositories;
+package com.eventorium.data.notification.repositories;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.notifications.models.NotificationResponse;
-import com.eventorium.data.notifications.services.NotificationService;
+import com.eventorium.data.notification.models.NotificationResponse;
+import com.eventorium.data.notification.services.NotificationService;
 import com.eventorium.data.util.ErrorResponse;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.constants.ErrorMessages;

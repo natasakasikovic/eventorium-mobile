@@ -1,6 +1,6 @@
-package com.eventorium.data.notifications.services;
+package com.eventorium.data.notification.services;
 
-import com.eventorium.data.notifications.models.NotificationResponse;
+import com.eventorium.data.notification.models.NotificationResponse;
 
 import java.util.List;
 

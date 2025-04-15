@@ -1,7 +1,7 @@
 package com.eventorium.data.solution.services;
 
 import com.eventorium.data.solution.models.service.Reservation;
-import com.eventorium.data.solution.models.service.UpdateReservation;
+import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public interface ReservationService {
     Call<List<Reservation>> getPendingReservations();
 
     @PATCH("reservations/{id}")
-    Call<Reservation> updateReservation(@Path("id") Long id, @Body UpdateReservation request);
+    Call<Reservation> updateReservation(@Path("id") Long id, @Body UpdateReservationStatus request);
 }

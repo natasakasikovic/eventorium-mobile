@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.solution.models.service.Reservation;
-import com.eventorium.data.solution.models.service.UpdateReservation;
+import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.repositories.ReservationRepository;
 import com.eventorium.data.util.Result;
 import com.eventorium.data.util.models.Status;
@@ -47,7 +47,7 @@ public class ReservationViewModel extends ViewModel {
     }
 
     public LiveData<Result<Reservation>> updateReservation(Long id, Status status) {
-        return repository.updateReservation(id, new UpdateReservation(status));
+        return repository.updateReservation(id, new UpdateReservationStatus(status));
     }
 
     @Override
