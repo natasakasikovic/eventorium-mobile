@@ -211,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.priceList);
         } else if (id == R.id.nav_new_product) {
             navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_products) {
+            navController.navigate(R.id.manageProductFragment);
         }
     }
 
@@ -218,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
         handleUserMenuItemSelection(id);
         if (id == R.id.nav_new_event) {
             navController.navigate(R.id.createEventFragment);
+        } else if(id == R.id.nav_reviews) {
+            navController.navigate(R.id.reviewFragment);
         }
     }
 
@@ -233,8 +237,10 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports) {
+        } else if (id == R.id.nav_user_reports){
             navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_manage_comments) {
+            navController.navigate(R.id.manageCommentsFragment);
         }
     }
 
@@ -245,10 +251,6 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.notificationsFragment);
         } else if (id == R.id.nav_messages) {
             navController.navigate(R.id.messagesFragment);
-        }  else if (id == R.id.nav_see_other_profile) { // TODO: DELETE! THIS IS TEMPORARY SINCE THERE IS NO CURRENTLY WAY TO COME TO PROFILE OVERVIEW!
-            Bundle args = new Bundle();
-            args.putLong("ARG_USER_ID", 1);
-            navController.navigate(R.id.otherProfileFragment, args);
         } else if (id == R.id.nav_invitations) {
             navController.navigate(R.id.userInvitationsFragment);
         }

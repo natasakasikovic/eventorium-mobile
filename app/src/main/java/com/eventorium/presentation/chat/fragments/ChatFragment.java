@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.data.interaction.models.ChatMessage;
 import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.databinding.FragmentChatBinding;
 import com.eventorium.presentation.chat.adapters.ChatAdapter;
 import com.eventorium.presentation.chat.viewmodels.ChatViewModel;

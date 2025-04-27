@@ -1,6 +1,5 @@
 package com.eventorium.presentation.chat.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.interaction.models.ChatMessage;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
 
 import java.util.List;
 import java.util.Objects;

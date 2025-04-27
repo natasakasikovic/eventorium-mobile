@@ -171,15 +171,21 @@ public class ProductDetailsFragment extends Fragment {
                 }
             });
         } else {
-            productViewModel.addFavouriteProduct(id).observe(getViewLifecycleOwner(), name -> {
-                if(name != null) {
+            productViewModel.addFavouriteProduct(id).observe(getViewLifecycleOwner(), result -> {
+                if(result.getError() == null) {
                     isFavourite = true;
                     favouriteButton.setIconResource(R.drawable.ic_favourite);
                     Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_product)
+                                + binding.productName.getText() + " "
+                                + getString(R.string.to_favourites),
+                        Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Toast.makeText(
                             requireContext(),
-                            getString(R.string.added_service)
-                                    + name
-                                    + getString(R.string.to_favourites),
+                            result.getError(),
                             Toast.LENGTH_SHORT
                     ).show();
                 }

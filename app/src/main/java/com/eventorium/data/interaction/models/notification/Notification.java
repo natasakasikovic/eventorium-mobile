@@ -1,4 +1,4 @@
-package com.eventorium.data.interaction.models;
+package com.eventorium.data.interaction.models.notification;
 
 import com.eventorium.data.util.models.NotificationType;
 

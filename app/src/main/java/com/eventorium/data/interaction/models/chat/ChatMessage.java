@@ -1,4 +1,4 @@
-package com.eventorium.data.interaction.models;
+package com.eventorium.data.interaction.models.chat;
 
 import com.eventorium.data.auth.models.UserDetails;
 

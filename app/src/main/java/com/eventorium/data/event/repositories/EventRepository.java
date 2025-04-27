@@ -154,7 +154,7 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<EventDetails> call, Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         });
 
