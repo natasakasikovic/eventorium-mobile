@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -84,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String role = sharedPreferences.getString("role", null);
         if (role == null) refresh("GUEST");
-        else refresh(role);
+        else {
+            refresh(role);
+            loginViewModel.openWebSocket();
+        }
     }
 
     public void refresh(String role) {
@@ -248,9 +250,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_notification) {
             navController.navigate(R.id.notificationsFragment);
         } else if (id == R.id.nav_messages) {
-            // TODO: navigate to messages fragment
-            Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
-        }  else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.messagesFragment);
+        } else if (id == R.id.nav_invitations) {
             navController.navigate(R.id.userInvitationsFragment);
         }
     }

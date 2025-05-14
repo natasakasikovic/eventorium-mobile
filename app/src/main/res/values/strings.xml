@@ -218,4 +218,5 @@
     <string name="your_invitations">Your invitations</string>
     <string name="guests">Guests:</string>
     <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
+    <string name="conversations">Conversations</string>
 </resources>
