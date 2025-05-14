@@ -218,9 +218,8 @@
     <string name="your_invitations">Your invitations</string>
     <string name="guests">Guests:</string>
     <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manual_reservations">Manual reservations</string>
     <string name="manage_reservations">Manage reservations</string>
     <string name="successfully_updated_reservation">Successfully updated reservation</string>
+    <string name="conversations">Conversations</string>
 </resources>

@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.eventorium.BuildConfig;
 import com.eventorium.Eventorium;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.models.chat.ChatMessageRequest;
-import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.notification.Notification;
 import com.eventorium.data.util.adapters.LocalDateAdapter;
 import com.eventorium.data.util.adapters.LocalDateTimeAdapter;

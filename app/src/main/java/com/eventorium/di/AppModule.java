@@ -29,8 +29,10 @@ import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.interaction.repositories.ChatRoomRepository;
 import com.eventorium.data.interaction.repositories.CommentRepository;
 import com.eventorium.data.interaction.repositories.RatingRepository;
+import com.eventorium.data.interaction.services.ChatRoomService;
 import com.eventorium.data.interaction.services.ChatService;
 import com.eventorium.data.interaction.services.CommentService;
 import com.eventorium.data.interaction.services.RatingService;
@@ -435,4 +437,16 @@ public class AppModule {
         return retrofit.create(ReservationService.class);
     }
 
+
+    @Provides
+    @Singleton
+    public static ChatRoomRepository providerChatRoomRepository(ChatRoomService service) {
+        return new ChatRoomRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public ChatRoomService providerChatRoomService(Retrofit retrofit) {
+        return retrofit.create(ChatRoomService.class);
+    }
 }
