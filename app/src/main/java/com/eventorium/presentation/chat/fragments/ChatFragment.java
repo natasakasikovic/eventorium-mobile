@@ -76,7 +76,7 @@ public class ChatFragment extends Fragment {
 
     private void sendMessage() {
         String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
-        if(!message.isEmpty()) {
+        if(message.trim().length() != 0) {
             ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
             chatViewModel.sendMessage(chatMessage);
             adapter.addMessage(chatMessage);
