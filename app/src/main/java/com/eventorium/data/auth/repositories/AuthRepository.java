@@ -18,7 +18,7 @@ import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.services.WebSocketService;
-import com.eventorium.presentation.util.JwtDecoder;
+import com.eventorium.data.shared.utils.JwtDecoder;
 
 import java.io.IOException;
 

@@ -29,7 +29,7 @@ import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
-import com.eventorium.presentation.util.ImageUpload;
+import com.eventorium.data.shared.utils.ImageUpload;
 import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 
