@@ -9,7 +9,7 @@ import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 

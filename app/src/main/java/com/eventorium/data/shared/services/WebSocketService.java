@@ -1,4 +1,4 @@
-package com.eventorium.data.util.services;
+package com.eventorium.data.shared.services;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -11,8 +11,8 @@ import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.models.chat.ChatMessageRequest;
 import com.eventorium.data.interaction.models.notification.Notification;
-import com.eventorium.data.util.adapters.LocalDateAdapter;
-import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
+import com.eventorium.data.shared.adapters.LocalDateAdapter;
+import com.eventorium.data.shared.adapters.LocalDateTimeAdapter;
 import com.eventorium.presentation.shared.listeners.OnMessageReceive;
 import com.eventorium.presentation.shared.services.NotificationService;
 import com.google.gson.Gson;

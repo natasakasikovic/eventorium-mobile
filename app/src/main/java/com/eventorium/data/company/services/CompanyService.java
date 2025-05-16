@@ -3,7 +3,7 @@ package com.eventorium.data.company.services;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface CompanyService {
     Call<CompanyDetails> getCompany(@Path("id") Long id);
 
     @GET("companies/{id}/images")
-    Call<List<ImageResponseDto>> getImages(@Path("id") Long id);
+    Call<List<ImageResponse>> getImages(@Path("id") Long id);
 
     @PUT("companies")
     Call<Company> update(@Body Company company);

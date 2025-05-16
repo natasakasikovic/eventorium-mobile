@@ -10,8 +10,8 @@ import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
 import com.eventorium.data.interaction.repositories.CommentRepository;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.models.Status;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.models.Status;
 
 import java.util.List;
 import java.util.Objects;

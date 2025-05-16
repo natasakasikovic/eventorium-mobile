@@ -5,7 +5,7 @@ import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ImageResponse;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public interface ServiceService {
     Call<ResponseBody> getServiceImage(@Path("id") Long id);
 
     @GET("services/{id}/images")
-    Call<List<ImageResponseDto>> getServiceImages(@Path("id") Long id);
+    Call<List<ImageResponse>> getServiceImages(@Path("id") Long id);
 
     @GET("services/suggestions")
     Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);

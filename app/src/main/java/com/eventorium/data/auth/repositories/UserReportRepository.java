@@ -8,9 +8,9 @@ import com.eventorium.data.auth.models.UpdateReportStatusRequest;
 import com.eventorium.data.auth.models.UserReportRequest;
 import com.eventorium.data.auth.models.UserReportResponse;
 import com.eventorium.data.auth.services.UserReportService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.eventorium.data.notifications.models;
+package com.eventorium.data.notification.models;
 
 import java.time.LocalDateTime;
 

@@ -2,7 +2,6 @@ package com.eventorium.data.event.repositories;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -15,10 +14,10 @@ import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.List;

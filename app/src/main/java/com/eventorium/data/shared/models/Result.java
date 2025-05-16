@@ -1,4 +1,4 @@
-package com.eventorium.data.util;
+package com.eventorium.data.shared.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

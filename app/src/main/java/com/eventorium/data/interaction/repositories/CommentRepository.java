@@ -8,9 +8,9 @@ import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
 import com.eventorium.data.interaction.services.CommentService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.ArrayList;

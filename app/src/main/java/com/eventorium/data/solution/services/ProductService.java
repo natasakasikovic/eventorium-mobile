@@ -3,7 +3,7 @@ package com.eventorium.data.solution.services;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ImageResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,6 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -30,7 +29,7 @@ public interface ProductService {
     Call<Product> getProduct(@Path("id") Long id);
 
     @GET("products/{id}/images")
-    Call<List<ImageResponseDto>> getProductImages(@Path("id") Long id);
+    Call<List<ImageResponse>> getProductImages(@Path("id") Long id);
 
     @GET("products/{id}/image")
     Call<ResponseBody> getProductImage(@Path("id") Long id);

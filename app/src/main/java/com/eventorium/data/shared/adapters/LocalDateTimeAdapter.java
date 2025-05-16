@@ -1,4 +1,4 @@
-package com.eventorium.data.util.adapters;
+package com.eventorium.data.shared.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

@@ -20,18 +20,12 @@ import com.eventorium.R;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;
-import com.eventorium.data.util.models.ReservationType;
+import com.eventorium.data.solution.models.service.ReservationType;
 import com.eventorium.databinding.FragmentEditServiceBinding;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.textfield.TextInputEditText;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
@@ -85,9 +79,9 @@ public class EditServiceFragment extends Fragment {
     }
 
     private void editService() {
-        UpdateService dto = loadDataFromForm();
+        UpdateService dto = loadFormData();
         if(dto != null) {
-            serviceViewModel.updateService(serviceSummary.getId(), loadDataFromForm())
+            serviceViewModel.updateService(serviceSummary.getId(), loadFormData())
                     .observe(getViewLifecycleOwner(), service -> {
                         if (service.getError() == null) {
                             Toast.makeText(
@@ -108,7 +102,7 @@ public class EditServiceFragment extends Fragment {
         }
     }
 
-    private UpdateService loadDataFromForm() {
+    private UpdateService loadFormData() {
         try {
             ReservationType type = binding.manualChecked.isChecked()
                     ? ReservationType.MANUAL

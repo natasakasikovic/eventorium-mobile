@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.repositories.AuthRepository;
@@ -13,10 +12,9 @@ import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
