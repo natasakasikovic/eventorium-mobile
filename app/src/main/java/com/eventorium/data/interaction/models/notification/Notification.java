@@ -1,6 +1,6 @@
 package com.eventorium.data.interaction.models.notification;
 
-import com.eventorium.data.util.models.NotificationType;
+import com.eventorium.data.notification.models.NotificationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

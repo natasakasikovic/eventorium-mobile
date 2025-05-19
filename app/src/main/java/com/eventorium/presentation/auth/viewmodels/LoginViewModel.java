@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.data.auth.repositories.AuthRepository;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.services.WebSocketService;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.services.WebSocketService;
 
 import javax.inject.Inject;
 

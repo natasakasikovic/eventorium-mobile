@@ -1,4 +1,4 @@
-package com.eventorium.data.util.models;
+package com.eventorium.data.shared.models;
 
 public enum Status {
     PENDING,

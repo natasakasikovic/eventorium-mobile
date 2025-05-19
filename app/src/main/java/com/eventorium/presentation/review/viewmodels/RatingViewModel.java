@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.interaction.models.rating.CreateRating;
 import com.eventorium.data.interaction.models.rating.Rating;
 import com.eventorium.data.interaction.repositories.RatingRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import javax.inject.Inject;
 

@@ -3,7 +3,8 @@ package com.eventorium.data.solution.services;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -30,7 +32,7 @@ public interface ProductService {
     Call<Product> getProduct(@Path("id") Long id);
 
     @GET("products/{id}/images")
-    Call<List<ImageResponseDto>> getProductImages(@Path("id") Long id);
+    Call<List<ImageResponse>> getProductImages(@Path("id") Long id);
 
     @GET("products/{id}/image")
     Call<ResponseBody> getProductImage(@Path("id") Long id);
@@ -51,6 +53,8 @@ public interface ProductService {
     @POST("products/{id}/images")
     Call<ResponseBody> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
 
+    @HTTP(method = "DELETE", path = "products/{id}/images", hasBody = true)
+    Call<ResponseBody> deleteImages(@Path("id") Long id, @Body List<RemoveImageRequest> images);
     @GET("products/filter/all")
     Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
 }

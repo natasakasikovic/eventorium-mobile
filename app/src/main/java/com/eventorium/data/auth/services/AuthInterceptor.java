@@ -1,4 +1,4 @@
-package com.eventorium.data.util;
+package com.eventorium.data.auth.services;
 
 import android.content.Context;
 import android.content.Intent;

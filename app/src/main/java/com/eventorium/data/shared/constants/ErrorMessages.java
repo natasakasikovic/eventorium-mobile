@@ -1,4 +1,4 @@
-package com.eventorium.data.util.constants;
+package com.eventorium.data.shared.constants;
 
 public class ErrorMessages {
     public static final String GENERAL_ERROR = "Oops! Something went wrong! Please, try again later!";

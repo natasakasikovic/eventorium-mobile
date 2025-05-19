@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.event.models.Invitation;
 import com.eventorium.data.event.models.InvitationDetails;
 import com.eventorium.data.event.repositories.InvitationRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 

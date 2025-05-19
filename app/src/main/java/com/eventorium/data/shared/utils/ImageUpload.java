@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util;
+package com.eventorium.data.shared.utils;
 
 import android.app.Activity;
 import android.content.Intent;

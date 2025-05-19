@@ -29,7 +29,7 @@ import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
-import com.eventorium.presentation.util.ImageUpload;
+import com.eventorium.data.shared.utils.ImageUpload;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;

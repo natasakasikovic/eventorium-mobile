@@ -1,4 +1,4 @@
-package com.eventorium.data.util.dtos;
+package com.eventorium.data.shared.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ImageResponseDto {
+public class ImageResponse {
     private Long id;
     private String data;
     private String contentType;

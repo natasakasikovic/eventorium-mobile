@@ -7,7 +7,7 @@ import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.repositories.ServiceRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
