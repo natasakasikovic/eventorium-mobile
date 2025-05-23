@@ -11,6 +11,7 @@ import com.eventorium.data.auth.services.UserReportService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,63 +33,19 @@ public class UserReportRepository {
 
     public LiveData<Result<List<UserReportResponse>>> getReports() {
         MutableLiveData<Result<List<UserReportResponse>>> liveData = new MutableLiveData<>();
-
-        service.getReports().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<UserReportResponse>> call, @NonNull Response<List<UserReportResponse>> response) {
-                if (response.body() != null && response.isSuccessful())
-                    liveData.postValue(Result.success(response.body()));
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<UserReportResponse>> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.getReports().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> reportUser(Long id, UserReportRequest report) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        service.reportUser(report, id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful())
-                    liveData.postValue(Result.success(null));
-                else {
-                    try {
-                        String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.reportUser(report, id).enqueue(RetrofitCallbackHelper.handleValidationResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> updateStatus(UpdateReportStatusRequest request, Long id) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        service.updateReport(id, request).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful())
-                    liveData.postValue(Result.success(null));
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.updateReport(id, request).enqueue(RetrofitCallbackHelper.handleResponse(liveData));
         return liveData;
     }
 }

@@ -3,12 +3,14 @@ package com.eventorium.data.shared.utils;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.auth.models.Role;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -62,7 +64,7 @@ public class RetrofitCallbackHelper {
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         };
     }
@@ -88,7 +90,23 @@ public class RetrofitCallbackHelper {
 
             @Override
             public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        };
+    }
+
+    public static<T> Callback<T> handleSuccessfulResponse(MutableLiveData<T> data) {
+        return new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    data.postValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
+                data.postValue(null);
             }
         };
     }
