@@ -12,6 +12,7 @@ import com.eventorium.data.category.services.CategoryService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -32,32 +33,9 @@ public class CategoryRepository {
         this.categoryService = categoryService;
     }
 
-    public LiveData<List<Category>> getCategories() {
-        MutableLiveData<List<Category>> liveData = new MutableLiveData<>();
-
-        categoryService.getCategories().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<Category>> call,
-                    @NonNull Response<List<Category>> response
-            ) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(Collections.emptyList());
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<List<Category>> call,
-                    @NonNull Throwable t
-            ) {
-                liveData.postValue(Collections.emptyList());
-            }
-        });
-
+    public LiveData<Result<List<Category>>> getCategories() {
+        MutableLiveData<Result<List<Category>>> liveData = new MutableLiveData<>();
+        categoryService.getCategories().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
         return liveData;
     }
 

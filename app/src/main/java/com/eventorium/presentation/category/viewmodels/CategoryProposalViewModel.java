@@ -11,6 +11,7 @@ import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.repositories.CategoryProposalRepository;
 import com.eventorium.data.category.repositories.CategoryRepository;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 import java.util.Objects;
@@ -42,9 +43,11 @@ public class CategoryProposalViewModel extends ViewModel {
 
     public void fetchCategoryProposals() {
         isLoading.setValue(true);
-        categoryProposalRepository.getCategoryProposals().observeForever(categories -> {
-            this.categoryProposals.postValue(categories);
-            isLoading.postValue(false);
+        categoryProposalRepository.getCategoryProposals().observeForever(result -> {
+            if(result.getError() == null) {
+                this.categoryProposals.postValue(result.getData());
+                isLoading.postValue(false);
+            }
         });
     }
 
@@ -67,15 +70,15 @@ public class CategoryProposalViewModel extends ViewModel {
                 .collect(toList()));
     }
 
-    public LiveData<Boolean> updateCategoryStatus(Long id, UpdateCategoryStatus dto) {
+    public LiveData<Result<Category>> updateCategoryStatus(Long id, UpdateCategoryStatus dto) {
         return categoryProposalRepository.updateCategoryStatus(id, dto);
     }
 
-    public LiveData<Boolean> updateCategoryProposal(Long id, CategoryRequest dto) {
+    public LiveData<Result<Category>> updateCategoryProposal(Long id, CategoryRequest dto) {
         return categoryProposalRepository.updateCategoryProposal(id, dto);
     }
 
-    public LiveData<Boolean> changeCategory(Long id, CategoryRequest dto) {
+    public LiveData<Result<Category>> changeCategory(Long id, CategoryRequest dto) {
         return categoryProposalRepository.changeCategory(id, dto);
     }
 }

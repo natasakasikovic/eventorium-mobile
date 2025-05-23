@@ -180,7 +180,7 @@ public class CategoryOverviewFragment extends Fragment {
                         R.string.category_updated_successfully,
                         Toast.LENGTH_SHORT
                 ).show();
-                loadCategories();
+                categoryViewModel.fetchCategories();
             } else {
                 Toast.makeText(
                         requireContext(),
