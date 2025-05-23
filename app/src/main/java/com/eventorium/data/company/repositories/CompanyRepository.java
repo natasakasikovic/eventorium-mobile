@@ -1,5 +1,6 @@
 package com.eventorium.data.company.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
@@ -17,6 +18,7 @@ import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.models.ImageItem;
 
@@ -42,27 +44,7 @@ public class CompanyRepository {
 
     public LiveData<Result<Company>> registerCompany(CreateCompany company) {
         MutableLiveData<Result<Company>> liveData = new MutableLiveData<>();
-        service.registerCompany(company).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Company> call, Response<Company> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Company> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
-
+        service.registerCompany(company).enqueue(handleValidationResponse(liveData));
         return  liveData;
     }
 
@@ -96,46 +78,13 @@ public class CompanyRepository {
 
     public LiveData<Result<Company>> getCompany() {
         MutableLiveData<Result<Company>> result = new MutableLiveData<>();
-        service.getCompany().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Company> call, Response<Company> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Company> call, Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.getCompany().enqueue(handleResponse(result));
         return result;
     }
 
     public LiveData<Result<CompanyDetails>> getCompany(Long id) {
         MutableLiveData<Result<CompanyDetails>> result = new MutableLiveData<>();
-        service.getCompany(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<CompanyDetails> call, Response<CompanyDetails> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    result.postValue(Result.error("Error while loading company"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CompanyDetails> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.getCompany(id).enqueue(handleResponse(result));
         return result;
     }
 
@@ -166,48 +115,13 @@ public class CompanyRepository {
 
     public LiveData<Result<Company>> update(Company company) {
         MutableLiveData<Result<Company>> result = new MutableLiveData<>();
-        service.update(company).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Company> call, Response<Company> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Company> call, Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.update(company).enqueue(handleValidationResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> removeImages(List<RemoveImageRequest> removedImages) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.removeImages(removedImages).enqueue(new Callback<>() {
-
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    result.postValue(Result.success(null));
-                } else {
-                    result.postValue(Result.error("Error while deleting images"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
-            }
-        });
-
+        service.removeImages(removedImages).enqueue(handleResponse(result));
         return result;
     }
 
