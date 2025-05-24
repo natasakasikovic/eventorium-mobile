@@ -2,8 +2,10 @@ package com.eventorium.data.shared.utils;
 
 import static java.util.stream.Collectors.toList;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -24,7 +26,7 @@ import retrofit2.Response;
 
 public class RetrofitCallbackHelper {
 
-    public static Callback<ResponseBody> handleDeleteResponse(MutableLiveData<Result<Void>> liveData) {
+    public static Callback<ResponseBody> handleVoidResponse(MutableLiveData<Result<Void>> liveData) {
         return new Callback<>() {
             @Override
             public void onResponse(
@@ -145,7 +147,7 @@ public class RetrofitCallbackHelper {
             }
         };
     }
-    private static<T> Callback<T> handleResponse(MutableLiveData<Result<T>> result, String error) {
+    public static<T> Callback<T> handleResponse(MutableLiveData<Result<T>> result, String error) {
         return new Callback<>() {
             @Override
             public void onResponse(
@@ -170,4 +172,43 @@ public class RetrofitCallbackHelper {
             }
         };
     }
+
+    public static Callback<ResponseBody> handlePdfExport(Context context, MutableLiveData<Result<Uri>> result) {
+        return new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<ResponseBody> call,
+                    @NonNull Response<ResponseBody> response
+            ) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        Uri uri = FileUtil.savePdfToDownloads(context, response.body());
+                        if (uri != null) result.postValue(Result.success(uri));
+                        else handlePdfErrorResponse(response, result);
+                    } catch (IOException e) {
+                        result.postValue(Result.error("Failed to export PDF."));
+                    }
+                }
+                else result.postValue(Result.error("Failed to export PDF."));
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                result.postValue(Result.error("Failed to export PDF."));
+            }
+        };
+    }
+
+    private static void handlePdfErrorResponse(Response<ResponseBody> response, MutableLiveData<Result<Uri>> result) {
+        try {
+            if (response.errorBody() != null) {
+                String err = response.errorBody().string();
+                result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+            }
+            else result.postValue(Result.error(ErrorMessages.PDF_ERROR));
+        } catch (IOException e) {
+            result.postValue(Result.error(ErrorMessages.PDF_ERROR));
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.eventorium.data.event.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +11,7 @@ import com.eventorium.data.event.services.AccountEventService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,132 +31,37 @@ public class AccountEventRepository {
 
     public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
         MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.getOrganizerEvents().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<EventSummary>> call,
-                    @NonNull Response<List<EventSummary>> response
-            ) {
-                if (response.body() != null && response.isSuccessful()) {
-                    result.postValue(Result.success(response.body()));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<EventSummary>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.getOrganizerEvents().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Boolean> isFavouriteEvent(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteEvent(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if (response.isSuccessful()) result.postValue(response.body());
-                else result.postValue(false);
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                result.postValue(false);
-            }
-        });
+        service.isFavouriteEvent(id).enqueue(handleBooleanResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> addToFavourites(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.addToFavourites(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) result.postValue(Result.success(null));
-                else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.addToFavourites(id).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> removeFromFavourites(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.removeFromFavourites(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) result.postValue(Result.success(null));
-                else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.removeFromFavourites(id).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Result<List<EventSummary>>> getFavouriteEvents() {
         MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.getFavouriteEvents().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<EventSummary>> call, Response<List<EventSummary>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    result.postValue(Result.error("Error while loading favourite events"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<EventSummary>> call, Throwable t) {
-                result.postValue(Result.error("Error while loading favourite events"));
-            }
-        });
+        service.getFavouriteEvents().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> addToCalendar(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.addToCalendar(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) result.postValue(Result.success(null));
-                else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.addToCalendar(id).enqueue(handleGeneralResponse(result));
         return result;
     }
 }

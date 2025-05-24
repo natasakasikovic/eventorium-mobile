@@ -17,7 +17,7 @@ public interface AccountEventService {
     Call<Boolean> isFavouriteEvent(@Path("id") Long id);
 
     @POST("account/events/favourites/{id}")
-    Call<Void> addToFavourites(@Path("id") Long id);
+    Call<ResponseBody> addToFavourites(@Path("id") Long id);
 
     @DELETE("account/events/favourites/{id}")
     Call<ResponseBody> removeFromFavourites(@Path("id") Long id);

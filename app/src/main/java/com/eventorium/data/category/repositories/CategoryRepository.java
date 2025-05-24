@@ -43,7 +43,7 @@ public class CategoryRepository {
 
     public LiveData<Result<Void>> deleteCategory(Long id) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        categoryService.deleteCategory(id).enqueue(handleDeleteResponse(liveData));
+        categoryService.deleteCategory(id).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 }
