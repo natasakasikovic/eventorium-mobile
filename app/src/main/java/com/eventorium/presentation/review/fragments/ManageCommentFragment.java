@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.Commentable;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.shared.models.Result;
@@ -105,7 +106,7 @@ public class ManageCommentFragment extends Fragment {
                         .observe(getViewLifecycleOwner(), result -> handleUpdateResult(id, result));
             }
 
-            private void handleUpdateResult(Long id, Result<Void> result) {
+            private void handleUpdateResult(Long id, Result<Comment> result) {
                 if(result.getError() == null) {
                     Toast.makeText(
                             requireContext(),

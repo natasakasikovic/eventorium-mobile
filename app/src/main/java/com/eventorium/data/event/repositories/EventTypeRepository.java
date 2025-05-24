@@ -1,5 +1,7 @@
 package com.eventorium.data.event.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,111 +37,25 @@ public class EventTypeRepository {
 
     public LiveData<EventType> createEventType(CreateEventType eventType) {
         MutableLiveData<EventType> liveData = new MutableLiveData<>();
-
-        eventTypeService.createEventType(eventType).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<EventType> call,
-                    @NonNull Response<EventType> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<EventType> call,
-                    @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-            }
-        });
-
+        eventTypeService.createEventType(eventType).enqueue(handleSuccessfulResponse(liveData));
         return liveData;
     }
 
     public LiveData<List<EventType>> getEventTypes() {
         MutableLiveData<List<EventType>> liveData = new MutableLiveData<>();
-
-        eventTypeService.getEventTypes().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<EventType>> call,
-                    @NonNull Response<List<EventType>> response
-            ) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(new ArrayList<>());
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<List<EventType>> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getLocalizedMessage());
-                liveData.postValue(new ArrayList<>());
-            }
-        });
-
+        eventTypeService.getEventTypes().enqueue(handleSuccessfulResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> updateEventType(EventType eventType) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        eventTypeService.updateEventType(eventType.getId(), eventType).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    liveData.postValue(Result.success(null));
-                } else {
-                    try {
-                        String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException exception) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        eventTypeService.updateEventType(eventType.getId(), eventType).enqueue(handleValidationResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> deleteEventType(Long id) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        eventTypeService.delete(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    liveData.postValue(Result.success(null));
-                } else {
-                    try {
-                        String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
-
+        eventTypeService.delete(id).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 }

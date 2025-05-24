@@ -34,7 +34,7 @@ public class CommentViewModel extends ViewModel {
     }
 
     public void getPendingComments() {
-        commentRepository.getPendingComments().observeForever(this.comments::postValue);
+        commentRepository.getPendingComments().observeForever(value -> this.comments.postValue(value.getData()));
     }
 
     public void removeComment(Long id) {
@@ -56,7 +56,7 @@ public class CommentViewModel extends ViewModel {
         return commentRepository.createEventComment(id, new CreateComment(comment));
     }
 
-    public LiveData<Result<Void>> updateComment(Long id, Status status) {
+    public LiveData<Result<Comment>> updateComment(Long id, Status status) {
         return commentRepository.updateComment(id, new UpdateComment(status));
     }
 
@@ -64,6 +64,6 @@ public class CommentViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        commentRepository.getPendingComments().removeObserver(comments::postValue);
+        commentRepository.getPendingComments().removeObserver(value -> comments.postValue(value.getData()));
     }
 }

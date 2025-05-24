@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
@@ -85,8 +86,12 @@ public class ChatFragment extends Fragment {
     }
 
     private void loadMessages() {
-        chatViewModel.getMessages(senderId, recipient.getId()).observe(getViewLifecycleOwner(), messages -> {
-            adapter.setData(messages);
+        chatViewModel.getMessages(senderId, recipient.getId()).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                adapter.setData(result.getData());
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

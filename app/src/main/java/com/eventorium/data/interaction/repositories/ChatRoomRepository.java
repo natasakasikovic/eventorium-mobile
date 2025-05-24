@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.interaction.models.ChatRoom;
 import com.eventorium.data.interaction.services.ChatRoomService;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,27 +27,9 @@ public class ChatRoomRepository {
         this.service = service;
     }
 
-    public LiveData<List<ChatRoom>> getChatRooms() {
-        MutableLiveData<List<ChatRoom>> result = new MutableLiveData<>();
-        service.getChatRooms().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ChatRoom>> call,
-                    @NonNull Response<List<ChatRoom>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
-                } else {
-                    result.setValue(new ArrayList<>());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ChatRoom>> call, @NonNull Throwable t) {
-                result.setValue(new ArrayList<>());
-            }
-        });
-
+    public LiveData<Result<List<ChatRoom>>> getChatRooms() {
+        MutableLiveData<Result<List<ChatRoom>>> result = new MutableLiveData<>();
+        service.getChatRooms().enqueue(RetrofitCallbackHelper.handleGeneralResponse(result));
         return result;
     }
 }

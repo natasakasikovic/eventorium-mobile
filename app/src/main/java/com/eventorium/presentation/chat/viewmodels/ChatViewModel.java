@@ -7,6 +7,7 @@ import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.models.chat.ChatMessageRequest;
 import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.services.WebSocketService;
 import com.eventorium.presentation.shared.listeners.OnMessageReceive;
 
@@ -33,7 +34,7 @@ public class ChatViewModel extends ViewModel {
         return authRepository.getUserId();
     }
 
-    public LiveData<List<ChatMessage>> getMessages(Long senderId, Long recipientId) {
+    public LiveData<Result<List<ChatMessage>>> getMessages(Long senderId, Long recipientId) {
         return chatRepository.getMessages(senderId, recipientId);
     }
 
