@@ -5,6 +5,7 @@ import com.eventorium.data.category.models.Category;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -25,5 +26,5 @@ public interface CategoryService {
     Call<Category> createCategory(@Body CategoryRequest dto);
 
     @DELETE("categories/{id}")
-    Call<Void> deleteCategory(@Path("id") Long id);
+    Call<ResponseBody> deleteCategory(@Path("id") Long id);
 }

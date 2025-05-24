@@ -36,11 +36,8 @@ public class AuthRepository {
     private final AuthService authService;
     private final SharedPreferences sharedPreferences;
 
-    private final WebSocketService webSocketService;
-
     @Inject
-    public AuthRepository(WebSocketService webSocketService, AuthService authService, SharedPreferences sharedPreferences) {
-        this.webSocketService = webSocketService;
+    public AuthRepository(AuthService authService, SharedPreferences sharedPreferences) {
         this.authService = authService;
         this.sharedPreferences = sharedPreferences;
     }

@@ -181,7 +181,7 @@ public class ServiceRepository {
 
     public LiveData<Result<Void>> deleteImages(Long id, List<RemoveImageRequest> request) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        serviceService.deleteImages(id, request).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        serviceService.deleteImages(id, request).enqueue(RetrofitCallbackHelper.handleDeleteResponse(liveData));
         return liveData;
     }
 
@@ -220,7 +220,7 @@ public class ServiceRepository {
 
     public LiveData<Result<Void>> deleteService(Long id) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        serviceService.deleteService(id).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        serviceService.deleteService(id).enqueue(RetrofitCallbackHelper.handleDeleteResponse(liveData));
         return liveData;
     }
 

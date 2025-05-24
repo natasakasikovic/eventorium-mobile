@@ -3,7 +3,6 @@ package com.eventorium.data.event.repositories;
 import android.content.Context;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -41,13 +40,13 @@ public class EventRepository {
 
     public LiveData<Result<List<EventSummary>>> getEvents() {
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getAll().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.getAll().enqueue(RetrofitCallbackHelper.handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<EventSummary>>> getTopEvents(){
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getTopEvents().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.getTopEvents().enqueue(RetrofitCallbackHelper.handleGeneralResponse(liveData));
         return liveData;
     }
 
@@ -76,25 +75,25 @@ public class EventRepository {
 
     public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.searchEvents(keyword).enqueue(RetrofitCallbackHelper.handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<EventDetails>> getEventDetails(Long id) {
         MutableLiveData<Result<EventDetails>> result = new MutableLiveData<>();
-        service.getEventDetails(id).enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getEventDetails(id).enqueue(RetrofitCallbackHelper.handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<CalendarEvent>>> getAttendingEvents() {
         MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
-        service.getAttendingEvents().enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getAttendingEvents().enqueue(RetrofitCallbackHelper.handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
         MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
-        service.getOrganizerEvents().enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getOrganizerEvents().enqueue(RetrofitCallbackHelper.handleGeneralResponse(result));
         return result;
     }
 
@@ -134,7 +133,7 @@ public class EventRepository {
 
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
-        service.getAgenda(id).enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getAgenda(id).enqueue(RetrofitCallbackHelper.handleGeneralResponse(result));
         return result;
     }
 
