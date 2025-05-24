@@ -140,11 +140,11 @@ public class CreateServiceFragment extends Fragment {
     private void createService() {
         CreateService dto = loadDataFromForm();
         if(dto != null) {
-            serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), serviceId -> {
-                if (serviceId.getError() == null) {
+            serviceViewModel.createService(dto).observe(getViewLifecycleOwner(), result -> {
+                if (result.getError() == null) {
                     if (!imageUris.isEmpty()) {
                         serviceViewModel
-                                .uploadImages(serviceId.getData(), getContext(), imageUris)
+                                .uploadImages(result.getData().getId(), getContext(), imageUris)
                                 .observe(getViewLifecycleOwner(), this::handleUpload);
                     } else {
                         Toast.makeText(
@@ -160,7 +160,7 @@ public class CreateServiceFragment extends Fragment {
                 } else {
                     Toast.makeText(
                             requireContext(),
-                            serviceId.getError(),
+                            result.getError(),
                             Toast.LENGTH_SHORT
                     ).show();
                 }

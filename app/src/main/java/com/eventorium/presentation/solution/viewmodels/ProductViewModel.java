@@ -15,6 +15,7 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class ProductViewModel extends ViewModel {
         return productRepository.getProductImage(id);
     }
 
-    public LiveData<List<Bitmap>> getProductImages(Long id) {
+    public LiveData<Result<List<ImageItem>>> getProductImages(Long id) {
         return productRepository.getProductImages(id);
     }
 

@@ -1,11 +1,14 @@
 package com.eventorium.data.solution.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
@@ -37,170 +40,43 @@ public class AccountProductRepository {
 
     public LiveData<Boolean> isFavouriteProduct(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteProduct(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Boolean> call,
-                    @NonNull Response<Boolean> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Boolean> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-            }
-        });
+        service.isFavouriteProduct(id).enqueue(handleBooleanResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> addFavouriteProduct(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.addFavouriteProduct(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if (!response.isSuccessful()) {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(Result.error(response.message()));
-                } else {
-                    result.setValue(Result.success(null));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.addFavouriteProduct(id).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Boolean> removeFavouriteProduct(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>(false);
-        service.removeFavouriteProduct(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if(response.isSuccessful()) {
-                    result.postValue(true);
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-            }
-        });
-
+        service.removeFavouriteProduct(id).enqueue(handleBooleanResponse(result));
         return result;
     }
 
     public LiveData<Result<List<ProductSummary>>> getFavouriteProducts() {
         MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.getFavouriteProducts().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else
-                    result.postValue(Result.error("Error while loading favourite products"));
-
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
-                result.postValue(Result.error("Error while loading favourite products"));
-            }
-        });
-
+        service.getFavouriteProducts().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<ProductSummary>>> getProducts() {
         MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-
-        service.getProducts().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.getProducts().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-
-        service.searchProducts(keyword).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else
-                    result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.searchProducts(keyword).enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
         MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-
-        service.filterProducts(getFilterParams(filter)).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
-
+        service.filterProducts(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
