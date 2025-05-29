@@ -6,13 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.HashMap;

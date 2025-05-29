@@ -1,4 +1,4 @@
-package com.eventorium.presentation.util;
+package com.eventorium.data.shared.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

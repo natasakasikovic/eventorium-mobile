@@ -13,10 +13,10 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.services.UserService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 

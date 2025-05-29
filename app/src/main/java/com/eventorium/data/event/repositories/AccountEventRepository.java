@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.List;

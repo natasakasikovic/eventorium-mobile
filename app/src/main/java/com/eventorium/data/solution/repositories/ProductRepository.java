@@ -17,11 +17,11 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.ProductService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ImageResponse;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -173,12 +173,12 @@ public class ProductRepository {
         service.getProductImages(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<ImageResponseDto>> call,
-                    @NonNull Response<List<ImageResponseDto>> response
+                    @NonNull Call<List<ImageResponse>> call,
+                    @NonNull Response<List<ImageResponse>> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
                     liveData.postValue(response.body().stream()
-                            .map(ImageResponseDto::getData)
+                            .map(ImageResponse::getData)
                             .map(FileUtil::convertToBitmap)
                             .collect(toList())
                     );
@@ -190,7 +190,7 @@ public class ProductRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<ImageResponseDto>> call,
+                    @NonNull Call<List<ImageResponse>> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());

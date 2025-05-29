@@ -1,6 +1,7 @@
 package com.eventorium.data.solution.models.service;
 
-import com.eventorium.data.util.models.Status;
+
+import com.eventorium.data.shared.models.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

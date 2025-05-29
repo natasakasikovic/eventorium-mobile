@@ -11,7 +11,7 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.repositories.UserRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import javax.inject.Inject;
 

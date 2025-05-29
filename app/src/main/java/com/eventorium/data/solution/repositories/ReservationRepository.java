@@ -4,11 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.solution.models.service.Reservation;
 import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.services.ReservationService;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
 
 import java.util.ArrayList;
 import java.util.List;

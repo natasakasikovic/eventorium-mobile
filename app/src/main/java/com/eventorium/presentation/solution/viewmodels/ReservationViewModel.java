@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.models.Status;
 import com.eventorium.data.solution.models.service.Reservation;
 import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.repositories.ReservationRepository;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.models.Status;
 
 import java.util.List;
 import java.util.Objects;

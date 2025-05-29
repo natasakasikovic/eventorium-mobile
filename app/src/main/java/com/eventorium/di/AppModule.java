@@ -52,10 +52,10 @@ import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ReservationService;
 import com.eventorium.data.solution.services.ServiceService;
-import com.eventorium.data.util.AuthInterceptor;
-import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
-import com.eventorium.data.util.services.WebSocketService;
-import com.eventorium.data.util.adapters.LocalDateAdapter;
+import com.eventorium.data.auth.services.AuthInterceptor;
+import com.eventorium.data.shared.adapters.LocalDateTimeAdapter;
+import com.eventorium.data.shared.services.WebSocketService;
+import com.eventorium.data.shared.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

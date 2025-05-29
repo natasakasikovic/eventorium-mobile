@@ -21,7 +21,7 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.util.models.Status;
+import com.eventorium.data.shared.models.Status;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
 import com.eventorium.presentation.category.adapters.CategoryProposalsAdapter;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;

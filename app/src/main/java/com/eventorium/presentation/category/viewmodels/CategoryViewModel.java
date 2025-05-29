@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.repositories.CategoryRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.ArrayList;
 import java.util.List;

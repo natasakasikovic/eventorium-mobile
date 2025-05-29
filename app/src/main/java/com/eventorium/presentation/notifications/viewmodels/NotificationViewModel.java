@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.notification.models.NotificationResponse;
 import com.eventorium.data.notification.repositories.NotificationRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 

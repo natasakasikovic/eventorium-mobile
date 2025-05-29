@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.models.Status;
 import com.eventorium.data.solution.models.service.Reservation;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.models.Status;
 import com.eventorium.databinding.FragmentManageReservationBinding;
 import com.eventorium.presentation.category.listeners.OnManualReservationListener;
 import com.eventorium.presentation.event.fragments.EventDetailsFragment;

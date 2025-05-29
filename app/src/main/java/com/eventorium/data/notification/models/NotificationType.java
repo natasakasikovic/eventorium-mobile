@@ -1,4 +1,4 @@
-package com.eventorium.data.util.models;
+package com.eventorium.data.notification.models;
 
 public enum NotificationType {
     SUCCESS,

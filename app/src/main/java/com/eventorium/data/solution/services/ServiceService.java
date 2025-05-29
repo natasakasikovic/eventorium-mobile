@@ -5,7 +5,8 @@ import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -37,7 +39,7 @@ public interface ServiceService {
     Call<ResponseBody> getServiceImage(@Path("id") Long id);
 
     @GET("services/{id}/images")
-    Call<List<ImageResponseDto>> getServiceImages(@Path("id") Long id);
+    Call<List<ImageResponse>> getServiceImages(@Path("id") Long id);
 
     @GET("services/suggestions")
     Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);
@@ -49,11 +51,14 @@ public interface ServiceService {
     @POST("services/{id}/images")
     Call<ResponseBody> uploadImages(@Path("id") Long id, @Part List<MultipartBody.Part> images);
 
+    @HTTP(method = "DELETE", path = "services/{id}/images", hasBody = true)
+    Call<ResponseBody> deleteImages(@Path("id") Long id, @Body List<RemoveImageRequest> images);
+
     @PUT("services/{id}")
     Call<Service> updateService(@Path("id") Long id, @Body UpdateService dto);
 
     @DELETE("services/{id}")
-    Call<Void> deleteService(@Path("id") Long id);
+    Call<ResponseBody> deleteService(@Path("id") Long id);
 
     @GET("services/search/all")
     Call<List<ServiceSummary>> searchServices(@Query("keyword") String keyword);

@@ -10,7 +10,7 @@ import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 import java.util.Objects;

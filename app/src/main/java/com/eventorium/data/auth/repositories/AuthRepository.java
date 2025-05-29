@@ -13,12 +13,12 @@ import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.LoginResponse;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.services.AuthService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
-import com.eventorium.data.util.services.WebSocketService;
-import com.eventorium.presentation.util.JwtDecoder;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.services.WebSocketService;
+import com.eventorium.data.shared.utils.JwtDecoder;
 
 import java.io.IOException;
 
