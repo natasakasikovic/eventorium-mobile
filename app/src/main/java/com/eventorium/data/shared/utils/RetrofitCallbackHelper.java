@@ -105,7 +105,7 @@ public class RetrofitCallbackHelper {
         };
     }
 
-    public static<T> Callback<T> handleBooleanResponse(MutableLiveData<Boolean> result) {
+    public static<T> Callback<T> handleSuccessAsBoolean(MutableLiveData<Boolean> result) {
         return new Callback<>() {
             @Override
             public void onResponse(
@@ -143,7 +143,7 @@ public class RetrofitCallbackHelper {
 
             @Override
             public void onFailure(@NonNull Call<List<ImageResponse>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         };
     }
@@ -186,15 +186,15 @@ public class RetrofitCallbackHelper {
                         if (uri != null) result.postValue(Result.success(uri));
                         else handlePdfErrorResponse(response, result);
                     } catch (IOException e) {
-                        result.postValue(Result.error("Failed to export PDF."));
+                        result.postValue(Result.error(ErrorMessages.PDF_ERROR));
                     }
                 }
-                else result.postValue(Result.error("Failed to export PDF."));
+                else result.postValue(Result.error(ErrorMessages.PDF_ERROR));
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                result.postValue(Result.error("Failed to export PDF."));
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.PDF_ERROR));
             }
         };
     }

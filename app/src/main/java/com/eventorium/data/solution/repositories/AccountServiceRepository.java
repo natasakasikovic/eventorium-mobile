@@ -2,18 +2,13 @@ package com.eventorium.data.solution.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AccountServiceRepository {
 
@@ -56,7 +46,7 @@ public class AccountServiceRepository {
 
     public LiveData<Boolean> isFavouriteService(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteService(id).enqueue(handleBooleanResponse(result));
+        service.isFavouriteService(id).enqueue(handleSuccessfulResponse(result));
         return result;
     }
 
@@ -68,7 +58,7 @@ public class AccountServiceRepository {
 
     public LiveData<Boolean> removeFavouriteService(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>(false);
-        service.removeFavouriteService(id).enqueue(handleBooleanResponse(result));
+        service.removeFavouriteService(id).enqueue(handleSuccessAsBoolean(result));
         return result;
     }
 

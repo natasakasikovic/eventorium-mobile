@@ -2,32 +2,20 @@ package com.eventorium.data.solution.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AccountProductRepository {
 
@@ -40,7 +28,7 @@ public class AccountProductRepository {
 
     public LiveData<Boolean> isFavouriteProduct(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteProduct(id).enqueue(handleBooleanResponse(result));
+        service.isFavouriteProduct(id).enqueue(handleSuccessfulResponse(result));
         return result;
     }
 
@@ -52,7 +40,7 @@ public class AccountProductRepository {
 
     public LiveData<Boolean> removeFavouriteProduct(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>(false);
-        service.removeFavouriteProduct(id).enqueue(handleBooleanResponse(result));
+        service.removeFavouriteProduct(id).enqueue(handleSuccessAsBoolean(result));
         return result;
     }
 

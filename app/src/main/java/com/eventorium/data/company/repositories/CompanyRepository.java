@@ -1,7 +1,6 @@
 package com.eventorium.data.company.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
-import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,8 +14,6 @@ import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.services.CompanyService;
 import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.models.ImageItem;
 
@@ -26,10 +23,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CompanyRepository {
 
@@ -57,7 +50,7 @@ public class CompanyRepository {
             result.setValue(false);
             return result;
         }
-        service.uploadImages(companyId, parts).enqueue(handleBooleanResponse(result));
+        service.uploadImages(companyId, parts).enqueue(handleSuccessAsBoolean(result));
 
         return result;
     }

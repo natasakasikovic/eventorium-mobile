@@ -37,7 +37,7 @@ public class AccountEventRepository {
 
     public LiveData<Boolean> isFavouriteEvent(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        service.isFavouriteEvent(id).enqueue(handleBooleanResponse(result));
+        service.isFavouriteEvent(id).enqueue(handleSuccessfulResponse(result));
         return result;
     }
 
