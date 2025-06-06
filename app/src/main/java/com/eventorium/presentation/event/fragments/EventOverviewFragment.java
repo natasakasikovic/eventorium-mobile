@@ -18,11 +18,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -31,6 +35,7 @@ public class EventOverviewFragment extends Fragment {
 
     private FragmentEventOverviewBinding binding;
     private EventViewModel viewModel;
+    private EventTypeViewModel eventTypeViewModel;
     private EventsAdapter adapter;
 
     public EventOverviewFragment() { }
@@ -42,7 +47,9 @@ public class EventOverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(EventViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
     }
 
     @Override
@@ -72,10 +79,24 @@ public class EventOverviewFragment extends Fragment {
         viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null){
                 adapter.setData(result.getData());
+                loadEventImage(result.getData());
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void loadEventImage(List<EventSummary> events) {
+        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null) {
+                        event.setImage(image);
+                        int position = events.indexOf(event);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
     }
 
     private void setUpListener(){
@@ -84,10 +105,11 @@ public class EventOverviewFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String keyword) {
                 viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null)
+                    if (result.getError() == null) {
                         adapter.setData(result.getData());
-                     else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                        loadEventImage(result.getData());
+                    } else
+                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
                 });
                 return true;
             }

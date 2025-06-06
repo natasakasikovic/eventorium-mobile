@@ -1,5 +1,7 @@
 package com.eventorium.presentation.event.viewmodels;
 
+import android.graphics.Bitmap;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -29,6 +31,10 @@ public class EventTypeViewModel extends ViewModel {
 
     public LiveData<List<EventType>> getEventTypes() {
         return eventTypeRepository.getEventTypes();
+    }
+
+    public LiveData<Bitmap> getImage(Long id) {
+        return eventTypeRepository.getImage(id);
     }
 
     public LiveData<Result<Void>> update(EventType eventType) {

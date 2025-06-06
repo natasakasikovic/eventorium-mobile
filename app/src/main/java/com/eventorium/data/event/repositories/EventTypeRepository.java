@@ -177,7 +177,7 @@ public class EventTypeRepository {
         return result;
     }
 
-    public LiveData<Bitmap> getProfilePhoto(Long id) {
+    public LiveData<Bitmap> getImage(Long id) {
         MutableLiveData<Bitmap> liveData = new MutableLiveData<>();
 
         eventTypeService.getImage(id).enqueue(new Callback<>() {

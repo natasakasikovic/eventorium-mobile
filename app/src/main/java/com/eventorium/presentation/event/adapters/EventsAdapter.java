@@ -35,11 +35,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
         EventSummary event = events.get(position);
-        holder.nameTextView.setText(event.getName());
-        holder.cityTextView.setText(event.getCity());
-        holder.seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
-        // TODO: Consider implementing generic photos for events based on event type in the backend
-        //holder.photoImageView.setImageResource(event.getPhoto());
+        holder.bind(event);
     }
 
     @Override
@@ -52,7 +48,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
         notifyDataSetChanged();
     }
 
-    public static class EventViewHolder extends RecyclerView.ViewHolder {
+    public class EventViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView cityTextView;
 
@@ -65,6 +61,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             cityTextView = itemView.findViewById(R.id.event_city);
             photoImageView = itemView.findViewById(R.id.event_photo);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
+        }
+
+        public void bind(EventSummary event) {
+            nameTextView.setText(event.getName());
+            cityTextView.setText(event.getCity());
+            seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
+            photoImageView.setImageBitmap(event.getImage());
         }
     }
 }

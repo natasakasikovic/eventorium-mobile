@@ -1,5 +1,6 @@
 package com.eventorium.data.event.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,21 +18,20 @@ import lombok.Setter;
 
 public class EventSummary implements Parcelable {
     private Long id;
+    private Long imageId;
+    private Bitmap image;
     private String name;
     private String city;
-    private Integer photo;
 
     protected EventSummary(Parcel in) {
         name = in.readString();
         city = in.readString();
-        photo = in.readInt();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(city);
-        dest.writeInt(photo);
     }
 
     @Override
