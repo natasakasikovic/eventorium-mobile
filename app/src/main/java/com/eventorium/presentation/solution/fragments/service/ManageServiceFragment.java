@@ -169,8 +169,8 @@ public class ManageServiceFragment extends Fragment {
     private void createBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
         View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
-        loadCategories(dialogView.findViewById(R.id.categorySelector));
-        loadEventTypes(dialogView.findViewById(R.id.eventTypeSelector));
+        loadCategories(dialogView.findViewById(R.id.spinnerCategory));
+        loadEventTypes(dialogView.findViewById(R.id.spinnerEventType));
         bottomSheetDialog.setContentView(dialogView);
 
         bottomSheetDialog.setOnDismissListener(dialog
@@ -183,19 +183,19 @@ public class ManageServiceFragment extends Fragment {
         boolean availability
                 = ((CheckBox) Objects.requireNonNull(dialogView.findViewById(R.id.availabilityBox)))
                 .isChecked();;
-        TextInputEditText minTextField = dialogView.findViewById(R.id.serviceMinPriceText);
-        TextInputEditText maxTextField = dialogView.findViewById(R.id.serviceMaxPriceText);
+        TextInputEditText minTextField = dialogView.findViewById(R.id.minPriceEditText);
+        TextInputEditText maxTextField = dialogView.findViewById(R.id.maxPriceEditText);
         Double minPrice = parsePrice(minTextField);
         Double maxPrice = parsePrice(maxTextField);
-        Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.categorySelector)));
-        EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.eventTypeSelector)));
+        Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerCategory)));
+        EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerEventType)));
 
         ServiceFilter filter = ServiceFilter.builder()
                 .availability(availability)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .category(category == null ? null : category.getName())
-                .eventType(eventType == null ? null : eventType.getName())
+                .type(eventType == null ? null : eventType.getName())
                 .build();
 
         manageableServiceViewModel.filterServices(filter);

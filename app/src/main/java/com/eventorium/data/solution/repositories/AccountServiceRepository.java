@@ -208,8 +208,8 @@ public class AccountServiceRepository {
         if (filter.getCategory() != null) {
             params.put("category", filter.getCategory());
         }
-        if (filter.getEventType() != null) {
-            params.put("eventType", filter.getEventType());
+        if (filter.getType() != null) {
+            params.put("eventType", filter.getType());
         }
         if (filter.getMinPrice() != null) {
             params.put("minPrice", String.valueOf(filter.getMinPrice()));
