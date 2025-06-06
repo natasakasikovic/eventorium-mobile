@@ -211,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.priceList);
         } else if (id == R.id.nav_new_product) {
             navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_manage_reservations) {
+            navController.navigate(R.id.manageReservationFragment);
         } else if (id == R.id.nav_products) {
             navController.navigate(R.id.manageProductFragment);
         }
@@ -237,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.categoryProposalsFragment);
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
-        } else if (id == R.id.nav_user_reports){
+        } else if (id == R.id.nav_user_reports) {
             navController.navigate(R.id.userReportsOverviewFragment);
         } else if (id == R.id.nav_manage_comments) {
             navController.navigate(R.id.manageCommentsFragment);

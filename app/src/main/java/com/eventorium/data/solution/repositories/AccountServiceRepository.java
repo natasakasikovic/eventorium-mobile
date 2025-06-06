@@ -169,13 +169,13 @@ public class AccountServiceRepository {
                 if(response.isSuccessful()) {
                     result.postValue(true);
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(false);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
+                result.postValue(false);
             }
         });
 

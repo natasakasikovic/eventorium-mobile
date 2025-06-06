@@ -45,6 +45,10 @@ public class EventViewModel extends ViewModel {
         return repository.createEvent(event);
     }
 
+    public LiveData<Result<List<Event>>> getDraftedEvents() {
+        return repository.getDraftedEvents();
+    }
+
     public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
         return repository.searchEvents(keyword);
     }

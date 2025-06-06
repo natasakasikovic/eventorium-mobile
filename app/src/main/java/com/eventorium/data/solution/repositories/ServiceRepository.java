@@ -297,9 +297,9 @@ public class ServiceRepository {
         return liveData;
     }
 
-    public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Double price) {
+    public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Long eventId, Double price) {
         MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        service.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+        service.getSuggestions(eventId, categoryId, price).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<List<ServiceSummary>> call,
