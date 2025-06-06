@@ -30,6 +30,8 @@ import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -177,8 +179,12 @@ public class ServiceDetailsFragment extends Fragment {
         binding.providerName.setText(provider.getName() + " " + provider.getLastname());
         binding.companyName.setText(service.getCompany().getName());
 
-        serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), images -> {
-            binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
+        serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                List<ImageItem> images = result.getData();
+                if (images.isEmpty()) this.binding.images.setVisibility(View.GONE);
+                else binding.images.setAdapter(new ImageAdapter(images));
+            }
         });
     }
 

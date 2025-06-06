@@ -9,9 +9,8 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
 import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.data.solution.repositories.PriceListRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;

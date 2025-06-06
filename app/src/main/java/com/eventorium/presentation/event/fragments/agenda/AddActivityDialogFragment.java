@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.eventorium.data.event.models.Activity;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.databinding.FragmentAddActivityDialogBinding;
 import com.eventorium.presentation.event.listeners.OnActivityCreatedListener;
 import com.google.android.material.textfield.TextInputEditText;

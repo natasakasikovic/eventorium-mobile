@@ -9,9 +9,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.services.CategoryService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.Collections;

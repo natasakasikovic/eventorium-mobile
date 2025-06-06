@@ -7,7 +7,7 @@ import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.models.chat.ChatMessageRequest;
 import com.eventorium.data.interaction.repositories.ChatRepository;
-import com.eventorium.data.util.services.WebSocketService;
+import com.eventorium.data.shared.services.WebSocketService;
 import com.eventorium.presentation.shared.listeners.OnMessageReceive;
 
 import java.util.List;

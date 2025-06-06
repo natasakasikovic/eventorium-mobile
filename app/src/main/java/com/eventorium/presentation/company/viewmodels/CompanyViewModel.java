@@ -10,7 +10,7 @@ import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.repositories.CompanyRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.models.ImageItem;
 

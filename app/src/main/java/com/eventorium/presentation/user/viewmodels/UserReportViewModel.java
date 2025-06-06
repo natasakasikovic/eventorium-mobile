@@ -7,7 +7,7 @@ import com.eventorium.data.auth.models.UpdateReportStatusRequest;
 import com.eventorium.data.auth.models.UserReportRequest;
 import com.eventorium.data.auth.models.UserReportResponse;
 import com.eventorium.data.auth.repositories.UserReportRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 

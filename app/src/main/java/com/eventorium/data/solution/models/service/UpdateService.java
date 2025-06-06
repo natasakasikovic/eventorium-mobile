@@ -1,8 +1,5 @@
 package com.eventorium.data.solution.models.service;
 
-import com.eventorium.data.util.models.ReservationType;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

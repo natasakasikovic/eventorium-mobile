@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.AccountDetails;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.databinding.FragmentUserProfileBinding;
 import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.shared.dialogs.ConfirmationDialog;

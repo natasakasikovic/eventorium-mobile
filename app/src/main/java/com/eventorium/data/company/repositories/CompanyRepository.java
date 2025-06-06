@@ -12,11 +12,11 @@ import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.services.CompanyService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.models.ImageItem;
 
@@ -143,7 +143,7 @@ public class CompanyRepository {
         MutableLiveData<Result<List<ImageItem>>> result = new MutableLiveData<>();
         service.getImages(id).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<ImageResponseDto>> call, Response<List<ImageResponseDto>> response) {
+            public void onResponse(Call<List<ImageResponse>> call, Response<List<ImageResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     result.postValue(Result.success(
                             response.body().stream()
@@ -156,7 +156,7 @@ public class CompanyRepository {
             }
 
             @Override
-            public void onFailure(Call<List<ImageResponseDto>> call, Throwable t) {
+            public void onFailure(Call<List<ImageResponse>> call, Throwable t) {
                 result.postValue(Result.error(t.getMessage()));
             }
         });

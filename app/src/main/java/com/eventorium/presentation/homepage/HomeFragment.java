@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;

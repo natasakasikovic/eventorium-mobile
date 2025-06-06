@@ -1,6 +1,6 @@
 package com.eventorium.data.interaction.models.comment;
 
-import com.eventorium.data.util.models.Status;
+import com.eventorium.data.shared.models.Status;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

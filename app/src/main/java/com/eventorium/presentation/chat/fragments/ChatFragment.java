@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.databinding.FragmentChatBinding;
 import com.eventorium.presentation.chat.adapters.ChatAdapter;
 import com.eventorium.presentation.chat.viewmodels.ChatViewModel;
@@ -69,17 +69,19 @@ public class ChatFragment extends Fragment {
         adapter = new ChatAdapter(senderId, new ArrayList<>());
         binding.chatTitle.setText(recipient.getName() + " " + recipient.getLastname());
         binding.chatRecyclerView.setAdapter(adapter);
-        binding.sendButton.setOnClickListener(v -> {
-            String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
-            if(!message.isEmpty()) {
-                ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
-                chatViewModel.sendMessage(chatMessage);
-                adapter.addMessage(chatMessage);
-                binding.messageInputEditText.setText("");
-            }
-        });
+        binding.sendButton.setOnClickListener(v -> sendMessage());
         loadMessages();
         return binding.getRoot();
+    }
+
+    private void sendMessage() {
+        String message = Objects.requireNonNull(binding.messageInputEditText.getText()).toString();
+        if(message.trim().length() != 0) {
+            ChatMessage chatMessage = new ChatMessage(senderId, recipient.getId(), message);
+            chatViewModel.sendMessage(chatMessage);
+            adapter.addMessage(chatMessage);
+            binding.messageInputEditText.setText("");
+        }
     }
 
     private void loadMessages() {

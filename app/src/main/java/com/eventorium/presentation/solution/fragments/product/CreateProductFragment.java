@@ -27,7 +27,7 @@ import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
-import com.eventorium.presentation.util.ImageUpload;
+import com.eventorium.data.shared.utils.ImageUpload;
 
 import java.io.IOException;
 import java.util.ArrayList;

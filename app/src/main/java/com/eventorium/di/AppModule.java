@@ -29,13 +29,15 @@ import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.event.services.InvitationService;
 import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.interaction.repositories.ChatRoomRepository;
 import com.eventorium.data.interaction.repositories.CommentRepository;
 import com.eventorium.data.interaction.repositories.RatingRepository;
+import com.eventorium.data.interaction.services.ChatRoomService;
 import com.eventorium.data.interaction.services.ChatService;
 import com.eventorium.data.interaction.services.CommentService;
 import com.eventorium.data.interaction.services.RatingService;
-import com.eventorium.data.notifications.repositories.NotificationRepository;
-import com.eventorium.data.notifications.services.NotificationService;
+import com.eventorium.data.notification.repositories.NotificationRepository;
+import com.eventorium.data.notification.services.NotificationService;
 import com.eventorium.data.shared.repositories.CityRepository;
 import com.eventorium.data.shared.services.CityService;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -48,10 +50,10 @@ import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
 import com.eventorium.data.solution.services.ServiceService;
-import com.eventorium.data.util.AuthInterceptor;
-import com.eventorium.data.util.adapters.LocalDateTimeAdapter;
-import com.eventorium.data.util.services.WebSocketService;
-import com.eventorium.data.util.adapters.LocalDateAdapter;
+import com.eventorium.data.auth.services.AuthInterceptor;
+import com.eventorium.data.shared.adapters.LocalDateTimeAdapter;
+import com.eventorium.data.shared.services.WebSocketService;
+import com.eventorium.data.shared.adapters.LocalDateAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -420,5 +422,17 @@ public class AppModule {
     @Inject
     public NotificationService provideNotificationService(Retrofit retrofit) {
         return retrofit.create(NotificationService.class);
+    }
+
+    @Provides
+    @Singleton
+    public static ChatRoomRepository providerChatRoomRepository(ChatRoomService service) {
+        return new ChatRoomRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public ChatRoomService providerChatRoomService(Retrofit retrofit) {
+        return retrofit.create(ChatRoomService.class);
     }
 }
