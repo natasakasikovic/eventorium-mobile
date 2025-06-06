@@ -49,4 +49,7 @@ public class LoginViewModel extends ViewModel {
     public boolean isLoggedIn() {
         return authRepository.isLoggedIn();
     }
+    public String getUserRole() {
+        return authRepository.getUserRole();
+    }
 }

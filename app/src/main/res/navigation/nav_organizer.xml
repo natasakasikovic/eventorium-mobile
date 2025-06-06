@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/budgetPlanning"
-        android:name="com.eventorium.presentation.event.fragments.BudgetPlanningFragment"
+        android:name="com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment"
         android:label="service_booking_fragment"
         tools:layout="@layout/fragment_budget_planning">
         <action
@@ -33,6 +33,16 @@
         <action
             android:id="@+id/action_budget_to_agenda"
             app:destination="@+id/agendaFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/purchaseProduct"
+        android:name="com.eventorium.presentation.solution.fragments.product.PurchaseProductFragment"
+        tools:layout="@layout/fragment_purchase_product">
+        <action
+            android:id="@+id/action_purchaseProduct_to_productDetails"
+            app:destination="@+id/productDetailsFragment"
+            />
     </fragment>
 
     <fragment
