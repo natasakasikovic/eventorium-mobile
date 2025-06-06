@@ -1,8 +1,5 @@
 package com.eventorium.data.solution.models.service;
 
-import com.eventorium.data.util.models.ReservationType;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -24,8 +21,8 @@ public class UpdateService {
     private Double discount;
     private List<Long> eventTypesIds;
     private ReservationType type;
-    private LocalDate reservationDeadline;
-    private LocalDate cancellationDeadline;
+    private Integer reservationDeadline;
+    private Integer cancellationDeadline;
     private Integer minDuration;
     private Integer maxDuration;
     private Boolean available;

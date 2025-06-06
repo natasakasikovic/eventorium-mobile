@@ -29,7 +29,7 @@ import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
-import com.eventorium.presentation.util.ImageUpload;
+import com.eventorium.data.shared.utils.ImageUpload;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -198,7 +198,6 @@ public class EditCompanyFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error while loading images", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     void save() {

@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UpdateReportStatusRequest;
 import com.eventorium.data.auth.models.UserReportResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.models.Status;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.models.Status;
 import com.eventorium.databinding.FragmentUserReportDetailsBinding;
 import com.eventorium.presentation.user.viewmodels.UserReportViewModel;
 

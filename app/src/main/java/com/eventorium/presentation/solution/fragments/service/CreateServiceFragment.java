@@ -23,23 +23,17 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.solution.models.service.CreateService;
-import com.eventorium.data.util.models.ReservationType;
+import com.eventorium.data.solution.models.service.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
-import com.eventorium.presentation.util.ImageUpload;
+import com.eventorium.data.shared.utils.ImageUpload;
 import com.eventorium.presentation.shared.adapters.ChecklistAdapter;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,58 +88,12 @@ public class CreateServiceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateServiceBinding.inflate(inflater, container, false);
-        createDatePickers();
         loadCategories();
         loadEventTypes();
         binding.manualChecked.setChecked(true);
         setupImagePicker();
         binding.createServiceButton.setOnClickListener(v -> createService());
         return binding.getRoot();
-    }
-
-    private TextInputEditText reservationDate;
-    private TextInputEditText cancellationDate;
-    private void createDatePickers() {
-        setupReservationPicker();
-        setupCancellationPicker();
-    }
-
-    private void setupReservationPicker() {
-        reservationDate = binding.serviceReservationDeadlineText;
-
-        MaterialDatePicker<Long> reservationPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a Date")
-                .build();
-
-
-        reservationDate.setOnClickListener(v ->
-                reservationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-
-        reservationPicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            reservationDate.setText(formattedDate);
-        });
-    }
-
-    private void setupCancellationPicker() {
-        cancellationDate = binding.serviceCancellationDeadlineText;
-        MaterialDatePicker<Long> cancellationPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a Date")
-                .build();
-
-        cancellationDate.setOnClickListener(v ->
-                cancellationPicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-
-        cancellationPicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            cancellationDate.setText(formattedDate);
-        });
     }
 
     @Override
@@ -162,18 +110,15 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private void loadCategories() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                new ArrayList<>(List.of(""))
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        Category suggestion = Category.builder().id(null).name("I would like to suggest category").build();
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
-            adapter.addAll(categories.stream().map(Category::getName).toArray(String[]::new));
-            adapter.notifyDataSetChanged();
-            binding.categorySelector.setAdapter(adapter);
-            binding.categorySelector.setTag(categories);
+            categories.add(0, suggestion);
+            ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    categories
+            );
+            binding.categorySelector.setAdapter(categoryAdapter);
         });
     }
 
@@ -184,18 +129,10 @@ public class CreateServiceFragment extends Fragment {
     }
 
     private Category getCategory() {
-        String categoryName = binding.categorySelector.getSelectedItem().toString();
-        Category category;
-        if(!categoryName.isEmpty()) {
-            category = ((List<Category>) binding.categorySelector.getTag())
-                    .stream()
-                    .filter(c -> c.getName().equals(categoryName))
-                    .findFirst().get();
-        } else {
-            category = new Category(
-                    null,
-                    String.valueOf(binding.suggestCategoryNameText.getText()),
-                    String.valueOf(binding.suggestCategoryDescriptionText.getText()));
+        Category category = (Category) binding.categorySelector.getSelectedItem();
+        if (category.getId() == null) {
+            category.setName(String.valueOf(binding.suggestCategoryNameText.getText()));
+            category.setDescription(String.valueOf(binding.suggestCategoryDescriptionText.getText()));
         }
         return category;
     }
@@ -239,14 +176,6 @@ public class CreateServiceFragment extends Fragment {
                     : ReservationType.AUTOMATIC;
 
             List<Float> duration = binding.serviceDuration.getValues();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
-
-            LocalDate cancellationDate = LocalDate.parse(binding.serviceCancellationDeadlineText.getText(), formatter);
-            LocalDate reservationDate = LocalDate.parse(binding.serviceReservationDeadlineText.getText(), formatter);
-
-            if(!validateDates(cancellationDate, reservationDate)) {
-                return null;
-            }
 
             return CreateService.builder()
                     .name(String.valueOf(binding.serviceNameText.getText()))
@@ -254,10 +183,12 @@ public class CreateServiceFragment extends Fragment {
                     .price(Double.parseDouble(String.valueOf(binding.servicePriceText.getText())))
                     .discount(Double.parseDouble(String.valueOf(binding.serviceDiscountText.getText())))
                     .specialties(String.valueOf(binding.serviceSpecificitiesText.getText()))
-                    .cancellationDeadline(cancellationDate)
-                    .reservationDeadline(reservationDate)
+                    .cancellationDeadline(Integer.valueOf(String.valueOf(binding.serviceCancellationDeadlineText.getText())))
+                    .reservationDeadline(Integer.valueOf(String.valueOf(binding.serviceReservationDeadlineText.getText())))
                     .minDuration(duration.get(0).intValue())
                     .maxDuration(duration.get(1).intValue())
+                    .isAvailable(binding.availabilityBox.isChecked())
+                    .isVisible(binding.visibilityBox.isChecked())
                     .type(type)
                     .eventTypes(((ChecklistAdapter<EventType>)
                             (Objects.requireNonNull(binding.eventTypeRecycleView.getAdapter())))
@@ -272,36 +203,6 @@ public class CreateServiceFragment extends Fragment {
             ).show();
             return null;
         }
-    }
-
-    private boolean validateDates(LocalDate cancellationDate, LocalDate reservationDate) {
-        if(cancellationDate.isBefore(LocalDate.now())) {
-            Toast.makeText(
-                    requireContext(),
-                    R.string.reservation_date_in_past,
-                    Toast.LENGTH_LONG
-            ).show();
-            return false;
-        }
-
-        if(reservationDate.isBefore(LocalDate.now())) {
-            Toast.makeText(
-                    requireContext(),
-                    R.string.cancellation_date_in_past,
-                    Toast.LENGTH_LONG
-            ).show();
-            return false;
-        }
-
-        if(cancellationDate.isBefore(reservationDate)) {
-            Toast.makeText(
-                    requireContext(),
-                    R.string.cancellation_after_reservation,
-                    Toast.LENGTH_LONG
-            ).show();
-            return false;
-        }
-        return true;
     }
 
     private void handleUpload(boolean successfulUpload) {

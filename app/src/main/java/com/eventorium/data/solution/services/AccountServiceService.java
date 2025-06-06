@@ -33,7 +33,7 @@ public interface AccountServiceService {
     Call<Boolean> isFavouriteService(@Path("id") Long id);
 
     @POST("account/services/favourites/{id}")
-    Call<Service> addFavouriteService(@Path("id") Long id);
+    Call<ResponseBody> addFavouriteService(@Path("id") Long id);
 
     @DELETE("account/services/favourites/{id}")
     Call<ResponseBody> removeFavouriteService(@Path("id") Long id);

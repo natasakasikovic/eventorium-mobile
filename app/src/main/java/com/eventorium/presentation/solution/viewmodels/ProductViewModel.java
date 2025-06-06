@@ -10,10 +10,11 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ProductViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final ProductRepository productRepository;
     private final AccountProductRepository accountProductRepository;
+
 
     @Inject
     public ProductViewModel(
@@ -70,7 +72,7 @@ public class ProductViewModel extends ViewModel {
         return accountProductRepository.removeFavouriteProduct(id);
     }
 
-    public LiveData<String> addFavouriteProduct(Long id) {
+    public LiveData<Result<Void>> addFavouriteProduct(Long id) {
         return accountProductRepository.addFavouriteProduct(id);
     }
 
@@ -80,5 +82,9 @@ public class ProductViewModel extends ViewModel {
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         return productRepository.searchProducts(keyword);
+    }
+
+    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
+        return productRepository.filterProducts(filter);
     }
 }

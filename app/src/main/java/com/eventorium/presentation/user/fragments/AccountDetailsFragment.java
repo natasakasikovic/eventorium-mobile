@@ -69,7 +69,7 @@ public class AccountDetailsFragment extends Fragment {
                 binding.email.setText(accountDetails.getEmail());
                 loadProfilePhoto(accountDetails.getId());
             } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Error while loading account.", Toast.LENGTH_SHORT).show();
             }
         });
     }

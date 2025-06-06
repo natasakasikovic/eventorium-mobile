@@ -1,13 +1,14 @@
 package com.eventorium.data.event.repositories;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +24,27 @@ public class AccountEventRepository {
 
     public AccountEventRepository(AccountEventService service) {
         this.service = service;
+    }
+
+    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
+        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
+        service.getOrganizerEvents().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(
+                    @NonNull Call<List<EventSummary>> call,
+                    @NonNull Response<List<EventSummary>> response
+            ) {
+                if (response.body() != null && response.isSuccessful()) {
+                    result.postValue(Result.success(response.body()));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<EventSummary>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+        return result;
     }
 
     public LiveData<Boolean> isFavouriteEvent(Long id) {
@@ -117,7 +139,14 @@ public class AccountEventRepository {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) result.postValue(Result.success(null));
-                else result.postValue(Result.error("Error while adding event to calendar"));
+                else {
+                    try {
+                        String err = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
+                }
             }
 
             @Override

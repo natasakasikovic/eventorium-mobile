@@ -37,13 +37,23 @@
     <fragment
         android:id="@+id/eventDetailsFragment"
         android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
-        tools:layout="@layout/fragment_event_details" />
+        tools:layout="@layout/fragment_event_details">
+        <action
+            android:id="@+id/action_event_details_to_organizer"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
         tools:layout="@layout/fragment_service_details">
+        <action
+            android:id="@+id/action_serviceDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
     </fragment>
 
     <fragment
@@ -142,5 +152,10 @@
         android:id="@+id/notificationsFragment"
         android:name="com.eventorium.presentation.notifications.fragments.NotificationsFragment"
         tools:layout="@layout/fragment_notifications"/>
+
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatRoomFragment"
+        tools:layout="@layout/fragment_chat_room"/>
 
 </navigation>

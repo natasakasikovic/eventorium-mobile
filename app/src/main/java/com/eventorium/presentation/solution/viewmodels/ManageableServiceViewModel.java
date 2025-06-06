@@ -10,7 +10,7 @@ import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 import java.util.Objects;
@@ -91,14 +91,14 @@ public class ManageableServiceViewModel extends ViewModel {
 
 
     public LiveData<Result<Void>> deleteService(Long serviceId) {
-        LiveData<Result<Void>> result =  serviceRepository.deleteService(serviceId);
-        if(result != null && Objects.requireNonNull(result.getValue()).getError() != null) {
-            manageableServices.postValue(Objects.requireNonNull(manageableServices.getValue())
-                    .stream()
-                    .filter(category -> !Objects.equals(category.getId(), serviceId))
-                    .collect(toList()));
-        }
-        return result;
+        return serviceRepository.deleteService(serviceId);
+    }
+
+    public void removeService(Long serviceId) {
+        manageableServices.postValue(Objects.requireNonNull(manageableServices.getValue())
+                .stream()
+                .filter(service -> !Objects.equals(service.getId(), serviceId))
+                .collect(toList()));
     }
 
     public void setFilterResults(List<ServiceSummary> filterResults) {

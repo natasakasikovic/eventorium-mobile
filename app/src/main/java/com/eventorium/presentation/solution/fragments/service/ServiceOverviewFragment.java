@@ -243,8 +243,8 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void loadServiceImages(List<ServiceSummary> services) {
-        services.forEach(service -> viewModel.getServiceImage(service.getId()).
-                observe(getViewLifecycleOwner(), image -> {
+        services.forEach( service -> viewModel.getServiceImage(service.getId()).
+                observe (getViewLifecycleOwner(), image -> {
                     if (image != null) {
                         service.setImage(image);
                         int position = services.indexOf(service);

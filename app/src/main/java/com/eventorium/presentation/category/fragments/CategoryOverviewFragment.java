@@ -120,18 +120,19 @@ public class CategoryOverviewFragment extends Fragment {
                 .setMessage("Are you sure you want to delete " + category.getName() + "?" )
                 .setPositiveButton("Delete", (dialog, which) -> {
                     categoryViewModel.deleteCategory(category.getId())
-                        .observe(getViewLifecycleOwner(), success -> {
-                                if(success) {
+                        .observe(getViewLifecycleOwner(), result -> {
+                                if(result.getError() == null) {
                                     Toast.makeText(
                                             requireContext(),
                                             R.string.category_deleted_successfully,
                                             Toast.LENGTH_SHORT
                                     ).show();
+                                    categoryViewModel.removeCategory(category.getId());
                                 } else {
                                     Toast.makeText(
                                             requireContext(),
-                                            R.string.failed_to_delete_category,
-                                            Toast.LENGTH_SHORT
+                                            result.getError(),
+                                            Toast.LENGTH_LONG
                                     ).show();
                                 }
                         });

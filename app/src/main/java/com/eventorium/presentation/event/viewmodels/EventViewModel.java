@@ -13,7 +13,7 @@ import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
@@ -31,6 +31,10 @@ public class EventViewModel extends ViewModel {
     public EventViewModel(EventRepository eventRepository, AccountEventRepository accountEventRepository) {
         this.repository = eventRepository;
         this.accountEventRepository = accountEventRepository;
+    }
+
+    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
+        return accountEventRepository.getOrganizerEvents();
     }
 
     public LiveData<Result<List<EventSummary>>> getEvents(){
@@ -71,6 +75,10 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<Uri>> exportToPdf(Long id, Context context) {
         return repository.exportToPdf(id, context);
+    }
+
+    public LiveData<Result<Uri>> exportGuestListToPdf(Long id, Context context) {
+        return repository.exportGuestListToPdf(id, context);
     }
 
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {

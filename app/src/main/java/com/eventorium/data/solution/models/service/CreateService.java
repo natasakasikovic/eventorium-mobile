@@ -2,9 +2,7 @@ package com.eventorium.data.solution.models.service;
 
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.util.models.ReservationType;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -29,8 +27,10 @@ public class CreateService {
     private List<EventType> eventTypes;
     private Category category;
     private ReservationType type;
-    private LocalDate reservationDeadline;
-    private LocalDate cancellationDeadline;
+    private Integer reservationDeadline;
+    private Integer cancellationDeadline;
     private Integer minDuration;
     private Integer maxDuration;
+    private Boolean isAvailable;
+    private Boolean isVisible;
 }

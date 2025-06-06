@@ -1,5 +1,7 @@
 package com.eventorium.data.event.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,8 +9,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.services.BudgetService;
+import com.eventorium.data.interaction.models.review.SolutionReview;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.product.Product;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
@@ -44,24 +48,9 @@ public class BudgetRepository {
         return result;
     }
 
-    public<T> Callback<T> handleResponse(MutableLiveData<Result<T>> result) {
-        return new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<T> call,
-                    @NonNull Response<T> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    result.postValue(Result.error(response.message()));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
-                result.postValue(Result.error(t.getMessage()));
-            }
-        };
+    public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
+        MutableLiveData<Result<List<SolutionReview>>> result = new MutableLiveData<>();
+        budgetService.getBudgetItems().enqueue(handleResponse(result));
+        return result;
     }
 }

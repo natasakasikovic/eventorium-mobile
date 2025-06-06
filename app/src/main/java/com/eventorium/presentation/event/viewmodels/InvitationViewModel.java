@@ -1,9 +1,12 @@
 package com.eventorium.presentation.event.viewmodels;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.Invitation;
+import com.eventorium.data.event.models.InvitationDetails;
 import com.eventorium.data.event.repositories.InvitationRepository;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
@@ -23,5 +26,9 @@ public class InvitationViewModel extends ViewModel {
 
     public void sendInvitations(Long id, List<Invitation> invitations){
         repository.sendInvitations(id, invitations);
+    }
+
+    public LiveData<Result<List<InvitationDetails>>> getInvitations() {
+       return repository.getInvitations();
     }
 }

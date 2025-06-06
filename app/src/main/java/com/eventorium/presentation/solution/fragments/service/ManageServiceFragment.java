@@ -144,17 +144,18 @@ public class ManageServiceFragment extends Fragment {
                 .setMessage("Are you sure you want to delete " + service.getName() + "?" )
                 .setPositiveButton("Delete", (dialog, which) -> {
                     manageableServiceViewModel.deleteService(service.getId())
-                            .observe(getViewLifecycleOwner(), success -> {
-                                if(success.getError() == null) {
+                            .observe(getViewLifecycleOwner(), result -> {
+                                if(result.getError() == null) {
                                     Toast.makeText(
                                             requireContext(),
                                             R.string.service_deleted_successfully,
                                             Toast.LENGTH_SHORT
                                     ).show();
+                                    manageableServiceViewModel.removeService(service.getId());
                                 } else {
                                     Toast.makeText(
                                             requireContext(),
-                                            success.getError(),
+                                            result.getError(),
                                             Toast.LENGTH_SHORT
                                     ).show();
                                 }

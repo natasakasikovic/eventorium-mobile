@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
@@ -18,13 +17,12 @@ import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;
 
-public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductViewHolder> {
+public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductViewHolder> {
 
-    private List<ProductSummary> productSummaries;
     private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
 
     public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
-        this.productSummaries = productSummaries;
+        super(productSummaries);
         this.onSeeMoreClick = onSeeMoreClick;
     }
 
@@ -35,24 +33,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         return new ProductViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         ProductSummary product = productSummaries.get(position);
         holder.bind(product);
     }
 
-    @Override
-    public int getItemCount() {
-        return productSummaries.size();
-    }
-
-    public void setData(List<ProductSummary> data) {
-        productSummaries = data;
-        notifyDataSetChanged();
-    }
-
-    public class ProductViewHolder extends RecyclerView.ViewHolder {
+    public class ProductViewHolder extends BaseProductViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;
@@ -70,6 +57,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             layout = itemView.findViewById(R.id.layout);
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(ProductSummary product) {
             nameTextView.setText(product.getName());
             priceTextView.setText(product.getPrice().toString());
@@ -82,6 +70,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             setDiscountLabel(product);
         }
 
+        @SuppressLint("SetTextI18n")
         private void setDiscountLabel(ProductSummary product) {
             if (hasDiscount(product)) {
                 discountTextView.setVisibility(View.VISIBLE);

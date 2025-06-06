@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -25,7 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.eventorium.R;
-import com.eventorium.data.interaction.models.MessageSender;
+import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
@@ -84,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String role = sharedPreferences.getString("role", null);
         if (role == null) refresh("GUEST");
-        else refresh(role.toUpperCase());
+        else {
+            refresh(role);
+            loginViewModel.openWebSocket();
+        }
     }
 
     public void refresh(String role) {
@@ -209,6 +211,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.priceList);
         } else if (id == R.id.nav_new_product) {
             navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_products) {
+            navController.navigate(R.id.manageProductFragment);
         }
     }
 
@@ -216,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
         handleUserMenuItemSelection(id);
         if (id == R.id.nav_new_event) {
             navController.navigate(R.id.createEventFragment);
+        } else if(id == R.id.nav_reviews) {
+            navController.navigate(R.id.reviewFragment);
         }
     }
 
@@ -232,7 +238,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_event_types) {
             navController.navigate(R.id.eventTypesFragment);
         } else if (id == R.id.nav_user_reports){
-        navController.navigate(R.id.userReportsOverviewFragment);
+            navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_manage_comments) {
+            navController.navigate(R.id.manageCommentsFragment);
         }
     }
 
@@ -242,12 +250,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.nav_notification) {
             navController.navigate(R.id.notificationsFragment);
         } else if (id == R.id.nav_messages) {
-            // TODO: navigate to messages fragment
-            Toast.makeText(MainActivity.this, "Add navigation in MainActivity.java :)", Toast.LENGTH_LONG).show();
-        }  else if (id == R.id.nav_see_other_profile) { // TODO: DELETE! THIS IS TEMPORARY SINCE THERE IS NO CURRENTLY WAY TO COME TO PROFILE OVERVIEW!
-            Bundle args = new Bundle();
-            args.putLong("ARG_USER_ID", 1);
-            navController.navigate(R.id.otherProfileFragment, args);
+            navController.navigate(R.id.messagesFragment);
+        } else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.userInvitationsFragment);
         }
     }
 
@@ -300,14 +305,14 @@ public class MainActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
         String fragmentToOpen = intent.getStringExtra("openFragment");
         if ("ChatFragment".equals(fragmentToOpen)) {
-            MessageSender recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
+            UserDetails recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
             if (recipient != null) {
                 openChatFragment(recipient);
             }
         }
     }
 
-    private void openChatFragment(MessageSender recipient) {
+    private void openChatFragment(UserDetails recipient) {
         navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
         args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceFilter;
@@ -19,11 +20,13 @@ import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -58,10 +61,15 @@ public class ServiceRepository {
                     @NonNull Call<ServiceSummary> call,
                     @NonNull Response<ServiceSummary> response
             ) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     result.postValue(Result.success(response.body().getId()));
                 } else {
-                    result.postValue(Result.error(response.message()));
+                    try {
+                        String errResponse = response.errorBody().string();
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+                    } catch (IOException e) {
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                    }
                 }
             }
 
@@ -175,21 +183,27 @@ public class ServiceRepository {
         return result;
     }
 
-    public LiveData<List<Bitmap>> getServiceImages(Long id) {
-        MutableLiveData<List<Bitmap>> liveData = new MutableLiveData<>();
+    public LiveData<Result<Void>> deleteImages(Long id, List<RemoveImageRequest> request) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+        service.deleteImages(id, request).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        return liveData;
+    }
 
+
+    public LiveData<Result<List<ImageItem>>> getServiceImages(Long id) {
+        MutableLiveData<Result<List<ImageItem>>> liveData = new MutableLiveData<>();
         service.getServiceImages(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<ImageResponseDto>> call,
-                    @NonNull Response<List<ImageResponseDto>> response
+                    @NonNull Call<List<ImageResponse>> call,
+                    @NonNull Response<List<ImageResponse>> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body().stream()
-                            .map(ImageResponseDto::getData)
-                            .map(FileUtil::convertToBitmap)
-                            .collect(toList())
-                    );
+                    liveData.postValue(Result.success(
+                            response.body().stream()
+                                    .map(image -> new ImageItem(image.getId(), FileUtil.convertToBitmap(image.getData())))
+                                    .collect(toList())
+                    ));
                 } else {
                     Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
                     liveData.postValue(null);
@@ -198,7 +212,7 @@ public class ServiceRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<ImageResponseDto>> call,
+                    @NonNull Call<List<ImageResponse>> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
@@ -210,29 +224,9 @@ public class ServiceRepository {
     }
 
     public LiveData<Result<Void>> deleteService(Long id) {
-        MutableLiveData<Result<Void>> successful = new MutableLiveData<>();
-        service.deleteService(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Void> call,
-                    @NonNull Response<Void> response
-            ) {
-                if (!response.isSuccessful()) {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    successful.postValue(Result.error(response.message()));
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<Void> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                successful.postValue(Result.error(t.getMessage()));
-            }
-        });
-        return successful;
+     MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+        service.deleteService(id).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        return liveData;
     }
 
     public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
@@ -281,14 +275,6 @@ public class ServiceRepository {
             }
         });
         return liveData;
-    }
-
-    private ServiceSummary getServiceSummary(Service service) {
-        return ServiceSummary.builder()
-                .id(service.getId())
-                .name(service.getName())
-                .price(service.getPrice())
-                .build();
     }
 
 
@@ -370,6 +356,7 @@ public class ServiceRepository {
         return result;
     }
 
+
     public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
         MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
 
@@ -414,10 +401,18 @@ public class ServiceRepository {
         return params;
     }
 
-    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
-        Optional.ofNullable(value)
-                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
-                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
-                .ifPresent(v -> params.put(key, v.toString()));
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value){
+            Optional.ofNullable(value)
+                    .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                    .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                    .ifPresent(v -> params.put(key, v.toString()));
+        }
+
+    private ServiceSummary getServiceSummary (Service service) {
+        return ServiceSummary.builder()
+                .id(service.getId())
+                .name(service.getName())
+                .price(service.getPrice())
+                .build();
     }
 }

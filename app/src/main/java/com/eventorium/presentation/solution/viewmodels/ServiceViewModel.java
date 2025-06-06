@@ -17,7 +17,9 @@ import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class ServiceViewModel extends ViewModel {
         return serviceRepository.getServiceImage(id);
     }
 
-    public LiveData<List<Bitmap>> getServiceImages(Long id) {
+    public LiveData<Result<List<ImageItem>>> getServiceImages(Long id) {
         return serviceRepository.getServiceImages(id);
     }
 
@@ -79,7 +81,7 @@ public class ServiceViewModel extends ViewModel {
         return accountServiceRepository.removeFavouriteService(id);
     }
 
-    public LiveData<String> addFavouriteService(Long id) {
+    public LiveData<Result<Void>> addFavouriteService(Long id) {
         return accountServiceRepository.addFavouriteService(id);
     }
 
@@ -93,5 +95,9 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
         return serviceRepository.filterServices(filter);
+    }
+
+    public LiveData<Result<Void>> removeImages(Long id, List<RemoveImageRequest> removedImages) {
+        return serviceRepository.deleteImages(id, removedImages);
     }
 }

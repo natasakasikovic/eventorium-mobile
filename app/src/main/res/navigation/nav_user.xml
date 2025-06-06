@@ -43,6 +43,28 @@
     </fragment>
 
     <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
+
+    <fragment
+        android:id="@+id/chatRoomsFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatRoomFragment"
+        android:label="fragment_chat_rooms"
+        tools:layout="@layout/fragment_chat_room">
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <action
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/accountEditFragment"
         android:name="com.eventorium.presentation.user.fragments.AccountEditFragment"
         android:label="fragment_account_edit"
@@ -54,13 +76,24 @@
         tools:layout="@layout/fragment_event_details" />
 
     <fragment
-        android:id="@+id/productDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
-        tools:layout="@layout/fragment_product_details" />
+        android:id="@+id/chatFragment"
+        android:name="com.eventorium.presentation.chat.fragments.ChatFragment"
+        tools:layout="@layout/fragment_chat"
+        android:label="fragment_chat" />
 
     <fragment
-        android:id="@+id/serviceDetailsFragment"
-        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
-        tools:layout="@layout/fragment_service_details" />
+        android:id="@+id/userInvitationsFragment"
+        android:name="com.eventorium.presentation.event.fragments.UserInvitationsFragment"
+        tools:layout="@layout/fragment_user_invitations">
+        <action
+            android:id="@+id/action_invitations_to_event_details"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
 
 </navigation>

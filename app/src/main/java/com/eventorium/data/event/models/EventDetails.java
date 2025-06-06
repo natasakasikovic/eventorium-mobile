@@ -1,6 +1,6 @@
 package com.eventorium.data.event.models;
 
-import com.eventorium.data.auth.models.ChatUserDetails;
+import com.eventorium.data.auth.models.UserDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,5 @@ public class EventDetails {
     private String address;
     private String city;
     private String date;
-    private ChatUserDetails organizer;
+    private UserDetails organizer;
 }

@@ -16,8 +16,9 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.AccountDetails;
-import com.eventorium.data.util.constants.ErrorMessages;
+import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.databinding.FragmentUserProfileBinding;
+import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.shared.dialogs.ConfirmationDialog;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
@@ -28,6 +29,7 @@ public class UserProfileFragment extends Fragment {
 
     private FragmentUserProfileBinding binding;
     private UserViewModel userViewModel;
+    private AuthViewModel authViewModel;
     private Long id;
 
     public static final String ARG_ID = "ARG_USER_ID";
@@ -51,7 +53,9 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentUserProfileBinding.inflate(inflater, container, false);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        userViewModel = provider.get(UserViewModel.class);
+        authViewModel = provider.get(AuthViewModel.class);
         loadAccountDetails();
         return binding.getRoot();
     }
@@ -59,6 +63,8 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (authViewModel.getUserId() == null || authViewModel.getUserId() == id) hideButtons();
+
         binding.blockUserButton.setOnClickListener(v -> openBlockConfirmationDialog());
         binding.reportUserButton.setOnClickListener(v -> navigateToReportUser());
     }
@@ -91,6 +97,11 @@ public class UserProfileFragment extends Fragment {
                 binding.profileImage.setImageResource(R.drawable.profile_photo);
             binding.profileImageLoader.setVisibility(View.GONE);
         });
+    }
+
+    private void hideButtons() {
+        binding.blockUserButton.setVisibility(View.GONE);
+        binding.reportUserButton.setVisibility(View.GONE);
     }
 
     private void openBlockConfirmationDialog() {

@@ -11,7 +11,7 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.repositories.UserRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import javax.inject.Inject;
 
@@ -52,5 +52,9 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Result<Void>> blockUser(Long id) {
         return repository.blockUser(id);
+    }
+
+    public LiveData<Result<Void>> deactivateAccount() {
+        return repository.deactivateAccount();
     }
 }

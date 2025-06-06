@@ -3,9 +3,9 @@ package com.eventorium.presentation.notifications.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.notifications.models.NotificationResponse;
-import com.eventorium.data.notifications.repositories.NotificationRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.notification.models.NotificationResponse;
+import com.eventorium.data.notification.repositories.NotificationRepository;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 

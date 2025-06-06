@@ -1,10 +1,7 @@
 package com.eventorium.data.event.services;
 
-import androidx.lifecycle.LiveData;
-
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.util.Result;
 
 import java.util.List;
 

@@ -14,17 +14,21 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.ProductService;
-import com.eventorium.data.util.ErrorResponse;
-import com.eventorium.data.util.FileUtil;
-import com.eventorium.data.util.Result;
-import com.eventorium.data.util.constants.ErrorMessages;
-import com.eventorium.data.util.dtos.ImageResponseDto;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ImageResponse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -36,16 +40,16 @@ import retrofit2.Response;
 
 public class ProductRepository {
 
-    private final ProductService productService;
+    private final ProductService service;
 
     @Inject
-    public ProductRepository(ProductService productService) {
-        this.productService = productService;
+    public ProductRepository(ProductService service) {
+        this.service = service;
     }
 
     public LiveData<Result<Product>> createProduct(CreateProduct request) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
-        productService.createProduct(request).enqueue(new Callback<>() {
+        service.createProduct(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -79,7 +83,7 @@ public class ProductRepository {
             return result;
         }
 
-        productService.uploadImages(id, parts).enqueue(new Callback<>() {
+        service.uploadImages(id, parts).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -105,7 +109,7 @@ public class ProductRepository {
 
     public LiveData<Product> getProduct(Long id) {
         MutableLiveData<Product> result = new MutableLiveData<>();
-        productService.getProduct(id).enqueue(new Callback<>() {
+        service.getProduct(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<Product> call,
@@ -134,7 +138,7 @@ public class ProductRepository {
 
     public LiveData<Bitmap> getProductImage(Long id) {
         MutableLiveData<Bitmap> result = new MutableLiveData<>();
-        productService.getProductImage(id).enqueue(new Callback<>() {
+        service.getProductImage(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<ResponseBody> call,
@@ -166,15 +170,15 @@ public class ProductRepository {
     public LiveData<List<Bitmap>> getProductImages(Long id) {
         MutableLiveData<List<Bitmap>> liveData = new MutableLiveData<>();
 
-        productService.getProductImages(id).enqueue(new Callback<>() {
+        service.getProductImages(id).enqueue(new Callback<>() {
             @Override
             public void onResponse(
-                    @NonNull Call<List<ImageResponseDto>> call,
-                    @NonNull Response<List<ImageResponseDto>> response
+                    @NonNull Call<List<ImageResponse>> call,
+                    @NonNull Response<List<ImageResponse>> response
             ) {
                 if(response.isSuccessful() && response.body() != null) {
                     liveData.postValue(response.body().stream()
-                            .map(ImageResponseDto::getData)
+                            .map(ImageResponse::getData)
                             .map(FileUtil::convertToBitmap)
                             .collect(toList())
                     );
@@ -186,7 +190,7 @@ public class ProductRepository {
 
             @Override
             public void onFailure(
-                    @NonNull Call<List<ImageResponseDto>> call,
+                    @NonNull Call<List<ImageResponse>> call,
                     @NonNull Throwable t
             ) {
                 Log.e("API_ERROR", "Error: " + t.getMessage());
@@ -200,7 +204,7 @@ public class ProductRepository {
     public LiveData<Result<List<ProductSummary>>> getTopProducts(){
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
 
-        productService.getTopProducts().enqueue(new Callback<>() {
+        service.getTopProducts().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
                 if(response.isSuccessful() && response.body() != null) {
@@ -218,7 +222,7 @@ public class ProductRepository {
     public LiveData<Result<List<ProductSummary>>> getProducts(){
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
 
-        productService.getAllProducts().enqueue(new Callback<>() {
+        service.getAllProducts().enqueue(new Callback<>() {
            @Override
            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
                if (response.isSuccessful() && response.body() != null) {
@@ -235,7 +239,7 @@ public class ProductRepository {
 
     public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
         MutableLiveData<List<ProductSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        productService.getSuggestions(categoryId, price).enqueue(new Callback<>() {
+        service.getSuggestions(categoryId, price).enqueue(new Callback<>() {
             @Override
             public void onResponse(
                     @NonNull Call<List<ProductSummary>> call,
@@ -256,7 +260,8 @@ public class ProductRepository {
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-        productService.searchProducts(keyword).enqueue(new Callback<>() {
+
+        service.searchProducts(keyword).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
                 if (response.body() != null && response.isSuccessful()) {
@@ -270,4 +275,56 @@ public class ProductRepository {
         });
         return liveData;
     }
+
+    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
+        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
+
+        service.filterProducts(getFilterParams(filter)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
+                if (response.isSuccessful() && response.body() != null)
+                    result.postValue(Result.success(response.body()));
+                else
+                    handleErrorResponse(response, result);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+            }
+        });
+
+        return result;
+    }
+
+    private void handleErrorResponse(Response<List<ProductSummary>> response, MutableLiveData<Result<List<ProductSummary>>> result) {
+        try {
+            String errResponse = response.errorBody().string();
+            result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
+        } catch (IOException e) {
+            result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+        }
+    }
+
+    private Map<String, String> getFilterParams(ProductFilter filter) {
+        Map<String, String> params = new HashMap<>();
+
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
+        addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "type", filter.getType());
+        addParamIfNotNull(params, "minPrice", filter.getMinPrice());
+        addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
+        addParamIfNotNull(params, "availability", filter.getAvailability());;
+
+        return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
+    }
+
 }

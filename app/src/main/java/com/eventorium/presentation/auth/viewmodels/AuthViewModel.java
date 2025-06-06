@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.repositories.AuthRepository;
-import com.eventorium.data.util.Result;
+import com.eventorium.data.shared.models.Result;
 
 import javax.inject.Inject;
 
@@ -33,5 +33,9 @@ public class AuthViewModel extends ViewModel {
 
     public String getUserRole() {
         return repository.getUserRole();
+    }
+
+    public Long getUserId() {
+        return repository.getUserId();
     }
 }
