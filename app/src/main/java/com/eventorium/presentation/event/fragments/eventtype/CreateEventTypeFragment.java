@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.eventtype;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.auth.models.User;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;

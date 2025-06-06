@@ -35,7 +35,7 @@ public interface EventTypeService {
     Call<Void> updateEventType(@Path("id") Long id, @Body EventType eventType);
 
     @Multipart
-    @PUT("event-types/{id}")
+    @PUT("event-types/{id}/image")
     Call<ResponseBody> updateImage(@Path("id") Long id, @Part MultipartBody.Part image);
 
     @DELETE("event-types/{id}")

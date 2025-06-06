@@ -1,4 +1,4 @@
-package com.eventorium.presentation.event.fragments;
+package com.eventorium.presentation.event.fragments.eventtype;
 
 import android.os.Bundle;
 

@@ -50,4 +50,8 @@ public class EventTypeViewModel extends ViewModel {
     public LiveData<Boolean> uploadImage(Long id, Context context, Uri selectedImageUri) {
         return eventTypeRepository.uploadImage(id, context, selectedImageUri);
     }
+
+    public LiveData<Boolean> updateImage(Long id, Context context, Uri selectedImageUri) {
+        return eventTypeRepository.updateImage(id, context, selectedImageUri);
+    }
 }
