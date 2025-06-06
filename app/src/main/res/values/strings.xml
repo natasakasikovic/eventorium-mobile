@@ -225,5 +225,8 @@
     <string name="purchase_product">Purchase product</string>
     <string name="guests">Guests:</string>
     <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
+    <string name="manual_reservations">Manual reservations</string>
+    <string name="manage_reservations">Manage reservations</string>
+    <string name="successfully_updated_reservation">Successfully updated reservation</string>
     <string name="conversations">Conversations</string>
 </resources>

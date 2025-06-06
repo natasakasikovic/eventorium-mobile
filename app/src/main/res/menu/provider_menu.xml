@@ -27,6 +27,11 @@
         android:title="@string/new_product" />
 
     <item
+        android:id="@+id/nav_manage_reservations"
+        android:icon="@drawable/ic_time"
+        android:title="@string/manage_reservations" />
+
+    <item
         android:id="@+id/nav_price_list"
         android:icon="@drawable/ic_price_list"
         android:title="@string/price_list" />
