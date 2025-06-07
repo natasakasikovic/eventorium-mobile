@@ -1,7 +1,5 @@
 package com.eventorium.presentation.event.fragments;
 
-import static com.eventorium.presentation.event.fragments.BudgetPlanningFragment.ARG_EVENT_ID;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,6 +28,7 @@ public class EventInvitationFragment extends Fragment {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
+    public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
 
     public EventInvitationFragment() { }
 

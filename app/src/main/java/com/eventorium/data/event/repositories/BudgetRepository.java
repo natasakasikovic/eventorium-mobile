@@ -11,6 +11,7 @@ import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
 
@@ -33,12 +34,6 @@ public class BudgetRepository {
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem item) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
         budgetService.purchaseProduct(eventId, item).enqueue(handleGeneralResponse(result));
-        return result;
-    }
-
-    public LiveData<Result<List<BudgetItem>>> getPurchased(Long eventId) {
-        MutableLiveData<Result<List<BudgetItem>>> result = new MutableLiveData<>();
-        budgetService.getPurchased(eventId).enqueue(handleGeneralResponse(result));
         return result;
     }
 

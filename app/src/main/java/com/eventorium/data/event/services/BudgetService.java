@@ -4,6 +4,7 @@ import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
 
@@ -17,9 +18,6 @@ public interface BudgetService {
 
     @GET("events/{event-id}/budget")
     Call<Budget> getBudget(@Path("event-id") Long eventId);
-
-    @GET("events/{event-id}/budget/purchased")
-    Call<List<BudgetItem>> getPurchased(@Path("event-id") Long eventId);
 
     @GET("budget-items")
     Call<List<SolutionReview>> getBudgetItems();

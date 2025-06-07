@@ -159,6 +159,9 @@
     <string name="continue_">Continue</string>
     <string name="join_the_eventorium_community">Join the Eventorium Community</string>
     <string name="profile_photo_not_added">The profile photo has not been added. You can update it later.</string>
+    <string name="purchased">Purchased</string>
+    <string name="purchase">Purchase</string>
+    <string name="already_bought_for_that_category">Already bought for that category!</string>
     <string name="upgrade_account">Upgrade Account</string>
     <string name="deactivate_account">Deactivate Account</string>
     <string name="change_password">Change Password</string>
@@ -216,7 +219,14 @@
     <string name="view_event">View event</string>
     <string name="invitations">Invitations</string>
     <string name="your_invitations">Your invitations</string>
+    <string name="reserve">Reserve</string>
+    <string name="successfully_purchased_product">Successfully purchased product!</string>
+    <string name="select_event">Select event</string>
+    <string name="purchase_product">Purchase product</string>
     <string name="guests">Guests:</string>
     <string name="export_guest_list_to_pdf">Export guest list to pdf</string>
+    <string name="manual_reservations">Manual reservations</string>
+    <string name="manage_reservations">Manage reservations</string>
+    <string name="successfully_updated_reservation">Successfully updated reservation</string>
     <string name="conversations">Conversations</string>
 </resources>

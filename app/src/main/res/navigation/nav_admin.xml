@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/createEventTypeFragment"
-        android:name="com.eventorium.presentation.event.fragments.CreateEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.CreateEventTypeFragment"
         android:label="create_event_type"
         tools:layout="@layout/fragment_create_event_type">
         <action
@@ -60,7 +60,7 @@
 
     <fragment
         android:id="@+id/eventTypesFragment"
-        android:name="com.eventorium.presentation.event.fragments.EventTypeOverviewFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.EventTypeOverviewFragment"
         tools:layout="@layout/fragment_event_type_overview">
         <action
             android:id="@+id/action_event_types_overview_to_edit"
@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/editEventTypeFragment"
-        android:name="com.eventorium.presentation.event.fragments.EditEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.EditEventTypeFragment"
         tools:layout="@layout/fragment_edit_event_type" />
 
     <fragment

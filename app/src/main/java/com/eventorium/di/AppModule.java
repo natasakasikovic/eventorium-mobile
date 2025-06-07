@@ -44,11 +44,13 @@ import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.PriceListRepository;
 import com.eventorium.data.solution.repositories.ProductRepository;
+import com.eventorium.data.solution.repositories.ReservationRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.solution.services.AccountProductService;
 import com.eventorium.data.solution.services.AccountServiceService;
 import com.eventorium.data.solution.services.PriceListService;
 import com.eventorium.data.solution.services.ProductService;
+import com.eventorium.data.solution.services.ReservationService;
 import com.eventorium.data.solution.services.ServiceService;
 import com.eventorium.data.auth.services.AuthInterceptor;
 import com.eventorium.data.shared.adapters.LocalDateTimeAdapter;
@@ -418,10 +420,22 @@ public class AppModule {
 
     @Provides
     @Singleton
-    @Inject
     public NotificationService provideNotificationService(Retrofit retrofit) {
         return retrofit.create(NotificationService.class);
     }
+
+    @Provides
+    @Singleton
+    public ReservationRepository provideReservationRepository(ReservationService service) {
+        return new ReservationRepository(service);
+    }
+
+    @Provides
+    @Singleton
+    public ReservationService provideReservationService(Retrofit retrofit) {
+        return retrofit.create(ReservationService.class);
+    }
+
 
     @Provides
     @Singleton

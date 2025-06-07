@@ -160,7 +160,7 @@ public class RetrofitCallbackHelper {
                     try {
                         String errorResponse = response.errorBody().string();
                         result.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         result.postValue(Result.error(error));
                     }
                 }
