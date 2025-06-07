@@ -169,13 +169,13 @@ public class AccountServiceRepository {
                 if(response.isSuccessful()) {
                     result.postValue(true);
                 } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
+                    result.postValue(false);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
+                result.postValue(false);
             }
         });
 
@@ -208,8 +208,8 @@ public class AccountServiceRepository {
         if (filter.getCategory() != null) {
             params.put("category", filter.getCategory());
         }
-        if (filter.getEventType() != null) {
-            params.put("eventType", filter.getEventType());
+        if (filter.getType() != null) {
+            params.put("eventType", filter.getType());
         }
         if (filter.getMinPrice() != null) {
             params.put("minPrice", String.valueOf(filter.getMinPrice()));

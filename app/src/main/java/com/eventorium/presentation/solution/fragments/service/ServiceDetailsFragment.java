@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.data.event.models.Event;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.chat.fragments.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
@@ -37,11 +39,16 @@ public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding binding;
     private ServiceViewModel serviceViewModel;
-
+    private LoginViewModel loginViewModel;
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
-    private Long serviceId;
+    public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
+    public static final String ARG_EVENT = "ARG_EVENT";
+
+    private Long id;
+    private Double plannedAmount;
+    private Event event;
     private UserDetails provider;
     private Long companyId;
 
@@ -57,13 +64,33 @@ public class ServiceDetailsFragment extends Fragment {
         return fragment;
     }
 
+    public static ServiceDetailsFragment newInstance(
+        Long id,
+        Event event,
+        Double plannedAmount
+    ) {
+        ServiceDetailsFragment fragment = new ServiceDetailsFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_ID, id);
+        args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
+        args.putParcelable(ARG_EVENT, event);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            serviceId = getArguments().getLong(ARG_ID);
+            id = getArguments().getLong(ARG_ID);
+            plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT);
+            event = getArguments().getParcelable(ARG_EVENT);
         }
-        serviceViewModel = new ViewModelProvider(this).get(ServiceViewModel.class);
+
+        ViewModelProvider provider = new ViewModelProvider(this);
+        serviceViewModel = provider.get(ServiceViewModel.class);
+        loginViewModel = provider.get(LoginViewModel.class);
     }
 
     @Override
@@ -71,18 +98,17 @@ public class ServiceDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         favouriteButton = binding.favButton;
-        if (!serviceViewModel.isLoggedIn()) {
+        if(!loginViewModel.isLoggedIn()) {
             favouriteButton.setVisibility(View.GONE);
         } else {
             setupFavouriteListeners();
         }
-        serviceViewModel.getService(serviceId).observe(getViewLifecycleOwner(), service -> {
-            if (service != null) {
+        serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
+            if(service != null) {
                 displayServiceDate(service);
             }
         });
 
-        favouriteButton.setOnClickListener(v -> handleIsFavourite());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
@@ -90,7 +116,7 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void setupFavouriteListeners() {
-        serviceViewModel.isFavourite(serviceId).observe(getViewLifecycleOwner(), result -> {
+        serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
                     result
@@ -98,42 +124,41 @@ public class ServiceDetailsFragment extends Fragment {
                             : R.drawable.ic_not_favourite
             );
         });
+
+        favouriteButton.setOnClickListener(v -> {
+            if (isFavourite) removeFromFavourites();
+            else addToFavourites();
+        });
     }
 
-    private void handleIsFavourite() {
-        if (isFavourite) {
-            serviceViewModel.removeFavouriteService(serviceId).observe(getViewLifecycleOwner(), result -> {
-                if (result) {
-                    isFavourite = false;
-                    favouriteButton.setIconResource(R.drawable.ic_not_favourite);
-                    Toast.makeText(
-                            requireContext(),
-                            R.string.removed_service_from_favourites,
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            });
-        } else {
-            serviceViewModel.addFavouriteService(serviceId).observe(getViewLifecycleOwner(), result -> {
-                if (result.getError() == null) {
-                    isFavourite = true;
-                    favouriteButton.setIconResource(R.drawable.ic_favourite);
-                    Toast.makeText(
-                            requireContext(),
-                            getString(R.string.added_product)
-                                    + binding.serviceName.getText() + " "
-                                    + getString(R.string.to_favourites),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                } else {
-                    Toast.makeText(
-                            requireContext(),
-                            result.getError(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
-            });
-        }
+    private void addToFavourites() {
+        serviceViewModel.addFavouriteService(id).observe(getViewLifecycleOwner(), name -> {
+            if (name != null) {
+                isFavourite = true;
+                favouriteButton.setIconResource(R.drawable.ic_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        getString(R.string.added_service)
+                                + name
+                                + getString(R.string.to_favourites),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void removeFromFavourites() {
+        serviceViewModel.removeFavouriteService(id).observe(getViewLifecycleOwner(), result -> {
+            if (result) {
+                isFavourite = false;
+                favouriteButton.setIconResource(R.drawable.ic_not_favourite);
+                Toast.makeText(
+                        requireContext(),
+                        R.string.removed_service_from_favourites,
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")

@@ -12,8 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ServiceFilter {
+    private String name;
+    private String description;
+    private String type;
     private String category;
-    private String eventType;
     private Boolean availability;
     private Double minPrice;
     private Double maxPrice;

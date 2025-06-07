@@ -9,6 +9,7 @@ import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -23,6 +24,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface ServiceService {
 
@@ -42,7 +44,7 @@ public interface ServiceService {
     Call<List<ImageResponse>> getServiceImages(@Path("id") Long id);
 
     @GET("services/suggestions")
-    Call<List<ServiceSummary>> getSuggestions(@Query("categoryId") Long categoryId, @Query("price") Double price);
+    Call<List<ServiceSummary>> getSuggestions(@Query("eventId") Long eventId, @Query("categoryId") Long categoryId, @Query("price") Double price);
 
     @POST("services")
     Call<ServiceSummary> createService(@Body CreateService dto);
@@ -65,4 +67,7 @@ public interface ServiceService {
 
     @GET("provider-reservations")
     Call<List<CalendarReservation>> getReservations();
+
+    @GET("services/filter/all")
+    Call<List<ServiceSummary>> filterServices(@QueryMap Map<String, String> params);
 }
