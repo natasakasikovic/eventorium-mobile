@@ -1,5 +1,7 @@
 package com.eventorium.data.interaction.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,6 +12,7 @@ import com.eventorium.data.interaction.services.RatingService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 
@@ -30,46 +33,19 @@ public class RatingRepository {
 
     public LiveData<Result<Rating>> createServiceRating(Long id, CreateRating request) {
         MutableLiveData<Result<Rating>> result = new MutableLiveData<>();
-        ratingService.createServiceRating(id, request).enqueue(handleRequest(result));
+        ratingService.createServiceRating(id, request).enqueue(handleValidationResponse(result));
         return result;
     }
 
     public LiveData<Result<Rating>> createProductRating(Long id, CreateRating request) {
         MutableLiveData<Result<Rating>> result = new MutableLiveData<>();
-        ratingService.createProductRating(id, request).enqueue(handleRequest(result));
+        ratingService.createProductRating(id, request).enqueue(handleValidationResponse(result));
         return result;
     }
 
     public LiveData<Result<Rating>> createEventRating(Long id, CreateRating request) {
         MutableLiveData<Result<Rating>> result = new MutableLiveData<>();
-        ratingService.createEventRating(id, request).enqueue(handleRequest(result));
+        ratingService.createEventRating(id, request).enqueue(handleValidationResponse(result));
         return result;
     }
-
-    private Callback<Rating> handleRequest(MutableLiveData<Result<Rating>> result) {
-        return new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Rating> call,
-                    @NonNull Response<Rating> response
-            ) {
-                if (response.isSuccessful()) {
-                    result.postValue(Result.success(null));
-                } else {
-                    try {
-                        String error = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Rating> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        };
-    }
-
 }

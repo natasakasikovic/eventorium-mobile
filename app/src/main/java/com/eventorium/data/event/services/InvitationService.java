@@ -5,6 +5,7 @@ import com.eventorium.data.event.models.InvitationDetails;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -14,7 +15,7 @@ import retrofit2.http.Path;
 public interface InvitationService {
 
     @POST("invitations/{event-id}")
-    Call<Void> sendInvitations(@Path("event-id") Long id , @Body List<Invitation> invitations);
+    Call<ResponseBody> sendInvitations(@Path("event-id") Long id , @Body List<Invitation> invitations);
 
     @GET("invitations/my-invitations")
     Call<List<InvitationDetails>> getInvitations();

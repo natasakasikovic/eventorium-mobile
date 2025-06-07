@@ -227,11 +227,10 @@ public class AppModule {
     @Provides
     @Singleton
     public static AuthRepository authRepository(
-            WebSocketService webSocketService,
             AuthService service,
             SharedPreferences sharedPreferences
     ) {
-        return new AuthRepository(webSocketService, service, sharedPreferences);
+        return new AuthRepository(service, sharedPreferences);
     }
 
 

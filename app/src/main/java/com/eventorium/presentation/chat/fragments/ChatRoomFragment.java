@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.ChatRoom;
@@ -57,8 +58,12 @@ public class ChatRoomFragment extends Fragment {
     }
 
     private void configureListener() {
-        viewModel.getChatRooms().observe(getViewLifecycleOwner(), chatRooms -> {
-            adapter.setData(chatRooms);
+        viewModel.getChatRooms().observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                adapter.setData(result.getData());
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

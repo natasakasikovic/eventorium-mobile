@@ -11,8 +11,8 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.ProductRepository;
-import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.solution.repositories.ServiceRepository;
 
 import java.util.List;
 
@@ -45,10 +45,6 @@ public class BudgetViewModel extends ViewModel {
 
     public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
         return productRepository.getSuggestedProducts(categoryId, price);
-    }
-
-    public LiveData<Result<List<ProductSummary>>> getPurchasedProducts(Long eventId) {
-        return budgetRepository.getPurchased(eventId);
     }
 
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem product) {

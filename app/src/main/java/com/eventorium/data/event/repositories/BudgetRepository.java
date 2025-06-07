@@ -27,25 +27,19 @@ public class BudgetRepository {
 
     public LiveData<Result<Budget>> getBudget(Long eventId) {
         MutableLiveData<Result<Budget>> result = new MutableLiveData<>();
-        budgetService.getBudget(eventId).enqueue(handleResponse(result));
+        budgetService.getBudget(eventId).enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem item) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
-        budgetService.purchaseProduct(eventId, item).enqueue(handleResponse(result));
-        return result;
-    }
-
-    public LiveData<Result<List<ProductSummary>>> getPurchased(Long eventId) {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        budgetService.getPurchased(eventId).enqueue(handleResponse(result));
+        budgetService.purchaseProduct(eventId, item).enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
         MutableLiveData<Result<List<SolutionReview>>> result = new MutableLiveData<>();
-        budgetService.getBudgetItems().enqueue(handleResponse(result));
+        budgetService.getBudgetItems().enqueue(handleGeneralResponse(result));
         return result;
     }
 }

@@ -242,8 +242,12 @@ public class ProductDetailsFragment extends Fragment {
             binding.providerName.setText(product.getProvider().getName() + " " + product.getProvider().getLastname());
             binding.companyName.setText(product.getCompany().getName());
 
-            productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), images -> {
-                binding.images.setAdapter(new ImageAdapter(images.stream().map(ImageItem::new).collect(toList())));
+            productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), result -> {
+                if(result.getError() == null) {
+                    binding.images.setAdapter(new ImageAdapter(result.getData()));
+                } else {
+                    Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                }
             });
 
             if(!product.getAvailable()) {

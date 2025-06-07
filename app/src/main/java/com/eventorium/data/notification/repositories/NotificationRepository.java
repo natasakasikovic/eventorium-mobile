@@ -1,5 +1,7 @@
 package com.eventorium.data.notification.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +11,7 @@ import com.eventorium.data.notification.services.NotificationService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,54 +33,13 @@ public class NotificationRepository {
 
     public LiveData<Result<List<NotificationResponse>>> getNotifications() {
         MutableLiveData<Result<List<NotificationResponse>>> result = new MutableLiveData<>();
-
-        service.getNotifications().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<NotificationResponse>> call, @NonNull Response<List<NotificationResponse>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<NotificationResponse>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.getNotifications().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> markNotificationsAsSeen() {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-
-        service.markNotificationsAsSeen().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful())
-                    result.postValue(Result.success(null));
-                else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.markNotificationsAsSeen().enqueue(handleVoidResponse(result));
         return result;
     }
 }

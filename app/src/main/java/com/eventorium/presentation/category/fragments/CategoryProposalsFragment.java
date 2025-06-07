@@ -21,6 +21,7 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.UpdateCategoryStatus;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.models.Status;
 import com.eventorium.databinding.FragmentCategoryProposalsBinding;
 import com.eventorium.presentation.category.adapters.CategoryProposalsAdapter;
@@ -103,8 +104,8 @@ public class CategoryProposalsFragment extends Fragment {
                 -> handleResponse(category.getId(), success));
     }
 
-    private void handleResponse(Long id, boolean success) {
-        if(success) {
+    private void handleResponse(Long id, Result<Category> success) {
+        if(success.getError() == null) {
             proposalViewModel.refreshProposals(id);
         } else {
             Toast.makeText(

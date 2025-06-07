@@ -1,18 +1,15 @@
 package com.eventorium.data.solution.repositories;
 
-import static java.util.stream.Collectors.toList;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceFilter;
@@ -20,11 +17,8 @@ import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.ServiceService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
@@ -39,10 +33,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ServiceRepository {
 
@@ -53,95 +43,21 @@ public class ServiceRepository {
         this.service = service;
     }
 
-    public LiveData<Result<Long>> createService(CreateService dto) {
-        MutableLiveData<Result<Long>> result = new MutableLiveData<>();
-        service.createService(dto).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ServiceSummary> call,
-                    @NonNull Response<ServiceSummary> response
-            ) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body().getId()));
-                } else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<ServiceSummary> call,
-                    @NonNull Throwable t
-            ) {
-                result.postValue(Result.error(t.getMessage()));
-            }
-        });
+    public LiveData<Result<ServiceSummary>> createService(CreateService dto) {
+        MutableLiveData<Result<ServiceSummary>> result = new MutableLiveData<>();
+        service.createService(dto).enqueue(handleValidationResponse(result));
         return result;
     }
 
     public LiveData<Service> getService(Long id) {
         MutableLiveData<Service> result = new MutableLiveData<>();
-        service.getService(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Service> call,
-                    @NonNull Response<Service> response)
-            {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<Service> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
-            }
-        });
-
+        service.getService(id).enqueue(handleSuccessfulResponse(result));
         return result;
     }
 
     public LiveData<Bitmap> getServiceImage(Long id) {
         MutableLiveData<Bitmap> result = new MutableLiveData<>();
-        service.getServiceImage(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    try (ResponseBody responseBody = response.body()){
-                        Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
-                        result.postValue(bitmap);
-                    } catch (Exception e) {
-                        Log.e("API_ERROR", "Error decoding image: " + e.getMessage());
-                        result.postValue(null);
-                    }
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
-            }
-        });
-
+        service.getServiceImage(id).enqueue(handleGetImage(result));
         return result;
     }
 
@@ -156,235 +72,71 @@ public class ServiceRepository {
             result.setValue(false);
             return result;
         }
-
-        service.uploadImages(serviceId, parts).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if(response.isSuccessful()) {
-                    result.postValue(true);
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(false);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(false);
-            }
-        });
+        service.uploadImages(serviceId, parts).enqueue(handleSuccessAsBoolean(result));
         return result;
     }
 
     public LiveData<Result<Void>> deleteImages(Long id, List<RemoveImageRequest> request) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        service.deleteImages(id, request).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        service.deleteImages(id, request).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
 
     public LiveData<Result<List<ImageItem>>> getServiceImages(Long id) {
         MutableLiveData<Result<List<ImageItem>>> liveData = new MutableLiveData<>();
-        service.getServiceImages(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ImageResponse>> call,
-                    @NonNull Response<List<ImageResponse>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(
-                            response.body().stream()
-                                    .map(image -> new ImageItem(image.getId(), FileUtil.convertToBitmap(image.getData())))
-                                    .collect(toList())
-                    ));
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<List<ImageResponse>> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                liveData.postValue(null);
-            }
-        });
-
+        service.getServiceImages(id).enqueue(handleGetImages(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> deleteService(Long id) {
-     MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        service.deleteService(id).enqueue(RetrofitCallbackHelper.handleDelete(liveData));
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+        service.deleteService(id).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
-    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
-        MutableLiveData<Result<ServiceSummary>> liveData = new MutableLiveData<>();
-        service.updateService(serviceId, dto).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Service> call,
-                    @NonNull Response<Service> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(getServiceSummary(response.body())));
-                } else {
-                    liveData.postValue(Result.error(response.message()));
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<Service> call,
-                    @NonNull Throwable t
-            ) {
-                liveData.postValue(Result.error(t.getMessage()));
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-            }
-        });
-
+    public LiveData<Result<Service>> updateService(Long serviceId, UpdateService dto) {
+        MutableLiveData<Result<Service>> liveData = new MutableLiveData<>();
+        service.updateService(serviceId, dto).enqueue(handleValidationResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ServiceSummary>>> getTopServices(){
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-
-        service.getTopServices().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
-                if (response.isSuccessful() && response.body() != null){
-                    liveData.postValue(Result.success(response.body()));
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error("Oops! Error while loading top five services! Please try again later"));
-            }
-        });
+        service.getTopServices().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
 
     public LiveData<Result<List<ServiceSummary>>> getServices() {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-
-        service.getServices().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ServiceSummary>> call,
-                                   @NonNull Response<List<ServiceSummary>> response) {
-                if (response.isSuccessful() && response.body() != null){
-                    liveData.postValue(Result.success(response.body()));
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error("Oops! Error while getting all services."));
-            }
-        });
+        service.getServices().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Long eventId, Double price) {
         MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        service.getSuggestions(eventId, categoryId, price).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ServiceSummary>> call,
-                    @NonNull Response<List<ServiceSummary>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
-
-            }
-        });
+        service.getSuggestions(eventId, categoryId, price).enqueue(handleSuccessfulResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-        service.searchServices(keyword).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    liveData.postValue(Result.success(response.body()));
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.searchServices(keyword).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<CalendarReservation>>> getReservations() {
         MutableLiveData<Result<List<CalendarReservation>>> result = new MutableLiveData<>();
-
-        service.getReservations().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<CalendarReservation>> call, Response<List<CalendarReservation>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    result.postValue(Result.error("Error while loading service reservations"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarReservation>> call, Throwable t) {
-                result.postValue(Result.error("Error while loading service reservations"));
-            }
-        });
+        service.getReservations().enqueue(handleGeneralResponse(result));
         return result;
     }
 
 
     public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
         MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-
-        service.filterServices(getFilterParams(filter)).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ServiceSummary>> call, @NonNull Response<List<ServiceSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else
-                    handleErrorResponse(response, result);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ServiceSummary>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.filterServices(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
         return result;
-    }
-
-    private void handleErrorResponse(Response<List<ServiceSummary>> response, MutableLiveData<Result<List<ServiceSummary>>> result) {
-        try {
-            String errResponse = response.errorBody().string();
-            result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-        } catch (IOException e) {
-            result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-        }
     }
 
     private Map<String, String> getFilterParams(ServiceFilter filter) {
@@ -402,17 +154,10 @@ public class ServiceRepository {
     }
 
     private void addParamIfNotNull(Map<String, String> params, String key, Object value){
-            Optional.ofNullable(value)
-                    .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
-                    .filter(v -> !(v instanceof String && v.toString().isEmpty()))
-                    .ifPresent(v -> params.put(key, v.toString()));
-        }
-
-    private ServiceSummary getServiceSummary (Service service) {
-        return ServiceSummary.builder()
-                .id(service.getId())
-                .name(service.getName())
-                .price(service.getPrice())
-                .build();
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
+
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.shared.models.City;
 import com.eventorium.data.shared.services.CityService;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.util.List;
 
@@ -23,22 +24,8 @@ public class CityRepository {
     }
 
     public LiveData<List<City>> getCities(){
-
         MutableLiveData<List<City>> liveData = new MutableLiveData<>();
-
-        service.getAll().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<City>> call, Response<List<City>> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    liveData.postValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<City>> call, Throwable t) {
-                liveData.postValue(null);
-            }
-        });
+        service.getAll().enqueue(RetrofitCallbackHelper.handleSuccessfulResponse(liveData));
         return liveData;
     }
 }

@@ -19,9 +19,6 @@ public interface BudgetService {
     @GET("events/{event-id}/budget")
     Call<Budget> getBudget(@Path("event-id") Long eventId);
 
-    @GET("events/{event-id}/budget/purchased")
-    Call<List<ProductSummary>> getPurchased(@Path("event-id") Long eventId);
-
     @GET("budget-items")
     Call<List<SolutionReview>> getBudgetItems();
 

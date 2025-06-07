@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import static java.util.stream.Collectors.toList;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
@@ -22,6 +24,7 @@ import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -49,26 +52,7 @@ public class ProductRepository {
 
     public LiveData<Result<Product>> createProduct(CreateProduct request) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
-        service.createProduct(request).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Product> call, Response<Product> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    result.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Product> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.createProduct(request).enqueue(handleValidationResponse(result));
         return result;
     }
 
@@ -83,229 +67,56 @@ public class ProductRepository {
             return result;
         }
 
-        service.uploadImages(id, parts).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    result.postValue(Result.success(null));
-                } else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error("Error while uploading images"));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                result.postValue(Result.error("Error while uploading images"));
-            }
-        });
-
+        service.uploadImages(id, parts).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Product> getProduct(Long id) {
         MutableLiveData<Product> result = new MutableLiveData<>();
-        service.getProduct(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<Product> call,
-                    @NonNull Response<Product> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.postValue(response.body());
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<Product> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
-            }
-        });
-
+        service.getProduct(id).enqueue(handleSuccessfulResponse(result));
         return result;
     }
 
     public LiveData<Bitmap> getProductImage(Long id) {
         MutableLiveData<Bitmap> result = new MutableLiveData<>();
-        service.getProductImage(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<ResponseBody> call,
-                    @NonNull Response<ResponseBody> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    try (ResponseBody responseBody = response.body()){
-                        Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
-                        result.postValue(bitmap);
-                    } catch (Exception e) {
-                        Log.e("API_ERROR", "Error decoding image: " + e.getMessage());
-                        result.postValue(null);
-                    }
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    result.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                result.postValue(null);
-            }
-        });
-
+        service.getProductImage(id).enqueue(handleGetImage(result));
         return result;
     }
-    public LiveData<List<Bitmap>> getProductImages(Long id) {
-        MutableLiveData<List<Bitmap>> liveData = new MutableLiveData<>();
-
-        service.getProductImages(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ImageResponse>> call,
-                    @NonNull Response<List<ImageResponse>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body().stream()
-                            .map(ImageResponse::getData)
-                            .map(FileUtil::convertToBitmap)
-                            .collect(toList())
-                    );
-                } else {
-                    Log.e("API_ERROR", "Error: " + response.code() + " - " + response.message());
-                    liveData.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(
-                    @NonNull Call<List<ImageResponse>> call,
-                    @NonNull Throwable t
-            ) {
-                Log.e("API_ERROR", "Error: " + t.getMessage());
-                liveData.postValue(null);
-            }
-        });
-
+    public LiveData<Result<List<ImageItem>>> getProductImages(Long id) {
+        MutableLiveData<Result<List<ImageItem>>> liveData = new MutableLiveData<>();
+        service.getProductImages(id).enqueue(handleGetImages(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ProductSummary>>> getTopProducts(){
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-
-        service.getTopProducts().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<ProductSummary>> call, Response<List<ProductSummary>> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(response.body()));
-                }
-            }
-            @Override
-            public void onFailure(Call<List<ProductSummary>> call, Throwable t) {
-                liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
-            }
-        });
+        service.getTopProducts().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ProductSummary>>> getProducts(){
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-
-        service.getAllProducts().enqueue(new Callback<>() {
-           @Override
-           public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
-               if (response.isSuccessful() && response.body() != null) {
-                   liveData.postValue(Result.success(response.body()));
-               }
-           }
-           @Override
-           public void onFailure(@NonNull Call<List<ProductSummary>> call,@NonNull Throwable t) {
-               liveData.postValue(Result.error("Oops! Something went wrong! Please, try again later!"));
-           }
-        });
+        service.getAllProducts().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
         MutableLiveData<List<ProductSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        service.getSuggestions(categoryId, price).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ProductSummary>> call,
-                    @NonNull Response<List<ProductSummary>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
-
-            }
-        });
+        service.getSuggestions(categoryId, price).enqueue(handleSuccessfulResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-
-        service.searchProducts(keyword).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    liveData.postValue(Result.success(response.body()));
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
+        service.searchProducts(keyword).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
         MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-
-        service.filterProducts(getFilterParams(filter)).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ProductSummary>> call, @NonNull Response<List<ProductSummary>> response) {
-                if (response.isSuccessful() && response.body() != null)
-                    result.postValue(Result.success(response.body()));
-                else
-                    handleErrorResponse(response, result);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ProductSummary>> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.filterProducts(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
         return result;
     }
-
-    private void handleErrorResponse(Response<List<ProductSummary>> response, MutableLiveData<Result<List<ProductSummary>>> result) {
-        try {
-            String errResponse = response.errorBody().string();
-            result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-        } catch (IOException e) {
-            result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-        }
-    }
-
     private Map<String, String> getFilterParams(ProductFilter filter) {
         Map<String, String> params = new HashMap<>();
 

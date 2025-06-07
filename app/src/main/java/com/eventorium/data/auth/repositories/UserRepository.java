@@ -1,11 +1,11 @@
 package com.eventorium.data.auth.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,10 +13,8 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.services.UserService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
 
 import java.io.IOException;
 
@@ -39,108 +37,25 @@ public class UserRepository {
 
     public LiveData<Result<AccountDetails>> getCurrentUser() {
         MutableLiveData<Result<AccountDetails>> liveData = new MutableLiveData<>();
-
-        service.getCurrentUser().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<AccountDetails> call, Response<AccountDetails> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error("Error while loading"));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AccountDetails> call, Throwable t) {
-                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.getCurrentUser().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<AccountDetails>> getUser(Long id) {
         MutableLiveData<Result<AccountDetails>> liveData = new MutableLiveData<>();
-
-        service.getUser(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<AccountDetails> call, Response<AccountDetails> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error("Error while loading"));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AccountDetails> call, Throwable t) {
-                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.getUser(id).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Bitmap> getProfilePhoto(Long id) {
         MutableLiveData<Bitmap> liveData = new MutableLiveData<>();
-
-        service.getProfilePhoto(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null) {
-                    try (ResponseBody responseBody = response.body()) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
-                        liveData.postValue(bitmap);
-                    } catch (Exception e) {
-                        liveData.postValue(null);
-                    }
-                } else {
-                    liveData.postValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                liveData.postValue(null);
-            }
-        });
-
+        service.getProfilePhoto(id).enqueue(handleGetImage(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> update(Person updateRequest) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        service.update(updateRequest).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful())
-                    liveData.postValue(Result.success(null));
-                else {
-                    try {
-                        String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.update(updateRequest).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
@@ -173,80 +88,19 @@ public class UserRepository {
 
     public LiveData<Result<Void>> changePassword(ChangePasswordRequest request) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-
-        service.changePassword(request).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful())
-                    liveData.postValue(Result.success(null));
-                else {
-                    try {
-                        String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.changePassword(request).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> blockUser(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-
-        service.blockUser(id).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful())
-                    result.postValue(Result.success(null));
-                else {
-                    try {
-                        String errResponse = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(errResponse)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.blockUser(id).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> deactivateAccount() {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-
-        service.deactivateAccount().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) result.postValue(Result.success(null));
-                else {
-                    try {
-                        String err = response.errorBody().string();
-                        result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-                    } catch (IOException e) {
-                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
-
+        service.deactivateAccount().enqueue(handleVoidResponse(result));
         return result;
     }
 }

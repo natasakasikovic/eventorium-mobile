@@ -66,12 +66,6 @@ public class PurchasedAndReservedFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPurchasedAndReservedBinding.inflate(inflater, container, false);
         configureAdapter();
-        budgetViewModel.getPurchasedProducts(event.getId()).observe(getViewLifecycleOwner(), products -> {
-            if(products.getError() == null) {
-                productsAdapter.setData(products.getData());
-                loadProductImages(products.getData());
-            }
-        });
         return binding.getRoot();
     }
 

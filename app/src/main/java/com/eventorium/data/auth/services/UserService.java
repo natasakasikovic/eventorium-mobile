@@ -27,18 +27,18 @@ public interface UserService {
     Call<ResponseBody> getProfilePhoto(@Path("id") Long id);
 
     @PUT("users")
-    Call<Void> update(@Body Person updateRequest);
+    Call<ResponseBody> update(@Body Person updateRequest);
 
     @Multipart
     @PUT("users/profile-photo")
     Call<ResponseBody> uploadProfilePhoto(@Part MultipartBody.Part photo);
 
     @POST("users/password")
-    Call<Void> changePassword(@Body ChangePasswordRequest request);
+    Call<ResponseBody> changePassword(@Body ChangePasswordRequest request);
 
     @POST("user-blocking/{user-id}")
-    Call<Void> blockUser(@Path("user-id") Long id);
+    Call<ResponseBody> blockUser(@Path("user-id") Long id);
 
     @DELETE("users")
-    Call<Void> deactivateAccount();
+    Call<ResponseBody> deactivateAccount();
 }

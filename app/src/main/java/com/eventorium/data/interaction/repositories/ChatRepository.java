@@ -1,11 +1,15 @@
 package com.eventorium.data.interaction.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.data.interaction.services.ChatService;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,26 +29,9 @@ public class ChatRepository {
         this.chatService = chatService;
     }
 
-    public LiveData<List<ChatMessage>> getMessages(Long senderId, Long recipientId) {
-        MutableLiveData<List<ChatMessage>> result = new MutableLiveData<>();
-        chatService.getMessages(senderId, recipientId).enqueue(new Callback<List<ChatMessage>>() {
-            @Override
-            public void onResponse(
-                    @NonNull Call<List<ChatMessage>> call,
-                    @NonNull Response<List<ChatMessage>> response
-            ) {
-                if(response.isSuccessful() && response.body() != null) {
-                    result.setValue(response.body());
-                } else {
-                    result.setValue(new ArrayList<>());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ChatMessage>> call, @NonNull Throwable t) {
-                result.setValue(new ArrayList<>());
-            }
-        });
+    public LiveData<Result<List<ChatMessage>>> getMessages(Long senderId, Long recipientId) {
+        MutableLiveData<Result<List<ChatMessage>>> result = new MutableLiveData<>();
+        chatService.getMessages(senderId, recipientId).enqueue(handleGeneralResponse(result));
         return result;
     }
 }
