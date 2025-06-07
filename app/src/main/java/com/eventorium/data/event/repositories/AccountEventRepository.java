@@ -61,7 +61,7 @@ public class AccountEventRepository {
 
     public LiveData<Result<Void>> addToCalendar(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.addToCalendar(id).enqueue(handleGeneralResponse(result));
+        service.addToCalendar(id).enqueue(handleVoidResponse(result));
         return result;
     }
 }

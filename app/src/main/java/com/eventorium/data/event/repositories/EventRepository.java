@@ -87,7 +87,7 @@ public class EventRepository {
 
     public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.createAgenda(id, agenda).enqueue(handleResponse(result, ErrorMessages.INVALID_ACTIVITY));
+        service.createAgenda(id, agenda).enqueue(handleVoidResponse(result));
         return result;
     }
 

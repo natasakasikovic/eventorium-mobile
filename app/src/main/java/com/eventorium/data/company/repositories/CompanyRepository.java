@@ -81,7 +81,7 @@ public class CompanyRepository {
 
     public LiveData<Result<Void>> removeImages(List<RemoveImageRequest> removedImages) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.removeImages(removedImages).enqueue(handleGeneralResponse(result));
+        service.removeImages(removedImages).enqueue(handleVoidResponse(result));
         return result;
     }
 

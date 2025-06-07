@@ -4,6 +4,7 @@ import com.eventorium.data.notification.models.NotificationResponse;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
@@ -14,5 +15,5 @@ public interface NotificationService {
     Call<List<NotificationResponse>> getNotifications();
 
     @PATCH("/api/v1/notifications/seen")
-    Call<Void> markNotificationsAsSeen();
+    Call<ResponseBody> markNotificationsAsSeen();
 }

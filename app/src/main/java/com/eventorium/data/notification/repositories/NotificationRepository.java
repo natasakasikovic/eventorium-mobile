@@ -39,7 +39,7 @@ public class NotificationRepository {
 
     public LiveData<Result<Void>> markNotificationsAsSeen() {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.markNotificationsAsSeen().enqueue(handleGeneralResponse(result));
+        service.markNotificationsAsSeen().enqueue(handleVoidResponse(result));
         return result;
     }
 }

@@ -42,5 +42,5 @@ public interface CompanyService {
     Call<Company> update(@Body Company company);
 
     @HTTP(method = "DELETE", path = "companies/images", hasBody = true)
-    Call<Void> removeImages(@Body List<RemoveImageRequest> removedImages);
+    Call<ResponseBody> removeImages(@Body List<RemoveImageRequest> removedImages);
 }

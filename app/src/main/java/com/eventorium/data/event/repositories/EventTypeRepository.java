@@ -49,13 +49,13 @@ public class EventTypeRepository {
 
     public LiveData<Result<Void>> updateEventType(EventType eventType) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        eventTypeService.updateEventType(eventType.getId(), eventType).enqueue(handleValidationResponse(liveData));
+        eventTypeService.updateEventType(eventType.getId(), eventType).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> deleteEventType(Long id) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        eventTypeService.delete(id).enqueue(handleGeneralResponse(liveData));
+        eventTypeService.delete(id).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 }

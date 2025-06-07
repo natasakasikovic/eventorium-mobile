@@ -5,6 +5,7 @@ import com.eventorium.data.event.models.EventType;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -21,8 +22,8 @@ public interface EventTypeService {
     Call<EventType> createEventType(@Body CreateEventType dto);
 
     @PUT("event-types/{id}")
-    Call<Void> updateEventType(@Path("id") Long id, @Body EventType eventType);
+    Call<ResponseBody> updateEventType(@Path("id") Long id, @Body EventType eventType);
 
     @DELETE("event-types/{id}")
-    Call<Void> delete(@Path("id") Long id);
+    Call<ResponseBody> delete(@Path("id") Long id);
 }

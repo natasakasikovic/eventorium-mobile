@@ -55,7 +55,7 @@ public class UserRepository {
 
     public LiveData<Result<Void>> update(Person updateRequest) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        service.update(updateRequest).enqueue(handleValidationResponse(liveData));
+        service.update(updateRequest).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
@@ -88,19 +88,19 @@ public class UserRepository {
 
     public LiveData<Result<Void>> changePassword(ChangePasswordRequest request) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
-        service.changePassword(request).enqueue(handleValidationResponse(liveData));
+        service.changePassword(request).enqueue(handleVoidResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Void>> blockUser(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.blockUser(id).enqueue(handleValidationResponse(result));
+        service.blockUser(id).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Result<Void>> deactivateAccount() {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.deactivateAccount().enqueue(handleValidationResponse(result));
+        service.deactivateAccount().enqueue(handleVoidResponse(result));
         return result;
     }
 }

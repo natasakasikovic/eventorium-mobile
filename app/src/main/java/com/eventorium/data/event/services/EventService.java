@@ -36,7 +36,7 @@ public interface EventService {
     Call<Event> createEvent(@Body CreateEvent event);
 
     @PUT("events/{id}/agenda")
-    Call<Void> createAgenda(@Path("id") Long id, @Body List<Activity> agenda);
+    Call<ResponseBody> createAgenda(@Path("id") Long id, @Body List<Activity> agenda);
 
     @GET("events/search/all")
     Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);

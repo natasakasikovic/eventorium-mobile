@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,13 +34,13 @@ public class InvitationRepository {
     public void sendInvitations(Long id, List<Invitation> invitations) {
         service.sendInvitations(id, invitations).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     System.out.println("Invitations sent successfully!"); // TODO: remove this and notify user that everything is sent successfully
                 }
             }
             @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 // TODO: handle error
             }
         });

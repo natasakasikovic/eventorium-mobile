@@ -29,5 +29,5 @@ public interface AccountEventService {
     Call<List<EventSummary>> getOrganizerEvents();
 
     @POST("account/events/{id}/attendance")
-    Call<Void> addToCalendar(@Path("id") Long id);
+    Call<ResponseBody> addToCalendar(@Path("id") Long id);
 }
