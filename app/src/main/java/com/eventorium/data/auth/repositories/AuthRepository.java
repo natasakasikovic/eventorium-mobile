@@ -19,6 +19,7 @@ import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.services.WebSocketService;
 import com.eventorium.data.shared.utils.JwtDecoder;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 
@@ -35,38 +36,15 @@ public class AuthRepository {
     private final AuthService authService;
     private final SharedPreferences sharedPreferences;
 
-    private final WebSocketService webSocketService;
-
     @Inject
-    public AuthRepository(WebSocketService webSocketService, AuthService authService, SharedPreferences sharedPreferences) {
-        this.webSocketService = webSocketService;
+    public AuthRepository(AuthService authService, SharedPreferences sharedPreferences) {
         this.authService = authService;
         this.sharedPreferences = sharedPreferences;
     }
 
     public LiveData<Result<User>> createAccount(User user) {
         MutableLiveData<Result<User>> liveData = new MutableLiveData<>();
-        authService.createAccount(user).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success(response.body()));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
-
+        authService.createAccount(user).enqueue(RetrofitCallbackHelper.handleValidationResponse(liveData));
         return liveData;
     }
 

@@ -32,12 +32,12 @@ public interface EventTypeService {
     Call<ResponseBody> uploadImage(@Path("id") Long id, @Part MultipartBody.Part image);
 
     @PUT("event-types/{id}")
-    Call<Void> updateEventType(@Path("id") Long id, @Body EventType eventType);
+    Call<ResponseBody> updateEventType(@Path("id") Long id, @Body EventType eventType);
 
     @Multipart
     @PUT("event-types/{id}/image")
     Call<ResponseBody> updateImage(@Path("id") Long id, @Part MultipartBody.Part image);
 
     @DELETE("event-types/{id}")
-    Call<Void> delete(@Path("id") Long id);
+    Call<ResponseBody> delete(@Path("id") Long id);
 }

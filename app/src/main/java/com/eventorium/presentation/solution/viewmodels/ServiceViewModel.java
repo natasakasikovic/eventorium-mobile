@@ -61,11 +61,11 @@ public class ServiceViewModel extends ViewModel {
         return serviceRepository.getServices();
     }
 
-    public LiveData<Result<ServiceSummary>> updateService(Long serviceId, UpdateService dto) {
+    public LiveData<Result<Service>> updateService(Long serviceId, UpdateService dto) {
         return serviceRepository.updateService(serviceId, dto);
     }
 
-    public LiveData<Result<Long>> createService(CreateService dto) {
+    public LiveData<Result<ServiceSummary>> createService(CreateService dto) {
         return serviceRepository.createService(dto);
     }
 
@@ -83,10 +83,6 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Result<Void>> addFavouriteService(Long id) {
         return accountServiceRepository.addFavouriteService(id);
-    }
-
-    public boolean isLoggedIn() {
-        return authRepository.isLoggedIn();
     }
 
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {

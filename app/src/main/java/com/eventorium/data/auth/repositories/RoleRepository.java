@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.auth.models.Role;
 import com.eventorium.data.auth.services.RoleService;
+import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.util.List;
 
@@ -25,21 +26,7 @@ public class RoleRepository {
 
     public LiveData<List<Role>> getRegistrationRoles() {
         MutableLiveData<List<Role>> liveData = new MutableLiveData<>();
-
-        service.getRegistrationRoles().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<Role>> call, Response<List<Role>> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    liveData.postValue(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Role>> call, Throwable t) {
-                liveData.postValue(null);
-            }
-        });
-
+        service.getRegistrationRoles().enqueue(RetrofitCallbackHelper.handleSuccessfulResponse(liveData));
         return liveData;
     }
 }

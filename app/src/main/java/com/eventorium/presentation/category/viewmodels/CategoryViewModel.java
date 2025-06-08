@@ -78,11 +78,13 @@ public class CategoryViewModel extends ViewModel {
     }
 
 
-    private void fetchCategories() {
+    public void fetchCategories() {
         isLoading.setValue(true);
-        categoryRepository.getCategories().observeForever(categories -> {
-            this.categories.postValue(categories);
-            isLoading.postValue(false);
+        categoryRepository.getCategories().observeForever(result -> {
+            if(result.getError() == null) {
+                this.categories.postValue(result.getData());
+                isLoading.postValue(false);
+            }
         });
     }
 
@@ -93,6 +95,6 @@ public class CategoryViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        categoryRepository.getCategories().removeObserver(categories::postValue);
+        categoryRepository.getCategories().removeObserver(value -> categories.postValue(value.getData()));
     }
 }

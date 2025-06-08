@@ -1,9 +1,10 @@
 package com.eventorium.data.event.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import android.content.Context;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -41,19 +42,19 @@ public class EventRepository {
 
     public LiveData<Result<List<EventSummary>>> getEvents() {
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getAll().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.getAll().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<List<EventSummary>>> getTopEvents(){
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getTopEvents().enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.getTopEvents().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Event>> createEvent(CreateEvent event) {
         MutableLiveData<Result<Event>> liveData = new MutableLiveData<>();
-        service.createEvent(event).enqueue(RetrofitCallbackHelper.handleValidationResponse(liveData));
+        service.createEvent(event).enqueue(handleValidationResponse(liveData));
         return liveData;
     }
 
@@ -86,42 +87,31 @@ public class EventRepository {
 
     public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.createAgenda(id, agenda).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) result.postValue(Result.success(null));
-                else result.postValue(Result.error(ErrorMessages.INVALID_ACTIVITY));
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
-            }
-        });
+        service.createAgenda(id, agenda).enqueue(handleVoidResponse(result));
         return result;
     }
 
     public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(RetrofitCallbackHelper.handleResponse(liveData));
+        service.searchEvents(keyword).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<EventDetails>> getEventDetails(Long id) {
         MutableLiveData<Result<EventDetails>> result = new MutableLiveData<>();
-        service.getEventDetails(id).enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getEventDetails(id).enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<CalendarEvent>>> getAttendingEvents() {
         MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
-        service.getAttendingEvents().enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getAttendingEvents().enqueue(handleGeneralResponse(result));
         return result;
     }
 
     public LiveData<Result<List<CalendarEvent>>> getOrganizerEvents() {
         MutableLiveData<Result<List<CalendarEvent>>> result = new MutableLiveData<>();
-        service.getOrganizerEvents().enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getOrganizerEvents().enqueue(handleGeneralResponse(result));
         return result;
     }
 
@@ -135,45 +125,13 @@ public class EventRepository {
 
     private LiveData<Result<Uri>> executeExport(Call<ResponseBody> call, Context context) {
         MutableLiveData<Result<Uri>> result = new MutableLiveData<>();
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        Uri uri = FileUtil.savePdfToDownloads(context, response.body());
-                        if (uri != null) result.postValue(Result.success(uri));
-                        else handlePdfErrorResponse(response, result);
-                    } catch (IOException e) {
-                        result.postValue(Result.error("Failed to export PDF."));
-                    }
-                }
-                else result.postValue(Result.error("Failed to export PDF."));
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                result.postValue(Result.error("Failed to export PDF."));
-            }
-        });
-
+        call.enqueue(handlePdfExport(context, result));
         return result;
     }
 
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
-        service.getAgenda(id).enqueue(RetrofitCallbackHelper.handleResponse(result));
+        service.getAgenda(id).enqueue(handleGeneralResponse(result));
         return result;
-    }
-
-    private void handlePdfErrorResponse(Response<ResponseBody> response, MutableLiveData<Result<Uri>> result) {
-        try {
-            if (response.errorBody() != null) {
-                String err = response.errorBody().string();
-                result.postValue(Result.error(ErrorResponse.getErrorMessage(err)));
-            }
-            else result.postValue(Result.error("Failed to export PDF."));
-        } catch (IOException e) {
-            result.postValue(Result.error("Failed to export PDF."));
-        }
     }
 }

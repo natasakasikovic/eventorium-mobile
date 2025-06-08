@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.interaction.models.ChatRoom;
 import com.eventorium.data.interaction.repositories.ChatRoomRepository;
+import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ChatRoomViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public LiveData<List<ChatRoom>> getChatRooms() {
+    public LiveData<Result<List<ChatRoom>>> getChatRooms() {
         return repository.getChatRooms();
     }
 
