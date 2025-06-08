@@ -87,7 +87,7 @@ public class EditEventTypeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditEventTypeBinding.inflate(inflater, container, false);
         setupImagePicker();
@@ -99,9 +99,9 @@ public class EditEventTypeFragment extends Fragment {
     }
 
     private void loadImage(Long id) {
-        eventTypeViewModel.getImage(id).observe(getViewLifecycleOwner(), profilePhoto -> {
-            if (profilePhoto != null)
-                binding.imageView.setImageBitmap(profilePhoto);
+        eventTypeViewModel.getImage(id).observe(getViewLifecycleOwner(), image -> {
+            if (image != null)
+                binding.imageView.setImageBitmap(image);
             else
                 binding.imageView.setImageResource(R.drawable.profile_photo);
         });
