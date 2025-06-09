@@ -33,8 +33,8 @@ public class EventViewModel extends ViewModel {
         this.accountEventRepository = accountEventRepository;
     }
 
-    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
-        return accountEventRepository.getOrganizerEvents();
+    public LiveData<Result<List<EventSummary>>> getManageableEvents() {
+        return accountEventRepository.getManageableEvents();
     }
 
     public LiveData<Result<List<EventSummary>>> getEvents(){

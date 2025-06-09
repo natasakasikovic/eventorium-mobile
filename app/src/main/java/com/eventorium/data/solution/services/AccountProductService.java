@@ -1,6 +1,5 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
