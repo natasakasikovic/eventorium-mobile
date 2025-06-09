@@ -22,5 +22,6 @@ public class Comment {
     private LocalDateTime creationDate;
     private UserDetails user;
     private ReviewType type;
-    private Commentable commentable;
+    private String displayName;
+    private Long objectId;
 }

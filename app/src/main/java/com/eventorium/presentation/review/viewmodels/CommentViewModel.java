@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
+import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.interaction.repositories.CommentRepository;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.models.Status;
@@ -43,17 +44,8 @@ public class CommentViewModel extends ViewModel {
                 .collect(toList()));
     }
 
-
-    public LiveData<Result<Comment>> createProductComment(Long id, String comment) {
-        return commentRepository.createProductComment(id, new CreateComment(comment));
-    }
-
-    public LiveData<Result<Comment>> createServiceComment(Long id, String comment) {
-        return commentRepository.createServiceComment(id, new CreateComment(comment));
-    }
-
-    public LiveData<Result<Comment>> createEventComment(Long id, String comment) {
-        return commentRepository.createEventComment(id, new CreateComment(comment));
+    public LiveData<Result<Comment>> createComment(Long id, ReviewType type, String comment) {
+        return commentRepository.createComment(new CreateComment(comment, type, id));
     }
 
     public LiveData<Result<Comment>> updateComment(Long id, Status status) {

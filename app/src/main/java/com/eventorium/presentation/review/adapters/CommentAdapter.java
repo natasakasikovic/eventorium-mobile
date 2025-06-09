@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.comment.Comment;
-import com.eventorium.data.interaction.models.comment.Commentable;
 import com.eventorium.presentation.review.listeners.OnManageCommentListener;
 
 import java.util.List;
@@ -76,15 +75,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ReviewVi
         @SuppressLint("SetTextI18n")
         public void bind(Comment comment) {
             userTextView.setText(comment.getUser().getName() + " " + comment.getUser().getLastname());
-            commentableTextView.setText(comment.getCommentable().getDisplayName());
+            commentableTextView.setText(comment.getDisplayName());
             commentTextView.setText(comment.getComment());
-
-            Commentable commentable = comment.getCommentable();
 
             userButton.setOnClickListener(v -> listener.navigateToProvider(comment.getUser()));
             acceptButton.setOnClickListener(v -> listener.acceptComment(comment.getId()));
             declineButton.setOnClickListener(v -> listener.declineComment(comment.getId()));
-            commentableButton.setOnClickListener(v -> listener.navigateToCommentable(comment.getType(), commentable));
+            commentableButton.setOnClickListener(v -> listener.navigateToCommentable(comment.getType(), comment.getObjectId()));
         }
     }
 }

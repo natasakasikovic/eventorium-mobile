@@ -76,46 +76,15 @@ public class CommentFragment extends Fragment {
             return;
         }
 
-        switch (type) {
-            case PRODUCT -> commentProduct(comment);
-            case SERVICE -> commentService(comment);
-            case EVENT -> commentEvent(comment);
-        }
-    }
-
-    private void commentService(String comment) {
-        commentViewModel.createServiceComment(id, comment).observe(getViewLifecycleOwner(), result -> {
+        commentViewModel.createComment(id, type, comment).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
-                onSuccess();
+                Toast.makeText(requireContext(), R.string.successfully_created_comment, Toast.LENGTH_SHORT).show();
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.popBackStack();
             } else {
                 showError(result.getError());
             }
         });
-    }
-
-    private void commentProduct(String comment) {
-        commentViewModel.createProductComment(id, comment).observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null) {
-                onSuccess();
-            } else {
-                showError(result.getError());
-            }
-        });
-    }
-
-    private void commentEvent(String comment) {
-        commentViewModel.createEventComment(id, comment).observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null) {
-                onSuccess();
-            } else {
-                showError(result.getError());
-            }
-        });
-    }
-    private void onSuccess() {
-        Toast.makeText(requireContext(), R.string.successfully_create_comment, Toast.LENGTH_SHORT).show();
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        navController.popBackStack();
     }
 
     private void showError(String error) {

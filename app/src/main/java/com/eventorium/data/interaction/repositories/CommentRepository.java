@@ -34,23 +34,12 @@ public class CommentRepository {
         this.commentService = commentService;
     }
 
-    public LiveData<Result<Comment>> createProductComment(Long id, CreateComment request) {
+    public LiveData<Result<Comment>> createComment(CreateComment request) {
         MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.createProductComment(id, request).enqueue(handleValidationResponse(result));
+        commentService.createProductComment(request).enqueue(handleValidationResponse(result));
         return result;
     }
 
-    public LiveData<Result<Comment>> createServiceComment(Long id, CreateComment request) {
-        MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.createServiceComment(id, request).enqueue(handleValidationResponse(result));
-        return result;
-    }
-
-    public LiveData<Result<Comment>> createEventComment(Long id, CreateComment request) {
-        MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.createServiceComment(id, request).enqueue(handleValidationResponse(result));
-        return result;
-    }
     public LiveData<Result<List<Comment>>> getPendingComments() {
         MutableLiveData<Result<List<Comment>>> liveData = new MutableLiveData<>();
         commentService.getPendingComments().enqueue(handleGeneralResponse(liveData));

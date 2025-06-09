@@ -198,7 +198,7 @@
     <string name="review">Review</string>
     <string name="successfully_rated">Successfully rated</string>
     <string name="comment_is_mandatory">Comment is mandatory</string>
-    <string name="successfully_create_comment">Successfully create comment</string>
+    <string name="successfully_created_comment">Comment has been created successfully!</string>
     <string name="no_plans">No plans for the selected date.</string>
     <string name="to_attend">Events You Plan to Attend:</string>
     <string name="added_to_calendar">

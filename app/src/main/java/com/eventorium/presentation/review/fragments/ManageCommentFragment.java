@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.comment.Comment;
-import com.eventorium.data.interaction.models.comment.Commentable;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.models.Status;
@@ -75,20 +74,20 @@ public class ManageCommentFragment extends Fragment {
             }
 
             @Override
-            public void navigateToCommentable(ReviewType type, Commentable commentable) {
+            public void navigateToCommentable(ReviewType type, Long id) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
                 switch(type) {
                     case PRODUCT -> {
-                        args.putLong(ProductDetailsFragment.ARG_ID, commentable.getId());
+                        args.putLong(ProductDetailsFragment.ARG_ID, id);
                         navController.navigate(R.id.productDetailsFragment, args);
                     }
                     case SERVICE -> {
-                        args.putLong(ServiceDetailsFragment.ARG_ID, commentable.getId());
+                        args.putLong(ServiceDetailsFragment.ARG_ID, id);
                         navController.navigate(R.id.serviceDetailsFragment, args);
                     }
                     case EVENT -> {
-                        args.putLong(EventDetailsFragment.ARG_EVENT_ID, commentable.getId());
+                        args.putLong(EventDetailsFragment.ARG_EVENT_ID, id);
                         navController.navigate(R.id.eventDetailsFragment, args);
                     }
                 }
