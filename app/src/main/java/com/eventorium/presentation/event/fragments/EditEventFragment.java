@@ -2,6 +2,7 @@ package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -46,7 +47,6 @@ public class EditEventFragment extends Fragment {
     private ArrayAdapter<City> cityArrayAdapter;
     private EventTypeViewModel eventTypeViewModel;
     private ArrayAdapter<EventType> eventTypeAdapter;
-    private UpdateEvent updated;
 
     private boolean eventLoaded = false;
     private boolean eventTypesLoaded = false;
@@ -82,7 +82,7 @@ public class EditEventFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadEvent();
         loadCities();
@@ -120,8 +120,7 @@ public class EditEventFragment extends Fragment {
     private void setupSaveButton() {
         MaterialButton saveBtn = binding.saveButton;
         saveBtn.setOnClickListener(v -> {
-            getFormFields();
-            viewModel.updateEvent(eventId, updated).observe(getViewLifecycleOwner(), result -> {
+            viewModel.updateEvent(eventId, getFormFields()).observe(getViewLifecycleOwner(), result -> {
                 if (result.getError() == null) {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     navController.popBackStack();
@@ -201,8 +200,9 @@ public class EditEventFragment extends Fragment {
         eventDate.setText(formattedDate);
     }
 
-    private void getFormFields() {
-        updated = new UpdateEvent();
+    private UpdateEvent getFormFields() {
+        UpdateEvent updated = new UpdateEvent();
+
         EventType selectedType = (EventType) binding.spinnerEventType.getSelectedItem();
         if (selectedType.getName().equals("All")) selectedType = null;
         updated.setEventType(selectedType);
@@ -215,5 +215,7 @@ public class EditEventFragment extends Fragment {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         updated.setDate(LocalDate.parse(binding.etEventDate.getText(), formatter));
+
+        return updated;
     }
 }
