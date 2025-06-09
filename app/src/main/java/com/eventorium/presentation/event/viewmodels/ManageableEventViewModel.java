@@ -26,4 +26,8 @@ public class ManageableEventViewModel extends ViewModel {
     public LiveData<Result<List<EventSummary>>> getEvents() {
         return repository.getManageableEvents();
     }
+
+    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
+        return repository.searchEvents(keyword);
+    }
 }

@@ -25,6 +25,12 @@ public class AccountEventRepository {
         return result;
     }
 
+    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
+        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
+        service.searchEvents(keyword).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
     public LiveData<Boolean> isFavouriteEvent(Long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         service.isFavouriteEvent(id).enqueue(handleSuccessfulResponse(result));

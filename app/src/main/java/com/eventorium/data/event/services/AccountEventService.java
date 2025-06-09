@@ -10,6 +10,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface AccountEventService {
 
@@ -27,6 +28,9 @@ public interface AccountEventService {
 
     @GET("account/events/all")
     Call<List<EventSummary>> getManageableEvents();
+
+    @GET("account/events/search/all")
+    Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
 
     @POST("account/events/{id}/attendance")
     Call<ResponseBody> addToCalendar(@Path("id") Long id);
