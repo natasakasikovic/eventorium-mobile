@@ -19,6 +19,7 @@ import com.eventorium.R;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.databinding.FragmentManageableEventsBinding;
 import com.eventorium.presentation.event.adapters.ManageableEventAdapter;
+import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
@@ -34,6 +35,7 @@ public class ManageableEventsFragment extends Fragment {
     private List<EventSummary> events;
     private ManageableEventAdapter adapter;
     private ManageableEventViewModel viewModel;
+    private EventTypeViewModel eventTypeViewModel;
     private RecyclerView recyclerView;
 
     public ManageableEventsFragment() {}
@@ -47,6 +49,7 @@ public class ManageableEventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(ManageableEventViewModel.class);
+        eventTypeViewModel = provider.get(EventTypeViewModel.class);
     }
 
     @Override
@@ -98,11 +101,24 @@ public class ManageableEventsFragment extends Fragment {
             if (result.getData() != null) {
                 events = result.getData();
                 adapter.setEvents(events);
-                // TODO: load images
+                loadEventImage(events);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadEventImage(List<EventSummary> events) {
+        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null) {
+                        event.setImage(image);
+                        int position = events.indexOf(event);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
     }
 
     @Override

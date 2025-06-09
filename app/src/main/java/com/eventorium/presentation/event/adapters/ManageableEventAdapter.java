@@ -51,15 +51,16 @@ public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdap
             cityTextView = itemView.findViewById(R.id.event_city);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
             editButton = itemView.findViewById(R.id.edit_button);
-            // TODO: load img
+            photoImageView = itemView.findViewById(R.id.event_photo);
         }
 
         @Override
-        public void bind(EventSummary eventSummary) {
-            nameTextView.setText(eventSummary.getName());
-            cityTextView.setText(eventSummary.getCity());
-            seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(eventSummary));
-            editButton.setOnClickListener(v -> manageListener.onEditClick(eventSummary));
+        public void bind(EventSummary event) {
+            nameTextView.setText(event.getName());
+            cityTextView.setText(event.getCity());
+            seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(event));
+            editButton.setOnClickListener(v -> manageListener.onEditClick(event));
+            photoImageView.setImageBitmap(event.getImage());
         }
     }
 }
