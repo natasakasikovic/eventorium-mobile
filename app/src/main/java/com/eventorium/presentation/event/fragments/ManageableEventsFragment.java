@@ -38,6 +38,7 @@ public class ManageableEventsFragment extends Fragment {
     private ManageableEventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
     private RecyclerView recyclerView;
+    NavController navController;
 
     public ManageableEventsFragment() {}
 
@@ -51,6 +52,8 @@ public class ManageableEventsFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(ManageableEventViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
+        navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+
     }
 
     @Override
@@ -74,14 +77,14 @@ public class ManageableEventsFragment extends Fragment {
 
             @Override
             public void onSeeMoreClick(EventSummary item) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 navController.navigate(R.id.action_manage_events_to_event_details,
                         EventDetailsFragment.newInstance(item.getId()).getArguments());
             }
 
             @Override
             public void onEditClick(EventSummary item) {
-
+                navController.navigate(R.id.action_manage_events_to_edit_event,
+                        EditEventFragment.newInstance(item.getId()).getArguments());
             }
 
             @Override

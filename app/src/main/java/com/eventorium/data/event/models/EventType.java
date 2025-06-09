@@ -67,4 +67,18 @@ public class EventType implements Parcelable {
     @NonNull
     @Override
     public String toString() { return name; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        EventType other = (EventType) obj;
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
