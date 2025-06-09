@@ -13,14 +13,9 @@ import com.eventorium.data.solution.models.service.Reservation;
 import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.services.ReservationService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ReservationRepository {
 

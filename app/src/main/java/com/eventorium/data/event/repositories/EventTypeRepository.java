@@ -2,26 +2,28 @@ package com.eventorium.data.event.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import android.util.Log;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.CreateEventType;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.event.services.EventTypeService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,5 +59,40 @@ public class EventTypeRepository {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
         eventTypeService.delete(id).enqueue(handleVoidResponse(liveData));
         return liveData;
+    }
+
+    public LiveData<Boolean> uploadImage(Long id, Context context, Uri uri) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        MultipartBody.Part part;
+
+        try {
+            part = FileUtil.getImageFromUri(context, uri, "image");
+        } catch (IOException e) {
+            result.setValue(false);
+            return result;
+        }
+        eventTypeService.uploadImage(id, part).enqueue(handleSuccessAsBoolean(result));
+        return result;
+    }
+
+    public LiveData<Bitmap> getImage(Long id) {
+        MutableLiveData<Bitmap> result = new MutableLiveData<>();
+        eventTypeService.getImage(id).enqueue(handleGetImage(result));
+        return result;
+    }
+
+    public LiveData<Boolean> updateImage(Long id, Context context, Uri uri) {
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        MultipartBody.Part part;
+
+        try {
+            part = FileUtil.getImageFromUri(context, uri, "image");
+        } catch (IOException e) {
+            result.setValue(false);
+            return result;
+        }
+
+        eventTypeService.updateImage(id, part).enqueue(handleSuccessAsBoolean(result));
+        return result;
     }
 }

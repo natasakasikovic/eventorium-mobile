@@ -1,5 +1,9 @@
 package com.eventorium.presentation.event.viewmodels;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -31,11 +35,23 @@ public class EventTypeViewModel extends ViewModel {
         return eventTypeRepository.getEventTypes();
     }
 
+    public LiveData<Bitmap> getImage(Long id) {
+        return eventTypeRepository.getImage(id);
+    }
+
     public LiveData<Result<Void>> update(EventType eventType) {
         return eventTypeRepository.updateEventType(eventType);
     }
 
     public LiveData<Result<Void>> delete(Long id) {
         return eventTypeRepository.deleteEventType(id);
+    }
+
+    public LiveData<Boolean> uploadImage(Long id, Context context, Uri selectedImageUri) {
+        return eventTypeRepository.uploadImage(id, context, selectedImageUri);
+    }
+
+    public LiveData<Boolean> updateImage(Long id, Context context, Uri selectedImageUri) {
+        return eventTypeRepository.updateImage(id, context, selectedImageUri);
     }
 }

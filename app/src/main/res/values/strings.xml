@@ -229,4 +229,6 @@
     <string name="manage_reservations">Manage reservations</string>
     <string name="successfully_updated_reservation">Successfully updated reservation</string>
     <string name="conversations">Conversations</string>
+    <string name="event_type_image">Event type image</string>
+    <string name="image_has_not_been_added">The event type image has not been added. You can update it later.</string>
 </resources>
