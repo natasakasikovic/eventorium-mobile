@@ -85,10 +85,6 @@ public class ServiceViewModel extends ViewModel {
         return accountServiceRepository.addFavouriteService(id);
     }
 
-    public boolean isLoggedIn() {
-        return authRepository.isLoggedIn();
-    }
-
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
         return serviceRepository.searchServices(keyword);
     }

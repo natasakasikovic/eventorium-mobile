@@ -1,9 +1,14 @@
 package com.eventorium.presentation.event.fragments.eventtype;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
@@ -12,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +48,8 @@ public class EditEventTypeFragment extends Fragment {
     private EventType eventType;
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
+    private Uri selectedImageUri = null;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
 
     private Category selectedCategory;
     private List<Category> selectedCategories = new ArrayList<>();
@@ -66,12 +74,47 @@ public class EditEventTypeFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
         categoryViewModel = provider.get(CategoryViewModel.class);
+
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        binding.imageView.setImageURI(selectedImageUri);
+                    }
+                }
+        );
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditEventTypeBinding.inflate(inflater, container, false);
+        setupImagePicker();
+        loadCategories();
+        loadImage(eventType.getId());
+        binding.btnAddCategory.setOnClickListener(v -> addCategoryToContainer());
+        binding.btnSaveChanges.setOnClickListener(v -> saveChanges());
+        return binding.getRoot();
+    }
+
+    private void loadImage(Long id) {
+        eventTypeViewModel.getImage(id).observe(getViewLifecycleOwner(), image -> {
+            if (image != null)
+                binding.imageView.setImageBitmap(image);
+            else
+                binding.imageView.setImageResource(R.drawable.profile_photo);
+        });
+    }
+
+    private void setupImagePicker() {
+        binding.uploadButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
+    }
+
+    private void loadCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             allCategories = categories;
             ArrayAdapter<Category> categoryAdapter = new ArrayAdapter<>(
@@ -82,9 +125,6 @@ public class EditEventTypeFragment extends Fragment {
             binding.comboBoxCategories.setAdapter(categoryAdapter);
         });
 
-        binding.btnAddCategory.setOnClickListener(v -> addCategoryToContainer());
-        binding.btnSaveChanges.setOnClickListener(v -> saveChanges());
-        return binding.getRoot();
     }
 
     @Override
@@ -151,12 +191,22 @@ public class EditEventTypeFragment extends Fragment {
         eventTypeViewModel.update(eventType).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 Toast.makeText(requireContext(), "Success!", Toast.LENGTH_SHORT).show();
+                if (selectedImageUri != null) uploadImage();
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 navController.navigateUp();
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void uploadImage() {
+        eventTypeViewModel.updateImage(eventType.getId(), getContext(), selectedImageUri)
+                .observe(getViewLifecycleOwner(), success -> {
+                    if (!success) Toast.makeText(requireContext(),
+                            R.string.image_has_not_been_added,
+                            Toast.LENGTH_LONG).show();
+                });
     }
 
     private void fillForm() {

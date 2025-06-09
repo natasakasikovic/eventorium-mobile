@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.shared.models.Result;
@@ -104,7 +105,8 @@ public class HomeFragment extends Fragment {
     private void observeTopEvents() {
         viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> eventsAdapter.setData(data)
+                data -> { eventsAdapter.setData(data);
+                          loadEventImages(data); }
         ));
     }
 
@@ -146,6 +148,19 @@ public class HomeFragment extends Fragment {
                         int position = services.indexOf(service);
                         if (position != -1) {
                             serviceAdapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
+    }
+
+    private void loadEventImages(List<EventSummary> events){
+        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        event.setImage(image);
+                        int position = events.indexOf(event);
+                        if (position != -1) {
+                            eventsAdapter.notifyItemChanged(position);
                         }
                     }
                 }));

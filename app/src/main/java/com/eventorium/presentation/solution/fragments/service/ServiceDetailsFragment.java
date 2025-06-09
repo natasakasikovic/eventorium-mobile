@@ -139,7 +139,6 @@ public class ServiceDetailsFragment extends Fragment {
                 Toast.makeText(
                         requireContext(),
                         getString(R.string.added_service)
-                                + name
                                 + getString(R.string.to_favourites),
                         Toast.LENGTH_SHORT
                 ).show();

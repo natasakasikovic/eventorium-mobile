@@ -57,6 +57,7 @@ public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolde
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
+            photoImageView.setImageBitmap(event.getImage());
         }
     }
 }

@@ -29,6 +29,7 @@ public class ProductSummary implements Parcelable {
     private Boolean visible;
     private Double rating;
     private Status status;
+
     protected ProductSummary(Parcel in) {
         id = in.readLong();
         name = in.readString();

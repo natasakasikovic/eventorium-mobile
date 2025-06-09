@@ -1,13 +1,19 @@
 package com.eventorium.presentation.event.fragments.eventtype;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +28,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.CreateEventType;
+import com.eventorium.data.event.models.EventType;
 import com.eventorium.databinding.FragmentCreateEventTypeBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -37,6 +44,9 @@ public class CreateEventTypeFragment extends Fragment {
     private FragmentCreateEventTypeBinding binding;
     private EditText nameTextEdit;
     private EditText descriptionTextEdit;
+    private Uri selectedImageUri;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
 
@@ -56,6 +66,17 @@ public class CreateEventTypeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         eventTypeViewModel = new ViewModelProvider(this).get(EventTypeViewModel.class);
+
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        selectedImageUri = result.getData().getData();
+                        binding.imageView.setImageURI(selectedImageUri);
+                    }
+                }
+        );
+
     }
 
     @Override
@@ -76,9 +97,17 @@ public class CreateEventTypeFragment extends Fragment {
             binding.comboBoxCategories.setAdapter(categoryAdapter);
         });
 
+        setupImagePicker();
         binding.btnAddCategory.setOnClickListener(v -> addCategoryToContainer());
         binding.createEventType.setOnClickListener(v -> createEventType());
         return binding.getRoot();
+    }
+
+    private void setupImagePicker() {
+        binding.uploadButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            pickImageLauncher.launch(intent);
+        });
     }
 
     private void addCategoryToContainer() {
@@ -114,6 +143,16 @@ public class CreateEventTypeFragment extends Fragment {
         }
     }
 
+    private void uploadImage(EventType eventType) {
+        if (selectedImageUri != null)
+            eventTypeViewModel.uploadImage(eventType.getId(), getContext(), selectedImageUri)
+                    .observe(getViewLifecycleOwner(), success -> {
+                        if (!success) Toast.makeText(requireContext(),
+                                R.string.image_has_not_been_added,
+                                Toast.LENGTH_LONG).show();
+                    });
+    }
+
     private void removeCategoryFromContainer(Category category, LinearLayout itemLayout) {
         selectedCategories.remove(category);
         binding.containerAddedItems.removeView(itemLayout);
@@ -140,6 +179,7 @@ public class CreateEventTypeFragment extends Fragment {
                         "Event type created successfully",
                         Toast.LENGTH_SHORT
                 ).show();
+                uploadImage(response);
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 navController.navigate(R.id.eventTypesFragment);
             } else {
