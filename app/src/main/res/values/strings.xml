@@ -215,6 +215,7 @@
     <string name="event_type">Event type</string>
     <string name="your_services">Your services</string>
     <string name="your_products">Your products</string>
+    <string name="your_events">Your events</string>
     <string name="i_will_come">I will come</string>
     <string name="view_event">View event</string>
     <string name="invitations">Invitations</string>
@@ -231,4 +232,6 @@
     <string name="conversations">Conversations</string>
     <string name="event_type_image">Event type image</string>
     <string name="image_has_not_been_added">The event type image has not been added. You can update it later.</string>
+    <string name="edit_event">Edit event information and save</string>
+    <string name="reservation_cancellation_waring">If you modify event date please note that all reservations with a cancellation deadline that has not passed will be canceled. Reservations with a passed cancellation deadline will not be affected.</string>
 </resources>

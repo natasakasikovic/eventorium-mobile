@@ -11,25 +11,20 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
+import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.UpdateEvent;
 import com.eventorium.data.event.services.EventService;
-import com.eventorium.data.shared.models.ErrorResponse;
-import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EventRepository {
 
@@ -59,30 +54,9 @@ public class EventRepository {
     }
 
     public LiveData<Result<List<Event>>> getDraftedEvents() {
-        MutableLiveData<Result<List<Event>>> liveData = new MutableLiveData<>();
-        service.getDraftedEvents().enqueue(new Callback<>() {
-
-            @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    liveData.postValue(Result.success((response.body())));
-                } else {
-                    try {
-                        String errorResponse = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorResponse)));
-                    } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.VALIDATION_ERROR));
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Event>> call, Throwable t) {
-                liveData.postValue(Result.error(t.getMessage()));
-            }
-        });
-
-        return liveData;
+        MutableLiveData<Result<List<Event>>> result = new MutableLiveData<>();
+        service.getDraftedEvents().enqueue(handleValidationResponse(result));
+        return result;
     }
 
     public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
@@ -132,6 +106,18 @@ public class EventRepository {
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
         service.getAgenda(id).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<EditableEvent>> getEditableEvent(Long id) {
+        MutableLiveData<Result<EditableEvent>> result = new MutableLiveData<>();
+        service.getEditableEvent(id).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<ResponseBody>> updateEvent(Long id, UpdateEvent event) {
+        MutableLiveData<Result<ResponseBody>> result = new MutableLiveData<>();
+        service.updateEvent(id, event).enqueue(handleValidationResponse(result));
         return result;
     }
 }

@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;

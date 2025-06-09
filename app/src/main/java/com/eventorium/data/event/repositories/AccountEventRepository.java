@@ -2,24 +2,14 @@ package com.eventorium.data.event.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AccountEventRepository {
 
@@ -29,9 +19,15 @@ public class AccountEventRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
+    public LiveData<Result<List<EventSummary>>> getManageableEvents() {
         MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.getOrganizerEvents().enqueue(handleGeneralResponse(result));
+        service.getManageableEvents().enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
+        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
+        service.searchEvents(keyword).enqueue(handleGeneralResponse(result));
         return result;
     }
 

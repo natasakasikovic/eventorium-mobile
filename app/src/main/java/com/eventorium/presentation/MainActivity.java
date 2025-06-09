@@ -222,8 +222,10 @@ public class MainActivity extends AppCompatActivity {
         handleUserMenuItemSelection(id);
         if (id == R.id.nav_new_event) {
             navController.navigate(R.id.createEventFragment);
-        } else if(id == R.id.nav_reviews) {
+        } else if (id == R.id.nav_reviews) {
             navController.navigate(R.id.reviewFragment);
+        } else if (id == R.id.nav_manageable_events) {
+            navController.navigate(R.id.manageableEventsFragment);
         }
     }
 
