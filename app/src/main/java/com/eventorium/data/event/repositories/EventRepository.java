@@ -13,16 +13,18 @@ import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.services.EventService;
 import com.eventorium.data.shared.models.ErrorResponse;
-import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -133,5 +135,33 @@ public class EventRepository {
         MutableLiveData<Result<List<Activity>>> result = new MutableLiveData<>();
         service.getAgenda(id).enqueue(handleGeneralResponse(result));
         return result;
+    }
+
+
+    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter){
+        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
+        service.filterEvents(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    private Map<String, String> getFilterParams(EventFilter filter) {
+        Map<String, String> params = new HashMap<>();
+
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
+        addParamIfNotNull(params, "type", filter.getType());
+        addParamIfNotNull(params, "maxParticipants", filter.getMaxParticipants());
+        addParamIfNotNull(params, "city", filter.getCity());
+        addParamIfNotNull(params, "from", filter.getFrom());
+        addParamIfNotNull(params, "to", filter.getTo());
+
+        return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
 }

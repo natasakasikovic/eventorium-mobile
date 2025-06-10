@@ -15,16 +15,31 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.shared.viewmodels.CityViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +51,10 @@ public class EventOverviewFragment extends Fragment {
     private FragmentEventOverviewBinding binding;
     private EventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
+    private CityViewModel cityViewModel;
     private EventsAdapter adapter;
+    private View dialogView;
+    private BottomSheetDialog bottomSheetDialog;
 
     public EventOverviewFragment() { }
 
@@ -50,11 +68,12 @@ public class EventOverviewFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(EventViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
+        cityViewModel = provider.get(CityViewModel.class);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
 
         adapter = new EventsAdapter(new ArrayList<>(), event -> {
@@ -72,7 +91,7 @@ public class EventOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpObserver();
-        setUpListener();
+        setUpListeners();
     }
 
     private void setUpObserver(){
@@ -80,9 +99,36 @@ public class EventOverviewFragment extends Fragment {
             if (result.getError() == null){
                 adapter.setData(result.getData());
                 loadEventImage(result.getData());
-            } else {
+            } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-            }
+        });
+    }
+
+    private void createDatePickers() {
+
+        TextInputEditText fromDate = dialogView.findViewById(R.id.fromDateEditText);
+        TextInputEditText toDate = dialogView.findViewById(R.id.toDateEditText);
+
+        MaterialDatePicker<Long> fromDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select start date").build();
+        MaterialDatePicker<Long> toDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select end date").build();
+
+        fromDate.setOnClickListener(v -> fromDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
+        toDate.setOnClickListener(v -> toDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
+
+        fromDatePicker.addOnPositiveButtonClickListener(selection -> {
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formatedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            fromDate.setText(formatedDate);
+        });
+
+        toDatePicker.addOnPositiveButtonClickListener(selection -> {
+            LocalDate selectedDate = Instant.ofEpochMilli(selection)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            String formatedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+            toDate.setText(formatedDate);
         });
     }
 
@@ -99,7 +145,7 @@ public class EventOverviewFragment extends Fragment {
                 }));
     }
 
-    private void setUpListener(){
+    private void setUpListeners(){
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -119,12 +165,143 @@ public class EventOverviewFragment extends Fragment {
                 return false;
             }
         });
+
+        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
+    }
+
+    private void createBottomSheetDialog() {
+        dialogView = getLayoutInflater().inflate(R.layout.events_filter, null);
+        bottomSheetDialog = new BottomSheetDialog(requireActivity());
+
+        loadCities(dialogView.findViewById(R.id.spinnerCity));
+        loadEventTypes(dialogView.findViewById(R.id.spinnerEventType));
+        createDatePickers();
+
+        bottomSheetDialog.setContentView(dialogView);
+        bottomSheetDialog.setOnDismissListener(dialog -> onBottomSheetDismiss());
+
+        bottomSheetDialog.show();
+    }
+
+    private <T> T getFromSpinner(Spinner spinner) {
+        String name = spinner.getSelectedItem() != null ? spinner.getSelectedItem().toString().trim() : "";
+
+        if (name.isEmpty())
+            return null;
+
+        List<T> items = (List<T>) spinner.getTag();
+        if (items == null)
+            return null;
+
+        return items.stream().filter(item -> name.equals(getItemName(item))).findFirst().orElse(null);
+    }
+
+    private void onBottomSheetDismiss() {
+        if (dialogView == null) return;
+
+        TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
+        String name = nameEditText.getText().toString().trim();
+
+        TextInputEditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
+        String description = descriptionEditText.getText().toString().trim();
+
+        EventType type = getFromSpinner(dialogView.findViewById(R.id.spinnerEventType));
+        String eventTypeName = type != null ? type.getName() : null;
+
+        City city = getFromSpinner(dialogView.findViewById(R.id.spinnerCity));
+        String cityName = city != null ? city.getName() : null;
+
+        Integer maxParticipants = parseInteger(dialogView.findViewById(R.id.maxParticipantsEditText));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+
+        TextInputEditText toDateEditText = dialogView.findViewById(R.id.toDateEditText);
+        LocalDate to = parseDate(toDateEditText, formatter);
+
+        TextInputEditText fromDateEditText = dialogView.findViewById(R.id.fromDateEditText);
+        LocalDate from = parseDate(fromDateEditText, formatter);
+
+        EventFilter filter = new EventFilter(name, description, eventTypeName, maxParticipants, cityName, from, to);
+
+        observeFilteringEvents(filter);
+    }
+
+    private Integer parseInteger(TextInputEditText textInput) {
+        String priceText = textInput.getText() != null ? textInput.getText().toString().trim() : "";
+
+        if (priceText.isEmpty()) return null;
+
+        try {
+            return Integer.parseInt(priceText);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private LocalDate parseDate(TextInputEditText editText, DateTimeFormatter formatter) {
+
+        if (editText == null || editText.getText() == null)
+            return null;
+
+        String dateText = editText.getText().toString().trim();
+        if (dateText.isEmpty())
+            return null;
+
+        try {
+            return LocalDate.parse(dateText, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private <T> String getItemName(T item) {
+        try {
+            Method method = item.getClass().getMethod("getName");
+            return (String) method.invoke(item);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            return "";
+        }
+    }
+
+    private void loadCities(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>(List.of("")));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        cityViewModel.getCities().observe(getViewLifecycleOwner(), cities -> {
+            adapter.addAll(cities.stream().map(City::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(cities);
+        });
+    }
+
+    private void loadEventTypes(Spinner spinner) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, new ArrayList<>(List.of("")));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        eventTypeViewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            adapter.addAll(eventTypes.stream().map(EventType::getName).toArray(String[]::new));
+            adapter.notifyDataSetChanged();
+            spinner.setAdapter(adapter);
+            spinner.setTag(eventTypes);
+        });
+    }
+
+    private void observeFilteringEvents(EventFilter filter) {
+        viewModel.filterEvents(filter).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                adapter.setData(result.getData());
+                loadEventImage(result.getData());
+            } else
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+        dialogView = null;
+        bottomSheetDialog = null;
     }
-
 }
