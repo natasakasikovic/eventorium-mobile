@@ -2,7 +2,6 @@ package com.eventorium.data.interaction.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -10,20 +9,11 @@ import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
 import com.eventorium.data.interaction.services.CommentService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CommentRepository {
 
@@ -36,7 +26,7 @@ public class CommentRepository {
 
     public LiveData<Result<Comment>> createComment(CreateComment request) {
         MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.createProductComment(request).enqueue(handleValidationResponse(result));
+        commentService.createComment(request).enqueue(handleValidationResponse(result));
         return result;
     }
 

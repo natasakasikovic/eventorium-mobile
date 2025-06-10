@@ -19,7 +19,7 @@ public interface CommentService {
     Call<List<Comment>> getPendingComments();
 
     @POST("comments")
-    Call<Comment> createProductComment(@Body CreateComment request);
+    Call<Comment> createComment(@Body CreateComment request);
 
     @PATCH("comments/{id}")
     Call<Comment> updateComment(@Path("id") Long id, @Body UpdateComment request);
