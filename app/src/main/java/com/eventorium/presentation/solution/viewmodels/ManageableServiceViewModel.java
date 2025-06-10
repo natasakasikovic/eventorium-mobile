@@ -101,8 +101,4 @@ public class ManageableServiceViewModel extends ViewModel {
                 .collect(toList()));
     }
 
-    public void setFilterResults(List<ServiceSummary> filterResults) {
-        this.filterResults.setValue(filterResults);
-    }
-
 }

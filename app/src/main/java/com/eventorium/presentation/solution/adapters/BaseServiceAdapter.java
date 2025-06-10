@@ -23,7 +23,6 @@ public abstract class BaseServiceAdapter<T extends BaseServiceAdapter.BaseServic
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-
     public void setData(List<ServiceSummary> data) {
         serviceSummaries = data;
         notifyDataSetChanged();

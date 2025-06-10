@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.EventSummary;
@@ -16,12 +15,12 @@ import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
-    private List<EventSummary> events;
+public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolder> {
+
     private final OnSeeMoreClick<EventSummary> listener;
 
     public EventsAdapter(List<EventSummary> events, OnSeeMoreClick<EventSummary> listener) {
-        this.events = events;
+        super(events);
         this.listener = listener;
     }
 
@@ -34,21 +33,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
-        EventSummary event = events.get(position);
+        EventSummary event = eventSummaries.get(position);
         holder.bind(event);
     }
 
-    @Override
-    public int getItemCount() {
-        return events.size();
-    }
-
-    public void setData(List<EventSummary> data) {
-        events = data;
-        notifyDataSetChanged();
-    }
-
-    public class EventViewHolder extends RecyclerView.ViewHolder {
+    public class EventViewHolder extends BaseEventViewHolder {
         TextView nameTextView;
         TextView cityTextView;
 
@@ -63,6 +52,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
         }
 
+        @Override
         public void bind(EventSummary event) {
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());

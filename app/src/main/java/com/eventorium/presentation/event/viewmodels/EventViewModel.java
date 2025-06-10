@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.CreateEvent;
+import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.UpdateEvent;
 import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
 import com.eventorium.data.shared.models.Result;
@@ -21,6 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import okhttp3.ResponseBody;
 
 @HiltViewModel
 public class EventViewModel extends ViewModel {
@@ -32,10 +35,6 @@ public class EventViewModel extends ViewModel {
     public EventViewModel(EventRepository eventRepository, AccountEventRepository accountEventRepository) {
         this.repository = eventRepository;
         this.accountEventRepository = accountEventRepository;
-    }
-
-    public LiveData<Result<List<EventSummary>>> getOrganizerEvents() {
-        return accountEventRepository.getOrganizerEvents();
     }
 
     public LiveData<Result<List<EventSummary>>> getEvents(){
@@ -92,5 +91,13 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
         return repository.filterEvents(filter);
+    }
+  
+    public LiveData<Result<EditableEvent>> getEditableEvent(Long id) {
+        return repository.getEditableEvent(id);
+    }
+
+    public LiveData<Result<ResponseBody>> updateEvent(Long eventId, UpdateEvent event) {
+        return repository.updateEvent(eventId, event);
     }
 }

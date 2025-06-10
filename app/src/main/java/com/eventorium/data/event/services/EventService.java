@@ -3,9 +3,11 @@ package com.eventorium.data.event.services;
 import com.eventorium.data.event.models.Activity;
 import com.eventorium.data.event.models.CalendarEvent;
 import com.eventorium.data.event.models.CreateEvent;
+import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.UpdateEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -60,4 +62,10 @@ public interface EventService {
 
     @GET("events/filter/all")
     Call<List<EventSummary>> filterEvents(@QueryMap Map<String, String> params);
+  
+    @GET("events/{id}")
+    Call<EditableEvent> getEditableEvent(@Path("id") Long id);
+
+    @PUT("events/{id}")
+    Call<ResponseBody> updateEvent(@Path("id") Long id, @Body UpdateEvent event);
 }

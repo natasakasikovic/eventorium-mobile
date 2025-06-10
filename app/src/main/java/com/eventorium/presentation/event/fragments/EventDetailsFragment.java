@@ -56,8 +56,12 @@ public class EventDetailsFragment extends Fragment {
 
     public EventDetailsFragment() { }
 
-    public static EventDetailsFragment newInstance() {
-        return new EventDetailsFragment();
+    public static EventDetailsFragment newInstance(Long id) {
+        EventDetailsFragment fragment = new EventDetailsFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_EVENT_ID, id);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

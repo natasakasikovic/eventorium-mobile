@@ -24,6 +24,7 @@ import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.models.EventType;
 import com.eventorium.data.shared.models.City;
+
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
