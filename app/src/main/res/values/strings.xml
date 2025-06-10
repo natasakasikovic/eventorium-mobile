@@ -232,6 +232,10 @@
     <string name="conversations">Conversations</string>
     <string name="event_type_image">Event type image</string>
     <string name="image_has_not_been_added">The event type image has not been added. You can update it later.</string>
+    <string name="filter_events">Filter events</string>
+    <string name="max_participants">Max Participants</string>
+    <string name="from_date">From date</string>
+    <string name="to_date">To date</string>
     <string name="edit_event">Edit event information and save</string>
     <string name="reservation_cancellation_waring">If you modify event date please note that all reservations with a cancellation deadline that has not passed will be canceled. Reservations with a passed cancellation deadline will not be affected.</string>
 </resources>

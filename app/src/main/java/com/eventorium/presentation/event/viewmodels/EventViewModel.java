@@ -11,6 +11,7 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.models.UpdateEvent;
 import com.eventorium.data.event.repositories.AccountEventRepository;
@@ -88,6 +89,10 @@ public class EventViewModel extends ViewModel {
         return repository.getAgenda(id);
     }
 
+    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
+        return repository.filterEvents(filter);
+    }
+  
     public LiveData<Result<EditableEvent>> getEditableEvent(Long id) {
         return repository.getEditableEvent(id);
     }
