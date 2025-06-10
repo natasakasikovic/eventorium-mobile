@@ -105,32 +105,31 @@ public class EventOverviewFragment extends Fragment {
     }
 
     private void createDatePickers() {
-
         TextInputEditText fromDate = dialogView.findViewById(R.id.fromDateEditText);
         TextInputEditText toDate = dialogView.findViewById(R.id.toDateEditText);
 
-        MaterialDatePicker<Long> fromDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select start date").build();
-        MaterialDatePicker<Long> toDatePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select end date").build();
+        setupDatePicker(fromDate, "Select start date");
+        setupDatePicker(toDate, "Select end date");
+    }
 
-        fromDate.setOnClickListener(v -> fromDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
-        toDate.setOnClickListener(v -> toDatePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER"));
+    private void setupDatePicker(TextInputEditText editText, String title) {
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(title).build();
 
-        fromDatePicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formatedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            fromDate.setText(formatedDate);
-        });
+        editText.setOnClickListener(v -> datePicker.show(requireActivity().getSupportFragmentManager(), "DATE_PICKER_" + title));
 
-        toDatePicker.addOnPositiveButtonClickListener(selection -> {
-            LocalDate selectedDate = Instant.ofEpochMilli(selection)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            String formatedDate = selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-            toDate.setText(formatedDate);
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            String formattedDate = formatDate(selection);
+            editText.setText(formattedDate);
         });
     }
+
+    private String formatDate(Long millis) {
+        LocalDate selectedDate = Instant.ofEpochMilli(millis)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        return selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
+    }
+
 
     private void loadEventImage(List<EventSummary> events) {
         events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
