@@ -19,17 +19,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_gravity="end"
+            android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/favButton"
-                style="?attr/materialIconButtonStyle"
+            <RatingBar
+                android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_not_favourite"
-                app:iconTint="@android:color/black"/>
+                android:numStars="5"
+                android:stepSize="1"
+                android:isIndicator="false"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"/>
 
         </LinearLayout>
 
@@ -219,7 +221,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:gravity="end">
 
-
             <Button
                 android:id="@+id/organizerBtn"
                 style="?attr/materialIconButtonStyle"
@@ -244,6 +245,14 @@
                 android:layout_gravity="end"
                 app:icon="@drawable/ic_chat"
                 app:iconTint="@android:color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/favButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/ic_not_favourite"
+                app:iconTint="@android:color/black"/>
         </LinearLayout>
 
         <View

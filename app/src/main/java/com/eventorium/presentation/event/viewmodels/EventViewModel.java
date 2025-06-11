@@ -73,6 +73,10 @@ public class EventViewModel extends ViewModel {
         return accountEventRepository.removeFromFavourites(id);
     }
 
+    public LiveData<Result<Boolean>> isUserEligibleToRate(Long eventId) {
+        return accountEventRepository.isUserEligibleToRate(eventId);
+    }
+
     public LiveData<Result<Void>> addToCalendar(Long id) {
         return accountEventRepository.addToCalendar(id);
     }

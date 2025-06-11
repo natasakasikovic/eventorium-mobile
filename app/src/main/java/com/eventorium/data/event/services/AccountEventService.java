@@ -26,6 +26,9 @@ public interface AccountEventService {
     @GET("account/events/favourites")
     Call<List<EventSummary>> getFavouriteEvents();
 
+    @GET("account/events/{id}/rating-eligibility")
+    Call<Boolean> isUserEligibleToRate(@Path("id") Long id);
+
     @GET("account/events/all")
     Call<List<EventSummary>> getManageableEvents();
 

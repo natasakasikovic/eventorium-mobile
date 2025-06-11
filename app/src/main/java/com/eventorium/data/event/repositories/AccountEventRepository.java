@@ -55,6 +55,12 @@ public class AccountEventRepository {
         return result;
     }
 
+    public LiveData<Result<Boolean>> isUserEligibleToRate(Long eventId) {
+        MutableLiveData<Result<Boolean>> result = new MutableLiveData<>();
+        service.isUserEligibleToRate(eventId).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
     public LiveData<Result<Void>> addToCalendar(Long id) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
         service.addToCalendar(id).enqueue(handleVoidResponse(result));
