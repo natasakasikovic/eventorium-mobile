@@ -52,6 +52,9 @@ public class CommentViewModel extends ViewModel {
         return commentRepository.updateComment(id, new UpdateComment(status));
     }
 
+    public LiveData<Result<List<Comment>>> getAcceptedCommentsForTarget(ReviewType type, Long objectId) {
+        return commentRepository.getAcceptedCommentsForTarget(type, objectId);
+    }
 
     @Override
     protected void onCleared() {
