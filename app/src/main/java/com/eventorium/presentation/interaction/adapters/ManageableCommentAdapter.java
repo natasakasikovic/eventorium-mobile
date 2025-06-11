@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.adapters;
+package com.eventorium.presentation.interaction.adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.comment.Comment;
-import com.eventorium.presentation.review.listeners.OnManageCommentListener;
+import com.eventorium.presentation.interaction.listeners.OnManageCommentListener;
 
 import java.util.List;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ReviewViewHolder> {
+public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCommentAdapter.ReviewViewHolder> {
 
     private List<Comment> comments;
     private final OnManageCommentListener listener;
 
-    public CommentAdapter(List<Comment> comments, OnManageCommentListener listener) {
+    public ManageableCommentAdapter(List<Comment> comments, OnManageCommentListener listener) {
         this.comments = comments;
         this.listener = listener;
     }
@@ -29,7 +29,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ReviewVi
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.manageable_comment_card, parent, false);
         return new ReviewViewHolder(view);
     }
 

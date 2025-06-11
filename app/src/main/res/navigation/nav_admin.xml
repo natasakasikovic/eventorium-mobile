@@ -74,7 +74,7 @@
 
     <fragment
         android:id="@+id/manageCommentsFragment"
-        android:name="com.eventorium.presentation.review.fragments.ManageCommentFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.ManageCommentFragment"
         tools:layout="@layout/fragment_manage_comment">
         <action
             android:id="@+id/action_manageComments_to_userProfile"

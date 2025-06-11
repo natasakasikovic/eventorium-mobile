@@ -1,6 +1,5 @@
-package com.eventorium.presentation.review.listeners;
+package com.eventorium.presentation.interaction.listeners;
 
-import com.eventorium.data.interaction.models.rating.Rating;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 
 public interface OnReviewListener {

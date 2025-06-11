@@ -59,13 +59,13 @@
 
     <fragment
         android:id="@+id/commentFragment"
-        android:name="com.eventorium.presentation.review.fragments.CommentFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.CreateCommentFragment"
         android:label="fragment_comment"
         tools:layout="@layout/fragment_comment"/>
 
     <fragment
         android:id="@+id/reviewFragment"
-        android:name="com.eventorium.presentation.review.fragments.ReviewFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.ReviewFragment"
         android:label="review_fragment"
         tools:layout="@layout/fragment_review">
         <action

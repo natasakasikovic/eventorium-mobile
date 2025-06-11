@@ -1,4 +1,4 @@
-package com.eventorium.presentation.chat.viewmodels;
+package com.eventorium.presentation.interaction.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

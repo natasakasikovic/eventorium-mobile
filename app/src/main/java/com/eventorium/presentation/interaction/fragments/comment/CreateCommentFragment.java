@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.fragments;
+package com.eventorium.presentation.interaction.fragments.comment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -17,12 +17,12 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.databinding.FragmentCommentBinding;
-import com.eventorium.presentation.review.viewmodels.CommentViewModel;
+import com.eventorium.presentation.interaction.viewmodels.CommentViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CommentFragment extends Fragment {
+public class CreateCommentFragment extends Fragment {
 
     private FragmentCommentBinding binding;
     private CommentViewModel commentViewModel;
@@ -34,11 +34,11 @@ public class CommentFragment extends Fragment {
     private ReviewType type;
     private String name;
 
-    public CommentFragment() {
+    public CreateCommentFragment() {
     }
 
-    public static CommentFragment newInstance(Long id, ReviewType type, String name) {
-        CommentFragment fragment = new CommentFragment();
+    public static CreateCommentFragment newInstance(Long id, ReviewType type, String name) {
+        CreateCommentFragment fragment = new CreateCommentFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_COMMENTABLE_ID, id);
         args.putString(ARG_NAME, name);

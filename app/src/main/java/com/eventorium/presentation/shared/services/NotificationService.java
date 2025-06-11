@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.presentation.MainActivity;
-import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 
 
 public class NotificationService {

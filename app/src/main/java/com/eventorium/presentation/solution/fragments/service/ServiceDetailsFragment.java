@@ -1,7 +1,5 @@
 package com.eventorium.presentation.solution.fragments.service;
 
-import static java.util.stream.Collectors.toList;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
@@ -22,7 +20,7 @@ import com.eventorium.data.event.models.Event;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
-import com.eventorium.presentation.chat.fragments.ChatFragment;
+import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;

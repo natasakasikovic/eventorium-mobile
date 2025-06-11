@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.viewmodels;
+package com.eventorium.presentation.interaction.viewmodels;
 
 import static java.util.stream.Collectors.toList;
 

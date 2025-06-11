@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.listeners;
+package com.eventorium.presentation.interaction.listeners;
 
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.review.ReviewType;

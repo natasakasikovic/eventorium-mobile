@@ -1,4 +1,4 @@
-package com.eventorium.presentation.chat.fragments;
+package com.eventorium.presentation.interaction.fragments.chat;
 
 import android.os.Bundle;
 
@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import com.eventorium.R;
 import com.eventorium.data.interaction.models.ChatRoom;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentChatRoomBinding;
-import com.eventorium.presentation.chat.adapters.ChatRoomAdapter;
-import com.eventorium.presentation.chat.listeners.OnChatRoomClickListener;
-import com.eventorium.presentation.chat.viewmodels.ChatRoomViewModel;
+import com.eventorium.presentation.interaction.adapters.ChatRoomAdapter;
+import com.eventorium.presentation.interaction.listeners.OnChatRoomClickListener;
+import com.eventorium.presentation.interaction.viewmodels.ChatRoomViewModel;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 
 import java.util.ArrayList;
