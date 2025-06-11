@@ -98,7 +98,11 @@
     <fragment
         android:id="@+id/eventDetailsFragment"
         android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
-        tools:layout="@layout/fragment_event_details" />
+        tools:layout="@layout/fragment_event_details">
+        <action
+            android:id="@+id/action_event_details_to_organizer"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/productDetailsFragment"

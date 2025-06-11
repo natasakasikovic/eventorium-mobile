@@ -29,6 +29,7 @@ import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.review.viewmodels.RatingViewModel;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
@@ -42,6 +43,7 @@ public class EventDetailsFragment extends Fragment {
     public static String ARG_EVENT_ID = "event_id";
     private EventViewModel viewModel;
     private AuthViewModel authViewModel;
+    private RatingViewModel ratingViewModel;
     private Long id;
     private EventDetails event;
     private UserDetails organizer;
@@ -52,6 +54,7 @@ public class EventDetailsFragment extends Fragment {
     private Button addToCalendarBtn;
     private Button exportDetailsBtn;
     private Button exportGuestListBtn;
+    private boolean isUserEligibleToRate = false;
 
     public EventDetailsFragment() { }
 
@@ -76,8 +79,6 @@ public class EventDetailsFragment extends Fragment {
         binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
         setUpViewModels();
         setUpButtons();
-        adjustUIVisibility();
-        loadAgenda();
         return binding.getRoot();
     }
 
@@ -85,12 +86,14 @@ public class EventDetailsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadEventDetails();
+        loadAgenda();
     }
 
     private void setUpViewModels() {
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(EventViewModel.class);
         authViewModel = provider.get(AuthViewModel.class);
+        ratingViewModel = provider.get(RatingViewModel.class);
     }
 
     private void setUpButtons() {
@@ -100,18 +103,33 @@ public class EventDetailsFragment extends Fragment {
         exportDetailsBtn = binding.btnExportDetails;
         exportGuestListBtn = binding.btnExportGuests;
         binding.organizerBtn.setOnClickListener(v -> navigateToOrganizer());
+        setUpRatingBar();
     }
 
     private void adjustUIVisibility() {
         if (authViewModel.getUserId() == null) {
-            hideViews(binding.actions, binding.question, binding.chatButton, binding.exportGuests);
+            hideViews(binding.actions, binding.question, binding.chatButton, binding.exportGuests, binding.ratingBar);
             return;
         }
 
-        if (authViewModel.getUserId().equals(id))
+        if (authViewModel.getUserId().equals(organizer.getId()))
             hideViews(binding.chatButton, binding.organizerBtn, binding.organizerName);
         else
             hideViews(binding.exportGuests);
+
+        if (!isUserEligibleToRate)
+            hideViews(binding.ratingBar);
+    }
+
+    private void setUserEligibility() {
+        viewModel.isUserEligibleToRate(id).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null)
+                this.isUserEligibleToRate = result.getData();
+            else
+                this.isUserEligibleToRate = false;
+
+            adjustUIVisibility();
+        });
     }
 
     private void hideViews(View... views) {
@@ -120,6 +138,20 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
+    private void setUpRatingBar() {
+        binding.ratingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            if (fromUser) {
+                ratingViewModel.createEventRating(id, (int) rating).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null)
+                        Toast.makeText(requireContext(), R.string.successfully_rated, Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                });
+                ratingBar.setIsIndicator(true);
+            }
+        });
+    }
+    
     private void navigateToChat() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
@@ -144,6 +176,7 @@ public class EventDetailsFragment extends Fragment {
                 setupFavButton();
                 setupAddToCalendarButton();
                 setupExportBtns();
+                setUserEligibility();
             }
             else showError(result.getError());
         });
