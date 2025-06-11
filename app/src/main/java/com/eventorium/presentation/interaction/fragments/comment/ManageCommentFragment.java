@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.fragments;
+package com.eventorium.presentation.interaction.fragments.comment;
 
 import android.os.Bundle;
 
@@ -16,15 +16,14 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.comment.Comment;
-import com.eventorium.data.interaction.models.comment.Commentable;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.models.Status;
 import com.eventorium.databinding.FragmentManageCommentBinding;
 import com.eventorium.presentation.event.fragments.EventDetailsFragment;
-import com.eventorium.presentation.review.adapters.CommentAdapter;
-import com.eventorium.presentation.review.listeners.OnManageCommentListener;
-import com.eventorium.presentation.review.viewmodels.CommentViewModel;
+import com.eventorium.presentation.interaction.adapters.ManageableCommentAdapter;
+import com.eventorium.presentation.interaction.listeners.OnManageCommentListener;
+import com.eventorium.presentation.interaction.viewmodels.CommentViewModel;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
@@ -38,7 +37,7 @@ public class ManageCommentFragment extends Fragment {
 
     private FragmentManageCommentBinding binding;
     private CommentViewModel commentViewModel;
-    private CommentAdapter adapter;
+    private ManageableCommentAdapter adapter;
 
     public ManageCommentFragment() {
     }
@@ -56,7 +55,7 @@ public class ManageCommentFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding  = FragmentManageCommentBinding.inflate(inflater, container, false);
-        adapter = new CommentAdapter(new ArrayList<>(), configureAdapter());
+        adapter = new ManageableCommentAdapter(new ArrayList<>(), configureAdapter());
         binding.commentsRecycleView.setAdapter(adapter);
 
         loadComments();
@@ -75,20 +74,20 @@ public class ManageCommentFragment extends Fragment {
             }
 
             @Override
-            public void navigateToCommentable(ReviewType type, Commentable commentable) {
+            public void navigateToDetails(ReviewType type, Long id) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
                 switch(type) {
                     case PRODUCT -> {
-                        args.putLong(ProductDetailsFragment.ARG_ID, commentable.getId());
+                        args.putLong(ProductDetailsFragment.ARG_ID, id);
                         navController.navigate(R.id.productDetailsFragment, args);
                     }
                     case SERVICE -> {
-                        args.putLong(ServiceDetailsFragment.ARG_ID, commentable.getId());
+                        args.putLong(ServiceDetailsFragment.ARG_ID, id);
                         navController.navigate(R.id.serviceDetailsFragment, args);
                     }
                     case EVENT -> {
-                        args.putLong(EventDetailsFragment.ARG_EVENT_ID, commentable.getId());
+                        args.putLong(EventDetailsFragment.ARG_EVENT_ID, id);
                         navController.navigate(R.id.eventDetailsFragment, args);
                     }
                 }

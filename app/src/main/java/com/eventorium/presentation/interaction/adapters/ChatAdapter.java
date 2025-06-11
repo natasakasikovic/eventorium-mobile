@@ -1,4 +1,4 @@
-package com.eventorium.presentation.chat.adapters;
+package com.eventorium.presentation.interaction.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.eventorium.presentation.chat.listeners;
+package com.eventorium.presentation.interaction.listeners;
 
 import com.eventorium.data.interaction.models.ChatRoom;
 

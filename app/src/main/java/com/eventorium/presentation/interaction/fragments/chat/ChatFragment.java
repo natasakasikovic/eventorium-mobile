@@ -1,4 +1,4 @@
-package com.eventorium.presentation.chat.fragments;
+package com.eventorium.presentation.interaction.fragments.chat;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.interaction.models.chat.ChatMessage;
 import com.eventorium.databinding.FragmentChatBinding;
-import com.eventorium.presentation.chat.adapters.ChatAdapter;
-import com.eventorium.presentation.chat.viewmodels.ChatViewModel;
+import com.eventorium.presentation.interaction.adapters.ChatAdapter;
+import com.eventorium.presentation.interaction.viewmodels.ChatViewModel;
 
 import java.util.ArrayList;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.adapters;
+package com.eventorium.presentation.interaction.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.rating.Rating;
 import com.eventorium.data.interaction.models.review.SolutionReview;
-import com.eventorium.presentation.review.listeners.OnReviewListener;
+import com.eventorium.presentation.interaction.listeners.OnReviewListener;
 
 import java.util.List;
 import java.util.stream.IntStream;

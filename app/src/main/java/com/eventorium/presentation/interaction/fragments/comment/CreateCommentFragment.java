@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.fragments;
+package com.eventorium.presentation.interaction.fragments.comment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -17,16 +17,16 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.databinding.FragmentCommentBinding;
-import com.eventorium.presentation.review.viewmodels.CommentViewModel;
+import com.eventorium.presentation.interaction.viewmodels.CommentViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CommentFragment extends Fragment {
+public class CreateCommentFragment extends Fragment {
 
     private FragmentCommentBinding binding;
     private CommentViewModel commentViewModel;
-    public static final String ARG_COMMENTABLE_ID = "ARG_COMMENTABLE_ID";
+    public static final String ARG_OBJECT_ID = "ARG_OBJECT_ID";
     public static final String ARG_TYPE = "ARG_REVIEW_TYPE";
     public static final String ARG_NAME = "ARG_NAME";
 
@@ -34,13 +34,13 @@ public class CommentFragment extends Fragment {
     private ReviewType type;
     private String name;
 
-    public CommentFragment() {
+    public CreateCommentFragment() {
     }
 
-    public static CommentFragment newInstance(Long id, ReviewType type, String name) {
-        CommentFragment fragment = new CommentFragment();
+    public static CreateCommentFragment newInstance(Long id, ReviewType type, String name) {
+        CreateCommentFragment fragment = new CreateCommentFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_COMMENTABLE_ID, id);
+        args.putLong(ARG_OBJECT_ID, id);
         args.putString(ARG_NAME, name);
         args.putParcelable(ARG_TYPE, type);
         fragment.setArguments(args);
@@ -51,7 +51,7 @@ public class CommentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            id = getArguments().getLong(ARG_COMMENTABLE_ID);
+            id = getArguments().getLong(ARG_OBJECT_ID);
             type = getArguments().getParcelable(ARG_TYPE);
             name = getArguments().getString(ARG_NAME);
         }
@@ -76,46 +76,15 @@ public class CommentFragment extends Fragment {
             return;
         }
 
-        switch (type) {
-            case PRODUCT -> commentProduct(comment);
-            case SERVICE -> commentService(comment);
-            case EVENT -> commentEvent(comment);
-        }
-    }
-
-    private void commentService(String comment) {
-        commentViewModel.createServiceComment(id, comment).observe(getViewLifecycleOwner(), result -> {
+        commentViewModel.createComment(id, type, comment).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
-                onSuccess();
+                Toast.makeText(requireContext(), R.string.successfully_created_comment, Toast.LENGTH_SHORT).show();
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.popBackStack();
             } else {
                 showError(result.getError());
             }
         });
-    }
-
-    private void commentProduct(String comment) {
-        commentViewModel.createProductComment(id, comment).observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null) {
-                onSuccess();
-            } else {
-                showError(result.getError());
-            }
-        });
-    }
-
-    private void commentEvent(String comment) {
-        commentViewModel.createEventComment(id, comment).observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null) {
-                onSuccess();
-            } else {
-                showError(result.getError());
-            }
-        });
-    }
-    private void onSuccess() {
-        Toast.makeText(requireContext(), R.string.successfully_create_comment, Toast.LENGTH_SHORT).show();
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        navController.popBackStack();
     }
 
     private void showError(String error) {

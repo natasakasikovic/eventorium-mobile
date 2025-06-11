@@ -1,4 +1,4 @@
-package com.eventorium.presentation.review.fragments;
+package com.eventorium.presentation.interaction.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,10 +19,10 @@ import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.databinding.FragmentReviewBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
-import com.eventorium.presentation.event.viewmodels.EventViewModel;
-import com.eventorium.presentation.review.adapters.ReviewAdapter;
-import com.eventorium.presentation.review.listeners.OnReviewListener;
-import com.eventorium.presentation.review.viewmodels.RatingViewModel;
+import com.eventorium.presentation.interaction.adapters.ReviewAdapter;
+import com.eventorium.presentation.interaction.fragments.comment.CreateCommentFragment;
+import com.eventorium.presentation.interaction.listeners.OnReviewListener;
+import com.eventorium.presentation.interaction.viewmodels.RatingViewModel;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
@@ -88,9 +88,9 @@ public class ReviewFragment extends Fragment {
             public void onCommentClick(SolutionReview review) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
-                args.putLong(CommentFragment.ARG_COMMENTABLE_ID, review.getId());
-                args.putString(CommentFragment.ARG_NAME, review.getName());
-                args.putParcelable(CommentFragment.ARG_TYPE, review.getType());
+                args.putLong(CreateCommentFragment.ARG_OBJECT_ID, review.getId());
+                args.putString(CreateCommentFragment.ARG_NAME, review.getName());
+                args.putParcelable(CreateCommentFragment.ARG_TYPE, review.getType());
                 navController.navigate(R.id.action_review_to_comment, args);
             }
 
