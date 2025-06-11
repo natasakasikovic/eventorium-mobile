@@ -26,7 +26,7 @@ public class CreateCommentFragment extends Fragment {
 
     private FragmentCommentBinding binding;
     private CommentViewModel commentViewModel;
-    public static final String ARG_COMMENTABLE_ID = "ARG_COMMENTABLE_ID";
+    public static final String ARG_OBJECT_ID = "ARG_OBJECT_ID";
     public static final String ARG_TYPE = "ARG_REVIEW_TYPE";
     public static final String ARG_NAME = "ARG_NAME";
 
@@ -40,7 +40,7 @@ public class CreateCommentFragment extends Fragment {
     public static CreateCommentFragment newInstance(Long id, ReviewType type, String name) {
         CreateCommentFragment fragment = new CreateCommentFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_COMMENTABLE_ID, id);
+        args.putLong(ARG_OBJECT_ID, id);
         args.putString(ARG_NAME, name);
         args.putParcelable(ARG_TYPE, type);
         fragment.setArguments(args);
@@ -51,7 +51,7 @@ public class CreateCommentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            id = getArguments().getLong(ARG_COMMENTABLE_ID);
+            id = getArguments().getLong(ARG_OBJECT_ID);
             type = getArguments().getParcelable(ARG_TYPE);
             name = getArguments().getString(ARG_NAME);
         }

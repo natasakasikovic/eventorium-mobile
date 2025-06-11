@@ -53,11 +53,11 @@ public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCom
 
         Button userButton;
         TextView userTextView;
-        TextView commentableTextView;
+        TextView objectTextView;
         TextView commentTextView;
         Button acceptButton;
         Button declineButton;
-        Button commentableButton;
+        Button detailsButton;
 
 
 
@@ -65,8 +65,8 @@ public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCom
             super(itemView);
             userButton = itemView.findViewById(R.id.userButton);
             userTextView = itemView.findViewById(R.id.userText);
-            commentableButton = itemView.findViewById(R.id.commentableButton);
-            commentableTextView = itemView.findViewById(R.id.commentableText);
+            detailsButton = itemView.findViewById(R.id.commentableButton);
+            objectTextView = itemView.findViewById(R.id.commentableText);
             commentTextView = itemView.findViewById(R.id.commentText);
             acceptButton = itemView.findViewById(R.id.acceptButton);
             declineButton = itemView.findViewById(R.id.declineButton);
@@ -75,13 +75,13 @@ public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCom
         @SuppressLint("SetTextI18n")
         public void bind(Comment comment) {
             userTextView.setText(comment.getUser().getName() + " " + comment.getUser().getLastname());
-            commentableTextView.setText(comment.getDisplayName());
+            objectTextView.setText(comment.getDisplayName());
             commentTextView.setText(comment.getComment());
 
             userButton.setOnClickListener(v -> listener.navigateToProvider(comment.getUser()));
             acceptButton.setOnClickListener(v -> listener.acceptComment(comment.getId()));
             declineButton.setOnClickListener(v -> listener.declineComment(comment.getId()));
-            commentableButton.setOnClickListener(v -> listener.navigateToCommentable(comment.getType(), comment.getObjectId()));
+            detailsButton.setOnClickListener(v -> listener.navigateToDetails(comment.getType(), comment.getObjectId()));
         }
     }
 }

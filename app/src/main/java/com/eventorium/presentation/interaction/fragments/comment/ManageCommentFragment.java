@@ -74,7 +74,7 @@ public class ManageCommentFragment extends Fragment {
             }
 
             @Override
-            public void navigateToCommentable(ReviewType type, Long id) {
+            public void navigateToDetails(ReviewType type, Long id) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
                 switch(type) {

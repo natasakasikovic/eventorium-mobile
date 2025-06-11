@@ -88,7 +88,7 @@ public class ReviewFragment extends Fragment {
             public void onCommentClick(SolutionReview review) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 Bundle args = new Bundle();
-                args.putLong(CreateCommentFragment.ARG_COMMENTABLE_ID, review.getId());
+                args.putLong(CreateCommentFragment.ARG_OBJECT_ID, review.getId());
                 args.putString(CreateCommentFragment.ARG_NAME, review.getName());
                 args.putParcelable(CreateCommentFragment.ARG_TYPE, review.getType());
                 navController.navigate(R.id.action_review_to_comment, args);

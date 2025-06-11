@@ -5,7 +5,7 @@ import com.eventorium.data.interaction.models.review.ReviewType;
 
 public interface OnManageCommentListener {
     void navigateToProvider(UserDetails provider);
-    void navigateToCommentable(ReviewType type, Long objectId);
+    void navigateToDetails(ReviewType type, Long objectId);
     void acceptComment(Long id);
     void declineComment(Long id);
 }
