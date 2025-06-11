@@ -108,7 +108,7 @@ public class ReviewFragment extends Fragment {
     }
 
     private void loadItems() {
-        budgetViewModel.getBudgetItems().observe(getViewLifecycleOwner(), result -> {
+        budgetViewModel.getAllBudgetItems().observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
                 reviewAdapter.setData(result.getData());
                 loadImages(result.getData());

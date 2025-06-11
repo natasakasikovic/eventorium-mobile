@@ -108,7 +108,7 @@ public class PurchaseProductFragment extends Fragment {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        eventViewModel.getDraftedEvents().observe(getViewLifecycleOwner(), result -> {
+        eventViewModel.getFutureEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 adapter.addAll(result.getData());
                 adapter.notifyDataSetChanged();

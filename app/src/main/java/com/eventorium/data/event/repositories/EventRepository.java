@@ -57,9 +57,9 @@ public class EventRepository {
         return liveData;
     }
 
-    public LiveData<Result<List<Event>>> getDraftedEvents() {
+    public LiveData<Result<List<Event>>> getFutureEvents() {
         MutableLiveData<Result<List<Event>>> result = new MutableLiveData<>();
-        service.getDraftedEvents().enqueue(handleValidationResponse(result));
+        service.getFutureEvents().enqueue(handleValidationResponse(result));
         return result;
     }
 

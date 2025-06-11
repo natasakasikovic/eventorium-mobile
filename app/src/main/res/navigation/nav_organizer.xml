@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_manage_events_to_edit_event"
             app:destination="@+id/editEventFragment" />
+        <action
+            android:id="@+id/action_manage_events_to_budget"
+            app:destination="@+id/budgetItemsList" />
     </fragment>
 
     <fragment
@@ -75,6 +78,12 @@
             android:id="@+id/action_agenda_to_invitations"
             app:destination="@+id/eventInvitationsFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/budgetItemsList"
+        android:name="com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragment"
+        tools:layout="@layout/fragment_budget_items_list"
+        />
 
     <fragment
         android:id="@+id/commentFragment"
