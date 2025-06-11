@@ -15,9 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EditableEvent;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.event.models.UpdateEvent;
+import com.eventorium.data.event.models.event.EditableEvent;
+import com.eventorium.data.event.models.eventtype.EventType;
+import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentEditEventBinding;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;

@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Activity;
+import com.eventorium.data.event.models.event.Activity;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.databinding.FragmentAgendaBinding;
 import com.eventorium.presentation.event.adapters.ActivitiesAdapter;

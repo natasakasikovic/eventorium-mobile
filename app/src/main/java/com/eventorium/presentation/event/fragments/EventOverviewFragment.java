@@ -20,9 +20,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventFilter;
-import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.event.EventFilter;
+import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.models.City;
 
 import com.eventorium.databinding.FragmentEventOverviewBinding;

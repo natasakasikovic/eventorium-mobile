@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;

@@ -21,8 +21,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Activity;
-import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.event.models.event.Activity;
+import com.eventorium.data.event.models.event.EventDetails;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.FragmentEventDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.AuthViewModel;

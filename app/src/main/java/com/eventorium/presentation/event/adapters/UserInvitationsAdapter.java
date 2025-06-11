@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.InvitationDetails;
+import com.eventorium.data.event.models.invitation.InvitationDetails;
 import com.eventorium.presentation.event.listeners.OnAddToCalendarClick;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.google.android.material.button.MaterialButton;

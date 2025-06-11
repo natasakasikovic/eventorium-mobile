@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.interaction.models.review.SolutionReview;
-import com.eventorium.data.event.models.Budget;
-import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.budget.Budget;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
@@ -47,7 +47,7 @@ public class BudgetViewModel extends ViewModel {
         return productRepository.getSuggestedProducts(categoryId, price);
     }
 
-    public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem product) {
+    public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItemRequest product) {
         return budgetRepository.purchaseProduct(eventId, product);
     }
 
@@ -55,7 +55,7 @@ public class BudgetViewModel extends ViewModel {
         return budgetRepository.getBudget(eventId);
     }
     public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
-        return budgetRepository.getBudgetItems();
+        return budgetRepository.getAllBudgetItems();
     }
 
 }

@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.databinding.FragmentCalendarBinding;
 import com.eventorium.presentation.auth.viewmodels.AuthViewModel;

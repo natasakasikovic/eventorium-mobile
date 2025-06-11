@@ -1,7 +1,7 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.models.CreateEventType;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.CreateEventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 
 import java.util.List;
 

@@ -1,13 +1,13 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.models.Activity;
-import com.eventorium.data.event.models.CalendarEvent;
-import com.eventorium.data.event.models.CreateEvent;
-import com.eventorium.data.event.models.EditableEvent;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventDetails;
-import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.event.models.UpdateEvent;
+import com.eventorium.data.event.models.event.Activity;
+import com.eventorium.data.event.models.event.CalendarEvent;
+import com.eventorium.data.event.models.event.CreateEvent;
+import com.eventorium.data.event.models.event.EditableEvent;
+import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.event.models.event.EventDetails;
+import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.event.models.event.UpdateEvent;
 
 import java.util.List;
 import java.util.Map;

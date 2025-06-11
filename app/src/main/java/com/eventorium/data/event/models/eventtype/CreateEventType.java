@@ -1,4 +1,4 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.eventtype;
 
 import com.eventorium.data.category.models.Category;
 import com.google.gson.annotations.Expose;

@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentPurchasedAndReservedBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;

@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;

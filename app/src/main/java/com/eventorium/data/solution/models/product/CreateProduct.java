@@ -1,7 +1,7 @@
 package com.eventorium.data.solution.models.product;
 
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 
 import java.util.List;
 

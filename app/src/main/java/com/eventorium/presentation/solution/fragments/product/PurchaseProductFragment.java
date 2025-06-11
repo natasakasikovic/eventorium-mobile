@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -17,15 +16,13 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.databinding.FragmentPurchaseProductBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -95,8 +92,8 @@ public class PurchaseProductFragment extends Fragment {
         });
     }
 
-    private BudgetItem buildItem() {
-        return BudgetItem.builder()
+    private BudgetItemRequest buildItem() {
+        return BudgetItemRequest.builder()
                 .itemId(productId)
                 .category(category)
                 .plannedAmount(Double.parseDouble(String.valueOf(binding.plannedAmountText.getText())))

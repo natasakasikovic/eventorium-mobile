@@ -15,8 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.CreateEvent;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.event.CreateEvent;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCreateEventBinding;

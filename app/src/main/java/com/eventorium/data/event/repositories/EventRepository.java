@@ -8,19 +8,16 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.event.models.Activity;
-import com.eventorium.data.event.models.CalendarEvent;
-import com.eventorium.data.event.models.CreateEvent;
-import com.eventorium.data.event.models.EditableEvent;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventDetails;
-import com.eventorium.data.event.models.EventFilter;
-import com.eventorium.data.event.models.EventSummary;
-import com.eventorium.data.event.models.UpdateEvent;
+import com.eventorium.data.event.models.event.Activity;
+import com.eventorium.data.event.models.event.CalendarEvent;
+import com.eventorium.data.event.models.event.CreateEvent;
+import com.eventorium.data.event.models.event.EditableEvent;
+import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.event.models.event.EventDetails;
+import com.eventorium.data.event.models.event.EventFilter;
+import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.event.services.EventService;
-import com.eventorium.data.shared.models.ErrorResponse;
-import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.HashMap;

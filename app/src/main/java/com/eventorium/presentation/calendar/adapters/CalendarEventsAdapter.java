@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;

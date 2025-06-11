@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,9 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.Budget;
-import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.event.models.Privacy;
+import com.eventorium.data.event.models.budget.Budget;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
@@ -118,7 +115,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
             if(result.getError() == null && !result.getData().getItems().isEmpty()) {
                 Budget budget = result.getData();
                 purchasedCategories =  budget.getItems().stream()
-                        .map(BudgetItem::getCategory)
+                        .map(BudgetItemRequest::getCategory)
                         .collect(toList());
                 binding.plannedAmount.setText("Planned amount: " + String.format("%.2f", budget.getPlannedAmount()));
                 binding.spentAmount.setText("Spent amount: " + String.format("%.2f", budget.getSpentAmount()));

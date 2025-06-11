@@ -1,7 +1,7 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.models.Invitation;
-import com.eventorium.data.event.models.InvitationDetails;
+import com.eventorium.data.event.models.invitation.Invitation;
+import com.eventorium.data.event.models.invitation.InvitationDetails;
 
 import java.util.List;
 

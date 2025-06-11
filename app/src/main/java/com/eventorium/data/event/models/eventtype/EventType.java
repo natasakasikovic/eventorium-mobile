@@ -1,4 +1,4 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.eventtype;
 
 import android.os.Parcel;
 import android.os.Parcelable;
