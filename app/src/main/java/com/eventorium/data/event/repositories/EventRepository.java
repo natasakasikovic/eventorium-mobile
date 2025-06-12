@@ -102,6 +102,10 @@ public class EventRepository {
         return executeExport(service.exportGuestListToPdf(id), context);
     }
 
+    public LiveData<Result<Uri>> exportEventStatisticsToPdf(Long id, Context context) {
+        return executeExport(service.exportStatisticsToPdf(id), context);
+    }
+
     private LiveData<Result<Uri>> executeExport(Call<ResponseBody> call, Context context) {
         MutableLiveData<Result<Uri>> result = new MutableLiveData<>();
         call.enqueue(handlePdfExport(context, result));

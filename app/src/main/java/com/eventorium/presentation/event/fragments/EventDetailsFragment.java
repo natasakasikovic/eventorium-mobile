@@ -29,7 +29,7 @@ import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.event.adapters.ActivitiesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
-import com.eventorium.presentation.review.viewmodels.RatingViewModel;
+import com.eventorium.presentation.interaction.viewmodels.RatingViewModel;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 

@@ -72,4 +72,7 @@ public interface EventService {
 
     @GET("events/passed")
     Call<List<PastEvent>> getPassedEvents();
+
+    @GET("events/{id}/pdf-statistics")
+    Call<ResponseBody> exportStatisticsToPdf(@Path("id") Long id);
 }

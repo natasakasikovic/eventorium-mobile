@@ -1,5 +1,7 @@
 package com.eventorium.presentation.event.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -72,7 +74,10 @@ public class PastEventsOverviewFragment extends Fragment {
 
             @Override
             public void onPdfExportClicked(PastEvent event) {
-                // TODO: call method to export statistics to pdf
+                viewModel.exportEventStatisticsToPdf(event.getId(), requireContext()).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null) openPdf(result.getData());
+                    else Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                });
             }
         });
         recyclerView.setAdapter(adapter);
@@ -86,5 +91,12 @@ public class PastEventsOverviewFragment extends Fragment {
             } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void openPdf(Uri pdfUri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(pdfUri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(intent);
     }
 }
