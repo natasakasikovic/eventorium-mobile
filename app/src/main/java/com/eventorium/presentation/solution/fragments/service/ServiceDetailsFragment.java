@@ -17,11 +17,13 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
+import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
@@ -41,6 +43,7 @@ public class ServiceDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
+    public static final String ARG_TYPE = "ARG_TYPE";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
     public static final String ARG_EVENT = "ARG_EVENT";
 
@@ -110,6 +113,7 @@ public class ServiceDetailsFragment extends Fragment {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
+        binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
         return binding.getRoot();
     }
 
@@ -197,6 +201,14 @@ public class ServiceDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(CompanyDetailsFragment.ARG_COMPANY_ID, companyId);
         navController.navigate(R.id.action_serviceDetails_to_company, args);
+    }
+
+    private void navigateToComments() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putSerializable(CommentsOverviewFragment.ARG_TYPE, ReviewType.SERVICE);
+        args.putLong(CommentsOverviewFragment.ARG_ID, id);
+        navController.navigate(R.id.action_serviceDetails_to_comments, args);
     }
 
     private void navigateToProvider() {

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
+import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.interaction.services.CommentService;
 import com.eventorium.data.shared.models.Result;
 
@@ -17,29 +18,34 @@ import javax.inject.Inject;
 
 public class CommentRepository {
 
-    private final CommentService commentService;
+    private final CommentService service;
 
     @Inject
-    public CommentRepository(CommentService commentService) {
-        this.commentService = commentService;
+    public CommentRepository(CommentService service) {
+        this.service = service;
     }
 
     public LiveData<Result<Comment>> createComment(CreateComment request) {
         MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.createComment(request).enqueue(handleValidationResponse(result));
+        service.createComment(request).enqueue(handleValidationResponse(result));
         return result;
     }
 
     public LiveData<Result<List<Comment>>> getPendingComments() {
         MutableLiveData<Result<List<Comment>>> liveData = new MutableLiveData<>();
-        commentService.getPendingComments().enqueue(handleGeneralResponse(liveData));
+        service.getPendingComments().enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
     public LiveData<Result<Comment>> updateComment(Long id, UpdateComment request) {
         MutableLiveData<Result<Comment>> result = new MutableLiveData<>();
-        commentService.updateComment(id, request).enqueue(handleValidationResponse(result));
+        service.updateComment(id, request).enqueue(handleValidationResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<Comment>>> getAcceptedCommentsForTarget(ReviewType type, Long objectId) {
+        MutableLiveData<Result<List<Comment>>> result = new MutableLiveData<>();
+        service.getAcceptedCommentsForTarget(type, objectId).enqueue(handleGeneralResponse(result));
         return result;
     }
 }
-

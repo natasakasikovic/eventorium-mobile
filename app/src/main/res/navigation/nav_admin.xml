@@ -94,10 +94,13 @@
         tools:layout="@layout/fragment_product_details">
         <action
             android:id="@+id/action_productDetails_to_provider"
-            app:destination="@+id/otherProfileFragment" />
+            app:destination="@id/otherProfileFragment" />
         <action
             android:id="@+id/action_productDetails_to_company"
-            app:destination="@+id/companyDetailsFragment" />
+            app:destination="@id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_comments"
+            app:destination="@+id/commentsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -136,6 +139,15 @@
         <action
             android:id="@+id/action_serviceDetails_to_company"
             app:destination="@+id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_comments"
+            app:destination="@+id/commentsOverviewFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/commentsOverviewFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment"
+        android:label="fragment_comments_overview"
+        tools:layout="@layout/fragment_comments_overview" />
 
 </navigation>

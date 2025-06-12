@@ -21,6 +21,7 @@ import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -28,6 +29,7 @@ import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
+import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
@@ -44,6 +46,7 @@ public class ProductDetailsFragment extends Fragment {
     private LoginViewModel loginViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
+    public static final String ARG_TYPE = "ARG_TYPE";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
     public static final String ARG_EVENT = "ARG_EVENT";
 
@@ -121,6 +124,7 @@ public class ProductDetailsFragment extends Fragment {
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.purchaseButton.setOnClickListener(v -> onPurchase());
+        binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
         return binding.getRoot();
     }
 
@@ -139,11 +143,10 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void onPurchase() {
-        if(event != null) {
+        if(event != null)
             purchaseProduct(event, plannedAmount);
-        } else {
+        else
             draftedPurchase();
-        }
     }
 
     private void draftedPurchase() {
@@ -221,6 +224,14 @@ public class ProductDetailsFragment extends Fragment {
         Bundle args = new Bundle();
         args.putParcelable(ChatFragment.ARG_RECIPIENT, provider);
         navController.navigate(R.id.chatFragment, args);
+    }
+
+    private void navigateToComments() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putSerializable(CommentsOverviewFragment.ARG_TYPE, ReviewType.PRODUCT);
+        args.putLong(CommentsOverviewFragment.ARG_ID, id);
+        navController.navigate(R.id.action_productDetails_to_comments, args);
     }
 
     @SuppressLint("SetTextI18n")
