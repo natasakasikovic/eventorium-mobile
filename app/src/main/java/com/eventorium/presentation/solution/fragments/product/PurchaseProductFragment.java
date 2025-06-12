@@ -73,7 +73,9 @@ public class PurchaseProductFragment extends Fragment {
 
     private void onPurchase() {
         Event event = (Event) binding.eventSelector.getSelectedItem();
-        budgetViewModel.purchaseProduct(event.getId(), buildItem()).observe(getViewLifecycleOwner(), result -> {
+        BudgetItemRequest item = buildItem();
+        if(item == null) return;
+        budgetViewModel.purchaseProduct(event.getId(), item).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
                 Toast.makeText(
                         requireContext(),
@@ -93,10 +95,20 @@ public class PurchaseProductFragment extends Fragment {
     }
 
     private BudgetItemRequest buildItem() {
+        String plannedAmount = String.valueOf(binding.plannedAmountText.getText());
+        if(plannedAmount.trim().isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return null;
+        }
+
         return BudgetItemRequest.builder()
                 .itemId(productId)
                 .category(category)
-                .plannedAmount(Double.parseDouble(String.valueOf(binding.plannedAmountText.getText())))
+                .plannedAmount(Double.parseDouble(plannedAmount))
                 .build();
     }
 
