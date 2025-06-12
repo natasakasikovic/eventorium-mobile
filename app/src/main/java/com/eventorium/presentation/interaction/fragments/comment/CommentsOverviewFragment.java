@@ -27,7 +27,7 @@ public class CommentsOverviewFragment extends Fragment {
     private ReviewType type;
     private Long objectId;
     public static final String ARG_TYPE = "ARG_TYPE";
-    public static final String ARG_ID = "ARG_SERVICE_ID";
+    public static final String ARG_ID = "ARG_ITEM_ID";
 
     public CommentsOverviewFragment() { }
 
