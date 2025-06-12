@@ -23,6 +23,7 @@ import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
+import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
@@ -205,8 +206,8 @@ public class ServiceDetailsFragment extends Fragment {
     private void navigateToComments() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TYPE, ReviewType.SERVICE);
-        args.putLong(ARG_ID, id);
+        args.putSerializable(CommentsOverviewFragment.ARG_TYPE, ReviewType.SERVICE);
+        args.putLong(CommentsOverviewFragment.ARG_ID, id);
         navController.navigate(R.id.action_serviceDetails_to_comments, args);
     }
 

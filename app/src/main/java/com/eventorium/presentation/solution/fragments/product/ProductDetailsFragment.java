@@ -29,6 +29,7 @@ import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
+import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
@@ -228,8 +229,8 @@ public class ProductDetailsFragment extends Fragment {
     private void navigateToComments() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TYPE, ReviewType.PRODUCT);
-        args.putLong(ARG_ID, id);
+        args.putSerializable(CommentsOverviewFragment.ARG_TYPE, ReviewType.PRODUCT);
+        args.putLong(CommentsOverviewFragment.ARG_ID, id);
         navController.navigate(R.id.action_productDetails_to_comments, args);
     }
 
