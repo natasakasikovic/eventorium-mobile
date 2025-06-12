@@ -19,7 +19,7 @@ import lombok.Setter;
 public class BudgetItem {
     private Double plannedAmount;
     private Double spentAmount;
-    private LocalDateTime purchased;
+    private LocalDateTime processedAt;
     private SolutionType type;
     private Long solutionId;
     private String solutionName;
