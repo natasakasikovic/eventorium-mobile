@@ -53,7 +53,6 @@ public class ManageableEventsFragment extends Fragment {
         viewModel = provider.get(ManageableEventViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
         navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-
     }
 
     @Override

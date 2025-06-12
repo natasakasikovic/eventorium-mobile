@@ -16,11 +16,9 @@ import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventFilter;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.UpdateEvent;
 import com.eventorium.data.event.services.EventService;
-import com.eventorium.data.shared.models.ErrorResponse;
-import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.HashMap;
@@ -152,6 +150,12 @@ public class EventRepository {
     public LiveData<Result<ResponseBody>> updateEvent(Long id, UpdateEvent event) {
         MutableLiveData<Result<ResponseBody>> result = new MutableLiveData<>();
         service.updateEvent(id, event).enqueue(handleValidationResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<PastEvent>>> getPassedEvents() {
+        MutableLiveData<Result<List<PastEvent>>> result = new MutableLiveData<>();
+        service.getPassedEvents().enqueue(handleGeneralResponse(result));
         return result;
     }
 }
