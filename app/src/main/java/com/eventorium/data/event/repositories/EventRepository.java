@@ -15,6 +15,7 @@ import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventFilter;
+import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.UpdateEvent;
@@ -160,6 +161,12 @@ public class EventRepository {
     public LiveData<Result<List<PastEvent>>> getPassedEvents() {
         MutableLiveData<Result<List<PastEvent>>> result = new MutableLiveData<>();
         service.getPassedEvents().enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
+        MutableLiveData<Result<EventRatingsStatistics>> result = new MutableLiveData<>();
+        service.getStatistics(id).enqueue(handleGeneralResponse(result));
         return result;
     }
 }

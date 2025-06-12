@@ -12,6 +12,7 @@ import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventFilter;
+import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.UpdateEvent;
@@ -112,5 +113,9 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<List<PastEvent>>> getPassedEvents() {
         return repository.getPassedEvents();
+    }
+
+    public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
+        return repository.getStatistics(id);
     }
 }

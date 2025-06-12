@@ -6,6 +6,7 @@ import com.eventorium.data.event.models.CreateEvent;
 import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
+import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.EventSummary;
 import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.UpdateEvent;
@@ -75,4 +76,7 @@ public interface EventService {
 
     @GET("events/{id}/pdf-statistics")
     Call<ResponseBody> exportStatisticsToPdf(@Path("id") Long id);
+
+    @GET("events/{id}/statistics")
+    Call<EventRatingsStatistics> getStatistics(@Path("id") Long id);
 }

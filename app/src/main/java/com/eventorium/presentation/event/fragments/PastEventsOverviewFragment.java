@@ -69,7 +69,9 @@ public class PastEventsOverviewFragment extends Fragment {
             @Override
             public void onStatisticsClicked(PastEvent event) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                // TODO: navigate to event statistics fragment
+                Bundle args = new Bundle();
+                args.putLong(EventRatingStatisticsFragment.ARG_EVENT_ID, event.getId());
+                navController.navigate(R.id.action_past_events_to_stats, args);
             }
 
             @Override

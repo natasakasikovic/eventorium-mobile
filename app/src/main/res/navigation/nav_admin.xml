@@ -142,7 +142,14 @@
         android:id="@+id/pastEventsOverview"
         android:name="com.eventorium.presentation.event.fragments.PastEventsOverviewFragment"
         tools:layout="@layout/fragment_past_events_overview">
-
+        <action
+            android:id="@+id/action_past_events_to_stats"
+            app:destination="@id/event_statistics" />
     </fragment>
+
+    <fragment
+        android:id="@+id/event_statistics"
+        android:name="com.eventorium.presentation.event.fragments.EventRatingStatisticsFragment"
+        tools:layout="@layout/fragment_event_rating_statistics" />
 
 </navigation>
