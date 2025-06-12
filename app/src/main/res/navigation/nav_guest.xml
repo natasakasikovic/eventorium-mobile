@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_serviceDetails_to_company"
             app:destination="@+id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_comments"
+            app:destination="@id/commentsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -67,6 +70,9 @@
         <action
             android:id="@+id/action_productDetails_to_company"
             app:destination="@+id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_comments"
+            app:destination="@+id/commentsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -99,7 +105,6 @@
             android:id="@+id/user_register_to_company_register"
             app:destination="@id/companyRegisterFragment" />
     </fragment>
-
 
     <fragment
         android:id="@+id/companyRegisterFragment"
@@ -157,5 +162,11 @@
         android:id="@+id/messagesFragment"
         android:name="com.eventorium.presentation.interaction.fragments.chat.ChatRoomFragment"
         tools:layout="@layout/fragment_chat_room"/>
+
+    <fragment
+        android:id="@+id/commentsOverviewFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment"
+        android:label="fragment_comments_overview"
+        tools:layout="@layout/fragment_comments_overview" />
 
 </navigation>
