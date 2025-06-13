@@ -83,54 +83,62 @@ public class EventRatingStatisticsFragment extends Fragment {
         });
     }
 
-
     private void fillChart(EventRatingsStatistics event) {
-        barDataSet = new BarDataSet(getBarEntries(event.getRatingsCount()), "Rating");
-
-        int[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA};
-        barDataSet.setColors(colors);
-        barDataSet.setValueTextSize(11f);
         barChart = binding.idBarChart;
-        BarData data = new BarData(barDataSet);
-        barChart.setData(data);
-        barChart.animateY(1000);
-        barChart.getDescription().setEnabled(false);
-        barChart.setDragEnabled(true);
-        barChart.setVisibleXRangeMaximum(6);
-        data.setBarWidth(0.15f);
 
+        setupBarData(event.getRatingsCount());
+        setupXAxis();
+        setupYAxis();
+        setupChartStyle();
+
+        barChart.invalidate();
+    }
+
+    private void setupBarData(Map<Integer, Integer> ratingsCount) {
+        BarDataSet barDataSet = new BarDataSet(getBarEntries(ratingsCount), "Rating");
+        barDataSet.setColors(Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA);
+        barDataSet.setValueTextSize(11f);
+
+        BarData barData = new BarData(barDataSet);
+        barData.setBarWidth(0.15f);
+
+        barChart.setData(barData);
+    }
+
+    private ArrayList<BarEntry> getBarEntries(Map<Integer, Integer> data) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            entries.add(new BarEntry(i, data.getOrDefault(i, 0)));
+        }
+        return entries;
+    }
+
+    private void setupXAxis() {
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1);
+        xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
         xAxis.setDrawGridLines(true);
         xAxis.setGridColor(Color.LTGRAY);
         xAxis.setGridLineWidth(1f);
+        barChart.getXAxis().setAxisMinimum(0);
+    }
 
+    private void setupYAxis() {
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setDrawGridLines(true);
         leftAxis.setGridColor(Color.LTGRAY);
         leftAxis.setGridLineWidth(1f);
         leftAxis.setTextColor(Color.WHITE);
 
-        YAxis rightAxis = barChart.getAxisRight();
-        rightAxis.setEnabled(false);
-
-        barChart.getXAxis().setAxisMinimum(0);
-        barChart.animate();
-
-        barChart.invalidate();
+        barChart.getAxisRight().setEnabled(false);
     }
 
-    private ArrayList<BarEntry> getBarEntries(Map<Integer, Integer> data) {
-        barEntries = new ArrayList<>();
-
-        barEntries.add(new BarEntry(1, data.get(1)));
-        barEntries.add(new BarEntry(2, data.get(2)));
-        barEntries.add(new BarEntry(3, data.get(3)));
-        barEntries.add(new BarEntry(4, data.get(4)));
-        barEntries.add(new BarEntry(5, data.get(5)));
-
-        return barEntries;
+    private void setupChartStyle() {
+        barChart.animateY(1000);
+        barChart.setDragEnabled(true);
+        barChart.setVisibleXRangeMaximum(6);
+        barChart.getDescription().setEnabled(false);
     }
+
 }
