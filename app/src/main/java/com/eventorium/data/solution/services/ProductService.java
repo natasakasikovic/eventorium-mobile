@@ -37,9 +37,6 @@ public interface ProductService {
     @GET("products/{id}/image")
     Call<ResponseBody> getProductImage(@Path("id") Long id);
 
-    @GET("products/suggestions")
-    Call<List<ProductSummary>> getSuggestions(@Query("categoryId") Long id, @Query("price") Double price);
-
     @GET("products/top-five-products")
     Call<List<ProductSummary>> getTopProducts();
 

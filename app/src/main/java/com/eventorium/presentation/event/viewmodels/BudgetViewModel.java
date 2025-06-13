@@ -38,15 +38,6 @@ public class BudgetViewModel extends ViewModel {
         this.serviceRepository = serviceRepository;
     }
 
-
-    public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Long eventId, Double price) {
-        return serviceRepository.getSuggestedServices(categoryId, eventId, price);
-    }
-
-    public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
-        return productRepository.getSuggestedProducts(categoryId, price);
-    }
-
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem product) {
         return budgetRepository.purchaseProduct(eventId, product);
     }

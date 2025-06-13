@@ -100,12 +100,6 @@ public class ProductRepository {
         return liveData;
     }
 
-    public LiveData<List<ProductSummary>> getSuggestedProducts(Long categoryId, Double price) {
-        MutableLiveData<List<ProductSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        service.getSuggestions(categoryId, price).enqueue(handleSuccessfulResponse(liveData));
-        return liveData;
-    }
-
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
         service.searchProducts(keyword).enqueue(handleGeneralResponse(liveData));

@@ -135,20 +135,6 @@ public class BudgetCategoryFragment extends Fragment {
             return;
         }
         Double price = Double.parseDouble(String.valueOf(binding.plannedAmount.getText()));
-        if(binding.productChecked.isChecked()) {
-            binding.itemsRecycleView.setAdapter(productsAdapter);
-            searchProducts(category.getId(), price);
-        } else {
-            binding.itemsRecycleView.setAdapter(servicesAdapter);
-            searchServices(category.getId(), price);
-        }
-    }
-
-    private void searchProducts(Long id, Double price) {
-        budgetViewModel.getSuggestedProducts(id, price).observe(getViewLifecycleOwner(), products -> {
-            productsAdapter.setData(products);
-            loadProductImages(products);
-        });
     }
 
     private void loadProductImages(List<ProductSummary> products) {
@@ -178,14 +164,6 @@ public class BudgetCategoryFragment extends Fragment {
                 })
         );
     }
-
-    private void searchServices(Long id, Double price) {
-        budgetViewModel.getSuggestedServices(id, event.getId(), price).observe(getViewLifecycleOwner(), services -> {
-            servicesAdapter.setData(services);
-            loadServiceImages(services);
-        });
-    }
-
 
     @Override
     public void onDestroy() {

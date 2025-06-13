@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.Budget;
 import com.eventorium.data.event.models.BudgetItem;
+import com.eventorium.data.event.models.BudgetSuggestion;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
@@ -34,6 +35,12 @@ public class BudgetRepository {
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem item) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
         budgetService.purchaseProduct(eventId, item).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<BudgetSuggestion>>> getBudgetSuggestions(Long eventId, Long categoryId, double price) {
+        MutableLiveData<Result<List<BudgetSuggestion>>> result = new MutableLiveData<>();
+        budgetService.getBudgetSuggestions(eventId, categoryId, price).enqueue(handleGeneralResponse(result));
         return result;
     }
 
