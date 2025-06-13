@@ -12,7 +12,9 @@ import com.eventorium.data.event.models.EditableEvent;
 import com.eventorium.data.event.models.Event;
 import com.eventorium.data.event.models.EventDetails;
 import com.eventorium.data.event.models.EventFilter;
+import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.UpdateEvent;
 import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
@@ -89,6 +91,10 @@ public class EventViewModel extends ViewModel {
         return repository.exportGuestListToPdf(id, context);
     }
 
+    public LiveData<Result<Uri>> exportEventStatisticsToPdf(Long id, Context context) {
+        return repository.exportEventStatisticsToPdf(id, context);
+    }
+
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         return repository.getAgenda(id);
     }
@@ -103,5 +109,13 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<ResponseBody>> updateEvent(Long eventId, UpdateEvent event) {
         return repository.updateEvent(eventId, event);
+    }
+
+    public LiveData<Result<List<PastEvent>>> getPassedEvents() {
+        return repository.getPassedEvents();
+    }
+
+    public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
+        return repository.getStatistics(id);
     }
 }
