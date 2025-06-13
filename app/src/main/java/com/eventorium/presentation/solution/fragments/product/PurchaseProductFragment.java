@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -17,15 +16,13 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.solution.models.product.Product;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.databinding.FragmentPurchaseProductBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -76,7 +73,9 @@ public class PurchaseProductFragment extends Fragment {
 
     private void onPurchase() {
         Event event = (Event) binding.eventSelector.getSelectedItem();
-        budgetViewModel.purchaseProduct(event.getId(), buildItem()).observe(getViewLifecycleOwner(), result -> {
+        BudgetItemRequest item = buildItem();
+        if(item == null) return;
+        budgetViewModel.purchaseProduct(event.getId(), item).observe(getViewLifecycleOwner(), result -> {
             if(result.getError() == null) {
                 Toast.makeText(
                         requireContext(),
@@ -95,11 +94,21 @@ public class PurchaseProductFragment extends Fragment {
         });
     }
 
-    private BudgetItem buildItem() {
-        return BudgetItem.builder()
+    private BudgetItemRequest buildItem() {
+        String plannedAmount = String.valueOf(binding.plannedAmountText.getText());
+        if(plannedAmount.trim().isEmpty()) {
+            Toast.makeText(
+                    requireContext(),
+                    R.string.please_fill_in_all_fields,
+                    Toast.LENGTH_SHORT
+            ).show();
+            return null;
+        }
+
+        return BudgetItemRequest.builder()
                 .itemId(productId)
                 .category(category)
-                .plannedAmount(Double.parseDouble(String.valueOf(binding.plannedAmountText.getText())))
+                .plannedAmount(Double.parseDouble(plannedAmount))
                 .build();
     }
 
@@ -111,7 +120,7 @@ public class PurchaseProductFragment extends Fragment {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        eventViewModel.getDraftedEvents().observe(getViewLifecycleOwner(), result -> {
+        eventViewModel.getFutureEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 adapter.addAll(result.getData());
                 adapter.notifyDataSetChanged();

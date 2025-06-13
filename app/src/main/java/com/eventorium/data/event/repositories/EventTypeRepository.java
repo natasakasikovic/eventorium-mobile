@@ -4,18 +4,16 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.event.models.CreateEventType;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.CreateEventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.event.services.EventTypeService;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.utils.FileUtil;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,10 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EventTypeRepository {
 

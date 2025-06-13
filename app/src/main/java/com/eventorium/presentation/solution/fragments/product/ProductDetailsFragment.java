@@ -19,8 +19,8 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.ChatUserDetails;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.BudgetItem;
-import com.eventorium.data.event.models.Event;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
@@ -158,7 +158,7 @@ public class ProductDetailsFragment extends Fragment {
     }
 
     private void purchaseProduct(Event event, Double plannedAmount) {
-        BudgetItem item = BudgetItem.builder()
+        BudgetItemRequest item = BudgetItemRequest.builder()
                 .itemId(id)
                 .plannedAmount(plannedAmount)
                 .category(category)

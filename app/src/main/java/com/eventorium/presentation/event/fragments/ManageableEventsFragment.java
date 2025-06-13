@@ -17,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.databinding.FragmentManageableEventsBinding;
 import com.eventorium.presentation.event.adapters.ManageableEventAdapter;
+import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragment;
+import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
@@ -72,7 +74,7 @@ public class ManageableEventsFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.eventsRecycleView;
-        adapter = new ManageableEventAdapter(new ArrayList<>(), new OnManageListener<>() {
+        adapter = new ManageableEventAdapter(new ArrayList<>(), new OnManageEventListener() {
 
             @Override
             public void onSeeMoreClick(EventSummary item) {
@@ -84,6 +86,12 @@ public class ManageableEventsFragment extends Fragment {
             public void onEditClick(EventSummary item) {
                 navController.navigate(R.id.action_manage_events_to_edit_event,
                         EditEventFragment.newInstance(item.getId()).getArguments());
+            }
+
+            @Override
+            public void navigateToBudget(EventSummary item) {
+                navController.navigate(R.id.action_manage_events_to_budget,
+                        BudgetItemsListFragment.newInstance(item.getId()).getArguments());
             }
 
             @Override

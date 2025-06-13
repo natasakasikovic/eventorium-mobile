@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventType;
-import com.eventorium.data.event.models.Privacy;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.databinding.FragmentBudgetPlanningBinding;
 import com.eventorium.presentation.event.fragments.agenda.AgendaFragment;
 import com.eventorium.presentation.shared.adapters.BudgetPagerAdapter;

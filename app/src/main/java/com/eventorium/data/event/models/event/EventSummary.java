@@ -1,4 +1,4 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.event;
 
 import android.graphics.Bitmap;
 import android.os.Parcel;

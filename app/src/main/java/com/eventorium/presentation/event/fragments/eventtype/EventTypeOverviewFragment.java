@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.databinding.FragmentEventTypeOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventTypesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;

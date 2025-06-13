@@ -1,10 +1,11 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.event;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.eventorium.data.shared.models.City;
+import com.eventorium.data.event.models.Privacy;
+import com.eventorium.data.event.models.eventtype.EventType;
 
 import java.time.LocalDate;
 
@@ -14,12 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter

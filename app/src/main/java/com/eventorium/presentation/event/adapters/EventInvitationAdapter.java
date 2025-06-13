@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.Invitation;
+import com.eventorium.data.event.models.invitation.Invitation;
 
 import com.google.android.material.chip.Chip;
 

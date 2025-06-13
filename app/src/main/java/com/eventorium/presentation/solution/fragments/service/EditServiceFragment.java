@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.utils.ImageUpload;
 import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;

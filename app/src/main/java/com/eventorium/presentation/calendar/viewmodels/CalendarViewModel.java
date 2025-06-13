@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.repositories.EventRepository;
-import com.eventorium.data.event.models.CalendarEvent;
+import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.shared.models.Result;
