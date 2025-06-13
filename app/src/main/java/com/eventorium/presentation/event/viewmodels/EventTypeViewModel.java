@@ -7,8 +7,8 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.event.models.CreateEventType;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.CreateEventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.shared.models.Result;
 

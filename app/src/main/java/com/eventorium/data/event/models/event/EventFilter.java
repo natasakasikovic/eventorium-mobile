@@ -1,6 +1,4 @@
-package com.eventorium.data.event.models;
-
-import com.eventorium.data.shared.models.City;
+package com.eventorium.data.event.models.event;
 
 import java.time.LocalDate;
 
@@ -15,12 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateEvent {
+public class EventFilter {
     private String name;
     private String description;
-    private LocalDate date;
+    private String type;
     private Integer maxParticipants;
-    private EventType eventType;
-    private City city;
-    private String address;
+    private String city;
+    private LocalDate from;
+    private LocalDate to;
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
 
 import java.util.List;
 

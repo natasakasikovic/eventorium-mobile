@@ -1,5 +1,6 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.event;
 
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.models.City;
 
 import java.time.LocalDate;

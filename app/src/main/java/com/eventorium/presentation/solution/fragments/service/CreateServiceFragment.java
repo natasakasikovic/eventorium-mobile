@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;

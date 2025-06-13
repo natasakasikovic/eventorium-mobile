@@ -1,6 +1,6 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
 
 import java.util.List;
 

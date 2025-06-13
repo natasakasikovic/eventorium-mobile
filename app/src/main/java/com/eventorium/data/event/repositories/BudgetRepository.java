@@ -5,14 +5,14 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.event.models.Budget;
-import com.eventorium.data.event.models.BudgetItem;
 import com.eventorium.data.event.models.BudgetSuggestion;
+import com.eventorium.data.event.models.budget.Budget;
+import com.eventorium.data.event.models.budget.BudgetItem;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.services.BudgetService;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
 
@@ -32,7 +32,13 @@ public class BudgetRepository {
         return result;
     }
 
-    public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItem item) {
+    public LiveData<Result<List<BudgetItem>>> getBudgetItems(Long eventId) {
+        MutableLiveData<Result<List<BudgetItem>>> result = new MutableLiveData<>();
+        budgetService.getBudgetItems(eventId).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItemRequest item) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
         budgetService.purchaseProduct(eventId, item).enqueue(handleGeneralResponse(result));
         return result;
@@ -44,9 +50,9 @@ public class BudgetRepository {
         return result;
     }
 
-    public LiveData<Result<List<SolutionReview>>> getBudgetItems() {
+    public LiveData<Result<List<SolutionReview>>> getAllBudgetItems() {
         MutableLiveData<Result<List<SolutionReview>>> result = new MutableLiveData<>();
-        budgetService.getBudgetItems().enqueue(handleGeneralResponse(result));
+        budgetService.getAllBudgetItems().enqueue(handleGeneralResponse(result));
         return result;
     }
 }

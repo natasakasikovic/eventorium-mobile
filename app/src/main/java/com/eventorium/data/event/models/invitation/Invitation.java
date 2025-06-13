@@ -1,6 +1,4 @@
-package com.eventorium.data.event.models;
-
-import java.util.List;
+package com.eventorium.data.event.models.invitation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Budget {
-    private Double plannedAmount;
-    private Double spentAmount;
-    private List<BudgetItem> items;
+public class Invitation {
+    private String email;
 }

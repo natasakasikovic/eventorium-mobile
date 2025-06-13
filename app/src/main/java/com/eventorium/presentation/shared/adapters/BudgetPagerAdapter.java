@@ -4,10 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.eventorium.data.event.models.Event;
-import com.eventorium.data.event.models.EventType;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.presentation.event.fragments.budget.BudgetItemsFragment;
-import com.eventorium.presentation.event.fragments.budget.PurchasedAndReservedFragment;
+import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragment;
 
 public class BudgetPagerAdapter extends FragmentStateAdapter {
 
@@ -23,7 +22,7 @@ public class BudgetPagerAdapter extends FragmentStateAdapter {
         if(position == 0) {
             return BudgetItemsFragment.newInstance(event);
         }
-        return PurchasedAndReservedFragment.newInstance(event);
+        return BudgetItemsListFragment.newInstance(event.getId());
     }
 
     @Override

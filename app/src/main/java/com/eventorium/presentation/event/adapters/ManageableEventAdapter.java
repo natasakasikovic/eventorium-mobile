@@ -10,16 +10,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
 
 public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdapter.ManageableEventViewHolder> {
 
-    private final OnManageListener<EventSummary> manageListener;
+    private final OnManageEventListener manageListener;
 
-    public ManageableEventAdapter(List<EventSummary> eventSummaries, OnManageListener<EventSummary> listener) {
+    public ManageableEventAdapter(List<EventSummary> eventSummaries, OnManageEventListener listener) {
         super(eventSummaries);
         manageListener = listener;
     }
@@ -43,6 +44,7 @@ public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdap
 
         Button seeMoreButton;
         Button editButton;
+        Button budgetButton;
         ImageView photoImageView;
 
         public ManageableEventViewHolder(@NonNull View itemView) {
@@ -51,6 +53,7 @@ public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdap
             cityTextView = itemView.findViewById(R.id.event_city);
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
             editButton = itemView.findViewById(R.id.edit_button);
+            budgetButton = itemView.findViewById(R.id.budgetButton);
             photoImageView = itemView.findViewById(R.id.event_photo);
         }
 
@@ -60,6 +63,7 @@ public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdap
             cityTextView.setText(event.getCity());
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(event));
             editButton.setOnClickListener(v -> manageListener.onEditClick(event));
+            budgetButton.setOnClickListener(v -> manageListener.navigateToBudget(event));
             photoImageView.setImageBitmap(event.getImage());
         }
     }

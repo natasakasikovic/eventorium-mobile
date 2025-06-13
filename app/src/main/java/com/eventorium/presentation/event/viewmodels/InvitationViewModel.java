@@ -3,8 +3,8 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.event.models.Invitation;
-import com.eventorium.data.event.models.InvitationDetails;
+import com.eventorium.data.event.models.invitation.Invitation;
+import com.eventorium.data.event.models.invitation.InvitationDetails;
 import com.eventorium.data.event.repositories.InvitationRepository;
 import com.eventorium.data.shared.models.Result;
 

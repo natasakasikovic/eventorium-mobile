@@ -5,7 +5,7 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.event.models.EventSummary;
+import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
 import com.eventorium.data.shared.models.Result;
 

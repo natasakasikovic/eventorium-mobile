@@ -1,4 +1,4 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.invitation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +8,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Invitation {
-    private String email;
+public class InvitationDetails {
+    private Long eventId;
+    private String eventName;
+    private String eventDate;
 }
