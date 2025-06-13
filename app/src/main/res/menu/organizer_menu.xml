@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_review"
         android:title="@string/review"/>
 
+    <item
+        android:id="@+id/nav_event_statistics"
+        android:title="@string/event_statistics"
+        android:icon="@drawable/ic_chart" />
+
 </menu>
