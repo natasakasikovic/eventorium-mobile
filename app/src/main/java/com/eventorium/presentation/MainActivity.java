@@ -226,6 +226,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.reviewFragment);
         } else if (id == R.id.nav_manageable_events) {
             navController.navigate(R.id.manageableEventsFragment);
+        } else if (id == R.id.nav_event_statistics) {
+            navController.navigate(R.id.pastEventsOverview);
         }
     }
 
@@ -245,6 +247,8 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.userReportsOverviewFragment);
         } else if (id == R.id.nav_manage_comments) {
             navController.navigate(R.id.manageCommentsFragment);
+        } else if (id == R.id.nav_event_statistics) {
+            navController.navigate(R.id.pastEventsOverview);
         }
     }
 

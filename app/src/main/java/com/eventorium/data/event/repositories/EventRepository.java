@@ -8,6 +8,8 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.event.models.EventRatingsStatistics;
+import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.event.Activity;
 import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.event.models.event.CreateEvent;
@@ -101,6 +103,10 @@ public class EventRepository {
         return executeExport(service.exportGuestListToPdf(id), context);
     }
 
+    public LiveData<Result<Uri>> exportEventStatisticsToPdf(Long id, Context context) {
+        return executeExport(service.exportStatisticsToPdf(id), context);
+    }
+
     private LiveData<Result<Uri>> executeExport(Call<ResponseBody> call, Context context) {
         MutableLiveData<Result<Uri>> result = new MutableLiveData<>();
         call.enqueue(handlePdfExport(context, result));
@@ -149,6 +155,18 @@ public class EventRepository {
     public LiveData<Result<ResponseBody>> updateEvent(Long id, UpdateEvent event) {
         MutableLiveData<Result<ResponseBody>> result = new MutableLiveData<>();
         service.updateEvent(id, event).enqueue(handleValidationResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<PastEvent>>> getPassedEvents() {
+        MutableLiveData<Result<List<PastEvent>>> result = new MutableLiveData<>();
+        service.getPassedEvents().enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
+        MutableLiveData<Result<EventRatingsStatistics>> result = new MutableLiveData<>();
+        service.getStatistics(id).enqueue(handleGeneralResponse(result));
         return result;
     }
 }

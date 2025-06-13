@@ -1,5 +1,7 @@
 package com.eventorium.data.event.services;
 
+import com.eventorium.data.event.models.EventRatingsStatistics;
+import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.event.Activity;
 import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.event.models.event.CreateEvent;
@@ -68,4 +70,13 @@ public interface EventService {
 
     @PUT("events/{id}")
     Call<ResponseBody> updateEvent(@Path("id") Long id, @Body UpdateEvent event);
+
+    @GET("events/passed")
+    Call<List<PastEvent>> getPassedEvents();
+
+    @GET("events/{id}/pdf-statistics")
+    Call<ResponseBody> exportStatisticsToPdf(@Path("id") Long id);
+
+    @GET("events/{id}/statistics")
+    Call<EventRatingsStatistics> getStatistics(@Path("id") Long id);
 }

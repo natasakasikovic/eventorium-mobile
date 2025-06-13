@@ -239,5 +239,6 @@
     <string name="edit_event">Edit event information and save</string>
     <string name="reservation_cancellation_waring">If you modify event date please note that all reservations with a cancellation deadline that has not passed will be canceled. Reservations with a passed cancellation deadline will not be affected.</string>
     <string name="purchased_and_reserved">Purchased and Reserved</string>
+    <string name="event_statistics">Event statistics</string>
     <string name="see_comments">See comments</string>
 </resources>

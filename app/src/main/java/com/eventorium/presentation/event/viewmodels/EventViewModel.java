@@ -6,6 +6,8 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.event.models.EventRatingsStatistics;
+import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.event.Activity;
 import com.eventorium.data.event.models.event.CreateEvent;
 import com.eventorium.data.event.models.event.EditableEvent;
@@ -89,6 +91,10 @@ public class EventViewModel extends ViewModel {
         return repository.exportGuestListToPdf(id, context);
     }
 
+    public LiveData<Result<Uri>> exportEventStatisticsToPdf(Long id, Context context) {
+        return repository.exportEventStatisticsToPdf(id, context);
+    }
+
     public LiveData<Result<List<Activity>>> getAgenda(Long id) {
         return repository.getAgenda(id);
     }
@@ -103,5 +109,13 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<ResponseBody>> updateEvent(Long eventId, UpdateEvent event) {
         return repository.updateEvent(eventId, event);
+    }
+
+    public LiveData<Result<List<PastEvent>>> getPassedEvents() {
+        return repository.getPassedEvents();
+    }
+
+    public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
+        return repository.getStatistics(id);
     }
 }
