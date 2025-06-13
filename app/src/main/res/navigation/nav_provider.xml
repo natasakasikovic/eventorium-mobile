@@ -75,6 +75,9 @@
         <action
             android:id="@id/action_productDetails_to_company"
             app:destination="@id/providerCompanyFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_comments"
+            app:destination="@id/commentsOverviewFragment" />
     </fragment>
 
     <fragment
@@ -95,9 +98,9 @@
         android:label="fragment_manage_reservation"
         tools:layout="@layout/fragment_manage_reservation">
         <action android:id="@+id/action_manageReservation_to_serviceDetails"
-            app:destination="@+id/serviceDetailsFragment" />
+            app:destination="@id/serviceDetailsFragment" />
         <action android:id="@+id/action_manageReservation_to_eventDetails"
-            app:destination="@+id/eventDetailsFragment" />
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -144,6 +147,15 @@
         android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
         android:label="fragment_service_details"
         tools:layout="@layout/fragment_service_details">
+        <action
+            android:id="@+id/action_serviceDetails_to_comments"
+            app:destination="@id/commentsOverviewFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/commentsOverviewFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment"
+        android:label="fragment_comments_overview"
+        tools:layout="@layout/fragment_comments_overview" />
 
 </navigation>
