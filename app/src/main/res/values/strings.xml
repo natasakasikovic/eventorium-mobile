@@ -241,4 +241,5 @@
     <string name="purchased_and_reserved">Purchased and Reserved</string>
     <string name="event_statistics">Event statistics</string>
     <string name="see_comments">See comments</string>
+    <string name="budget">Budget</string>
 </resources>
