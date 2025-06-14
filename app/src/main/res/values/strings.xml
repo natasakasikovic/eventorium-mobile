@@ -242,4 +242,5 @@
     <string name="event_statistics">Event statistics</string>
     <string name="see_comments">See comments</string>
     <string name="budget">Budget</string>
+    <string name="location_not_found">Location not found on map.</string>
 </resources>
