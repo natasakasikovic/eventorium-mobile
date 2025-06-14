@@ -5,6 +5,7 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.event.models.BudgetSuggestion;
 import com.eventorium.data.event.models.budget.Budget;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
@@ -40,6 +41,12 @@ public class BudgetRepository {
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItemRequest item) {
         MutableLiveData<Result<Product>> result = new MutableLiveData<>();
         budgetService.purchaseProduct(eventId, item).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<List<BudgetSuggestion>>> getBudgetSuggestions(Long eventId, Long categoryId, double price) {
+        MutableLiveData<Result<List<BudgetSuggestion>>> result = new MutableLiveData<>();
+        budgetService.getBudgetSuggestions(eventId, categoryId, price).enqueue(handleGeneralResponse(result));
         return result;
     }
 

@@ -114,12 +114,6 @@ public class ServiceRepository {
         return liveData;
     }
 
-    public LiveData<List<ServiceSummary>> getSuggestedServices(Long categoryId, Long eventId, Double price) {
-        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(Collections.emptyList());
-        service.getSuggestions(eventId, categoryId, price).enqueue(handleSuccessfulResponse(liveData));
-        return liveData;
-    }
-
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
         MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
         service.searchServices(keyword).enqueue(handleGeneralResponse(liveData));

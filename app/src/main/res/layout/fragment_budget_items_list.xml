@@ -10,7 +10,7 @@
         android:id="@+id/purchasedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/purchased_and_reserved"
+        android:text="@string/budget"
         android:layout_marginTop="20dp"
         android:textSize="24sp"
         android:textColor="@color/md_theme_primary"

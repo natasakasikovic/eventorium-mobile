@@ -24,32 +24,6 @@
         android:clickable="true"
         android:focusable="true"/>
 
-    <RadioGroup
-        android:layout_marginTop="10dp"
-        android:id="@+id/confirmationGroup"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="30dp">
-        <RadioButton
-            android:id="@+id/productChecked"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:checked="false"
-            android:enabled="true"
-            android:layout_marginEnd="30dp"
-            android:text="@string/product"/>
-        <RadioButton
-            android:id="@+id/serviceChecked"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:checked="false"
-            android:enabled="true"
-            android:text="@string/service"/>
-    </RadioGroup>
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/plannedAmountText"
         android:layout_width="match_parent"

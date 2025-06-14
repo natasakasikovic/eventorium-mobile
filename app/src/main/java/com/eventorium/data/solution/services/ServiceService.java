@@ -43,9 +43,6 @@ public interface ServiceService {
     @GET("services/{id}/images")
     Call<List<ImageResponse>> getServiceImages(@Path("id") Long id);
 
-    @GET("services/suggestions")
-    Call<List<ServiceSummary>> getSuggestions(@Query("eventId") Long eventId, @Query("categoryId") Long categoryId, @Query("price") Double price);
-
     @POST("services")
     Call<ServiceSummary> createService(@Body CreateService dto);
 
