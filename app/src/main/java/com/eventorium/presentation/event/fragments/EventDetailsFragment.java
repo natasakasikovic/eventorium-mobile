@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -177,9 +178,18 @@ public class EventDetailsFragment extends Fragment {
                 setupAddToCalendarButton();
                 setupExportBtns();
                 setUserEligibility();
+                showLocationOnMap();
             }
             else showError(result.getError());
         });
+    }
+
+    private void showLocationOnMap() {
+        String address = event.getAddress() + " " + event.getCity();
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.map_container, LocationMapFragment.newInstance(address));
+        transaction.commit();
     }
 
     @SuppressLint("SetTextI18n")
