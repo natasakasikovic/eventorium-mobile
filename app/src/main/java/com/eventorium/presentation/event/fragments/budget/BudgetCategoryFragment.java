@@ -1,10 +1,13 @@
 package com.eventorium.presentation.event.fragments.budget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -34,6 +37,7 @@ import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -161,29 +165,17 @@ public class BudgetCategoryFragment extends Fragment {
     private void loadImages(List<BudgetSuggestion> suggestions) {
         suggestions.forEach(suggestion -> {
             if(suggestion.getSolutionType() == SolutionType.PRODUCT)
-                loadProductImage(suggestion);
+                loadImage(suggestion, productViewModel::getProductImage);
             else
-                loadServiceImages(suggestion);
+                loadImage(suggestion, serviceViewModel::getServiceImage);
         });
     }
 
 
-    private void loadProductImage(BudgetSuggestion suggestion) {
-        productViewModel.getProductImage(suggestion.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        suggestion.setImage(image);
-                        int position = adapter.getPosition(suggestion);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                });
-    }
-    private void loadServiceImages(BudgetSuggestion suggestion) {
-        serviceViewModel.getServiceImage(suggestion.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
+    private void loadImage(BudgetSuggestion suggestion, Function<Long, LiveData<Bitmap>> imageLoader) {
+        imageLoader.apply(suggestion.getId())
+                .observe(getViewLifecycleOwner(), image -> {
+                    if (image != null) {
                         suggestion.setImage(image);
                         int position = adapter.getPosition(suggestion);
                         if (position != -1) {
