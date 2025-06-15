@@ -24,7 +24,7 @@ public interface AuthService {
     @POST("auth/registration")
     Call<User> createAccount(@Body User user);
 
-    @PUT("users/account-role")
+    @PUT("auth/account-role")
     Call<AuthResponse> upgradeAccount(@Body UpgradeAccountRequest request);
 
     @Multipart
