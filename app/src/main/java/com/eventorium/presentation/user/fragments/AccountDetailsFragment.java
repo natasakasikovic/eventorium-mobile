@@ -19,6 +19,9 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.databinding.FragmentAccountDetailsBinding;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -26,6 +29,7 @@ public class AccountDetailsFragment extends Fragment {
 
     private FragmentAccountDetailsBinding binding;
     private UserViewModel userViewModel;
+    private Long userId;
 
     public AccountDetailsFragment() { }
 
@@ -43,6 +47,8 @@ public class AccountDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentAccountDetailsBinding.inflate(inflater, container, false);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        binding.upgradeAccountButton.setVisibility(View.GONE);
+        binding.upgradeMotivation.setVisibility(View.GONE);
         loadAccountDetails();
         return binding.getRoot();
     }
@@ -61,15 +67,23 @@ public class AccountDetailsFragment extends Fragment {
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 AccountDetails accountDetails = result.getData();
+                userId = accountDetails.getId();
                 String fullName = accountDetails.getName() + " " + accountDetails.getLastname();
-                String address = accountDetails.getAddress() + ", " + accountDetails.getCity().getName();
+                String address = Optional.ofNullable(accountDetails.getAddress())
+                        .filter(s -> !s.isEmpty())
+                        .map(s -> s + ", " + accountDetails.getCity().getName())
+                        .orElse(accountDetails.getCity().getName());
+
                 binding.fullName.setText(fullName);
                 binding.addressCity.setText(address);
                 binding.phoneNumber.setText(accountDetails.getPhoneNumber());
                 binding.email.setText(accountDetails.getEmail());
                 loadProfilePhoto(accountDetails.getId());
+                if (Objects.equals(result.getData().getRole(), "USER")) {
+                    prepareViewForUser();
+                }
             } else {
-                Toast.makeText(requireContext(), "Error while loading account.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -82,6 +96,19 @@ public class AccountDetailsFragment extends Fragment {
             else
                 binding.profileImage.setImageResource(R.drawable.profile_photo);
             binding.profileImageLoader.setVisibility(View.GONE);
+        });
+    }
+
+    private void prepareViewForUser() {
+        binding.editAccountButton.setVisibility(View.GONE);
+        binding.upgradeAccountButton.setVisibility(View.VISIBLE);
+        binding.phoneNumber.setVisibility(View.GONE);
+        binding.upgradeMotivation.setVisibility(View.VISIBLE);
+        binding.upgradeAccountButton.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(requireView());
+            Bundle args = new Bundle();
+            args.putLong(UpgradeAccountFragment.ARG_USER_ID, userId);
+            navController.navigate(R.id.action_account_to_upgrade, args);
         });
     }
 

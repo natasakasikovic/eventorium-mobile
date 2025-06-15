@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
-    private String jwt;
-    private Long expiresIn;
+public class UpgradeAccountRequest {
+    private Role role;
+    private String address;
+    private String phoneNumber;
 }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.UpgradeAccountRequest;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.shared.models.Result;
@@ -37,5 +39,13 @@ public class AuthViewModel extends ViewModel {
 
     public Long getUserId() {
         return repository.getUserId();
+    }
+
+    public LiveData<Result<AuthResponse>> upgradeAccount(UpgradeAccountRequest request) {
+        return repository.upgradeAccount(request);
+    }
+
+    public void updateSession(AuthResponse response) {
+        repository.updateSession(response);
     }
 }

@@ -25,6 +25,7 @@ import com.eventorium.R;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCompanyRegisterBinding;
+import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.shared.models.ImageItem;
@@ -50,21 +51,25 @@ public class CompanyRegisterFragment extends Fragment {
     private CompanyViewModel viewModel;
     private CityViewModel cityViewModel;
 
+    private CreateCompany company;
     private ImageAdapter imageAdapter;
     private ImageUpload imageUpload;
     private final List<Uri> imageUris = new ArrayList<>();
 
 
     public static final String ARG_PROVIDER_ID = "ARG_PROVIDER_ID";
+    public static final Boolean ARG_ALREADY_VERIFIED = false;
+
     private Long providerId;
-    private CreateCompany company;
+    private Boolean isUserAlreadyVerified;
 
     public CompanyRegisterFragment() {}
 
-    public static CompanyRegisterFragment newInstance(Long providerId) {
+    public static CompanyRegisterFragment newInstance(Long providerId, Boolean isUserAlreadyVerified) {
         CompanyRegisterFragment fragment = new CompanyRegisterFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_PROVIDER_ID, providerId);
+        args.putBoolean(String.valueOf(ARG_ALREADY_VERIFIED), isUserAlreadyVerified);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +79,7 @@ public class CompanyRegisterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             providerId = getArguments().getLong(ARG_PROVIDER_ID);
+            isUserAlreadyVerified = getArguments().getBoolean(String.valueOf(ARG_ALREADY_VERIFIED));
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         viewModel = provider.get(CompanyViewModel.class);
@@ -167,13 +173,16 @@ public class CompanyRegisterFragment extends Fragment {
                                 if (!success) Toast.makeText(requireContext(), "Error while uploading images", Toast.LENGTH_SHORT).show();
                             });
                 }
-                showInfoDialog();
-                NavController navController = Navigation.findNavController(requireActivity(),
-                                                            R.id.fragment_nav_content_main);
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                if (!isUserAlreadyVerified)
+                    showInfoDialog();
+                else
+                    ((MainActivity) requireActivity()).refresh("PROVIDER");
+
                 navController.popBackStack(R.id.homepageFragment, false);
-            } else {
-                Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
             }
+            else Toast.makeText(requireContext(), response.getError(), Toast.LENGTH_LONG).show();
         });
 
     }
