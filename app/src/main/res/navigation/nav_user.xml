@@ -80,6 +80,19 @@
         <action
             android:id="@+id/action_accountDetails_to_editAccountFragment"
             app:destination="@id/accountEditFragment"/>
+        <action
+            android:id="@+id/action_account_to_upgrade"
+            app:destination="@id/upgradeAccountFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/upgradeAccountFragment"
+        android:name="com.eventorium.presentation.user.fragments.UpgradeAccountFragment"
+        tools:layout="@layout/fragment_upgrade_account">
+        <action
+            android:id="@+id/upgrade_account_to_company_register"
+            app:destination="@id/companyRegisterFragment" />
+
     </fragment>
 
     <fragment
@@ -138,5 +151,11 @@
         android:name="com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment"
         android:label="fragment_comments_overview"
         tools:layout="@layout/fragment_comments_overview" />
+
+    <fragment
+        android:id="@+id/companyRegisterFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyRegisterFragment"
+        android:label="fragment_company_register"
+        tools:layout="@layout/fragment_company_register" />
 
 </navigation>

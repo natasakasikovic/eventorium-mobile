@@ -1,5 +1,7 @@
 package com.eventorium.data.auth.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,14 +12,14 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.auth0.android.jwt.JWT;
 import com.eventorium.data.auth.models.LoginRequest;
-import com.eventorium.data.auth.models.LoginResponse;
+import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.UpgradeAccountRequest;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.services.AuthService;
 import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.services.WebSocketService;
 import com.eventorium.data.shared.utils.JwtDecoder;
 import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
@@ -33,18 +35,18 @@ import retrofit2.Response;
 
 public class AuthRepository {
 
-    private final AuthService authService;
+    private final AuthService service;
     private final SharedPreferences sharedPreferences;
 
     @Inject
     public AuthRepository(AuthService authService, SharedPreferences sharedPreferences) {
-        this.authService = authService;
+        this.service = authService;
         this.sharedPreferences = sharedPreferences;
     }
 
     public LiveData<Result<User>> createAccount(User user) {
         MutableLiveData<Result<User>> liveData = new MutableLiveData<>();
-        authService.createAccount(user).enqueue(RetrofitCallbackHelper.handleValidationResponse(liveData));
+        service.createAccount(user).enqueue(RetrofitCallbackHelper.handleValidationResponse(liveData));
         return liveData;
     }
 
@@ -59,7 +61,7 @@ public class AuthRepository {
             return result;
         }
 
-        authService.uploadProfilePhoto(id, part).enqueue(new Callback<>() {
+        service.uploadProfilePhoto(id, part).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) result.postValue(true);
@@ -76,11 +78,11 @@ public class AuthRepository {
         return result;
     }
 
-    public LiveData<Result<LoginResponse>> login(LoginRequest dto) {
-        MutableLiveData<Result<LoginResponse>> liveData = new MutableLiveData<>();
-        authService.login(dto).enqueue(new Callback<>() {
+    public LiveData<Result<AuthResponse>> login(LoginRequest dto) {
+        MutableLiveData<Result<AuthResponse>> liveData = new MutableLiveData<>();
+        service.login(dto).enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null)
                     handleSuccessfulResponse(response.body(), liveData);
                 else
@@ -88,19 +90,19 @@ public class AuthRepository {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(Call<AuthResponse> call, Throwable t) {
                 liveData.postValue(Result.error(t.getMessage()));
             }
         });
         return liveData;
     }
 
-    private void handleSuccessfulResponse(LoginResponse responseBody, MutableLiveData<Result<LoginResponse>> liveData) {
+    private void handleSuccessfulResponse(AuthResponse responseBody, MutableLiveData<Result<AuthResponse>> liveData) {
         saveJwtToken(responseBody.getJwt());
         liveData.postValue(Result.success(responseBody));
     }
 
-    private void handleErrorResponse(Response<LoginResponse> response, MutableLiveData<Result<LoginResponse>> liveData) {
+    private void handleErrorResponse(Response<AuthResponse> response, MutableLiveData<Result<AuthResponse>> liveData) {
         try {
             String errorMessage = response.errorBody().string();
             liveData.postValue(Result.error(ErrorResponse.getErrorMessage(errorMessage)));
@@ -130,11 +132,23 @@ public class AuthRepository {
     public String getUserRole() {
         return sharedPreferences.getString("role", null);
     }
+
     public String saveRole(String jwt) {
         String role = JwtDecoder.decodeRole(jwt);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("role", role);
         editor.apply();
         return role;
+    }
+
+    public LiveData<Result<AuthResponse>> upgradeAccount(UpgradeAccountRequest request) {
+        MutableLiveData<Result<AuthResponse>> result = new MutableLiveData<>();
+        service.upgradeAccount(request).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public void updateSession(AuthResponse response) {
+        saveJwtToken(response.getJwt());
+        saveRole(response.getJwt());
     }
 }
