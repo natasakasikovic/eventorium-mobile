@@ -27,8 +27,7 @@
         tools:layout="@layout/fragment_edit_service">
         <action
             android:id="@+id/action_update_to_serviceManagement"
-            app:destination="@id/manageServicesFragment"
-            />
+            app:destination="@id/manageServicesFragment" />
     </fragment>
 
     <fragment
@@ -57,6 +56,18 @@
         <action
             android:id="@+id/action_manage_product_to_product_details"
             app:destination="@id/manageProductDetailsFragment" />
+        <action
+            android:id="@+id/action_manage_products_to_edit_product"
+            app:destination="@id/editProductFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProductFragment"
+        tools:layout="@layout/fragment_edit_product"
+        android:name="com.eventorium.presentation.solution.fragments.product.EditProductFragment" >
+        <action
+            android:id="@+id/action_edit_product_to_manageable_products"
+            app:destination="@id/manageProductFragment" />
     </fragment>
 
     <fragment

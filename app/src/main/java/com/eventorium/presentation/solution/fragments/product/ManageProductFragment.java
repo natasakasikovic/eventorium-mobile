@@ -100,7 +100,11 @@ public class ManageProductFragment extends Fragment {
             }
 
             @Override
-            public void onEditClick(ProductSummary item) {}
+            public void onEditClick(ProductSummary item) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_manage_products_to_edit_product,
+                        EditProductFragment.newInstance(item).getArguments());
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -267,6 +271,12 @@ public class ManageProductFragment extends Fragment {
             spinner.setAdapter(adapter);
             spinner.setTag(categories);
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
 

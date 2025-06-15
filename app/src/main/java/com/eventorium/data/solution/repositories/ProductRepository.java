@@ -13,21 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.product.UpdateProduct;
 import com.eventorium.data.solution.services.ProductService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,10 +33,6 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProductRepository {
 
@@ -71,6 +64,12 @@ public class ProductRepository {
         return result;
     }
 
+    public LiveData<Result<Product>> updateProduct(Long id, UpdateProduct request) {
+        MutableLiveData<Result<Product>> result = new MutableLiveData<>();
+        service.updateProduct(id, request).enqueue(handleValidationResponse(result));
+        return result;
+    }
+
     public LiveData<Product> getProduct(Long id) {
         MutableLiveData<Product> result = new MutableLiveData<>();
         service.getProduct(id).enqueue(handleSuccessfulResponse(result));
@@ -87,6 +86,13 @@ public class ProductRepository {
         service.getProductImages(id).enqueue(handleGetImages(liveData));
         return liveData;
     }
+
+    public LiveData<Result<Void>> deleteImages(Long id, List<RemoveImageRequest> request) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+        service.deleteImages(id, request).enqueue(handleVoidResponse(liveData));
+        return liveData;
+    }
+
 
     public LiveData<Result<List<ProductSummary>>> getTopProducts(){
         MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();

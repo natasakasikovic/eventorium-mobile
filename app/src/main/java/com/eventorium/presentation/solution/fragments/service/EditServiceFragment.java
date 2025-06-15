@@ -241,7 +241,7 @@ public class EditServiceFragment extends Fragment {
                 else existingImagesAdapter.insert(images);
                 binding.loader.setVisibility(View.GONE);
             } else {
-                Toast.makeText(requireContext(), "Error while loading images", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }
