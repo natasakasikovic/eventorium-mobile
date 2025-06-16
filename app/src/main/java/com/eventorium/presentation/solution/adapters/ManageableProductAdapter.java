@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,7 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
         Button seeMoreButton;
         Button editButton;
         Button deleteButton;
+        LinearLayout layout;
 
         public ManageableProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,6 +68,7 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            layout = itemView.findViewById(R.id.product_layout);
         }
 
         @SuppressLint("SetTextI18n")
@@ -78,6 +81,11 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(productSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(productSummary));
             deleteButton.setOnClickListener(v -> manageListener.onDeleteClick(productSummary));
+
+            if (productSummary.getAvailable() != null) {
+                float alpha = productSummary.getAvailable() ? 1f : 0.5f;
+                layout.setAlpha(alpha);
+            }
         }
     }
 }

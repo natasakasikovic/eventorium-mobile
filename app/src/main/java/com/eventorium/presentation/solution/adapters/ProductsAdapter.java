@@ -64,7 +64,7 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
             imageView.setImageBitmap(product.getImage());
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
-            if(product.getAvailable() != null) {
+            if (product.getAvailable() != null) {
                 float alpha = product.getAvailable() ? 1f : 0.5f;
                 layout.setAlpha(alpha);
             }
