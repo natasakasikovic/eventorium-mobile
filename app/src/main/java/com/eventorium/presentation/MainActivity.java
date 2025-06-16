@@ -81,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
         setupDrawer();
 
         setContentView(binding.getRoot());
-        if (getIntent() != null) {
-            handleIntent(getIntent());
-        }
 
         sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         binding.baseLayout.notificationButton.setOnClickListener(v ->
@@ -96,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
             refresh(role);
             Long id = loginViewModel.getUserId();
             startWebSocketService(id, role);
+        }
+
+        if (getIntent() != null) {
+            handleIntent(getIntent());
         }
     }
 
