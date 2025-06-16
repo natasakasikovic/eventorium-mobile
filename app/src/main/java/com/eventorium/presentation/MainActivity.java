@@ -92,7 +92,8 @@ public class MainActivity extends AppCompatActivity {
         else {
             refresh(role);
             Long id = loginViewModel.getUserId();
-            startWebSocketService(id, role);
+            if(!WebSocketForegroundService.isRunning)
+                startWebSocketService(id, role);
         }
 
         if (getIntent() != null) {

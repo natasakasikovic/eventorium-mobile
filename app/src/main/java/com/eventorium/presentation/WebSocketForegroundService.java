@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class WebSocketForegroundService extends Service {
 
+    public static boolean isRunning = false;
     private static final String TAG = "WebSocketFgService";
     private static final String CHANNEL_ID = "WebSocketChannel";
     private static final int NOTIFICATION_ID = 101;
@@ -31,6 +32,7 @@ public class WebSocketForegroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        isRunning = true;
         createNotificationChannel();
         startForeground(NOTIFICATION_ID, buildNotification());
     }
@@ -41,11 +43,9 @@ public class WebSocketForegroundService extends Service {
         String role = intent.getStringExtra("role");
 
         if (userId != -1 && role != null) {
+            Log.i(TAG, "Opening WebSocket");
             webSocketService.connect(userId, role);
-        } else {
-            Log.e(TAG, "Missing userId or role in intent");
         }
-
         return START_STICKY;
     }
 
@@ -57,8 +57,8 @@ public class WebSocketForegroundService extends Service {
 
     private Notification buildNotification() {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Eventorium Chat")
-                .setContentText("Listening for new messages...")
+                .setContentTitle("Eventorium")
+                .setContentText("Listening for notifications and messages...")
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
@@ -83,5 +83,6 @@ public class WebSocketForegroundService extends Service {
         super.onDestroy();
         webSocketService.disconnect();
         Log.d(TAG, "WebSocket service destroyed and disconnected");
+        isRunning = false;
     }
 }

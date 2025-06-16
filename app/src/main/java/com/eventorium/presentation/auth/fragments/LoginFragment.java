@@ -122,7 +122,7 @@ public class LoginFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     navigateToHome();
-                    if (isGranted) {
+                    if (isGranted && !WebSocketForegroundService.isRunning) {
                         startWebSocketService();
                     }
                 }
@@ -133,7 +133,8 @@ public class LoginFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
             navigateToHome();
-            startWebSocketService();
+            if(!WebSocketForegroundService.isRunning)
+                startWebSocketService();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
