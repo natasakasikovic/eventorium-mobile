@@ -88,4 +88,10 @@ public class AccountProductRepository {
                 .filter(v -> !(v instanceof String && v.toString().isEmpty()))
                 .ifPresent(v -> params.put(key, v.toString()));
     }
+
+    public LiveData<Result<Void>> deleteProduct(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.deleteProduct(id).enqueue(handleVoidResponse(result));
+        return result;
+    }
 }

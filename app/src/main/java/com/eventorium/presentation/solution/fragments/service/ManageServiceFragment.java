@@ -142,29 +142,26 @@ public class ManageServiceFragment extends Fragment {
         new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
                 .setTitle("Delete Service")
                 .setMessage("Are you sure you want to delete " + service.getName() + "?" )
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    manageableServiceViewModel.deleteService(service.getId())
-                            .observe(getViewLifecycleOwner(), result -> {
-                                if(result.getError() == null) {
-                                    Toast.makeText(
-                                            requireContext(),
-                                            R.string.service_deleted_successfully,
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                    manageableServiceViewModel.removeService(service.getId());
-                                } else {
-                                    Toast.makeText(
-                                            requireContext(),
-                                            result.getError(),
-                                            Toast.LENGTH_SHORT
-                                    ).show();
-                                }
-                            });
-                })
+                .setPositiveButton("Delete", (dialog, which) -> onDialogConfirmation(service.getId()))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
+    private void onDialogConfirmation(Long serviceId) {
+        manageableServiceViewModel.deleteService(serviceId)
+                .observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() == null) {
+                        Toast.makeText(
+                                requireContext(),
+                                R.string.service_deleted_successfully,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        manageableServiceViewModel.removeService(serviceId);
+                    } else {
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     private void createBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());

@@ -1,5 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ManageableProductAdapter extends BaseProductAdapter<ManageableProductAdapter.ManageableProductViewHolder> {
 
@@ -34,6 +37,14 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
 
     public void setProducts(List<ProductSummary> newProducts) {
         productSummaries = newProducts;
+        notifyDataSetChanged();
+    }
+
+    public void removeProduct(Long productId) {
+        productSummaries = Objects.requireNonNull(productSummaries)
+                .stream()
+                .filter(product -> !Objects.equals(product.getId(), productId))
+                .collect(toList());
         notifyDataSetChanged();
     }
 

@@ -31,6 +31,9 @@ public interface AccountProductService {
     @GET("account/products/all")
     Call<List<ProductSummary>> getProducts();
 
+    @DELETE("products/{id}")
+    Call<ResponseBody> deleteProduct(@Path("id") Long id);
+
     @GET("account/products/search/all")
     Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
 
