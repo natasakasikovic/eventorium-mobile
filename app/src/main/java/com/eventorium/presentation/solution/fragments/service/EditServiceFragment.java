@@ -150,8 +150,12 @@ public class EditServiceFragment extends Fragment {
                                     R.string.service_updated_successfully,
                                     Toast.LENGTH_SHORT
                             ).show();
-                            removeImages();
-                            uploadNewImages();
+                            if (removedImages.isEmpty() && imageUris.isEmpty()) {
+                                navController.navigateUp();
+                            } else {
+                                removeImages();
+                                uploadNewImages();
+                            }
                         } else {
                             Toast.makeText(
                                     requireContext(),

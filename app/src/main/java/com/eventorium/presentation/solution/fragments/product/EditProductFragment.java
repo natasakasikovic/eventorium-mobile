@@ -174,8 +174,12 @@ public class EditProductFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), result -> {
                     if (result.getData() != null) {
                         Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                        removeImages();
-                        uploadNewImages();
+                        if (removedImages.isEmpty() && imageUris.isEmpty()) {
+                            navController.navigateUp();
+                        } else {
+                            removeImages();
+                            uploadNewImages();
+                        }
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }
