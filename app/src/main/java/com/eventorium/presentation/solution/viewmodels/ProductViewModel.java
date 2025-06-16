@@ -44,6 +44,10 @@ public class ProductViewModel extends ViewModel {
         return repository.createProduct(product);
     }
 
+    public LiveData<Result<Void>> deleteProduct(Long id) {
+        return repository.deleteProduct(id);
+    }
+
     public LiveData<Result<Void>> uploadImages(Long id, Context context, List<Uri> uris) {
         return repository.uploadImages(id, context, uris);
     }

@@ -287,7 +287,7 @@ public class ManageProductFragment extends Fragment {
     }
 
     private void onDialogConfirmation(Long productId) {
-        viewModel.deleteProduct(productId)
+        productViewModel.deleteProduct(productId)
                 .observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() == null) {
                         Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();

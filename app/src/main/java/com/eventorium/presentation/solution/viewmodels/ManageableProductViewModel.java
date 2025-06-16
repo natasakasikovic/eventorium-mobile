@@ -34,8 +34,4 @@ public class ManageableProductViewModel extends ViewModel {
     public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
         return repository.filterProducts(filter);
     }
-
-    public LiveData<Result<Void>> deleteProduct(Long id) {
-        return repository.deleteProduct(id);
-    }
 }

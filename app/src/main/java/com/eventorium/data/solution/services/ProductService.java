@@ -14,6 +14,7 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
@@ -59,4 +60,7 @@ public interface ProductService {
 
     @GET("products/filter/all")
     Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
+
+    @DELETE("products/{id}")
+    Call<ResponseBody> deleteProduct(@Path("id") Long id);
 }

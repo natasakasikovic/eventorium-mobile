@@ -87,6 +87,12 @@ public class ProductRepository {
         return liveData;
     }
 
+    public LiveData<Result<Void>> deleteProduct(Long id) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.deleteProduct(id).enqueue(handleVoidResponse(result));
+        return result;
+    }
+
     public LiveData<Result<Void>> deleteImages(Long id, List<RemoveImageRequest> request) {
         MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
         service.deleteImages(id, request).enqueue(handleVoidResponse(liveData));
