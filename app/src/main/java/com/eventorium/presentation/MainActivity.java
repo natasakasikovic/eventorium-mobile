@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
         if (role == null) refresh("GUEST");
         else {
             refresh(role);
-            loginViewModel.openWebSocket();
+            Long id = loginViewModel.getUserId();
+            startWebSocketService(id, role);
         }
     }
 
@@ -126,6 +127,17 @@ public class MainActivity extends AppCompatActivity {
                 setupNotificationButton(sharedPreferences.getBoolean("silenceNotifications", false));
             }
         });
+    }
+
+    private void startWebSocketService(Long userId, String role) {
+        Intent serviceIntent = new Intent(getApplicationContext(), WebSocketForegroundService.class);
+        serviceIntent.putExtra("userId", userId);
+        serviceIntent.putExtra("role", role);
+        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+    }
+
+    private void stopWebSocketService() {
+        getApplicationContext().stopService(new Intent(getApplicationContext(), WebSocketForegroundService.class));
     }
 
     private void setupNotificationButton(boolean silenced) {
@@ -317,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
         editor.apply();
         refresh("GUEST");
-        loginViewModel.closeWebSocket();
+        stopWebSocketService();
     }
 
     private void hideBottomNavigation() {
