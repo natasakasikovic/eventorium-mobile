@@ -51,6 +51,8 @@ public class ServiceDetailsFragment extends Fragment {
     private Long eventId;
     private UserDetails provider;
     private Long companyId;
+    private Integer maxDuration;
+    private Integer minDuration;
 
 
     public ServiceDetailsFragment() { }
@@ -77,7 +79,7 @@ public class ServiceDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             id = getArguments().getLong(ARG_ID);
             plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT);
             eventId = getArguments().getLong(ARG_EVENT_ID);
@@ -101,6 +103,8 @@ public class ServiceDetailsFragment extends Fragment {
         serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 displayServiceDate(service);
+                minDuration = service.getMinDuration();
+                maxDuration = service.getMaxDuration();
             }
         });
 
@@ -216,10 +220,12 @@ public class ServiceDetailsFragment extends Fragment {
     private void navigateToReservation() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
 
+        Integer fixedDurationHours = minDuration == maxDuration ? minDuration : 0;
+
         if (eventId == 0)
-            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id).getArguments());
+            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id, fixedDurationHours).getArguments());
         else
-            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id, eventId, plannedAmount).getArguments());
+            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id, fixedDurationHours, eventId, plannedAmount).getArguments());
     }
 
     private void navigateToProvider() {

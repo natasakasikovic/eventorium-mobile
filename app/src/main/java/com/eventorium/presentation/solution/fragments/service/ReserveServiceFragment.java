@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +25,11 @@ import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.solution.viewmodels.ReservationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -36,10 +40,12 @@ public class ReserveServiceFragment extends Fragment {
     public static final String ARG_SERVICE_ID = "SERVICE_ID";
     public static final String ARG_PLANNED_AMOUNT = "PLANNED_AMOUNT";
     public static final String ARG_EVENT_ID = "EVENT_ID";
+    public static final String ARG_FIXED_DURATION_HOURS = "FIXED_DURATION_HOURS";
 
     private Long serviceId;
     private Double plannedAmount;
     private Long eventId;
+    private Integer fixedDurationHours;
 
     private FragmentReserveServiceBinding binding;
     private ReservationViewModel viewModel;
@@ -48,20 +54,22 @@ public class ReserveServiceFragment extends Fragment {
 
     public ReserveServiceFragment() {}
 
-    public static ReserveServiceFragment newInstance(Long serviceId) {
+    public static ReserveServiceFragment newInstance(Long serviceId, Integer fixedDurationHours) {
         ReserveServiceFragment fragment = new ReserveServiceFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_SERVICE_ID, serviceId);
+        args.putInt(ARG_FIXED_DURATION_HOURS, fixedDurationHours);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static ReserveServiceFragment newInstance(Long serviceId, Long eventId, Double plannedAmount) {
+    public static ReserveServiceFragment newInstance(Long serviceId, Integer fixedDurationHours, Long eventId, Double plannedAmount) {
         ReserveServiceFragment fragment = new ReserveServiceFragment();
         Bundle args = new Bundle();
         args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
         args.putLong(ARG_EVENT_ID, eventId);
         args.putLong(ARG_SERVICE_ID, serviceId);
+        args.putInt(ARG_FIXED_DURATION_HOURS, fixedDurationHours);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,6 +83,7 @@ public class ReserveServiceFragment extends Fragment {
 
         Bundle args = getArguments();
         serviceId = args.getLong(ARG_SERVICE_ID);
+        fixedDurationHours = args.containsKey(ARG_FIXED_DURATION_HOURS) ? getArguments().getInt(ARG_FIXED_DURATION_HOURS) : 0;
         plannedAmount = args.containsKey(ARG_PLANNED_AMOUNT) ? args.getDouble(ARG_PLANNED_AMOUNT) : 0.0;
         eventId = args.containsKey(ARG_EVENT_ID) ? args.getLong(ARG_EVENT_ID) : 0;
 
@@ -99,8 +108,45 @@ public class ReserveServiceFragment extends Fragment {
         } else
             loadFutureEventsIntoSpinner();
 
-        binding.reserveServiceButton.setOnClickListener(v -> reserveService());
+        setUpListeners();
+
         return binding.getRoot();
+    }
+
+    private void setUpListeners() {
+        binding.reserveServiceButton.setOnClickListener(v -> reserveService());
+
+        binding.timePickerTextFrom.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (fixedDurationHours != null && !s.toString().isEmpty()) {
+                    String startingTime = getTimeFromInput(binding.timePickerTextFrom);
+                    String endingTime = calculateEndingTime(startingTime, fixedDurationHours);
+                    binding.timePickerTextTo.setText(endingTime);
+                }
+            }
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+    }
+
+    private String getTimeFromInput(TextInputEditText field) {
+        return field.getText() != null ? field.getText().toString().trim() : "";
+    }
+
+    private String calculateEndingTime(String startTime, long durationHours) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.getDefault());
+            Date startDate = sdf.parse(startTime);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.HOUR_OF_DAY, (int) durationHours);
+            return sdf.format(calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private void createTimePicker() {
@@ -185,10 +231,6 @@ public class ReserveServiceFragment extends Fragment {
         }
 
         return true;
-    }
-
-    private String getTimeFromInput(EditText timeInput) {
-        return timeInput.getText().toString().toUpperCase();
     }
 
     private Double parsePlannedAmount(EditText input) {
