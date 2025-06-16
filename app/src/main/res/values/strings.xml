@@ -100,7 +100,6 @@
     <string name="from">From: </string>
     <string name="to">To: </string>
     <string name="date">Date: </string>
-    <string name="book_service">Book a service</string>
     <string name="select_date">Select date</string>
     <string name="category_proposals">Category proposals</string>
     <string name="update_category_proposal">Update category proposal</string>
@@ -245,4 +244,5 @@
     <string name="location_not_found">Location not found on map.</string>
     <string name="upgrade_to">Upgrade to:</string>
     <string name="upgrade_motivation">Unlock more options in Eventorium by upgrading your account. This will let you promote your services and products or organize events, depending on the role you select.</string>
+    <string name="reserve_service">Reserve a service\n</string>
 </resources>
