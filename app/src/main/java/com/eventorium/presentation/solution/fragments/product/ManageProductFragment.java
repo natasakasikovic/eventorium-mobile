@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +25,7 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -92,7 +94,9 @@ public class ManageProductFragment extends Fragment {
         recyclerView = binding.productsRecycleView;
         adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<>() {
             @Override
-            public void onDeleteClick(ProductSummary item) {}
+            public void onDeleteClick(ProductSummary item) {
+                showDeleteDialog(item);
+            }
 
             @Override
             public void onSeeMoreClick(ProductSummary item) {
@@ -100,7 +104,11 @@ public class ManageProductFragment extends Fragment {
             }
 
             @Override
-            public void onEditClick(ProductSummary item) {}
+            public void onEditClick(ProductSummary item) {
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                navController.navigate(R.id.action_manage_products_to_edit_product,
+                        EditProductFragment.newInstance(item).getArguments());
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -267,6 +275,33 @@ public class ManageProductFragment extends Fragment {
             spinner.setAdapter(adapter);
             spinner.setTag(categories);
         });
+    }
+
+    private void showDeleteDialog(ProductSummary product) {
+        new AlertDialog.Builder(requireContext(), R.style.DialogTheme)
+                .setTitle("Delete product")
+                .setMessage("Are you sure you want to delete " + product.getName() + "?" )
+                .setPositiveButton("Delete", (dialog, which) -> onDialogConfirmation(product.getId()))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void onDialogConfirmation(Long productId) {
+        productViewModel.deleteProduct(productId)
+                .observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() == null) {
+                        Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
+                        adapter.removeProduct(productId);
+                    } else {
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
 
