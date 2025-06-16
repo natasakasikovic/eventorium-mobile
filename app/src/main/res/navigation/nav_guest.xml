@@ -155,7 +155,7 @@
 
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.eventorium.presentation.notifications.fragments.NotificationsFragment"
+        android:name="com.eventorium.presentation.notification.fragments.NotificationsFragment"
         tools:layout="@layout/fragment_notifications"/>
 
     <fragment

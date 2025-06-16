@@ -28,6 +28,7 @@ import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.databinding.ActivityMainBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
+import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
 import com.eventorium.presentation.shared.viewmodels.SplashScreenViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -44,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private NotificationViewModel notificationViewModel;
+
+    private SharedPreferences sharedPreferences;
     private BottomNavigationView bottomNavigationView;
     private NavigationView navigationView;
     private NavController navController;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        notificationViewModel = provider.get(NotificationViewModel.class);
         loginViewModel = provider.get(LoginViewModel.class);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -80,8 +85,12 @@ public class MainActivity extends AppCompatActivity {
             handleIntent(getIntent());
         }
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        binding.baseLayout.notificationButton.setOnClickListener(v ->
+                handleNotificationSilenceChange(!sharedPreferences.getBoolean("silenceNotifications", false))
+        );
         String role = sharedPreferences.getString("role", null);
+
         if (role == null) refresh("GUEST");
         else {
             refresh(role);
@@ -92,7 +101,37 @@ public class MainActivity extends AppCompatActivity {
     public void refresh(String role) {
         userRole = role;
         setNavigation();
-        if (role.equals("GUEST")) hideBottomNavigation();
+
+        if (role.equals("GUEST")) {
+            binding.baseLayout.notificationButton.setVisibility(View.GONE);
+            hideBottomNavigation();
+        } else {
+            handleNotificationSilenced();
+        }
+    }
+
+    private void handleNotificationSilenceChange(boolean silenced) {
+        notificationViewModel.silenceNotifications(silenced).observe(this, result -> {
+            if(result.getError() == null) {
+                notificationViewModel.saveSilencedStatus(silenced);
+                setupNotificationButton(silenced);
+            }
+        });
+    }
+
+    private void handleNotificationSilenced() {
+        notificationViewModel.getNotificationSilenceStatus().observe(this, result -> {
+            if(result.getError() == null) {
+                notificationViewModel.saveSilencedStatus(result.getData());
+                setupNotificationButton(sharedPreferences.getBoolean("silenceNotifications", false));
+            }
+        });
+    }
+
+    private void setupNotificationButton(boolean silenced) {
+        int iconRes = silenced ? R.drawable.ic_notifications_off : R.drawable.ic_notifications;
+        binding.baseLayout.notificationButton.setVisibility(View.VISIBLE);
+        binding.baseLayout.notificationButton.setIconResource(iconRes);
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.eventorium.data.auth.models.AuthResponse;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
@@ -40,6 +41,7 @@ public class LoginFragment extends Fragment {
     private ActivityResultLauncher<String> requestNotificationPermissionLauncher;
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
+    private NotificationViewModel notificationViewModel;
 
     private TextInputEditText emailEditText;
     private TextInputEditText passwordEditText;
@@ -53,7 +55,9 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        loginViewModel = provider.get(LoginViewModel.class);
+        notificationViewModel = provider.get(NotificationViewModel.class);
         subscribeToNotifications();
     }
 
@@ -82,6 +86,10 @@ public class LoginFragment extends Fragment {
             return;
         }
 
+        handleLogin(email, password);
+    }
+
+    private void handleLogin(String email, String password) {
         LoginRequest dto = new LoginRequest(email, password);
         loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
@@ -90,7 +98,6 @@ public class LoginFragment extends Fragment {
             } else
                 showInfoDialog(result.getError());
         });
-
     }
 
     private void showInfoDialog(String message) {

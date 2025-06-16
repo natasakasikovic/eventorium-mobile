@@ -26,7 +26,7 @@ import retrofit2.Response;
 
 public class RetrofitCallbackHelper {
 
-    public static Callback<ResponseBody> handleVoidResponse(MutableLiveData<Result<Void>> liveData) {
+    public static Callback<ResponseBody> handleVoidResponse(MutableLiveData<Result<Void>> result) {
         return new Callback<>() {
             @Override
             public void onResponse(
@@ -34,13 +34,13 @@ public class RetrofitCallbackHelper {
                     @NonNull Response<ResponseBody> response
             ) {
                 if (response.isSuccessful()) {
-                    liveData.postValue(Result.success(null));
+                    result.postValue(Result.success(null));
                 } else {
                     try {
                         String error = response.errorBody().string();
-                        liveData.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
+                        result.postValue(Result.error(ErrorResponse.getErrorMessage(error)));
                     } catch (IOException e) {
-                        liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                        result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
                     }
                 }
             }
@@ -50,7 +50,7 @@ public class RetrofitCallbackHelper {
                     @NonNull Call<ResponseBody> call,
                     @NonNull Throwable t
             ) {
-                liveData.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
+                result.postValue(Result.error(ErrorMessages.GENERAL_ERROR));
             }
         };
     }
