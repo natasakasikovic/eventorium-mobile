@@ -244,4 +244,6 @@
     <string name="budget">Budget</string>
     <string name="location_not_found">Location not found on map.</string>
     <string name="edit_product">Edit product</string>
+    <string name="upgrade_to">Upgrade to:</string>
+    <string name="upgrade_motivation">Unlock more options in Eventorium by upgrading your account. This will let you promote your services and products or organize events, depending on the role you select.</string>
 </resources>

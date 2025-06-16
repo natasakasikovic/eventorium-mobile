@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.LoginRequest;
-import com.eventorium.data.auth.models.LoginResponse;
+import com.eventorium.data.auth.models.AuthResponse;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -44,7 +44,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText emailEditText;
     private TextInputEditText passwordEditText;
 
-    private LoginResponse response;
+    private AuthResponse response;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();

@@ -1,5 +1,6 @@
 package com.eventorium.presentation.auth.fragments;
 
+import static com.eventorium.presentation.company.fragments.CompanyRegisterFragment.ARG_ALREADY_VERIFIED;
 import static com.eventorium.presentation.company.fragments.CompanyRegisterFragment.ARG_PROVIDER_ID;
 
 import android.app.Activity;
@@ -149,6 +150,7 @@ public class RegisterFragment extends Fragment {
         if (selectedRole.getName().equals("PROVIDER")) {
             Bundle args = new Bundle();
             args.putLong(ARG_PROVIDER_ID, user.getId());
+            args.putBoolean(String.valueOf(ARG_ALREADY_VERIFIED), false);
             navController.navigate(R.id.companyRegisterFragment, args);
         } else {
             showInfoDialog();
