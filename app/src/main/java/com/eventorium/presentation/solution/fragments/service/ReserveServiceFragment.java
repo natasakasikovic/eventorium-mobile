@@ -193,26 +193,41 @@ public class ReserveServiceFragment extends Fragment {
         String startingTime = getTimeFromInput(binding.timePickerTextFrom);
         String endingTime = getTimeFromInput(binding.timePickerTextTo);
 
-        if (plannedAmount == 0.0)
-            plannedAmount = parsePlannedAmount(binding.plannedAmount);
+        ensurePlannedAmount();
+        if (!ensureEventId()) return;
 
-        if (eventId == 0) {
-            Event event = (Event) binding.eventSelector.getSelectedItem();
-            if (event == null) {
-                Toast.makeText(requireContext(), "Please select an event.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            eventId = event.getId();
+        performReservation(startingTime, endingTime);
+    }
+    private void ensurePlannedAmount() {
+        if (plannedAmount == 0.0) {
+            plannedAmount = parsePlannedAmount(binding.plannedAmount);
+        }
+    }
+
+    private boolean ensureEventId() {
+        if (eventId != 0) return true;
+
+        Event event = (Event) binding.eventSelector.getSelectedItem();
+        if (event == null) {
+            Toast.makeText(requireContext(), "Please select an event.", Toast.LENGTH_SHORT).show();
+            return false;
         }
 
-        viewModel.reserveService(startingTime, endingTime, plannedAmount, eventId, serviceId)
+        eventId = event.getId();
+        return true;
+    }
+
+    private void performReservation(String startTime, String endTime) {
+        viewModel.reserveService(startTime, endTime, plannedAmount, eventId, serviceId)
                 .observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null)
+                    if (result.getError() == null) {
                         showSuccessMessageAndNavigate();
-                    else
+                    } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
+
 
     private boolean validateInput() {
         if (binding.timePickerTextFrom.getText().toString().isEmpty()) {
