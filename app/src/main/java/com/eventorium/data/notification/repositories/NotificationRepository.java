@@ -42,4 +42,16 @@ public class NotificationRepository {
         service.markNotificationsAsSeen().enqueue(handleVoidResponse(result));
         return result;
     }
+
+    public LiveData<Result<Boolean>> getNotificationSilenceStatus() {
+        MutableLiveData<Result<Boolean>> result = new MutableLiveData<>();
+        service.getNotificationSilenceStatus().enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<Void>> silenceNotifications(boolean silence) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.silenceNotifications(silence).enqueue(handleVoidResponse(result));
+        return result;
+    }
 }
