@@ -1,5 +1,7 @@
 package com.eventorium.presentation.event.adapters;
 
+import static java.util.stream.Collectors.toList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -30,20 +32,31 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.BudgetItemViewHolder> {
 
     private Context context;
     private List<BudgetItem> budgetItems;
     private OnBudgetItemActionListener listener;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable debounceRunnable;
-    private static final long DEBOUNCE_DELAY = 300;
 
     public BudgetItemAdapter(List<BudgetItem> budgetItems, Context context, OnBudgetItemActionListener listener) {
         this.budgetItems = budgetItems;
         this.context = context;
         this.listener = listener;
+    }
+
+    public void removeItem(Long itemId) {
+        if (itemId == null) return;
+
+        for (int i = 0; i < budgetItems.size(); i++) {
+            BudgetItem item = budgetItems.get(i);
+            if (itemId.equals(item.getId())) {
+                budgetItems.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 
     public void setData(List<BudgetItem> items) {
@@ -84,6 +97,10 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
         MaterialButton purchaseButton;
         MaterialButton deleteButton;
         MaterialButton saveButton;
+
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private Runnable debounceRunnable;
+        private static final long DEBOUNCE_DELAY = 300;
 
         public BudgetItemViewHolder(View itemView) {
             super(itemView);

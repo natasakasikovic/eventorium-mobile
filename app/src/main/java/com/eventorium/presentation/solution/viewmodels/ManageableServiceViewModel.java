@@ -94,11 +94,4 @@ public class ManageableServiceViewModel extends ViewModel {
         return serviceRepository.deleteService(serviceId);
     }
 
-    public void removeService(Long serviceId) {
-        manageableServices.postValue(Objects.requireNonNull(manageableServices.getValue())
-                .stream()
-                .filter(service -> !Objects.equals(service.getId(), serviceId))
-                .collect(toList()));
-    }
-
 }

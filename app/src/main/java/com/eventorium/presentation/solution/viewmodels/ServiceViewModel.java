@@ -30,17 +30,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class ServiceViewModel extends ViewModel {
 
-    private final AuthRepository authRepository;
     private final ServiceRepository serviceRepository;
     private final AccountServiceRepository accountServiceRepository;
 
     @Inject
     public ServiceViewModel(
-            AuthRepository authRepository,
             ServiceRepository serviceRepository,
             AccountServiceRepository accountServiceRepository
     ) {
-        this.authRepository = authRepository;
         this.serviceRepository = serviceRepository;
         this.accountServiceRepository = accountServiceRepository;
     }

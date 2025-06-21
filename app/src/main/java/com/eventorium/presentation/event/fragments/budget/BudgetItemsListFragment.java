@@ -103,8 +103,10 @@ public class BudgetItemsListFragment extends Fragment {
             @Override
             public void onDelete(BudgetItem item) {
                 budgetViewModel.deleteBudgetItem(eventId, item.getId()).observe(getViewLifecycleOwner(), result -> {
-                    if(result.getError() == null)
+                    if(result.getError() == null) {
                         handleResponse("Item has been deleted successfully!");
+                        adapter.removeItem(item.getId());
+                    }
                     else
                         handleResponse(result.getError());
                 });

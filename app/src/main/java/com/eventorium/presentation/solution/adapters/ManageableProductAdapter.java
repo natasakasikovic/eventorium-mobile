@@ -14,11 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class ManageableProductAdapter extends BaseProductAdapter<ManageableProductAdapter.ManageableProductViewHolder> {
 
@@ -42,11 +44,16 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
     }
 
     public void removeProduct(Long productId) {
-        productSummaries = Objects.requireNonNull(productSummaries)
-                .stream()
-                .filter(product -> !Objects.equals(product.getId(), productId))
-                .collect(toList());
-        notifyDataSetChanged();
+        if (productId == null) return;
+
+        for (int i = 0; i < productSummaries.size(); i++) {
+            ProductSummary product = productSummaries.get(i);
+            if (productId.equals(product.getId())) {
+                productSummaries.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 
     public class ManageableProductViewHolder extends BaseProductViewHolder {

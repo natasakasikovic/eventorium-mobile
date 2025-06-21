@@ -11,10 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
 
@@ -25,6 +27,19 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
     ) {
         super(serviceSummaries);
         this.manageListener = listener;
+    }
+
+    public void removeService(Long serviceId) {
+        if (serviceId == null) return;
+
+        for (int i = 0; i < serviceSummaries.size(); i++) {
+            ServiceSummary service = serviceSummaries.get(i);
+            if (serviceId.equals(service.getId())) {
+                serviceSummaries.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 
     @NonNull
