@@ -43,7 +43,6 @@ public class ServiceDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
-    public static final String ARG_TYPE = "ARG_TYPE";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
     public static final String ARG_EVENT = "ARG_EVENT";
 
@@ -105,16 +104,26 @@ public class ServiceDetailsFragment extends Fragment {
             setupFavouriteListeners();
         }
         serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
-            if(service != null) {
+            if(service != null)
                 displayServiceDate(service);
-            }
         });
 
+        setupButtons();
+        return binding.getRoot();
+    }
+
+    private void setupButtons() {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
-        return binding.getRoot();
+
+        if(event != null && plannedAmount != null) {
+            binding.backToPlannerButton.setVisibility(View.VISIBLE);
+            binding.addToPlannedButton.setVisibility(View.VISIBLE);
+
+            // TODO: Add when reservations are merged
+        }
     }
 
     private void setupFavouriteListeners() {

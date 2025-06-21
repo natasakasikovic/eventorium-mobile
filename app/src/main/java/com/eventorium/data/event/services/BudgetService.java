@@ -38,7 +38,7 @@ public interface BudgetService {
     @GET("budget-items")
     Call<List<SolutionReview>> getAllBudgetItems();
 
-    @POST("events/{event-id}/budget/budget-item")
+    @POST("events/{event-id}/budget/budget-items")
     Call<BudgetItem> createBudgetItem(@Path("event-id") Long eventId, @Body BudgetItemRequest request);
 
     @POST("events/{event-id}/budget/purchase")

@@ -1,7 +1,5 @@
 package com.eventorium.presentation.event.adapters;
 
-import static java.util.stream.Collectors.toList;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -31,8 +29,6 @@ import com.google.android.material.button.MaterialButton;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.IntStream;
 
 public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.BudgetItemViewHolder> {
 
@@ -54,6 +50,18 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
             if (itemId.equals(item.getId())) {
                 budgetItems.remove(i);
                 notifyItemRemoved(i);
+                return;
+            }
+        }
+    }
+
+    public void updateItem(Long itemId, double spentAmount) {
+        for (int i = 0; i < budgetItems.size(); i++) {
+            BudgetItem item = budgetItems.get(i);
+            if (itemId.equals(item.getId())) {
+                item.setStatus(BudgetItemStatus.PROCESSED);
+                item.setSpentAmount(spentAmount);
+                notifyItemChanged(i);
                 return;
             }
         }

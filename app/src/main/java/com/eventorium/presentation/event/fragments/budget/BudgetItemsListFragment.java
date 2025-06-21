@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.budget.UpdateBudgetItem;
+import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentBudgetItemsListBinding;
 import com.eventorium.presentation.event.adapters.BudgetItemAdapter;
 import com.eventorium.presentation.event.listeners.OnBudgetItemActionListener;
@@ -93,10 +94,12 @@ public class BudgetItemsListFragment extends Fragment {
                         .build();
 
                 budgetViewModel.purchaseProduct(eventId, request).observe(getViewLifecycleOwner(), result -> {
-                    if(result.getError() == null)
+                    if(result.getError() == null) {
                         handleResponse("Item has been purchased successfully!");
-                    else
-                        handleResponse(result.getError());
+                        Product product = result.getData();
+                        double spentAmount = product.getPrice() * (1 - product.getDiscount() / 100);
+                        adapter.updateItem(item.getId(), spentAmount);
+                    } else handleResponse(result.getError());
                 });
             }
 
