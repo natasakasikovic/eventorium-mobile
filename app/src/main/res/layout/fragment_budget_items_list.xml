@@ -10,7 +10,7 @@
         android:id="@+id/purchasedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/budget"
+        android:text="@string/purchased_and_reserved"
         android:layout_marginTop="20dp"
         android:textSize="24sp"
         android:textColor="@color/md_theme_primary"
@@ -20,8 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
-        android:id="@+id/linear_layout_services"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="20dp"
@@ -31,7 +30,6 @@
         app:layout_constraintTop_toBottomOf="@+id/purchasedText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/solutionRecycleView"

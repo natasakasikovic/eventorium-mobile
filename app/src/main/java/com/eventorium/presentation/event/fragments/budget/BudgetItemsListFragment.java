@@ -54,7 +54,7 @@ public class BudgetItemsListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetItemsListBinding.inflate(inflater, container, false);
-        adapter = new BudgetItemAdapter(new ArrayList<>());
+        adapter = new BudgetItemAdapter(new ArrayList<>(), requireContext());
         binding.solutionRecycleView.setAdapter(adapter);
         loadBudgetItems();
         return binding.getRoot();
