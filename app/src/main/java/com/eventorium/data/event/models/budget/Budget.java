@@ -1,5 +1,7 @@
 package com.eventorium.data.event.models.budget;
 
+import com.eventorium.data.category.models.Category;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +18,5 @@ import lombok.Setter;
 public class Budget {
     private Double plannedAmount;
     private Double spentAmount;
-    private List<BudgetItemRequest> items;
+    private List<Category> activeCategories;
 }

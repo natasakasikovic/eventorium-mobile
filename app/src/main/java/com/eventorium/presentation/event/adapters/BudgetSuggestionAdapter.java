@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.BudgetSuggestion;
+import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 
 import java.util.List;

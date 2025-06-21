@@ -2,7 +2,6 @@ package com.eventorium.presentation.event.fragments.budget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,16 +18,12 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.BudgetSuggestion;
+import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.solution.models.SolutionType;
-import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentBudgetCategoryBinding;
 import com.eventorium.presentation.event.adapters.BudgetSuggestionAdapter;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
-import com.eventorium.presentation.solution.adapters.ProductsAdapter;
-import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 import com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;

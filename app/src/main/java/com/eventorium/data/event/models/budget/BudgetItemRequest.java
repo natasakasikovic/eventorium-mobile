@@ -18,5 +18,5 @@ public class BudgetItemRequest {
     private Double plannedAmount;
     private Long itemId;
     private Category category;
-    private SolutionType type;
+    private SolutionType itemType;
 }

@@ -3,16 +3,15 @@ package com.eventorium.presentation.event.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.event.models.BudgetSuggestion;
+import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.data.event.models.budget.BudgetItem;
+import com.eventorium.data.event.models.budget.UpdateBudgetItem;
 import com.eventorium.data.event.repositories.BudgetRepository;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.event.models.budget.Budget;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.solution.models.product.Product;
-import com.eventorium.data.solution.repositories.ProductRepository;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.solution.repositories.ServiceRepository;
 
 import java.util.List;
 
@@ -32,6 +31,23 @@ public class BudgetViewModel extends ViewModel {
     public LiveData<Result<List<BudgetSuggestion>>> getBudgetSuggestions(Long eventId, Long categoryId, double price) {
         return budgetRepository.getBudgetSuggestions(eventId, categoryId, price);
     }
+
+    public LiveData<Result<BudgetItem>> createBudgetItem(Long eventId, BudgetItemRequest request) {
+        return budgetRepository.createBudgetItem(eventId, request);
+    }
+
+    public LiveData<Result<Void>> deleteBudgetItem(Long eventId, Long itemId) {
+        return budgetRepository.deleteBudgetItem(eventId, itemId);
+    }
+
+    public LiveData<Result<Void>> updateActiveCategories(Long eventId, List<Long> categoryIds) {
+        return budgetRepository.updateActiveCategories(eventId, categoryIds);
+    }
+
+    public LiveData<Result<BudgetItem>> updateBudgeItem(Long eventId, Long itemId, UpdateBudgetItem request) {
+        return budgetRepository.updateBudgeItem(eventId, itemId, request);
+    }
+
 
     public LiveData<Result<Product>> purchaseProduct(Long eventId, BudgetItemRequest product) {
         return budgetRepository.purchaseProduct(eventId, product);

@@ -1,4 +1,4 @@
-package com.eventorium.data.event.models;
+package com.eventorium.data.event.models.budget;
 
 import android.graphics.Bitmap;
 
