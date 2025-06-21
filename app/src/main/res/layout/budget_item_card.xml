@@ -133,6 +133,49 @@
             android:orientation="horizontal"
             android:layout_height="match_parent">
 
+            <com.google.android.material.button.MaterialButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/purchaseButton"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/darker_gray"
+                android:visibility="gone"
+                app:icon="@drawable/ic_cart"
+                app:iconTint="@android:color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/reserveButton"
+                style="?attr/materialIconButtonStyle"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/darker_gray"
+                app:icon="@drawable/ic_reserve"
+                app:iconTint="@android:color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/saveButton"
+                style="?attr/materialIconButtonStyle"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/darker_gray"
+                app:icon="@drawable/ic_save"
+                app:iconTint="@android:color/black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/deleteButton"
+                style="?attr/materialIconButtonStyle"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/darker_gray"
+                app:icon="@drawable/ic_delete"
+                app:iconTint="@android:color/black" />
         </LinearLayout>
 
     </LinearLayout>

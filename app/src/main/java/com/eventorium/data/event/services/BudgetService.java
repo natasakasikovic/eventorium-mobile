@@ -44,10 +44,10 @@ public interface BudgetService {
     @POST("events/{event-id}/budget/purchase")
     Call<Product> purchaseProduct(@Path("event-id") Long eventId, @Body BudgetItemRequest item);
 
-    @PATCH("/events/{event-id}/budget/active-categories")
+    @PATCH("events/{event-id}/budget/active-categories")
     Call<ResponseBody> updateActiveCategories(@Path("event-id") Long eventId, @Body List<Long> categoryIds);
 
-    @PATCH("/events/{event-id}/budget/budget-items/{item-id}")
+    @PATCH("events/{event-id}/budget/budget-items/{item-id}")
     Call<BudgetItem> updateBudgetItemPlannedAmount(
             @Path("event-id") Long eventId,
             @Path("item-id") Long itemId,

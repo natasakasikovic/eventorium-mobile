@@ -9,9 +9,14 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.eventorium.data.event.models.budget.BudgetItem;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.budget.UpdateBudgetItem;
 import com.eventorium.databinding.FragmentBudgetItemsListBinding;
 import com.eventorium.presentation.event.adapters.BudgetItemAdapter;
+import com.eventorium.presentation.event.listeners.OnBudgetItemActionListener;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 
 import java.util.ArrayList;
@@ -54,10 +59,61 @@ public class BudgetItemsListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBudgetItemsListBinding.inflate(inflater, container, false);
-        adapter = new BudgetItemAdapter(new ArrayList<>(), requireContext());
+        setupAdapter();
         binding.solutionRecycleView.setAdapter(adapter);
         loadBudgetItems();
         return binding.getRoot();
+    }
+
+    private void setupAdapter() {
+        adapter = new BudgetItemAdapter(new ArrayList<>(), requireContext(), new OnBudgetItemActionListener() {
+            @Override
+            public void onReserve(BudgetItem item) {
+                // TODO: have to wait for service reservation pull request
+            }
+
+            @Override
+            public void onSave(BudgetItem item) {
+                UpdateBudgetItem request = new UpdateBudgetItem(item.getPlannedAmount());
+                budgetViewModel.updateBudgeItem(eventId, item.getId(), request).observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() == null)
+                        handleResponse("Item has been updated successfully!");
+                    else
+                        handleResponse(result.getError());
+                });
+            }
+
+            @Override
+            public void onPurchase(BudgetItem item) {
+                BudgetItemRequest request = BudgetItemRequest.builder()
+                        .itemId(item.getId())
+                        .category(item.getCategory())
+                        .itemType(item.getType())
+                        .plannedAmount(item.getPlannedAmount())
+                        .build();
+
+                budgetViewModel.purchaseProduct(eventId, request).observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() == null)
+                        handleResponse("Item has been purchased successfully!");
+                    else
+                        handleResponse(result.getError());
+                });
+            }
+
+            @Override
+            public void onDelete(BudgetItem item) {
+                budgetViewModel.deleteBudgetItem(eventId, item.getId()).observe(getViewLifecycleOwner(), result -> {
+                    if(result.getError() == null)
+                        handleResponse("Item has been deleted successfully!");
+                    else
+                        handleResponse(result.getError());
+                });
+            }
+        });
+    }
+
+    private void handleResponse(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void loadBudgetItems() {
