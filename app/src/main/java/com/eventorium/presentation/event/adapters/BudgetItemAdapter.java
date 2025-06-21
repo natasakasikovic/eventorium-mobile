@@ -2,9 +2,16 @@ package com.eventorium.presentation.event.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,10 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.event.models.budget.BudgetItemStatus;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.presentation.event.listeners.OnBudgetItemActionListener;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -27,6 +36,9 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
     private Context context;
     private List<BudgetItem> budgetItems;
     private OnBudgetItemActionListener listener;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable debounceRunnable;
+    private static final long DEBOUNCE_DELAY = 300;
 
     public BudgetItemAdapter(List<BudgetItem> budgetItems, Context context, OnBudgetItemActionListener listener) {
         this.budgetItems = budgetItems;
@@ -63,7 +75,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
         TextView solutionName;
         TextView categoryName;
         TextView spentAmount;
-        TextView plannedAmount;
+        EditText plannedAmount;
 
         TextView statusText;
         ImageView statusIcon;
@@ -92,7 +104,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
             solutionName.setText(item.getSolutionName());
             categoryName.setText(item.getCategory().getName());
             spentAmount.setText("Spent: " + item.getSpentAmount());
-            plannedAmount.setText("Planned: " + item.getPlannedAmount());
+            plannedAmount.setText(item.getPlannedAmount().toString());
 
             int statusColor = getStatusColor(item.getStatus());
 
@@ -114,16 +126,61 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
 
         private void setupButtons(BudgetItem item) {
             BudgetItemStatus status = item.getStatus();
+
             switch (status) {
-                case PROCESSED, DENIED -> {}
-                case PENDING -> enableButton(saveButton, item, listener::onSave);
+                case PROCESSED, DENIED -> disablePlannedAmount();
+                case PENDING -> {
+                    enableButton(saveButton, item, listener::onSave);
+                    createPlannedAmountChangeHandler(item);
+                }
                 case PLANNED -> {
                     enableButton(deleteButton, item, listener::onDelete);
                     switch (item.getType()) {
                         case PRODUCT -> enableButton(purchaseButton, item, listener::onPurchase);
                         case SERVICE -> enableButton(reserveButton, item, listener::onReserve);
                     }
+                    createPlannedAmountChangeHandler(item);
                 }
+            }
+        }
+
+        private void disablePlannedAmount() {
+            plannedAmount.setEnabled(false);
+            plannedAmount.setFocusable(false);
+            plannedAmount.setFocusableInTouchMode(false);
+            plannedAmount.setCursorVisible(false);
+            plannedAmount.setBackgroundColor(Color.TRANSPARENT);
+            plannedAmount.setTextColor(ContextCompat.getColor(context, R.color.status_processed));
+        }
+
+        private void createPlannedAmountChangeHandler(BudgetItem item) {
+            plannedAmount.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                    if (debounceRunnable != null) {
+                        handler.removeCallbacks(debounceRunnable);
+                    }
+                }
+
+                @SuppressLint("DefaultLocale")
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (!editable.toString().isEmpty()) {
+                        debounceRunnable = () ->  onPlannedAmountChanged(editable, item);
+                        handler.postDelayed(debounceRunnable, DEBOUNCE_DELAY);
+                    }
+                }
+            });
+        }
+
+        public void onPlannedAmountChanged(Editable editable, BudgetItem item) {
+            try {
+                item.setPlannedAmount(Double.parseDouble(editable.toString()));
+            } catch (NumberFormatException e) {
+                Log.e("PRICE_LIST", Objects.requireNonNull(e.getLocalizedMessage()));
             }
         }
 

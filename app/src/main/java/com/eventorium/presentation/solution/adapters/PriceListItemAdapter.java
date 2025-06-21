@@ -39,20 +39,10 @@ public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdap
         return new ProductViewHolder(itemView);
     }
 
-    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, @SuppressLint("RecyclerView") int position) {
         PriceListItem priceListItem = productList.get(position);
-
-        holder.nameTextView.setText(priceListItem.getName());
-        holder.priceEditText.setText(String.format("%.2f", priceListItem.getPrice()));
-        holder.discountEditText.setText(String.format("%.2f", priceListItem.getDiscount()));
-        holder.netPriceTextView.setText(String.format("$%.2f", priceListItem.getNetPrice()));
-
-        holder.createPriceChangeHandler(priceListItem);
-        holder.createDiscountChangeHandler(priceListItem);
-
-        holder.saveButton.setOnClickListener(v -> onSave.save(priceListItem));
+        holder.bind(priceListItem);
     }
 
 
@@ -61,7 +51,7 @@ public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdap
         return productList.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+    public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, netPriceTextView;
         EditText priceEditText, discountEditText;
         ImageButton saveButton;
@@ -148,6 +138,19 @@ public class PriceListItemAdapter extends RecyclerView.Adapter<PriceListItemAdap
             } catch (NumberFormatException e) {
                 Log.e("PRICE_LIST", Objects.requireNonNull(e.getLocalizedMessage()));
             }
+        }
+
+        @SuppressLint("DefaultLocale")
+        public void bind(PriceListItem priceListItem) {
+            nameTextView.setText(priceListItem.getName());
+            priceEditText.setText(String.format("%.2f", priceListItem.getPrice()));
+            discountEditText.setText(String.format("%.2f", priceListItem.getDiscount()));
+            netPriceTextView.setText(String.format("$%.2f", priceListItem.getNetPrice()));
+
+            createPriceChangeHandler(priceListItem);
+            createDiscountChangeHandler(priceListItem);
+
+            saveButton.setOnClickListener(v -> onSave.save(priceListItem));
         }
     }
 }

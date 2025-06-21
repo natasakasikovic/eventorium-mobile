@@ -54,6 +54,6 @@ public interface BudgetService {
             @Body UpdateBudgetItem request
     );
 
-    @DELETE("events/{event-id}/budget/budget-item/{item-id}")
+    @DELETE("events/{event-id}/budget/budget-items/{item-id}")
     Call<ResponseBody> deleteBudgeItem(@Path("event-id") Long eventId, @Path("item-id") Long itemId);
 }
