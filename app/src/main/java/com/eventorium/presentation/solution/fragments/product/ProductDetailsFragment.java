@@ -136,9 +136,6 @@ public class ProductDetailsFragment extends Fragment {
         binding.purchaseButton.setOnClickListener(v -> onPurchase());
 
         if(plannedAmount != null && event != null) {
-            binding.addToPlannedButton.setVisibility(View.VISIBLE);
-            binding.backToPlannerButton.setVisibility(View.VISIBLE);
-
             binding.addToPlannedButton.setOnClickListener(v -> addToPlanner());
             binding.backToPlannerButton.setOnClickListener(v -> navigateToBudget());
         }
@@ -245,6 +242,12 @@ public class ProductDetailsFragment extends Fragment {
         } else {
             binding.purchaseButton.setVisibility(View.VISIBLE);
         }
+
+        if(event != null && plannedAmount != null) {
+            binding.addToPlannedButton.setVisibility(View.VISIBLE);
+            binding.backToPlannerButton.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void changeMargin() {

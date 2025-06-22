@@ -141,7 +141,6 @@ public class BudgetCategoryFragment extends Fragment {
         navController.navigate(R.id.action_budget_to_productDetails, args);
     }
 
-
     private void search() {
         if(Objects.requireNonNull(binding.plannedAmount.getText()).toString().isEmpty()) {
             Toast.makeText(getContext(), R.string.please_fill_in_all_fields, Toast.LENGTH_SHORT).show();

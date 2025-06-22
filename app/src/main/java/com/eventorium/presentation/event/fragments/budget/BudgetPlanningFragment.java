@@ -22,16 +22,19 @@ public class BudgetPlanningFragment extends Fragment {
 
     private FragmentBudgetPlanningBinding binding;
     public static final String ARG_EVENT = "ARG_EVENT";
+    public static final String ARG_CAN_ADVANCE = "ARG_CAN_ADVANCE";
 
     private Event event;
+    private boolean canAdvance;
 
     public BudgetPlanningFragment() {
     }
 
-    public static BudgetPlanningFragment newInstance(Event event) {
+    public static BudgetPlanningFragment newInstance(Event event, boolean canAdvance) {
         BudgetPlanningFragment fragment = new BudgetPlanningFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_EVENT, event);
+        args.putBoolean(ARG_CAN_ADVANCE, canAdvance);
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,6 +44,7 @@ public class BudgetPlanningFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             event = getArguments().getParcelable(ARG_EVENT);
+            canAdvance = getArguments().getBoolean(ARG_CAN_ADVANCE, true);
         }
     }
 
@@ -50,7 +54,8 @@ public class BudgetPlanningFragment extends Fragment {
         binding = FragmentBudgetPlanningBinding.inflate(inflater, container, false);
         BudgetPagerAdapter adapter = new BudgetPagerAdapter(this, event);
         binding.viewPager.setAdapter(adapter);
-        setUpListener();
+        if(canAdvance)
+            setUpListener();
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
             switch (position) {
@@ -67,6 +72,7 @@ public class BudgetPlanningFragment extends Fragment {
     }
 
     private void setUpListener() {
+        binding.continueButton.setVisibility(View.VISIBLE);
         binding.continueButton.setOnClickListener(v -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();

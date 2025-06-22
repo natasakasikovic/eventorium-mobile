@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.databinding.FragmentManageableEventsBinding;
 import com.eventorium.presentation.event.adapters.ManageableEventAdapter;
@@ -90,8 +91,9 @@ public class ManageableEventsFragment extends Fragment {
 
             @Override
             public void navigateToBudget(EventSummary item) {
+                Event event = Event.builder().id(item.getId()).build();
                 navController.navigate(R.id.action_manage_events_to_budget,
-                        BudgetItemsListFragment.newInstance(item.getId()).getArguments());
+                        BudgetItemsListFragment.newInstance(event, false).getArguments());
             }
 
             @Override
