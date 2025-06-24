@@ -1,4 +1,4 @@
-package com.eventorium.presentation.notifications.adapters;
+package com.eventorium.presentation.notification.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

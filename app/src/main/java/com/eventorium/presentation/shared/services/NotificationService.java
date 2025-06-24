@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
@@ -76,7 +77,7 @@ public class NotificationService {
             @Nullable PendingIntent pendingIntent
     ) {
         return new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setSmallIcon(R.drawable.ic_notifications)
                 .setContentTitle(title)
                 .setContentText(contentText)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

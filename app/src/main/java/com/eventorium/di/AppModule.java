@@ -414,8 +414,11 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public static NotificationRepository provideNotificationRepository(NotificationService service) {
-        return new NotificationRepository(service);
+    public static NotificationRepository provideNotificationRepository(
+            SharedPreferences sharedPreferences,
+            NotificationService service
+    ) {
+        return new NotificationRepository(sharedPreferences, service);
     }
 
     @Provides
