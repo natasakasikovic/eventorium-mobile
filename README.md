@@ -125,13 +125,10 @@ The system supports the following roles with corresponding credentials:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-
+[contributors-shield]: https://img.shields.io/github/contributors/kzi-nastava/ma-project-event-planner-siit-2024-team-13.svg?style=for-the-badge
+[contributors-url]: https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/graphs/contributors
 [license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
 [license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
-
 [android-shield]: https://img.shields.io/badge/Android-API%2034-3DDC84?logo=android&logoColor=white
 [java-shield]: https://img.shields.io/badge/Java-18-red?logo=java&logoColor=white
 [studio-shield]: https://img.shields.io/badge/Android%20Studio-Hedgehog-FD6F00?logo=ladybug&logoColor=white  
@@ -142,6 +139,5 @@ The system supports the following roles with corresponding credentials:
 [studio-url]: https://developer.android.com/studio/archive#hedgehog  
 [gradle-url]: https://docs.gradle.org/8.9/release-notes.html  
 [xml-url]: https://www.w3.org/XML/
-
 [last-commit-shield]: https://img.shields.io/github/last-commit/kzi-nastava/iss-project-event-planner-siit-2024-team-13?branch=main&style=for-the-badge
 [last-commit-url]: https://github.com/kzi-nastava/iss-project-event-planner-siit-2024-team-13/commits/main
