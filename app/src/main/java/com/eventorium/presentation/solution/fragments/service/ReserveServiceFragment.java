@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +120,7 @@ public class ReserveServiceFragment extends Fragment {
         binding.timePickerTextFrom.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (fixedDurationHours != null && !s.toString().isEmpty()) {
+                if (fixedDurationHours != 0 && !s.toString().isEmpty()) { // if service doesn't have fixed duration, zero is being set as default value for fixedDurationHours
                     String startingTime = getTimeFromInput(binding.timePickerTextFrom);
                     String endingTime = calculateEndingTime(startingTime, fixedDurationHours);
                     binding.timePickerTextTo.setText(endingTime);
@@ -132,7 +133,7 @@ public class ReserveServiceFragment extends Fragment {
     }
 
     private String getTimeFromInput(TextInputEditText field) {
-        return field.getText() != null ? field.getText().toString().trim() : "";
+        return field.getText() != null ? field.getText().toString().trim().toUpperCase() : "";
     }
 
     private String calculateEndingTime(String startTime, long durationHours) {
@@ -144,7 +145,7 @@ public class ReserveServiceFragment extends Fragment {
             calendar.add(Calendar.HOUR_OF_DAY, (int) durationHours);
             return sdf.format(calendar.getTime());
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e("TimeCalculator", "Failed to parse time: " + startTime, e);
             return "";
         }
     }

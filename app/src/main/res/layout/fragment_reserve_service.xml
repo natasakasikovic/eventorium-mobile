@@ -92,10 +92,10 @@
             android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reserveServiceButton"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:text="@string/reserve_service"
         android:importantForAccessibility="yes"
         android:backgroundTint="@color/md_theme_primary"

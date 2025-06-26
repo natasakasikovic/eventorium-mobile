@@ -23,5 +23,5 @@ public interface ReservationService {
     Call<Reservation> updateReservation(@Path("id") Long id, @Body UpdateReservationStatus request);
 
     @POST("events/{eventId}/services/{serviceId}/reservation")
-    Call<ResponseBody> reserveService(@Body ReservationRequest request, @Path("eventId") long eventId, @Path("serviceId") long serviceId);
+    Call<ResponseBody> reserveService(@Body ReservationRequest request, @Path("eventId") Long eventId, @Path("serviceId") long serviceId);
 }
