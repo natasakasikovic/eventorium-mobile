@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
-import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
@@ -119,6 +118,7 @@ public class ServiceDetailsFragment extends Fragment {
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
+        binding.reserveService.setOnClickListener(v -> navigateToReservation());
         binding.reserveService.setOnClickListener(v -> navigateToReservation());
 
         if(eventId != null && plannedAmount != null) {
