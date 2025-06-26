@@ -46,7 +46,6 @@ public class ProductDetailsFragment extends Fragment {
     private LoginViewModel loginViewModel;
 
     public static final String ARG_ID = "ARG_PRODUCT_ID";
-    public static final String ARG_TYPE = "ARG_TYPE";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
     public static final String ARG_EVENT = "ARG_EVENT";
 

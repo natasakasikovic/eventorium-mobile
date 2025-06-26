@@ -43,19 +43,19 @@ public class ServiceDetailsFragment extends Fragment {
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
-    public static final String ARG_TYPE = "ARG_TYPE";
     public static final String ARG_PLANNED_AMOUNT = "ARG_PLANNED_AMOUNT";
-    public static final String ARG_EVENT = "ARG_EVENT";
+    public static final String ARG_EVENT_ID = "ARG_EVENT_ID";
 
     private Long id;
     private Double plannedAmount;
-    private Event event;
+    private Long eventId;
     private UserDetails provider;
     private Long companyId;
+    private Integer maxDuration;
+    private Integer minDuration;
 
 
-    public ServiceDetailsFragment() {
-    }
+    public ServiceDetailsFragment() { }
 
     public static ServiceDetailsFragment newInstance(Long id) {
         ServiceDetailsFragment fragment = new ServiceDetailsFragment();
@@ -65,28 +65,24 @@ public class ServiceDetailsFragment extends Fragment {
         return fragment;
     }
 
-    public static ServiceDetailsFragment newInstance(
-        Long id,
-        Event event,
-        Double plannedAmount
-    ) {
+    public static ServiceDetailsFragment newInstance(Long id, Long eventId, Double plannedAmount) {
         ServiceDetailsFragment fragment = new ServiceDetailsFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_ID, id);
         args.putDouble(ARG_PLANNED_AMOUNT, plannedAmount);
-        args.putParcelable(ARG_EVENT, event);
+        args.putLong(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
+
+        if (getArguments() != null) {
             id = getArguments().getLong(ARG_ID);
             plannedAmount = getArguments().getDouble(ARG_PLANNED_AMOUNT);
-            event = getArguments().getParcelable(ARG_EVENT);
+            eventId = getArguments().getLong(ARG_EVENT_ID);
         }
 
         ViewModelProvider provider = new ViewModelProvider(this);
@@ -107,15 +103,25 @@ public class ServiceDetailsFragment extends Fragment {
         serviceViewModel.getService(id).observe(getViewLifecycleOwner(), service -> {
             if(service != null) {
                 displayServiceDate(service);
+                minDuration = service.getMinDuration();
+                maxDuration = service.getMaxDuration();
             }
         });
 
+        setupClickListeners();
+        renderButtons();
+
+        return binding.getRoot();
+    }
+
+    private void setupClickListeners() {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
-        return binding.getRoot();
+        binding.reserveService.setOnClickListener(v -> navigateToReservation());
     }
+
 
     private void setupFavouriteListeners() {
         serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
@@ -211,11 +217,29 @@ public class ServiceDetailsFragment extends Fragment {
         navController.navigate(R.id.action_serviceDetails_to_comments, args);
     }
 
+    private void navigateToReservation() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+
+        Integer fixedDurationHours = minDuration == maxDuration ? minDuration : 0;
+
+        if (eventId == 0)
+            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id, fixedDurationHours).getArguments());
+        else
+            navController.navigate(R.id.action_serviceDetails_to_reservation, ReserveServiceFragment.newInstance(id, fixedDurationHours, eventId, plannedAmount).getArguments());
+    }
+
     private void navigateToProvider() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Bundle args = new Bundle();
         args.putLong(UserProfileFragment.ARG_ID, provider.getId());
         navController.navigate(R.id.action_serviceDetails_to_provider, args);
+    }
+
+    private void renderButtons() {
+        String role = loginViewModel.getUserRole();
+
+        if (role == null || !role.equals("EVENT_ORGANIZER"))
+            binding.reserveService.setVisibility(View.GONE);
     }
 
     @Override

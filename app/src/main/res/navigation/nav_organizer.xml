@@ -30,10 +30,9 @@
         tools:layout="@layout/fragment_edit_event" />
 
     <fragment
-        android:id="@+id/bookingFragment"
-        android:name="com.eventorium.presentation.solution.fragments.service.ServiceBookingFragment"
-        android:label="service_booking_fragment"
-        tools:layout="@layout/fragment_service_booking" />
+        android:id="@+id/serviceReservationFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ReserveServiceFragment"
+        tools:layout="@layout/fragment_reserve_service" />
 
     <fragment
         android:id="@+id/eventInvitationsFragment"
@@ -178,6 +177,9 @@
         <action
             android:id="@+id/action_serviceDetails_to_comments"
             app:destination="@id/commentsOverviewFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_reservation"
+            app:destination="@id/serviceReservationFragment"/>
     </fragment>
 
     <fragment
