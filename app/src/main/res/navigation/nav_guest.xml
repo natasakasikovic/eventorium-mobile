@@ -57,7 +57,15 @@
         <action
             android:id="@+id/action_serviceDetails_to_comments"
             app:destination="@id/commentsOverviewFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_reservation"
+            app:destination="@id/serviceReservationFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/serviceReservationFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ReserveServiceFragment"
+        tools:layout="@layout/fragment_reserve_service" />
 
     <fragment
         android:id="@+id/productDetailsFragment"
@@ -155,7 +163,7 @@
 
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.eventorium.presentation.notifications.fragments.NotificationsFragment"
+        android:name="com.eventorium.presentation.notification.fragments.NotificationsFragment"
         tools:layout="@layout/fragment_notifications"/>
 
     <fragment

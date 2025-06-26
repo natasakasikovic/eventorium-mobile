@@ -56,8 +56,8 @@ public class WebSocketService {
         logConnection(stompClient);
 
         createGlobalSubscriptions();
-        switch(role) {
-            case "ADMIN" -> createAdminSubscriptions();
+        if (role.equals("ADMIN")) {
+            createAdminSubscriptions();
         }
     }
 

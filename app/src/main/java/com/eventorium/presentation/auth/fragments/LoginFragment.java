@@ -2,6 +2,7 @@ package com.eventorium.presentation.auth.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +28,9 @@ import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.AuthResponse;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
+import com.eventorium.presentation.WebSocketForegroundService;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
@@ -53,7 +56,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        ViewModelProvider provider = new ViewModelProvider(this);
+        loginViewModel = provider.get(LoginViewModel.class);
         subscribeToNotifications();
     }
 
@@ -82,6 +86,10 @@ public class LoginFragment extends Fragment {
             return;
         }
 
+        handleLogin(email, password);
+    }
+
+    private void handleLogin(String email, String password) {
         LoginRequest dto = new LoginRequest(email, password);
         loginViewModel.login(dto).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
@@ -90,7 +98,6 @@ public class LoginFragment extends Fragment {
             } else
                 showInfoDialog(result.getError());
         });
-
     }
 
     private void showInfoDialog(String message) {
@@ -115,7 +122,9 @@ public class LoginFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     navigateToHome();
-                    loginViewModel.openWebSocket();
+                    if (isGranted && !WebSocketForegroundService.isRunning) {
+                        startWebSocketService();
+                    }
                 }
         );
     }
@@ -124,10 +133,29 @@ public class LoginFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED) {
             navigateToHome();
-            loginViewModel.openWebSocket();
+            if(!WebSocketForegroundService.isRunning)
+                startWebSocketService();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
+    }
+
+    private void startWebSocketService() {
+        Long userId = loginViewModel.getUserId();
+        String role = loginViewModel.getUserRole();
+        if (userId != null && role != null) {
+            ContextCompat.startForegroundService(
+                    requireContext(),
+                    createWebSocketServiceIntent(userId, role)
+            );
+        }
+    }
+
+    private Intent createWebSocketServiceIntent(Long userId, String role) {
+        Intent intent = new Intent(requireContext(), WebSocketForegroundService.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("role", role);
+        return intent;
     }
 
     @Override

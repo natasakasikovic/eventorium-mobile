@@ -2,14 +2,13 @@ package com.eventorium.data.solution.repositories;
 
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.constants.ErrorMessages;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 import com.eventorium.data.solution.models.service.Reservation;
+import com.eventorium.data.solution.models.service.ReservationRequest;
 import com.eventorium.data.solution.models.service.UpdateReservationStatus;
 import com.eventorium.data.solution.services.ReservationService;
 
@@ -38,4 +37,9 @@ public class ReservationRepository {
         return result;
     }
 
+    public LiveData<Result<Void>> reserveService(ReservationRequest request, Long eventId, Long serviceId) {
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.reserveService(request, eventId, serviceId).enqueue(RetrofitCallbackHelper.handleVoidResponse(result));
+        return result;
+    }
 }

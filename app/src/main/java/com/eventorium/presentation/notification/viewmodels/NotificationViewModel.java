@@ -1,6 +1,7 @@
-package com.eventorium.presentation.notifications.viewmodels;
+package com.eventorium.presentation.notification.viewmodels;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.notification.models.NotificationResponse;
@@ -29,5 +30,17 @@ public class NotificationViewModel extends ViewModel {
 
     public LiveData<Result<Void>> markNotificationsAsSeen() {
         return repository.markNotificationsAsSeen();
+    }
+
+    public LiveData<Result<Boolean>> getNotificationSilenceStatus() {
+        return repository.getNotificationSilenceStatus();
+    }
+
+    public LiveData<Result<Void>> silenceNotifications(boolean silenced) {
+        return repository.silenceNotifications(silenced);
+    }
+
+    public void saveSilencedStatus(boolean silenced) {
+        repository.saveSilencedStatus(silenced);
     }
 }

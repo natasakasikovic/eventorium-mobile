@@ -1,4 +1,4 @@
-package com.eventorium.presentation.notifications.fragments;
+package com.eventorium.presentation.notification.fragments;
 
 import android.os.Bundle;
 
@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.databinding.FragmentNotificationsBinding;
-import com.eventorium.presentation.notifications.adapters.NotificationAdapter;
-import com.eventorium.presentation.notifications.viewmodels.NotificationViewModel;
+import com.eventorium.presentation.notification.adapters.NotificationAdapter;
+import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
 
 import java.util.ArrayList;
 

@@ -127,10 +127,9 @@ public class BudgetCategoryFragment extends Fragment {
         Bundle args = new Bundle();
         args.putLong(ServiceDetailsFragment.ARG_ID, suggestion.getId());
         args.putDouble(ServiceDetailsFragment.ARG_PLANNED_AMOUNT, plannedAmount);
-        args.putParcelable(ServiceDetailsFragment.ARG_EVENT, event);
+        args.putLong(ServiceDetailsFragment.ARG_EVENT_ID, event.getId());
         navController.navigate(R.id.action_budget_to_serviceDetails, args);
     }
-
 
     private void navigateToProductDetails(BudgetSuggestion suggestion) {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
@@ -184,5 +183,4 @@ public class BudgetCategoryFragment extends Fragment {
         super.onDestroy();
         binding = null;
     }
-
 }

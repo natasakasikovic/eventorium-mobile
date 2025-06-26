@@ -38,18 +38,12 @@ public class LoginViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public void openWebSocket() {
-        webSocketService.connect(authRepository.getUserId(), authRepository.getUserRole());
-    }
-
-    public void closeWebSocket() {
-        webSocketService.disconnect();
-    }
-
     public boolean isLoggedIn() {
         return authRepository.isLoggedIn();
     }
     public String getUserRole() {
         return authRepository.getUserRole();
     }
+
+    public Long getUserId() { return authRepository.getUserId(); }
 }

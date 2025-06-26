@@ -100,7 +100,6 @@
     <string name="from">From: </string>
     <string name="to">To: </string>
     <string name="date">Date: </string>
-    <string name="book_service">Book a service</string>
     <string name="select_date">Select date</string>
     <string name="category_proposals">Category proposals</string>
     <string name="update_category_proposal">Update category proposal</string>
@@ -250,4 +249,5 @@
     <string name="add_to_planner">Add to planner</string>
     <string name="back_to_planner">Back to planner</string>
     <string name="successfully_added_product_to_planner">Successfully added product to planner.</string>
+    <string name="reserve_service">Reserve a service</string>
 </resources>
