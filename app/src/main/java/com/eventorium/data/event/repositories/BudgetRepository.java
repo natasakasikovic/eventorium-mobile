@@ -5,6 +5,7 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.data.event.models.budget.Budget;
 import com.eventorium.data.event.models.budget.BudgetItem;
@@ -16,6 +17,7 @@ import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -63,9 +65,9 @@ public class BudgetRepository {
         return result;
     }
 
-    public LiveData<Result<Void>> updateActiveCategories(Long eventId, List<Long> activeCategoryIds) {
+    public LiveData<Result<Void>> updateActiveCategories(Long eventId, List<Category> categories) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        budgetService.updateActiveCategories(eventId, activeCategoryIds).enqueue(handleVoidResponse(result));
+        budgetService.updateActiveCategories(eventId, getCategoryIds(categories)).enqueue(handleVoidResponse(result));
         return result;
     }
 
@@ -79,5 +81,9 @@ public class BudgetRepository {
         MutableLiveData<Result<List<SolutionReview>>> result = new MutableLiveData<>();
         budgetService.getAllBudgetItems().enqueue(handleGeneralResponse(result));
         return result;
+    }
+
+    private List<Long> getCategoryIds(List<Category> categories) {
+        return categories.stream().map(Category::getId).collect(Collectors.toList());
     }
 }

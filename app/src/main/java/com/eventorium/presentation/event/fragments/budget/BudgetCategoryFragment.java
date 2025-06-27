@@ -39,15 +39,16 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class BudgetCategoryFragment extends Fragment {
 
-    public interface OnRemoveCategoryListener {
+    public interface CategoryChangeListener {
         void onRemoveCategory(int position, Category category);
+        void saveCategories();
     }
 
     private FragmentBudgetCategoryBinding binding;
     private BudgetViewModel budgetViewModel;
     private ProductViewModel productViewModel;
     private ServiceViewModel serviceViewModel;
-    private OnRemoveCategoryListener onRemoveCategoryListener;
+    private CategoryChangeListener categoryChangeListener;
 
     private BudgetSuggestionAdapter adapter;
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
@@ -75,11 +76,11 @@ public class BudgetCategoryFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (getParentFragment() instanceof OnRemoveCategoryListener) {
-            onRemoveCategoryListener = (OnRemoveCategoryListener) getParentFragment();
+        if (getParentFragment() instanceof CategoryChangeListener) {
+            categoryChangeListener = (CategoryChangeListener) getParentFragment();
         } else {
             assert getParentFragment() != null;
-            throw new ClassCastException(getParentFragment()+ " must implement OnRemoveCategoryListener");
+            throw new ClassCastException(getParentFragment()+ " must implement CategoryChangeListener");
         }
     }
 
@@ -102,8 +103,8 @@ public class BudgetCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentBudgetCategoryBinding.inflate(inflater, container, false);
         binding.deleteButton.setOnClickListener(v -> {
-            if (onRemoveCategoryListener != null) {
-                onRemoveCategoryListener.onRemoveCategory(position, category);
+            if (categoryChangeListener != null) {
+                categoryChangeListener.onRemoveCategory(position, category);
             }
         });
         configureAdapter();
@@ -129,6 +130,7 @@ public class BudgetCategoryFragment extends Fragment {
         args.putDouble(ServiceDetailsFragment.ARG_PLANNED_AMOUNT, plannedAmount);
         args.putLong(ServiceDetailsFragment.ARG_EVENT_ID, event.getId());
         navController.navigate(R.id.action_budget_to_serviceDetails, args);
+        categoryChangeListener.saveCategories();
     }
 
     private void navigateToProductDetails(BudgetSuggestion suggestion) {
@@ -138,6 +140,7 @@ public class BudgetCategoryFragment extends Fragment {
         args.putDouble(ProductDetailsFragment.ARG_PLANNED_AMOUNT, plannedAmount);
         args.putParcelable(ProductDetailsFragment.ARG_EVENT, event);
         navController.navigate(R.id.action_budget_to_productDetails, args);
+        categoryChangeListener.saveCategories();
     }
 
     private void search() {
