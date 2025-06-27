@@ -24,6 +24,8 @@ import com.eventorium.databinding.FragmentBudgetItemsListBinding;
 import com.eventorium.presentation.event.adapters.BudgetItemAdapter;
 import com.eventorium.presentation.event.listeners.OnBudgetItemActionListener;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
+import com.eventorium.presentation.solution.fragments.service.ReserveServiceFragment;
+import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,7 @@ public class BudgetItemsListFragment extends Fragment {
     private FragmentBudgetItemsListBinding binding;
     private BudgetItemAdapter adapter;
     private BudgetViewModel budgetViewModel;
+    private ServiceViewModel serviceViewModel;
     public static final String ARG_EVENT = "ARG_EVENT";
     public static final String ARG_IS_IN_BUDGET = "ARG_IS_REOPENED";
     private Event event;
@@ -90,7 +93,11 @@ public class BudgetItemsListFragment extends Fragment {
         adapter = new BudgetItemAdapter(new ArrayList<>(), requireContext(), new OnBudgetItemActionListener() {
             @Override
             public void onReserve(BudgetItem item) {
-                // TODO: have to wait for service reservation pull request
+                serviceViewModel.getService(item.getId()).observe(getViewLifecycleOwner(), service -> {
+                    Integer minDuration = service.getMinDuration();
+                    Integer maxDuration = service.getMaxDuration();
+                    navigateToReservation(item, minDuration, maxDuration);
+                });
             }
 
             @Override
@@ -146,6 +153,19 @@ public class BudgetItemsListFragment extends Fragment {
             if(result.getError() == null)
                 adapter.setData(result.getData());
         });
+    }
+
+    private void navigateToReservation(BudgetItem item, Integer minDuration, Integer maxDuration) {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        Integer fixedDurationHours = minDuration.equals(maxDuration) ? minDuration : 0;
+        Bundle fragment = ReserveServiceFragment.newInstance(
+                item.getId(),
+                fixedDurationHours,
+                event.getId(),
+                item.getPlannedAmount()
+        ).getArguments();
+
+        navController.navigate(R.id.action_budgetItems_to_reservation, fragment);
     }
 
     @Override

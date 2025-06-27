@@ -216,9 +216,7 @@ public class ProductDetailsFragment extends Fragment {
 
     private void navigateToBudget() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        Bundle args = new Bundle();
-        args.putParcelable(BudgetPlanningFragment.ARG_EVENT, event);
-        navController.navigate(R.id.budgetPlanning, args);
+        navController.popBackStack();
     }
 
     private void showError(String message) {
@@ -247,7 +245,6 @@ public class ProductDetailsFragment extends Fragment {
             binding.addToPlannedButton.setVisibility(View.VISIBLE);
             binding.backToPlannerButton.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void changeMargin() {

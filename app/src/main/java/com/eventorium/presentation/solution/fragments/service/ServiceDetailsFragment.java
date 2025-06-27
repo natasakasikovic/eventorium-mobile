@@ -12,14 +12,19 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.data.category.models.Category;
+import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.interaction.models.review.ReviewType;
+import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.databinding.FragmentServiceDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
 import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
@@ -39,6 +44,7 @@ public class ServiceDetailsFragment extends Fragment {
     private FragmentServiceDetailsBinding binding;
     private ServiceViewModel serviceViewModel;
     private LoginViewModel loginViewModel;
+    private BudgetViewModel budgetViewModel;
     private MaterialButton favouriteButton;
     private boolean isFavourite;
     public static final String ARG_ID = "ARG_SERVICE_ID";
@@ -49,6 +55,7 @@ public class ServiceDetailsFragment extends Fragment {
     private Double plannedAmount;
     private Long eventId;
     private UserDetails provider;
+    private Category category;
     private Long companyId;
     private Integer maxDuration;
     private Integer minDuration;
@@ -87,6 +94,7 @@ public class ServiceDetailsFragment extends Fragment {
         ViewModelProvider provider = new ViewModelProvider(this);
         serviceViewModel = provider.get(ServiceViewModel.class);
         loginViewModel = provider.get(LoginViewModel.class);
+        budgetViewModel = provider.get(BudgetViewModel.class);
     }
 
     @Override
@@ -104,6 +112,7 @@ public class ServiceDetailsFragment extends Fragment {
                 displayServiceDate(service);
                 minDuration = service.getMinDuration();
                 maxDuration = service.getMaxDuration();
+                category = service.getCategory();
             }
         });
 
@@ -117,18 +126,42 @@ public class ServiceDetailsFragment extends Fragment {
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
+        binding.addToPlannedButton.setOnClickListener(v -> addToPlanner());
         binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
         binding.reserveService.setOnClickListener(v -> navigateToReservation());
-        binding.reserveService.setOnClickListener(v -> navigateToReservation());
-
-        if(eventId != null && plannedAmount != null) {
-            binding.backToPlannerButton.setVisibility(View.VISIBLE);
-            binding.addToPlannedButton.setVisibility(View.VISIBLE);
-
-            // TODO: Add when reservations are merged
-        }
+        binding.backToPlannerButton.setOnClickListener(v -> navigateToBudget());
     }
 
+    private void addToPlanner() {
+        BudgetItemRequest item = BudgetItemRequest.builder()
+                .itemId(id)
+                .plannedAmount(plannedAmount)
+                .itemType(SolutionType.PRODUCT)
+                .category(category)
+                .build();
+
+        budgetViewModel.createBudgetItem(eventId, item).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.successfully_added_product_to_planner,
+                        Toast.LENGTH_SHORT
+                ).show();
+                navigateToBudget();
+            } else {
+                Toast.makeText(
+                        requireContext(),
+                        result.getError(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+    }
+
+    private void navigateToBudget() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+        navController.popBackStack();
+    }
 
     private void setupFavouriteListeners() {
         serviceViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
@@ -244,9 +277,33 @@ public class ServiceDetailsFragment extends Fragment {
 
     private void renderButtons() {
         String role = loginViewModel.getUserRole();
+        if(role == null || role.isEmpty()) {
+            binding.favButton.setVisibility(View.GONE);
+            binding.chatButton.setVisibility(View.GONE);
+            changeMargin();
+            return;
+        }
+        if(!role.equals("EVENT_ORGANIZER")) {
+            binding.chatButton.setVisibility(View.GONE);
+        } else {
+            binding.reserveService.setVisibility(View.VISIBLE);
+        }
 
-        if (role == null || !role.equals("EVENT_ORGANIZER"))
-            binding.reserveService.setVisibility(View.GONE);
+        if(eventId != 0) {
+            binding.backToPlannerButton.setVisibility(View.VISIBLE);
+            binding.addToPlannedButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void changeMargin() {
+        TextView serviceTextView = binding.serviceName;
+        float density = getResources().getDisplayMetrics().density;
+        int leftMargin = (int) (20 * density);
+
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) serviceTextView.getLayoutParams();
+        layoutParams.setMargins(leftMargin, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
+
+        serviceTextView.setLayoutParams(layoutParams);
     }
 
     @Override

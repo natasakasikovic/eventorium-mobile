@@ -82,7 +82,11 @@
         android:id="@+id/budgetItemsList"
         android:name="com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragment"
         tools:layout="@layout/fragment_budget_items_list"
-        />
+        >
+        <action
+            android:id="@+id/action_budgetItems_to_reservation"
+            app:destination="@id/serviceReservationFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/commentFragment"
