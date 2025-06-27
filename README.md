@@ -9,7 +9,7 @@
   <h1 align="center">EVENTORIUM</h1>
   <p align="center">
     <br />
-    <a href="https://github.com/kzi-nastava/iss-project-event-planner-siit-2024-team-13/issues/new?labels=bug">Report Bug</a>
+    <a href="https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/issues/new?labels=bug">Report Bug</a>
     <a href="www.youtube.com">Demo</a>
   </p>
 </div>
@@ -83,17 +83,17 @@ Optional:
 1. 🔁 Clone the repository
 
 ```sh
-git clone https://github.com/kzi-nastava/iss-project-event-planner-siit-2024-team-13.git
+git clone https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13.git
 ```
 
-1. 🧰 Open the project in Android Studio
+2. 🧰 Open the project in Android Studio
 
 - Launch Android Studio
 - Click "Open"
 - Select the `ma-project-event-planner-siit-2024-team-13` directory
 
-2. ⏳ Wait for Gradle to sync and build
-3. 📱 Run the application
+3. ⏳ Wait for Gradle to sync and build
+4. 📱 Run the application
 
 - Connect a physical Android device (with USB Debugging enabled) or start an emulator.
 - Click "Run" (green play button) or use:
@@ -122,6 +122,35 @@ The system supports the following roles with corresponding credentials:
   - Email: `user@gmail.com`
   - Password: `pera`
 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 📸 Screenshots
+
+#### 🏠 Home Page and Login page
+
+<div align="center" style="overflow: hidden;">
+  <img src="./screenshots/0. login.jpg" alt="Login" width="400" height="auto"/>
+  <img src="./screenshots/9. homepage.jpg" alt="Homepage" width="400" height="auto"/>
+</div>
+
+#### 📆 Event Details View
+
+<div align="center" style="overflow: hidden;">
+  <img src="./screenshots/8. event_details.jpg" alt="Event details" width="400" height="auto"/>
+  <img src="./screenshots/8. agenda_map.jpg" alt="Agenda and map" width="400" height="auto"/>
+</div>
+
+#### 👤 User profile view
+
+<div align="center" style="overflow: hidden;">
+  <img src="./screenshots/15. profile.jpg" alt="Event details" width="400" height="auto"/>
+  <img src="./screenshots/16. edit_profile.jpg" alt="Agenda and map" width="400" height="auto"/>
+</div>
+
+#### 📁 More Screenshots
+
+You can view additional screenshots in the [screenshots](./screenshots) folder.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
