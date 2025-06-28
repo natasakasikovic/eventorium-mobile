@@ -10,7 +10,7 @@
   <p align="center">
     <br />
     <a href="https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/issues/new?labels=bug">Report Bug</a>
-    <a href="www.youtube.com">Demo</a>
+    <a href="https://www.youtube.com/watch?v=QiGeygigk-w">Demo</a>
   </p>
 </div>
 
@@ -93,7 +93,9 @@ git clone https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team
 - Select the `ma-project-event-planner-siit-2024-team-13` directory
 
 3. ⏳ Wait for Gradle to sync and build
-4. 📱 Run the application
+4. 🔐 Update `local_properties` with the (backend) `ip_addr` and `secret`.
+- Make sure to use the same `secret` value that's defined in the backend configuration. 
+5. 📱 Run the application
 
 - Connect a physical Android device (with USB Debugging enabled) or start an emulator.
 - Click "Run" (green play button) or use:
