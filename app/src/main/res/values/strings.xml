@@ -90,7 +90,7 @@
     <string name="minimum_price">Minimum price</string>
     <string name="maximum_price">Maximum price</string>
     <string name="enter_invitations">Please enter the email addresses of the special people you’d like to invite to your event</string>
-    <string name="send_invitations">Send invititations and create event</string>
+    <string name="send_invitations">Send invitations and create event</string>
     <string name="confirm_new_password">Confirm new password</string>
     <string name="new_password">New password</string>
     <string name="old_password">Old password</string>
@@ -245,5 +245,10 @@
     <string name="edit_product">Edit product</string>
     <string name="upgrade_to">Upgrade to:</string>
     <string name="upgrade_motivation">Unlock more options in Eventorium by upgrading your account. This will let you promote your services and products or organize events, depending on the role you select.</string>
+    <string name="status">Status</string>
+    <string name="add_to_planner">Add to planner</string>
+    <string name="back_to_planner">Back to planner</string>
+    <string name="successfully_added_product_to_planner">Successfully added product to planner.</string>
     <string name="reserve_service">Reserve a service</string>
+    <string name="successfully_added_service_to_planner">Successfully added service to planner.</string>
 </resources>

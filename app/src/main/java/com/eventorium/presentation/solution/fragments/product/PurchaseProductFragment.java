@@ -18,6 +18,7 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.databinding.FragmentPurchaseProductBinding;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
@@ -68,7 +69,30 @@ public class PurchaseProductFragment extends Fragment {
         binding = FragmentPurchaseProductBinding.inflate(inflater, container, false);
         loadEvents();
         binding.purchaseProductButton.setOnClickListener(v -> onPurchase());
+        binding.addToPlannerButton.setOnClickListener(v -> onAddToPlanner());
         return binding.getRoot();
+    }
+
+    private void onAddToPlanner() {
+        Event event = (Event) binding.eventSelector.getSelectedItem();
+        BudgetItemRequest item = buildItem();
+        budgetViewModel.createBudgetItem(event.getId(), item).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.successfully_added_product_to_planner,
+                        Toast.LENGTH_SHORT
+                ).show();
+                NavController navController = Navigation.findNavController(requireView());
+                navController.popBackStack();
+            } else {
+                Toast.makeText(
+                        requireContext(),
+                        result.getError(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
     }
 
     private void onPurchase() {
@@ -108,6 +132,7 @@ public class PurchaseProductFragment extends Fragment {
         return BudgetItemRequest.builder()
                 .itemId(productId)
                 .category(category)
+                .itemType(SolutionType.PRODUCT)
                 .plannedAmount(Double.parseDouble(plannedAmount))
                 .build();
     }

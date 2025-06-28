@@ -39,6 +39,7 @@ public class WebSocketForegroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent == null) return START_STICKY;
         long userId = intent.getLongExtra("userId", -1);
         String role = intent.getStringExtra("role");
 

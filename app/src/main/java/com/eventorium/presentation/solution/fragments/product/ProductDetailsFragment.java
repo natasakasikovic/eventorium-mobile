@@ -22,6 +22,7 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.interaction.models.review.ReviewType;
+import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.databinding.FragmentProductDetailsBinding;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
@@ -109,6 +110,13 @@ public class ProductDetailsFragment extends Fragment {
         favouriteButton = binding.favButton;
         productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
 
+        loadIsFavourite();
+        setupButtons();
+
+        return binding.getRoot();
+    }
+
+    private void loadIsFavourite() {
         productViewModel.isFavourite(id).observe(getViewLifecycleOwner(), result -> {
             isFavourite = result;
             favouriteButton.setIconResource(
@@ -117,14 +125,42 @@ public class ProductDetailsFragment extends Fragment {
                             : R.drawable.ic_not_favourite
             );
         });
+    }
 
+    private void setupButtons() {
         favouriteButton.setOnClickListener(v -> handleIsFavourite());
+        binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
         binding.chatButton.setOnClickListener(v -> navigateToChat());
         binding.providerButton.setOnClickListener(v -> navigateToProvider());
         binding.companyButton.setOnClickListener(v -> navigateToCompany());
         binding.purchaseButton.setOnClickListener(v -> onPurchase());
-        binding.seeCommentsButton.setOnClickListener(v -> navigateToComments());
-        return binding.getRoot();
+
+        if(plannedAmount != null && event != null) {
+            binding.addToPlannedButton.setOnClickListener(v -> addToPlanner());
+            binding.backToPlannerButton.setOnClickListener(v -> navigateToBudget());
+        }
+    }
+
+    private void addToPlanner() {
+        BudgetItemRequest item = BudgetItemRequest.builder()
+                .itemId(id)
+                .plannedAmount(plannedAmount)
+                .itemType(SolutionType.PRODUCT)
+                .category(category)
+                .build();
+
+        budgetViewModel.createBudgetItem(event.getId(), item).observe(getViewLifecycleOwner(), result -> {
+            if(result.getError() == null) {
+                Toast.makeText(
+                        requireContext(),
+                        R.string.successfully_added_product_to_planner,
+                        Toast.LENGTH_SHORT
+                ).show();
+                navigateToBudget();
+            } else {
+                showError(result.getError());
+            }
+        });
     }
 
     private void navigateToCompany() {
@@ -159,6 +195,7 @@ public class ProductDetailsFragment extends Fragment {
     private void purchaseProduct(Event event, Double plannedAmount) {
         BudgetItemRequest item = BudgetItemRequest.builder()
                 .itemId(id)
+                .itemType(SolutionType.PRODUCT)
                 .plannedAmount(plannedAmount)
                 .category(category)
                 .build();
@@ -179,9 +216,7 @@ public class ProductDetailsFragment extends Fragment {
 
     private void navigateToBudget() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-        Bundle args = new Bundle();
-        args.putParcelable(BudgetPlanningFragment.ARG_EVENT, event);
-        navController.navigate(R.id.budgetPlanning, args);
+        navController.popBackStack();
     }
 
     private void showError(String message) {
@@ -204,6 +239,11 @@ public class ProductDetailsFragment extends Fragment {
             binding.chatButton.setVisibility(View.GONE);
         } else {
             binding.purchaseButton.setVisibility(View.VISIBLE);
+        }
+
+        if(event != null && plannedAmount != null) {
+            binding.addToPlannedButton.setVisibility(View.VISIBLE);
+            binding.backToPlannerButton.setVisibility(View.VISIBLE);
         }
     }
 

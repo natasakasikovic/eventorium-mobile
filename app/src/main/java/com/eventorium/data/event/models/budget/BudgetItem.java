@@ -17,11 +17,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class BudgetItem {
+    private Long id;
     private Double plannedAmount;
     private Double spentAmount;
     private LocalDateTime processedAt;
     private SolutionType type;
     private Long solutionId;
     private String solutionName;
+    private BudgetItemStatus status;
     private Category category;
 }

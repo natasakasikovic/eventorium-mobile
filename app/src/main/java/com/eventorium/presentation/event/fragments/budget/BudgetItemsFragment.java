@@ -1,8 +1,5 @@
 package com.eventorium.presentation.event.fragments.budget;
 
-import static java.util.stream.Collectors.toList;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,12 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
-import com.eventorium.data.event.models.budget.Budget;
-import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
 import com.eventorium.databinding.FragmentBudgetItemsBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -32,20 +25,19 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragment.OnRemoveCategoryListener {
+public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragment.CategoryChangeListener {
 
     private FragmentBudgetItemsBinding binding;
 
     private CategoryViewModel categoryViewModel;
     private BudgetViewModel budgetViewModel;
-    private CategoryPagerAdapter adapter;
+    private CategoryPagerAdapter pagerAdapter;
     private ArrayAdapter<Category> categoryAdapter;
 
     private Event event;
 
-    private final List<Category> plannedCategories = new ArrayList<>();
-    private List<Category> otherCategories = new ArrayList<>();
-    private List<Category> purchasedCategories;
+    private List<Category> activeCategories = new ArrayList<>();
+    private final List<Category> allCategories = new ArrayList<>();
 
     public static String ARG_EVENT = "ARG_EVENT";
 
@@ -76,9 +68,9 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
                              Bundle savedInstanceState) {
         binding = FragmentBudgetItemsBinding.inflate(inflater, container, false);
         configureCategoryAdapter();
-        restoreBudget();
         loadSuggestedCategories();
-        loadOtherCategories();
+        loadAllCategories();
+        restoreBudget();
 
         binding.btnAddCategory.setOnClickListener(v -> {
             Category category = (Category) binding.categorySelector.getSelectedItem();
@@ -86,7 +78,7 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
         });
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) ->
-                tab.setText(adapter.getFragmentTitle(position))
+                tab.setText(pagerAdapter.getFragmentTitle(position))
         ).attach();
 
         return binding.getRoot();
@@ -102,56 +94,46 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
         binding.categorySelector.setAdapter(categoryAdapter);
     }
 
-    private void loadOtherCategories() {
+    private void loadAllCategories() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             categoryAdapter.addAll(categories);
         });
     }
 
-
-    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void restoreBudget() {
         budgetViewModel.getBudget(event.getId()).observe(getViewLifecycleOwner(), result -> {
-            if(result.getError() == null && !result.getData().getItems().isEmpty()) {
-                Budget budget = result.getData();
-                purchasedCategories =  budget.getItems().stream()
-                        .map(BudgetItemRequest::getCategory)
-                        .collect(toList());
-                binding.plannedAmount.setText("Planned amount: " + String.format("%.2f", budget.getPlannedAmount()));
-                binding.spentAmount.setText("Spent amount: " + String.format("%.2f", budget.getSpentAmount()));
+            List<Category> categories = result.getData().getActiveCategories();
+            if(result.getError() == null && !categories.isEmpty()) {
+                for(Category category : categories)
+                    pagerAdapter.addFragment(
+                            BudgetCategoryFragment.newInstance(event, category , activeCategories.size()),
+                            category.getName());
             }
         });
 
     }
 
     private void addCategory(Category category) {
-        if(purchasedCategories != null && purchasedCategories.contains(category)) {
-            Toast.makeText(
-                getContext(),
-                R.string.already_bought_for_that_category,
-                Toast.LENGTH_SHORT
-            ).show();
+        if(activeCategories.contains(category))
             return;
-        }
-        adapter.addFragment(BudgetCategoryFragment.newInstance(event, category, plannedCategories.size()), category.getName());
-        plannedCategories.add(category);
-        otherCategories.remove(category);
+
+        pagerAdapter.addFragment(BudgetCategoryFragment.newInstance(event, category, activeCategories.size()), category.getName());
+        activeCategories.add(category);
     }
 
     private void loadSuggestedCategories() {
-        adapter = new CategoryPagerAdapter(this);
+        pagerAdapter = new CategoryPagerAdapter(this);
         if(event.getType() != null) {
             event.getType().getSuggestedCategories()
                     .forEach(category -> {
-                        adapter.addFragment(
-                                BudgetCategoryFragment.newInstance(event, category ,plannedCategories.size()),
+                        pagerAdapter.addFragment(
+                                BudgetCategoryFragment.newInstance(event, category , activeCategories.size()),
                                 category.getName());
-                        plannedCategories.add(category);
+                        activeCategories.add(category);
                     });
         }
-        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.setAdapter(pagerAdapter);
     }
-
 
     @Override
     public void onDestroy() {
@@ -161,9 +143,14 @@ public class BudgetItemsFragment extends Fragment implements BudgetCategoryFragm
 
     @Override
     public void onRemoveCategory(int position, Category category) {
-        adapter.removeFragment(position);
+        pagerAdapter.removeFragment(position);
+        activeCategories.remove(category);
+    }
 
-        plannedCategories.remove(category);
-        otherCategories.add(category);
+    @Override
+    public void saveCategories() {
+        budgetViewModel
+                .updateActiveCategories(event.getId(), activeCategories)
+                .observe(getViewLifecycleOwner(), _ignored -> {});
     }
 }
