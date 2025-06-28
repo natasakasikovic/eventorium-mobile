@@ -136,7 +136,7 @@ public class ServiceDetailsFragment extends Fragment {
         BudgetItemRequest item = BudgetItemRequest.builder()
                 .itemId(id)
                 .plannedAmount(plannedAmount)
-                .itemType(SolutionType.PRODUCT)
+                .itemType(SolutionType.SERVICE)
                 .category(category)
                 .build();
 
@@ -144,7 +144,7 @@ public class ServiceDetailsFragment extends Fragment {
             if(result.getError() == null) {
                 Toast.makeText(
                         requireContext(),
-                        R.string.successfully_added_product_to_planner,
+                        R.string.successfully_added_service_to_planner,
                         Toast.LENGTH_SHORT
                 ).show();
                 navigateToBudget();

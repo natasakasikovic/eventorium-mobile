@@ -64,6 +64,7 @@ public class BudgetItemsListFragment extends Fragment {
         }
         ViewModelProvider provider = new ViewModelProvider(this);
         budgetViewModel = provider.get(BudgetViewModel.class);
+        serviceViewModel = provider.get(ServiceViewModel.class);
     }
 
 
@@ -93,7 +94,7 @@ public class BudgetItemsListFragment extends Fragment {
         adapter = new BudgetItemAdapter(new ArrayList<>(), requireContext(), new OnBudgetItemActionListener() {
             @Override
             public void onReserve(BudgetItem item) {
-                serviceViewModel.getService(item.getId()).observe(getViewLifecycleOwner(), service -> {
+                serviceViewModel.getService(item.getSolutionId()).observe(getViewLifecycleOwner(), service -> {
                     Integer minDuration = service.getMinDuration();
                     Integer maxDuration = service.getMaxDuration();
                     navigateToReservation(item, minDuration, maxDuration);
@@ -159,7 +160,7 @@ public class BudgetItemsListFragment extends Fragment {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
         Integer fixedDurationHours = minDuration.equals(maxDuration) ? minDuration : 0;
         Bundle fragment = ReserveServiceFragment.newInstance(
-                item.getId(),
+                item.getSolutionId(),
                 fixedDurationHours,
                 event.getId(),
                 item.getPlannedAmount()
