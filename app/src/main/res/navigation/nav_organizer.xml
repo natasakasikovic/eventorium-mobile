@@ -49,6 +49,9 @@
             android:id="@+id/action_budget_to_productDetails"
             app:destination="@+id/productDetailsFragment"/>
         <action
+            android:id="@+id/action_budget_to_reservation"
+            app:destination="@id/serviceReservationFragment"/>
+        <action
             android:id="@+id/action_budget_to_serviceDetails"
             app:destination="@+id/serviceDetailsFragment"/>
         <action

@@ -124,11 +124,11 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
             saveButton = itemView.findViewById(R.id.saveButton);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         public void bind(BudgetItem item) {
             solutionName.setText(item.getSolutionName());
             categoryName.setText(item.getCategory().getName());
-            spentAmount.setText("Spent: " + item.getSpentAmount());
+            spentAmount.setText("Spent: " +  String.format("%.2f", item.getSpentAmount()));
             plannedAmount.setText(item.getPlannedAmount().toString());
 
             int statusColor = getStatusColor(item.getStatus());

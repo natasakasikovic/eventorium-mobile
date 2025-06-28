@@ -115,7 +115,7 @@ public class BudgetItemsListFragment extends Fragment {
             @Override
             public void onPurchase(BudgetItem item) {
                 BudgetItemRequest request = BudgetItemRequest.builder()
-                        .itemId(item.getId())
+                        .itemId(item.getSolutionId())
                         .category(item.getCategory())
                         .itemType(item.getType())
                         .plannedAmount(item.getPlannedAmount())
@@ -166,7 +166,7 @@ public class BudgetItemsListFragment extends Fragment {
                 item.getPlannedAmount()
         ).getArguments();
 
-        navController.navigate(R.id.action_budgetItems_to_reservation, fragment);
+        navController.navigate(R.id.action_budget_to_reservation, fragment);
     }
 
     @Override
