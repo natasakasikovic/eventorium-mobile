@@ -19,6 +19,7 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.service.Service;
@@ -35,6 +36,7 @@ import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -215,6 +217,12 @@ public class ServiceDetailsFragment extends Fragment {
         binding.serviceDescription.setText(service.getDescription());
         binding.serviceCategory.setText("Category: " + service.getCategory().getName());
         binding.serviceSpecialties.setText(service.getSpecialties());
+        List<EventType> eventTypes = service.getEventTypes();
+        String eventTypeNames = eventTypes.stream()
+                .map(EventType::getName)
+                .collect(Collectors.joining(", "));
+        binding.serviceEventTypes.setText("Event types: " + eventTypeNames);
+        binding.serviceReservationType.setText("Reservation type: " + service.getType());
         binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
                 ? service.getMinDuration() + "h"
                 : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
