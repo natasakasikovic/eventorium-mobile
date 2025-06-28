@@ -113,11 +113,11 @@ public class ServiceDetailsFragment extends Fragment {
                 minDuration = service.getMinDuration();
                 maxDuration = service.getMaxDuration();
                 category = service.getCategory();
+                renderButtons();
             }
         });
 
         setupClickListeners();
-        renderButtons();
 
         return binding.getRoot();
     }
@@ -277,6 +277,7 @@ public class ServiceDetailsFragment extends Fragment {
 
     private void renderButtons() {
         String role = loginViewModel.getUserRole();
+        Long userId = loginViewModel.getUserId();
         if(role == null || role.isEmpty()) {
             binding.favButton.setVisibility(View.GONE);
             binding.chatButton.setVisibility(View.GONE);
@@ -287,6 +288,13 @@ public class ServiceDetailsFragment extends Fragment {
             binding.chatButton.setVisibility(View.GONE);
         } else {
             binding.reserveService.setVisibility(View.VISIBLE);
+        }
+
+        if(role.equals("PROVIDER") && userId.equals(provider.getId())) {
+            binding.providerButton.setVisibility(View.GONE);
+            binding.providerName.setVisibility(View.GONE);
+            binding.companyButton.setVisibility(View.GONE);
+            binding.companyName.setVisibility(View.GONE);
         }
 
         if(eventId != 0) {

@@ -103,9 +103,6 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
-        favouriteButton = binding.favButton;
-
-        renderButtons();
 
         favouriteButton = binding.favButton;
         productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
@@ -229,6 +226,7 @@ public class ProductDetailsFragment extends Fragment {
 
     private void renderButtons() {
         String role = loginViewModel.getUserRole();
+        Long userId = loginViewModel.getUserId();
         if(role == null || role.isEmpty()) {
             binding.favButton.setVisibility(View.GONE);
             binding.chatButton.setVisibility(View.GONE);
@@ -239,6 +237,13 @@ public class ProductDetailsFragment extends Fragment {
             binding.chatButton.setVisibility(View.GONE);
         } else {
             binding.purchaseButton.setVisibility(View.VISIBLE);
+        }
+
+        if(role.equals("PROVIDER") && userId.equals(provider.getId())) {
+            binding.providerButton.setVisibility(View.GONE);
+            binding.providerName.setVisibility(View.GONE);
+            binding.companyButton.setVisibility(View.GONE);
+            binding.companyName.setVisibility(View.GONE);
         }
 
         if(event != null && plannedAmount != null) {
@@ -300,6 +305,7 @@ public class ProductDetailsFragment extends Fragment {
             if(!product.getAvailable()) {
                 binding.purchaseButton.setClickable(false);
             }
+            renderButtons();
         }
     }
 
