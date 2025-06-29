@@ -214,8 +214,11 @@ public class EditCompanyFragment extends Fragment {
         viewModel.update(company).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 Toast.makeText(requireContext(), "Successfully updated", Toast.LENGTH_SHORT).show();
-                removeImages();
-                uploadNewImages();
+                if (removedImages.isEmpty() && imageUris.isEmpty()) navController.navigateUp();
+                else {
+                    removeImages();
+                    uploadNewImages();
+                }
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
