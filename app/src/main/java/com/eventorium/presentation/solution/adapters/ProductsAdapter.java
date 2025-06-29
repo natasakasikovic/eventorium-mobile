@@ -57,10 +57,11 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
             layout = itemView.findViewById(R.id.layout);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         public void bind(ProductSummary product) {
             nameTextView.setText(product.getName());
-            priceTextView.setText(product.getPrice().toString());
+            double price = product.getPrice() * (1 - product.getDiscount() / 100);
+            priceTextView.setText(String.format("%.2f", price));
             imageView.setImageBitmap(product.getImage());
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 

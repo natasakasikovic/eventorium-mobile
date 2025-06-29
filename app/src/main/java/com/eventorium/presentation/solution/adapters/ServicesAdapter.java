@@ -57,7 +57,7 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
             layout = itemView.findViewById(R.id.service_layout);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         @Override
         public void bind(ServiceSummary service) {
 
@@ -67,7 +67,8 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
             setDiscount(service);
 
             nameTextView.setText(service.getName());
-            priceTextView.setText(service.getPrice().toString());
+            double price = service.getPrice() * (1 - service.getDiscount() / 100);
+            priceTextView.setText(String.format("%.2f", price));
             photoImageview.setImageBitmap(service.getImage());
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
 

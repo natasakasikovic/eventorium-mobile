@@ -210,13 +210,14 @@ public class ServiceDetailsFragment extends Fragment {
         });
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void displayServiceDate(Service service) {
         binding.serviceName.setText(service.getName());
-        binding.servicePrice.setText(service.getPrice().toString());
         binding.serviceDescription.setText(service.getDescription());
         binding.serviceCategory.setText("Category: " + service.getCategory().getName());
         binding.serviceSpecialties.setText(service.getSpecialties());
+        double price = service.getPrice() * (1 - service.getDiscount() / 100);
+        binding.servicePrice.setText(String.format("%.2f", price));
         List<EventType> eventTypes = service.getEventTypes();
         String eventTypeNames = eventTypes.stream()
                 .map(EventType::getName)

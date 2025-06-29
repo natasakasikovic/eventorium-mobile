@@ -278,7 +278,7 @@ public class ProductDetailsFragment extends Fragment {
         navController.navigate(R.id.action_productDetails_to_comments, args);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void loadProductDetails(Product product) {
         if (product != null) {
             ChatUserDetails sender = product.getProvider();
@@ -287,7 +287,8 @@ public class ProductDetailsFragment extends Fragment {
             category = product.getCategory();
 
             binding.productName.setText(product.getName());
-            binding.productPrice.setText(product.getPrice().toString());
+            double price = product.getPrice() * (1 - product.getDiscount() / 100);
+            binding.productPrice.setText(String.format("%.2f", price));
             binding.productDescription.setText(product.getDescription());
             binding.productCategory.setText("Category: " + product.getCategory().getName());
             binding.rating.setText(product.getRating().toString());
