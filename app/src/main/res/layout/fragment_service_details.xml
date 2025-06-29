@@ -7,7 +7,7 @@
     android:background="@color/md_theme_secondaryContainer"
     tools:context=".presentation.solution.fragments.service.ServiceDetailsFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -162,28 +162,33 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="20dp"/>
 
-                <ScrollView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <LinearLayout
-                        android:gravity="center_vertical"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="4dp">
+                    <TextView
+                        android:id="@+id/no_images"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_images"
+                        android:visibility="gone"
+                        android:fontFamily="@font/jejumyeongjo"
+                        android:layout_gravity="center"/>
+                    <ProgressBar
+                        android:id="@+id/loader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/images"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/images"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:scrollbars="horizontal"
-                            android:orientation="horizontal"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </ScrollView>
+                        android:scrollbars="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:layout_gravity="center"/>
+                </androidx.cardview.widget.CardView>
 
                 <TextView
                     android:id="@+id/duration"
@@ -298,6 +303,6 @@
                     android:backgroundTint="@color/md_theme_primary"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

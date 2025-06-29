@@ -32,6 +32,7 @@ import com.eventorium.presentation.company.fragments.CompanyDetailsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
 import com.eventorium.presentation.event.viewmodels.BudgetViewModel;
 import com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment;
+import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
@@ -305,8 +306,11 @@ public class ProductDetailsFragment extends Fragment {
             binding.companyName.setText(product.getCompany().getName());
 
             productViewModel.getProductImages(product.getId()).observe(getViewLifecycleOwner(), result -> {
-                if(result.getError() == null) {
-                    binding.images.setAdapter(new ImageAdapter(result.getData()));
+                if (result.getError() == null) {
+                    List<ImageItem> images = result.getData();
+                    if (images.isEmpty()) binding.noImages.setVisibility(View.VISIBLE);
+                    else binding.images.setAdapter(new ImageAdapter(images));
+                    binding.loader.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                 }
