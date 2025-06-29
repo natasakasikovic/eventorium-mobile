@@ -20,18 +20,18 @@
 
     <TextView
         android:id="@+id/eventTypeLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/jejumyeongjo"
         android:text="@string/event_types"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/eventTypeInputLayout"
         android:gravity="start" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/eventTypeInputLayout"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/eventTypeLabel"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/eventNameInputLayout"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/name"
         app:layout_constraintTop_toBottomOf="@id/eventTypeInputLayout"
@@ -68,7 +68,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionInputLayout"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/description"
         app:layout_constraintTop_toBottomOf="@id/eventNameInputLayout"
@@ -86,7 +86,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/maxParticipantsLayout"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/max_participants"
         app:layout_constraintTop_toBottomOf="@id/descriptionInputLayout"
@@ -104,18 +104,18 @@
 
     <TextView
         android:id="@+id/cityLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/jejumyeongjo"
         android:text="@string/city"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/maxParticipantsLayout"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/cityTextInput"
         android:gravity="start" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/cityTextInput"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/city"
         app:layout_constraintTop_toBottomOf="@id/cityLabel"
@@ -134,7 +134,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fromDate"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/from_date"
         app:layout_constraintTop_toBottomOf="@id/cityTextInput"
@@ -153,7 +153,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/toDate"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="@string/to_date"
         app:layout_constraintTop_toBottomOf="@id/fromDate"
