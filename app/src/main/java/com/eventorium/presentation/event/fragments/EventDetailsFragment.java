@@ -109,7 +109,7 @@ public class EventDetailsFragment extends Fragment {
 
     private void adjustUIVisibility() {
         if (authViewModel.getUserId() == null) {
-            hideViews(binding.actions, binding.question, binding.chatButton, binding.exportGuests, binding.ratingBar);
+            hideViews(binding.actions, binding.question, binding.chatButton, binding.exportGuests, binding.ratingBar, binding.favButton);
             return;
         }
 

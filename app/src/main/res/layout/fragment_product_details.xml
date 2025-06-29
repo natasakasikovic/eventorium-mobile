@@ -113,6 +113,14 @@
                     android:layout_height="match_parent"/>
 
                 <TextView
+                    android:id="@+id/productEventTypes"
+                    android:text="@string/category"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/jejumyeongjo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textStyle="bold"

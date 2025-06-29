@@ -21,6 +21,7 @@ import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.product.Product;
@@ -35,6 +36,9 @@ import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -103,9 +107,6 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
-        favouriteButton = binding.favButton;
-
-        renderButtons();
 
         favouriteButton = binding.favButton;
         productViewModel.getProduct(id).observe(getViewLifecycleOwner(), this::loadProductDetails);
@@ -229,6 +230,7 @@ public class ProductDetailsFragment extends Fragment {
 
     private void renderButtons() {
         String role = loginViewModel.getUserRole();
+        Long userId = loginViewModel.getUserId();
         if(role == null || role.isEmpty()) {
             binding.favButton.setVisibility(View.GONE);
             binding.chatButton.setVisibility(View.GONE);
@@ -239,6 +241,13 @@ public class ProductDetailsFragment extends Fragment {
             binding.chatButton.setVisibility(View.GONE);
         } else {
             binding.purchaseButton.setVisibility(View.VISIBLE);
+        }
+
+        if(role.equals("PROVIDER") && userId.equals(provider.getId())) {
+            binding.providerButton.setVisibility(View.GONE);
+            binding.providerName.setVisibility(View.GONE);
+            binding.companyButton.setVisibility(View.GONE);
+            binding.companyName.setVisibility(View.GONE);
         }
 
         if(event != null && plannedAmount != null) {
@@ -273,16 +282,22 @@ public class ProductDetailsFragment extends Fragment {
         navController.navigate(R.id.action_productDetails_to_comments, args);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void loadProductDetails(Product product) {
         if (product != null) {
             ChatUserDetails sender = product.getProvider();
             provider = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
             companyId = product.getCompany().getId();
             category = product.getCategory();
-
             binding.productName.setText(product.getName());
-            binding.productPrice.setText(product.getPrice().toString());
+            List<EventType> eventTypes = product.getEventTypes();
+            String eventTypeNames = eventTypes.stream()
+                    .map(EventType::getName)
+                    .collect(Collectors.joining(", "));
+            binding.productEventTypes.setText("Event types: " + eventTypeNames);
+
+            double price = product.getPrice() * (1 - product.getDiscount() / 100);
+            binding.productPrice.setText(String.format("%.2f", price));
             binding.productDescription.setText(product.getDescription());
             binding.productCategory.setText("Category: " + product.getCategory().getName());
             binding.rating.setText(product.getRating().toString());
@@ -300,6 +315,7 @@ public class ProductDetailsFragment extends Fragment {
             if(!product.getAvailable()) {
                 binding.purchaseButton.setClickable(false);
             }
+            renderButtons();
         }
     }
 

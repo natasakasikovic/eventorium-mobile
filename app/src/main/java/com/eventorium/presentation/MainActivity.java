@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleNotificationSilenced() {
         notificationViewModel.getNotificationSilenceStatus().observe(this, result -> {
-            if(result.getError() == null) {
+            if(result.getError() == null && result.getData() != null) {
                 notificationViewModel.saveSilencedStatus(result.getData());
                 setupNotificationButton(sharedPreferences.getBoolean("silenceNotifications", false));
             }

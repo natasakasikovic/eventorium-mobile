@@ -59,6 +59,8 @@
             <TextView
                 android:id="@+id/lastMessage"
                 android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/jejumyeongjo"

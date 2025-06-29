@@ -19,6 +19,7 @@ import com.eventorium.R;
 import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.service.Service;
@@ -35,6 +36,7 @@ import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -113,11 +115,11 @@ public class ServiceDetailsFragment extends Fragment {
                 minDuration = service.getMinDuration();
                 maxDuration = service.getMaxDuration();
                 category = service.getCategory();
+                renderButtons();
             }
         });
 
         setupClickListeners();
-        renderButtons();
 
         return binding.getRoot();
     }
@@ -208,13 +210,20 @@ public class ServiceDetailsFragment extends Fragment {
         });
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     private void displayServiceDate(Service service) {
         binding.serviceName.setText(service.getName());
-        binding.servicePrice.setText(service.getPrice().toString());
         binding.serviceDescription.setText(service.getDescription());
         binding.serviceCategory.setText("Category: " + service.getCategory().getName());
         binding.serviceSpecialties.setText(service.getSpecialties());
+        double price = service.getPrice() * (1 - service.getDiscount() / 100);
+        binding.servicePrice.setText(String.format("%.2f", price));
+        List<EventType> eventTypes = service.getEventTypes();
+        String eventTypeNames = eventTypes.stream()
+                .map(EventType::getName)
+                .collect(Collectors.joining(", "));
+        binding.serviceEventTypes.setText("Event types: " + eventTypeNames);
+        binding.serviceReservationType.setText("Reservation type: " + service.getType());
         binding.duration.setText("Duration:" + (service.getMinDuration().equals(service.getMaxDuration())
                 ? service.getMinDuration() + "h"
                 : service.getMinDuration() + "h -" + service.getMaxDuration() + "h"));
@@ -277,6 +286,7 @@ public class ServiceDetailsFragment extends Fragment {
 
     private void renderButtons() {
         String role = loginViewModel.getUserRole();
+        Long userId = loginViewModel.getUserId();
         if(role == null || role.isEmpty()) {
             binding.favButton.setVisibility(View.GONE);
             binding.chatButton.setVisibility(View.GONE);
@@ -289,6 +299,13 @@ public class ServiceDetailsFragment extends Fragment {
             binding.reserveService.setVisibility(View.VISIBLE);
         }
 
+        if(role.equals("PROVIDER") && userId.equals(provider.getId())) {
+            binding.providerButton.setVisibility(View.GONE);
+            binding.providerName.setVisibility(View.GONE);
+            binding.companyButton.setVisibility(View.GONE);
+            binding.companyName.setVisibility(View.GONE);
+        }
+
         if(eventId != 0) {
             binding.backToPlannerButton.setVisibility(View.VISIBLE);
             binding.addToPlannedButton.setVisibility(View.VISIBLE);
@@ -296,7 +313,7 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void changeMargin() {
-        TextView serviceTextView = binding.serviceName;
+        TextView serviceTextView = binding.serviceTextView;
         float density = getResources().getDisplayMetrics().density;
         int leftMargin = (int) (20 * density);
 
