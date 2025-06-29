@@ -21,6 +21,7 @@ import com.eventorium.data.auth.models.UserDetails;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
 import com.eventorium.data.event.models.event.Event;
+import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.interaction.models.review.ReviewType;
 import com.eventorium.data.solution.models.SolutionType;
 import com.eventorium.data.solution.models.product.Product;
@@ -35,6 +36,9 @@ import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.eventorium.presentation.user.fragments.UserProfileFragment;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -285,8 +289,13 @@ public class ProductDetailsFragment extends Fragment {
             provider = new UserDetails(sender.getId(), sender.getName(), sender.getLastname());
             companyId = product.getCompany().getId();
             category = product.getCategory();
-
             binding.productName.setText(product.getName());
+            List<EventType> eventTypes = product.getEventTypes();
+            String eventTypeNames = eventTypes.stream()
+                    .map(EventType::getName)
+                    .collect(Collectors.joining(", "));
+            binding.productEventTypes.setText("Event types: " + eventTypeNames);
+
             double price = product.getPrice() * (1 - product.getDiscount() / 100);
             binding.productPrice.setText(String.format("%.2f", price));
             binding.productDescription.setText(product.getDescription());
