@@ -9,7 +9,6 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceFilter;
@@ -88,6 +87,10 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
         return serviceRepository.filterServices(filter);
+    }
+
+    public LiveData<Result<Void>> deleteService(Long id) {
+        return serviceRepository.deleteService(id);
     }
 
     public LiveData<Result<Void>> removeImages(Long id, List<RemoveImageRequest> removedImages) {

@@ -55,7 +55,7 @@ public class ManageServiceFragment extends Fragment {
     private CategoryViewModel categoryViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private ManageableServiceAdapter adapter;
-    private CircularProgressIndicator loadingIndicator;
+    private List<ServiceSummary> services;
     private RecyclerView recyclerView;
     private TextView noServicesText;
 
@@ -87,8 +87,15 @@ public class ManageServiceFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        showLoadingIndicator();
+        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
+        recyclerView = binding.servicesRecycleView;
+        noServicesText = binding.noServicesText;
+        configureAdapter();
+        configureSearch();
+        loadServices();
+    }
 
+    private void configureAdapter() {
         adapter = new ManageableServiceAdapter(new ArrayList<>(), new OnManageListener<>() {
             @Override
             public void onDeleteClick(ServiceSummary item) {
@@ -98,8 +105,6 @@ public class ManageServiceFragment extends Fragment {
             @Override
             public void onSeeMoreClick(ServiceSummary serviceSummary) {
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                NavGraph currentGraph = navController.getGraph();
-                Log.d("Navigation", "Current Graph: " + currentGraph);
                 navController.navigate(R.id.action_manageServices_to_serviceDetails,
                         ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
             }
@@ -111,31 +116,29 @@ public class ManageServiceFragment extends Fragment {
                         EditServiceFragment.newInstance(serviceSummary).getArguments());
             }
         });
-        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
-        recyclerView = binding.servicesRecycleView;
         recyclerView.setAdapter(adapter);
-        loadingIndicator = binding.loadingIndicator;
-        noServicesText = binding.noServicesText;
+    }
 
-        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    private void configureSearch() {
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
+            @Override
+            public boolean onQueryTextChange(String keyword) {
+                manageableServiceViewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null) {
+                        services = result.getData();
+                        adapter.setData(services);
+                        loadImages(services);
+                    }
+                    else
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                });
+                return true;
+            }
             @Override
             public boolean onQueryTextSubmit(String query) {
-                manageableServiceViewModel.searchServices(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    manageableServiceViewModel.searchServices(null);
-                }
-                return true;
+                return false;
             }
         });
-
-        loadServices();
-        setupSearch();
-        setupFilter();
     }
 
     private void showDeleteDialog(ServiceSummary service) {
@@ -148,7 +151,7 @@ public class ManageServiceFragment extends Fragment {
     }
 
     private void onDialogConfirmation(Long serviceId) {
-        manageableServiceViewModel.deleteService(serviceId)
+        serviceViewModel.deleteService(serviceId)
                 .observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() == null) {
                         Toast.makeText(
@@ -244,7 +247,7 @@ public class ManageServiceFragment extends Fragment {
         return null;
     }
 
-    private void getServiceImages(List<ServiceSummary> services) {
+    private void loadImages(List<ServiceSummary> services) {
         services.forEach(service ->
             serviceViewModel.getServiceImage(service.getId())
                     .observe(getViewLifecycleOwner(), image -> {
@@ -272,38 +275,18 @@ public class ManageServiceFragment extends Fragment {
         });
     }
 
-    private void updateServiceAdapter(List<ServiceSummary> services) {
-        if(services != null && !services.isEmpty()) {
-            recyclerView.setVisibility(View.VISIBLE);
-            noServicesText.setVisibility(View.GONE);
-            getServiceImages(services);
-            adapter.setServices(services);
-        } else {
-            adapter.setServices(Collections.EMPTY_LIST);
-            recyclerView.setVisibility(View.GONE);
-            noServicesText.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void loadServices() {
-        manageableServiceViewModel.getManageableServices()
-                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
-    }
-
-    private void setupFilter() {
-        manageableServiceViewModel.getFilterResults()
-                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
-    }
-
-    private void setupSearch() {
-        manageableServiceViewModel.getSearchResults()
-                .observe(getViewLifecycleOwner(), this::updateServiceAdapter);
-    }
-
-    private void showLoadingIndicator() {
-        manageableServiceViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            loadingIndicator.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        });
+        manageableServiceViewModel.getServices()
+                .observe(getViewLifecycleOwner(), result -> {
+                    if (result.getError() == null) {
+                        binding.servicesRecycleView.setVisibility(View.VISIBLE);
+                        binding.loadingIndicator.setVisibility(View.GONE);
+                        adapter.setData(result.getData());
+                        loadImages(result.getData());
+                    } else {
+                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override
