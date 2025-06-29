@@ -313,7 +313,7 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void changeMargin() {
-        TextView serviceTextView = binding.serviceName;
+        TextView serviceTextView = binding.serviceTextView;
         float density = getResources().getDisplayMetrics().density;
         int leftMargin = (int) (20 * density);
 
