@@ -48,8 +48,13 @@ public class HomeFragment extends Fragment {
     public static HomeFragment newInstance() { return new HomeFragment(); }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(HomepageViewModel.class);
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         configureServiceAdapter();
@@ -64,7 +69,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureProductAdapter() {
-        productsAdapter = new ProductsAdapter( new ArrayList<>(), product -> {
+        productsAdapter = new ProductsAdapter(new ArrayList<>(), product -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ProductDetailsFragment.ARG_ID, product.getId());
@@ -73,7 +78,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        serviceAdapter = new ServicesAdapter( new ArrayList<>(), service -> {
+        serviceAdapter = new ServicesAdapter(new ArrayList<>(), service -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ARG_ID, service.getId());
@@ -141,7 +146,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadServiceImages(List<ServiceSummary> services){
-        services.forEach( service -> viewModel.getServiceImage(service.getId()).
+        services.forEach(service -> viewModel.getServiceImage(service.getId()).
                 observe (getViewLifecycleOwner(), image -> {
                     if (image != null){
                         service.setImage(image);
@@ -167,10 +172,11 @@ public class HomeFragment extends Fragment {
     }
 
     private <T> void handleResult(Result<T> result, Consumer<T> onSuccess) {
-        if (result.getError() == null) {
+        if (result.getError() == null && result.getData() != null) {
             onSuccess.accept(result.getData());
         } else {
-            Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+            String message = result.getError() != null ? result.getError() : "Loading..";
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 
