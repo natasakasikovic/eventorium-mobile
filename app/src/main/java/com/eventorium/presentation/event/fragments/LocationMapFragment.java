@@ -67,18 +67,24 @@ public class LocationMapFragment extends Fragment {
     }
 
     private void loadLocationAsync() {
-        binding.progressBar.setVisibility(View.VISIBLE);
+        if (binding != null)
+            binding.progressBar.setVisibility(View.VISIBLE);
 
         new Thread(() -> {
             try {
                 GeoPoint point = getCoordinatesFromAddress(address);
-                if (point != null && isAdded())
-                    requireActivity().runOnUiThread(() -> showLocation(point));
+                if (point != null && isAdded() && binding != null)
+                    requireActivity().runOnUiThread(() -> {
+                        if (binding != null) {
+                            showLocation(point);
+                        }
+                    });
+
                 else
                     requireActivity().runOnUiThread(this::showError);
 
             } catch (Exception e) {
-                Log.e("LocationMapFragment", "Error getting coordinates", e);
+                Log.e("LocationMapFragment", "Error getting coordinates");
                 if (isAdded())
                     requireActivity().runOnUiThread(this::showError);
 
@@ -87,6 +93,8 @@ public class LocationMapFragment extends Fragment {
     }
 
     private void showError() {
+        if (binding == null)
+            return;
         binding.progressBar.setVisibility(View.GONE);
         binding.map.setVisibility(View.GONE);
         binding.locationErrorText.setVisibility(View.VISIBLE);
@@ -137,4 +145,14 @@ public class LocationMapFragment extends Fragment {
 
         return null;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (binding != null) {
+            binding.map.onDetach();
+            binding = null;
+        }
+    }
+
 }
