@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.repositories.AccountEventRepository;
+import com.eventorium.data.event.repositories.EventTypeRepository;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
@@ -29,19 +30,22 @@ public class FavouritesViewModel extends ViewModel {
     private final ProductRepository productRepository;
     private final AccountServiceRepository accountServiceRepository;
     private final ServiceRepository serviceRepository;
+    private final EventTypeRepository eventTypeRepository;
 
     @Inject
     public FavouritesViewModel(AccountEventRepository eventRepository,
                                AccountProductRepository accountProductRepository,
                                ProductRepository productRepository,
                                AccountServiceRepository accountServiceRepository,
-                               ServiceRepository serviceRepository)
+                               ServiceRepository serviceRepository,
+                               EventTypeRepository eventTypeRepository)
     {
         this.eventRepository = eventRepository;
         this.accountProductRepository = accountProductRepository;
         this.productRepository = productRepository;
         this.accountServiceRepository = accountServiceRepository;
         this.serviceRepository = serviceRepository;
+        this.eventTypeRepository = eventTypeRepository;
     }
 
     public LiveData<Result<List<EventSummary>>> getFavouriteEvents() {
@@ -62,5 +66,9 @@ public class FavouritesViewModel extends ViewModel {
 
     public LiveData<Bitmap> getServiceImage(Long id) {
         return serviceRepository.getServiceImage(id);
+    }
+
+    public LiveData<Bitmap> getEventImage(Long id) {
+        return eventTypeRepository.getImage(id);
     }
 }

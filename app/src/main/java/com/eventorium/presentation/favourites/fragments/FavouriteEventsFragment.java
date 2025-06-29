@@ -32,6 +32,7 @@ public class FavouriteEventsFragment extends Fragment {
     private FragmentFavouriteEventsBinding binding;
     private FavouritesViewModel viewModel;
     private List<EventSummary> events;
+    private EventsAdapter adapter;
 
     public FavouriteEventsFragment() { }
 
@@ -63,18 +64,33 @@ public class FavouriteEventsFragment extends Fragment {
             if (result.getData() != null) {
                 events = result.getData();
                 setupAdapter();
-            } else {
+                loadEventImages(events);
+            } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
         });
     }
 
     private void setupAdapter() {
-        binding.eventsRecycleView.setAdapter(new EventsAdapter(events, event -> {
+        adapter = new EventsAdapter(events, event -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ARG_EVENT_ID, event.getId());
             navController.navigate(R.id.action_fav_to_event_details, args);
-        }));
+        });
+
+        binding.eventsRecycleView.setAdapter(adapter);
+    }
+
+    private void loadEventImages(List<EventSummary> events){
+        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
+                observe (getViewLifecycleOwner(), image -> {
+                    if (image != null){
+                        event.setImage(image);
+                        int position = events.indexOf(event);
+                        if (position != -1) {
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                }));
     }
 }
