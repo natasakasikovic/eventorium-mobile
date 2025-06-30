@@ -200,13 +200,13 @@ public class ReserveServiceFragment extends Fragment {
         performReservation(startingTime, endingTime);
     }
     private void ensurePlannedAmount() {
-        if (plannedAmount == 0.0) {
+        if (binding.plannedAmountInputLayout.getVisibility() != View.GONE) // in this case, planned amount is not passed -> get it from input field
             plannedAmount = parsePlannedAmount(binding.plannedAmount);
-        }
     }
 
     private boolean ensureEventId() {
-        if (eventId != 0) return true;
+        if (binding.eventSelectionInputLayout.getVisibility() == View.GONE) // in this case, event is passed so you don't need to take it from spinner
+            return true;
 
         Event event = (Event) binding.eventSelector.getSelectedItem();
         if (event == null) {
