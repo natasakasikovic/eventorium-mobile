@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
@@ -57,7 +58,6 @@ public class ManageServiceFragment extends Fragment {
     private ManageableServiceAdapter adapter;
     private List<ServiceSummary> services;
     private RecyclerView recyclerView;
-    private TextView noServicesText;
 
     public ManageServiceFragment() {
     }
@@ -89,7 +89,6 @@ public class ManageServiceFragment extends Fragment {
 
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
-        noServicesText = binding.noServicesText;
         configureAdapter();
         configureSearch();
         loadServices();
@@ -191,14 +190,25 @@ public class ManageServiceFragment extends Fragment {
         EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerEventType)));
 
         ServiceFilter filter = ServiceFilter.builder()
-                .availability(availability)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .category(category == null ? null : category.getName())
                 .type(eventType == null ? null : eventType.getName())
                 .build();
 
-        manageableServiceViewModel.filterServices(filter);
+        if (availability) filter.setAvailability(true);
+        observeFilteringServices(filter);
+    }
+
+    private void observeFilteringServices(ServiceFilter filter) {
+        manageableServiceViewModel.filterServices(filter).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                services = result.getData();
+                adapter.setData(services);
+                loadImages(services);
+            } else
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        });
     }
 
     private Double parsePrice(TextInputEditText textInput) {
