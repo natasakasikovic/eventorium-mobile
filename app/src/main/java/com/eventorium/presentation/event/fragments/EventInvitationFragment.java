@@ -2,9 +2,12 @@ package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,8 @@ import com.eventorium.presentation.event.viewmodels.InvitationViewModel;
 import java.util.regex.Pattern;
 
 import dagger.hilt.android.AndroidEntryPoint;
+
+import com.eventorium.R;
 
 @AndroidEntryPoint
 public class EventInvitationFragment extends Fragment {
@@ -41,7 +46,9 @@ public class EventInvitationFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null)
             eventId = getArguments().getLong(ARG_EVENT_ID);
-        }
+
+        setUpOnBackPressedHandler();
+    }
 
 
     @Override
@@ -61,7 +68,7 @@ public class EventInvitationFragment extends Fragment {
         setUpListeners();
     }
 
-    private void setUpListeners(){
+    private void setUpListeners() {
         binding.addEmailButton.setOnClickListener(v ->
         {
             String email = binding.emailEditText.getText().toString();
@@ -81,15 +88,36 @@ public class EventInvitationFragment extends Fragment {
         });
     }
 
-    private boolean isEmailValid(String email){
-        if (email.isEmpty()){
+    private boolean isEmailValid(String email) {
+        if (email.isEmpty()) {
             binding.emailInputLayout.setError("Email cannot be empty");
             return false;
-        } else if (!EMAIL_PATTERN.matcher(email).matches()){
+        } else if (!EMAIL_PATTERN.matcher(email).matches()) {
             binding.emailInputLayout.setError("Email format is not good");
             return false;
         }
         return true;
+    }
+
+    private void setUpOnBackPressedHandler() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitConfirmationDialog();
+            }
+        });
+    }
+
+    private void showExitConfirmationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit_event_creation)
+                .setMessage(R.string.exit_event_creation_confirmation)
+                .setPositiveButton(R.string.exit, (dialog, which) -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack(R.id.homepageFragment, false);
+                })
+                .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 }
