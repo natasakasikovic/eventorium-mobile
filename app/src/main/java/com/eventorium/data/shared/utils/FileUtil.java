@@ -5,8 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -77,6 +79,16 @@ public class FileUtil {
         }
     }
 
+    public static Bitmap convertToBitmap(Context context, Uri uri) throws IOException {
+        try {
+            Bitmap bitmap = ImageDecoder.decodeBitmap(
+                    ImageDecoder.createSource(context.getContentResolver(), uri)
+            );
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public static File getFileFromUri(Context context, Uri uri) throws IOException {
         String fileName = getFileName(context, uri);
         if (fileName == null) return null;

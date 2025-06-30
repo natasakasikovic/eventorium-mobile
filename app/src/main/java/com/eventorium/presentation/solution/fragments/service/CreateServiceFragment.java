@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ReservationType;
 import com.eventorium.databinding.FragmentCreateServiceBinding;
@@ -70,9 +71,7 @@ public class CreateServiceFragment extends Fragment {
             imageAdapter.insert(imageUris.stream()
                     .map(uri -> {
                         try {
-                            Bitmap bitmap = ImageDecoder.decodeBitmap(
-                                    ImageDecoder.createSource(requireContext().getContentResolver(), uri)
-                            );
+                            Bitmap bitmap = FileUtil.convertToBitmap(requireContext(), uri);
                             return new ImageItem(bitmap, uri);
                         } catch (IOException e) {
                             return null;

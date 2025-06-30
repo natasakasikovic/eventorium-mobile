@@ -35,12 +35,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == DELETABLE) {
-            View view = inflater.inflate(R.layout.image_with_delete, parent, false);
-            return new ImageViewHolder(view);
-        } else {
-            return new ImageViewHolder(new ImageView(parent.getContext()));
-        }
+        View view;
+        if (viewType == DELETABLE)
+            view = inflater.inflate(R.layout.image_with_delete, parent, false);
+        else
+            view = inflater.inflate(R.layout.image_without_delete, parent, false);
+
+        return new ImageViewHolder(view);
     }
 
     @Override
