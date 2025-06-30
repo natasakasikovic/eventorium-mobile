@@ -159,10 +159,14 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/images"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="horizontal"
+                        android:layout_height="300dp"
+                        android:scrollbars="vertical"
+                        android:overScrollMode="never"
+                        android:padding="8dp"
+                        android:clipToPadding="false"
+                        android:layout_gravity="center"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:layout_gravity="center"/>
+                        />
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
