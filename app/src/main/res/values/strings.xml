@@ -253,4 +253,6 @@
     <string name="successfully_added_service_to_planner">Successfully added service to planner.</string>
     <string name="exit_event_creation">Exit Event Creation</string>
     <string name="exit_event_creation_confirmation">If you leave now, you won’t be able to continue this process later. Do you want to exit?</string>
+    <string name="exit">Exit</string>
+    <string name="stay">Stay</string>
 </resources>

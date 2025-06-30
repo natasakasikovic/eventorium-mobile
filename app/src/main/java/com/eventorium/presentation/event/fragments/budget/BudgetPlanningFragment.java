@@ -97,11 +97,11 @@ public class BudgetPlanningFragment extends Fragment {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                 .setTitle(R.string.exit_event_creation)
                 .setMessage(R.string.exit_event_creation_confirmation)
-                .setPositiveButton("Exit", (dialog, which) -> {
+                .setPositiveButton(R.string.exit, (dialog, which) -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                    navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+                    navController.popBackStack(R.id.homepageFragment, false);
                 })
-                .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
