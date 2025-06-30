@@ -238,8 +238,11 @@ public class ServiceDetailsFragment extends Fragment {
         serviceViewModel.getServiceImages(service.getId()).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 List<ImageItem> images = result.getData();
-                if (images.isEmpty()) this.binding.images.setVisibility(View.GONE);
+                if (images.isEmpty()) binding.noImages.setVisibility(View.VISIBLE);
                 else binding.images.setAdapter(new ImageAdapter(images));
+                binding.loader.setVisibility(View.GONE);
+            } else {
+                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
         });
     }

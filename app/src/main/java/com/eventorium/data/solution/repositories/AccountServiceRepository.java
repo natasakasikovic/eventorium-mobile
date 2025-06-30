@@ -26,22 +26,22 @@ public class AccountServiceRepository {
         this.service = service;
     }
 
-    public LiveData<List<ServiceSummary>> getManageableServices() {
-        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>();
-        service.getManageableServices().enqueue(handleSuccessfulResponse(liveData));
-        return liveData;
+    public LiveData<Result<List<ServiceSummary>>> getManageableServices() {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getManageableServices().enqueue(handleGeneralResponse(result));
+        return result;
     }
 
-    public LiveData<List<ServiceSummary>> searchServices(String query) {
-        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>();
-        service.searchManageableServices(query).enqueue(handleSuccessfulResponse(liveData));
-        return liveData;
+    public LiveData<Result<List<ServiceSummary>>> searchServices(String query) {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+        service.searchManageableServices(query).enqueue(handleGeneralResponse(result));
+        return result;
     }
 
-    public LiveData<List<ServiceSummary>> filterServices(ServiceFilter filter) {
-        MutableLiveData<List<ServiceSummary>> liveData = new MutableLiveData<>(new ArrayList<>());
-        service.filterManageableServices(getFilterParams(filter)).enqueue(handleSuccessfulResponse(liveData));
-        return liveData;
+    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
+        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
+        service.filterManageableServices(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+        return result;
     }
 
     public LiveData<Boolean> isFavouriteService(Long id) {

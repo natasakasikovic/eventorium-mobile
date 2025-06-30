@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.databinding.FragmentCreateProductBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
@@ -107,9 +108,7 @@ public class CreateProductFragment extends Fragment {
             imageAdapter.insert(imageUris.stream()
                     .map(uri -> {
                         try {
-                            Bitmap bitmap = ImageDecoder.decodeBitmap(
-                                    ImageDecoder.createSource(requireContext().getContentResolver(), uri)
-                            );
+                            Bitmap bitmap = FileUtil.convertToBitmap(requireContext(), uri);
                             return new ImageItem(bitmap, uri);
                         } catch (IOException e) {
                             return null;

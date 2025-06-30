@@ -129,7 +129,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
             solutionName.setText(item.getSolutionName());
             categoryName.setText(item.getCategory().getName());
             spentAmount.setText("Spent: " +  String.format("%.2f", item.getSpentAmount()));
-            plannedAmount.setText(item.getPlannedAmount().toString());
+            plannedAmount.setText(String.format("%.2f", item.getPlannedAmount()));
 
             int statusColor = getStatusColor(item.getStatus());
 

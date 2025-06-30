@@ -73,11 +73,12 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             deleteButton = itemView.findViewById(R.id.deleteButton);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "DefaultLocale"})
         @Override
         public void bind(ServiceSummary serviceSummary) {
             nameTextView.setText(serviceSummary.getName());
-            priceTextView.setText(serviceSummary.getPrice().toString());
+            double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100);
+            priceTextView.setText(String.format("%.2f", price));
             imageView.setImageBitmap(serviceSummary.getImage());
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));

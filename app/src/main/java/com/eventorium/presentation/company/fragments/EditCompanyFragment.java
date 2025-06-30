@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.data.shared.models.City;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.databinding.FragmentEditCompanyBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
@@ -114,9 +115,7 @@ public class EditCompanyFragment extends Fragment {
             newImagesAdapter.insert(imageUris.stream()
                     .map(uri -> {
                         try {
-                            Bitmap bitmap = ImageDecoder.decodeBitmap(
-                                    ImageDecoder.createSource(requireContext().getContentResolver(), uri)
-                            );
+                            Bitmap bitmap = FileUtil.convertToBitmap(requireContext(), uri);
                             return new ImageItem(bitmap, uri);
                         } catch (IOException e) {
                             return null;

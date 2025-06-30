@@ -38,6 +38,7 @@ projectlombokLombok = "1.18.36"
 retrofit = "2.9.0"
 rxjava = "2.2.5"
 stompprotocolandroid = "1.6.4"
+exifinterface = "1.3.6"
 
 [libraries]
 androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
@@ -82,6 +83,7 @@ osmdroid-geopackage = { module = "org.osmdroid:osmdroid-geopackage", version.ref
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
 stompprotocolandroid = { module = "com.github.NaikSoftware:StompProtocolAndroid", version.ref = "stompprotocolandroid" }
+androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
