@@ -80,14 +80,8 @@ public class FileUtil {
     }
 
     public static Bitmap convertToBitmap(Context context, Uri uri) throws IOException {
-        try {
-            Bitmap bitmap = ImageDecoder.decodeBitmap(
-                    ImageDecoder.createSource(context.getContentResolver(), uri)
-            );
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
-        } catch (Exception e) {
-            return null;
-        }
+        ImageDecoder.Source source = ImageDecoder.createSource(context.getContentResolver(), uri);
+        return ImageDecoder.decodeBitmap(source);
     }
     public static File getFileFromUri(Context context, Uri uri) throws IOException {
         String fileName = getFileName(context, uri);
