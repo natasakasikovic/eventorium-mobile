@@ -4,6 +4,7 @@ package com.eventorium.presentation.event.fragments.agenda;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -31,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AgendaFragment extends Fragment implements OnActivityCreatedListener  {
     private FragmentAgendaBinding binding;
+    private OnBackPressedCallback onBackPressedCallback;
+
     private List<Activity> activities = new ArrayList<>();
     private RecyclerView recyclerView;
     private ActivitiesAdapter adapter;
@@ -60,6 +63,7 @@ public class AgendaFragment extends Fragment implements OnActivityCreatedListene
             privacy = getArguments().getParcelable(ARG_EVENT_PRIVACY);
         }
         eventViewModel = new ViewModelProvider(this).get(EventViewModel.class);
+        setUpOnBackPressedHandler();
     }
 
     @Override
@@ -100,6 +104,11 @@ public class AgendaFragment extends Fragment implements OnActivityCreatedListene
 
     private void navigate() {
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+
+        if (onBackPressedCallback != null) {
+            onBackPressedCallback.setEnabled(false);
+        }
+
         if (privacy.equals(Privacy.CLOSED)) {
             Bundle args = new Bundle();
             args.putLong(ARG_EVENT_ID, id);
@@ -108,6 +117,28 @@ public class AgendaFragment extends Fragment implements OnActivityCreatedListene
             Toast.makeText(requireContext(), "Event created successfully", Toast.LENGTH_SHORT).show();
             navController.popBackStack(R.id.homepageFragment, false);
         }
+    }
+
+    private void setUpOnBackPressedHandler() {
+        onBackPressedCallback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitConfirmationDialog();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, onBackPressedCallback);
+    }
+
+    private void showExitConfirmationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit_event_creation)
+                .setMessage(R.string.exit_event_creation_confirmation)
+                .setPositiveButton("Exit", (dialog, which) -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+                })
+                .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
 }

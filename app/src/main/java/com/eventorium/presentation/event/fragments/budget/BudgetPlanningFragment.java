@@ -2,6 +2,7 @@ package com.eventorium.presentation.event.fragments.budget;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -42,10 +43,11 @@ public class BudgetPlanningFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             event = getArguments().getParcelable(ARG_EVENT);
             canAdvance = getArguments().getBoolean(ARG_CAN_ADVANCE, true);
         }
+        setUpOnBackPressedHandler();
     }
 
     @Override
@@ -80,6 +82,27 @@ public class BudgetPlanningFragment extends Fragment {
             args.putParcelable(AgendaFragment.ARG_EVENT_PRIVACY, event.getPrivacy());
             navController.navigate(R.id.action_budget_to_agenda, args);
         });
+    }
+
+    private void setUpOnBackPressedHandler() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitConfirmationDialog();
+            }
+        });
+    }
+
+    private void showExitConfirmationDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.exit_event_creation)
+                .setMessage(R.string.exit_event_creation_confirmation)
+                .setPositiveButton("Exit", (dialog, which) -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+                })
+                .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
