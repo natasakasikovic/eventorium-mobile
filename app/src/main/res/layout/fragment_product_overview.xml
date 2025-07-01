@@ -1,83 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/md_theme_secondaryContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_theme_secondaryContainer">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/productsText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="@string/products"
+        android:textSize="28sp"
+        android:textColor="@color/md_theme_primary"
+        android:fontFamily="@font/jejumyeongjo"
+        android:paddingTop="10dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"/>
 
-        <TextView
-            android:id="@+id/productsText"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/searchBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/productsText"
+        app:layout_constraintBottom_toTopOf="@id/linear_layout_products"
+        android:layout_marginTop="24dp">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/products"
-            android:textSize="28sp"
-            android:textColor="@color/md_theme_primary"
-            android:fontFamily="@font/jejumyeongjo"
-            android:paddingTop="10dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"/>
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="45dp"
+            android:background="@color/card_background"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            app:iconifiedByDefault="false"
+            app:queryHint="Search" />
 
-        <LinearLayout
-            android:id="@+id/searchBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/productsText"
-            app:layout_constraintBottom_toTopOf="@id/linear_layout_products"
-            android:layout_marginTop="24dp">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="45dp"
-                android:background="@color/card_background"
-                android:clickable="true"
-                android:focusableInTouchMode="true"
-                app:iconifiedByDefault="false"
-                app:queryHint="Search" />
-
-            <Button
-                android:id="@+id/filterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_gravity="center_vertical"
-                android:backgroundTint="@android:color/darker_gray"
-                app:icon="@drawable/ic_tune"
-                app:iconTint="@android:color/black"
-                style="?attr/materialIconButtonStyle" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linear_layout_products"
+        <Button
+            android:id="@+id/filterButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/md_theme_tertiaryContainer"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/searchBarLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTint="@android:color/darker_gray"
+            app:icon="@drawable/ic_tune"
+            app:iconTint="@android:color/black"
+            style="?attr/materialIconButtonStyle" />
+    </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/productsRecycleView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_gravity="center" />
+    <LinearLayout
+        android:id="@+id/linear_layout_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/md_theme_tertiaryContainer"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/searchBarLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productsRecycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:clipToPadding="false"
+            android:paddingBottom="150dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

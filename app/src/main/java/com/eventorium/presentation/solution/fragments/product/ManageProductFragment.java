@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -111,17 +112,30 @@ public class ManageProductFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && dy > 0) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5) {
+                        viewModel.loadNextPage();
+                        loadImages();
+                    }
+                }
+            }
+        });
     }
 
     private void loadProducts() {
-        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
-            if (result.getData() != null) {
-                products = result.getData();
-                adapter.setProducts(products);
-                loadImages();
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
+        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+            adapter.addProducts(products);
         });
     }
 

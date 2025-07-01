@@ -5,6 +5,7 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
@@ -50,9 +51,9 @@ public class AccountProductRepository {
         return result;
     }
 
-    public LiveData<Result<List<ProductSummary>>> getProducts() {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.getProducts().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ProductSummary>>> getProducts(int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.getProducts(page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 

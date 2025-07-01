@@ -1,5 +1,7 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.PagedResponse;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;
@@ -29,7 +31,10 @@ public interface AccountProductService {
     Call<ResponseBody> removeFavouriteProduct(@Path("id") Long id);
 
     @GET("account/products/all")
-    Call<List<ProductSummary>> getProducts();
+    Call<List<ProductSummary>> getAllProducts();
+
+    @GET("account/products")
+    Call<PagedResponse<ProductSummary>> getProducts(@Query("page") int page, @Query("size") int size);
 
     @GET("account/products/search/all")
     Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);

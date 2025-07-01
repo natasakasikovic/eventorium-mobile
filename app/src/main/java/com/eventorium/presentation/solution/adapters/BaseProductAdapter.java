@@ -38,6 +38,12 @@ public abstract class BaseProductAdapter<T extends BaseProductAdapter.BaseProduc
         return productSummaries.size();
     }
 
+    public void addProducts(List<ProductSummary> newProducts) {
+        int start = productSummaries.size();
+        productSummaries.addAll(newProducts);
+        notifyItemRangeInserted(start, productSummaries.size());
+    }
+
     public abstract static class BaseProductViewHolder extends RecyclerView.ViewHolder {
         public BaseProductViewHolder(@NonNull View itemView) {
             super(itemView);
