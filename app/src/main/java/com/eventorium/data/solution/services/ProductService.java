@@ -46,8 +46,12 @@ public interface ProductService {
     @GET("products/top-five-products")
     Call<List<ProductSummary>> getTopProducts();
 
-    @GET("products/search/all")
-    Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
+    @GET("products/search")
+    Call<PagedResponse<ProductSummary>> searchProducts(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @POST("products")
     Call<Product> createProduct(@Body CreateProduct product);
@@ -59,8 +63,8 @@ public interface ProductService {
     @HTTP(method = "DELETE", path = "products/{id}/images", hasBody = true)
     Call<ResponseBody> deleteImages(@Path("id") Long id, @Body List<RemoveImageRequest> images);
 
-    @GET("products/filter/all")
-    Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
+    @GET("products/filter")
+    Call<PagedResponse<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
 
     @DELETE("products/{id}")
     Call<ResponseBody> deleteProduct(@Path("id") Long id);

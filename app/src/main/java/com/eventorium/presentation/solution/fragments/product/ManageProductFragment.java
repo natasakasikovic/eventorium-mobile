@@ -168,15 +168,7 @@ public class ManageProductFragment extends Fragment {
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-//                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
-//                    if (result.getError() == null) {
-//                        products = result.getData();
-//                        adapter.setData(products);
-//                        loadImages();
-//                    }
-//                    else
-//                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-//                });
+                viewModel.search(keyword);
                 return true;
             }
             @Override
@@ -228,18 +220,7 @@ public class ManageProductFragment extends Fragment {
                 .build();
 
 
-        observeFilteringProducts(filter);
-    }
-
-    private void observeFilteringProducts(ProductFilter filter) {
-        viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
-//            if (result.getError() == null) {
-//                products = result.getData();
-//                adapter.setData(products);
-//                loadImages();
-//            } else
-//                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {

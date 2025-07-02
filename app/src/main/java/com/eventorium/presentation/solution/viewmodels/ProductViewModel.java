@@ -87,16 +87,12 @@ public class ProductViewModel extends PagedViewModel<ProductSummary, ProductFilt
         return accountProductRepository.addFavouriteProduct(id);
     }
 
-    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
-        return repository.searchProducts(keyword);
-    }
-
-    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
-        return repository.filterProducts(filter);
-    }
-
     @Override
     protected LiveData<Result<PagedResponse<ProductSummary>>> loadPage(PagingMode mode, int page, int size) {
-        return repository.getProducts(page, size);
+        return switch (mode) {
+            case DEFAULT -> repository.getProducts(page, size);
+            case SEARCH -> repository.searchProducts(searchQuery, page, size);
+            case FILTER -> repository.filterProducts(filterParams, page, size);
+        };
     }
 }

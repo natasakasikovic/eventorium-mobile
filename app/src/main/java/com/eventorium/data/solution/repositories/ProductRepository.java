@@ -113,23 +113,25 @@ public class ProductRepository {
         return liveData;
     }
 
-    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
-        MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-        service.searchProducts(keyword).enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<ProductSummary>>> searchProducts(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> liveData = new MutableLiveData<>();
+        service.searchProducts(keyword, page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
-    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.filterProducts(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ProductSummary>>> filterProducts(ProductFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.filterProducts(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
-    private Map<String, String> getFilterParams(ProductFilter filter) {
+    private Map<String, String> getFilterParams(ProductFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
         addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
         addParamIfNotNull(params, "type", filter.getType());
         addParamIfNotNull(params, "minPrice", filter.getMinPrice());
         addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
