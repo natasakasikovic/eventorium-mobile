@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
@@ -89,9 +91,32 @@ public class ManageServiceFragment extends Fragment {
 
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
+        observeServices();
+        serviceViewModel.refresh();
+        setupScrollListener(binding.servicesRecycleView);
         configureAdapter();
         configureSearch();
-        loadServices();
+    }
+
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
+            @Override
+            protected void loadMoreItems() {
+                serviceViewModel.loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return serviceViewModel.isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return serviceViewModel.isLastPage;
+            }
+        });
     }
 
     private void configureAdapter() {
@@ -285,18 +310,15 @@ public class ManageServiceFragment extends Fragment {
         });
     }
 
-    private void loadServices() {
-        manageableServiceViewModel.getServices()
-                .observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        binding.servicesRecycleView.setVisibility(View.VISIBLE);
-                        binding.loadingIndicator.setVisibility(View.GONE);
-                        adapter.setData(result.getData());
-                        loadImages(result.getData());
-                    } else {
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                    }
-                });
+    private void observeServices() {
+        serviceViewModel.getItems().observe(getViewLifecycleOwner(), services -> {
+            adapter.setData(services);
+            loadImages(services);
+            if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
+                binding.loadingIndicator.setVisibility(View.GONE);
+                binding.servicesRecycleView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

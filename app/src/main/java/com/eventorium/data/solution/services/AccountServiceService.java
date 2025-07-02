@@ -1,6 +1,8 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +18,8 @@ import retrofit2.http.QueryMap;
 
 public interface AccountServiceService {
 
-    @GET("account/services/all")
-    Call<List<ServiceSummary>> getManageableServices();
+    @GET("account/services")
+    Call<PagedResponse<ServiceSummary>> getManageableServices(@Query("page") int page, @Query("size") int size);
 
     @GET("account/services/filter/all")
     Call<List<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);

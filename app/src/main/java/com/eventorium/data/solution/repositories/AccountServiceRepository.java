@@ -5,6 +5,7 @@ import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
@@ -26,9 +27,9 @@ public class AccountServiceRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> getManageableServices() {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.getManageableServices().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> getManageableServices(int size, int page) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getManageableServices(size, page).enqueue(handleGeneralResponse(result));
         return result;
     }
 
