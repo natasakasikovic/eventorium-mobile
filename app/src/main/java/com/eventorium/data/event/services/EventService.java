@@ -45,8 +45,12 @@ public interface EventService {
     @PUT("events/{id}/agenda")
     Call<ResponseBody> createAgenda(@Path("id") Long id, @Body List<Activity> agenda);
 
-    @GET("events/search/all")
-    Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
+    @GET("events/search")
+    Call<PagedResponse<EventSummary>> searchEvents(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("account/events/my-attending-events")
     Call<List<CalendarEvent>> getAttendingEvents();
@@ -63,8 +67,8 @@ public interface EventService {
     @GET("events/{id}/agenda")
     Call<List<Activity>> getAgenda(@Path("id") Long id);
 
-    @GET("events/filter/all")
-    Call<List<EventSummary>> filterEvents(@QueryMap Map<String, String> params);
+    @GET("events/filter")
+    Call<PagedResponse<EventSummary>> filterEvents(@QueryMap Map<String, String> params);
   
     @GET("events/{id}")
     Call<EditableEvent> getEditableEvent(@Path("id") Long id);

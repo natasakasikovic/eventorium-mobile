@@ -72,9 +72,9 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<EventSummary>>> searchEvents(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> liveData = new MutableLiveData<>();
+        service.searchEvents(keyword, page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
@@ -120,16 +120,18 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.filterEvents(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> filterEvents(EventFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.filterEvents(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    private Map<String, String> getFilterParams(EventFilter filter) {
+    private Map<String, String> getFilterParams(EventFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
         addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "type", filter.getType());
         addParamIfNotNull(params, "maxParticipants", filter.getMaxParticipants());

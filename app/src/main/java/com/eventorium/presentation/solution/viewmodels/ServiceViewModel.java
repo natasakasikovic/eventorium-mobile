@@ -40,7 +40,6 @@ public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilt
             ServiceRepository serviceRepository,
             AccountServiceRepository accountServiceRepository
     ) {
-        super(2);
         this.serviceRepository = serviceRepository;
         this.accountServiceRepository = accountServiceRepository;
     }

@@ -38,7 +38,6 @@ public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
 
     @Inject
     public EventViewModel(EventRepository eventRepository, AccountEventRepository accountEventRepository) {
-        super(2);
         this.repository = eventRepository;
         this.accountEventRepository = accountEventRepository;
     }
@@ -49,10 +48,6 @@ public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
 
     public LiveData<Result<List<Event>>> getFutureEvents() {
         return repository.getFutureEvents();
-    }
-
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        return repository.searchEvents(keyword);
     }
 
     public LiveData<Result<EventDetails>> getEventDetails(Long id) {
@@ -99,10 +94,6 @@ public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
         return repository.getAgenda(id);
     }
 
-    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
-        return repository.filterEvents(filter);
-    }
-  
     public LiveData<Result<EditableEvent>> getEditableEvent(Long id) {
         return repository.getEditableEvent(id);
     }
@@ -121,6 +112,10 @@ public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
 
     @Override
     protected LiveData<Result<PagedResponse<EventSummary>>> loadPage(PagingMode mode, int page, int size) {
-        return repository.getEvents(page, size);
+        return switch (mode) {
+            case DEFAULT -> repository.getEvents(page, size);
+            case SEARCH -> repository.searchEvents(searchQuery, page, size);
+            case FILTER -> repository.filterEvents(filterParams, page, size);
+        };
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.NotImplementedError;
 
 @HiltViewModel
 public class ManageableEventViewModel extends PagedViewModel<EventSummary, EventFilter> {
@@ -24,16 +25,15 @@ public class ManageableEventViewModel extends PagedViewModel<EventSummary, Event
 
     @Inject
     public ManageableEventViewModel(AccountEventRepository repository) {
-        super(2);
         this.repository = repository;
     }
-
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        return repository.searchEvents(keyword);
-    }
-
+    
     @Override
     protected LiveData<Result<PagedResponse<EventSummary>>> loadPage(PagingMode mode, int page, int size) {
-        return repository.getManageableEvents(page, size);
+        return switch (mode) {
+            case DEFAULT -> repository.getManageableEvents(page, size);
+            case SEARCH -> repository.searchEvents(searchQuery, page, size);
+            case FILTER -> throw new NotImplementedError("Manage events filter");
+        };
     }
 }

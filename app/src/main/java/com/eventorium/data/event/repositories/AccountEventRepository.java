@@ -26,9 +26,9 @@ public class AccountEventRepository {
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> searchEvents(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.searchEvents(keyword, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 

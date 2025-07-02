@@ -24,7 +24,6 @@ public class ManageableProductViewModel extends PagedViewModel<ProductSummary, P
     private final AccountProductRepository repository;
     @Inject
     public ManageableProductViewModel(AccountProductRepository repository) {
-        super(2);
         this.repository = repository;
     }
 

@@ -21,7 +21,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     protected final MutableLiveData<Integer> page = new MutableLiveData<>(0);
 
     private final Set<Integer> requestedPages = new HashSet<>();
-    protected final int pageSize;
+    protected final int pageSize = 10;
 
     public boolean isLoading = false;
     public boolean isLastPage = false;
@@ -29,10 +29,6 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     protected PagingMode mode = PagingMode.DEFAULT;
     protected String searchQuery = null;
     protected F filterParams = null;
-
-    public PagedViewModel(int pageSize) {
-        this.pageSize = pageSize;
-    }
 
     public LiveData<List<T>> getItems() {
         return items;

@@ -174,13 +174,7 @@ public class EventOverviewFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadEventImage(result.getData());
-                    } else
-                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                viewModel.search(keyword);
                 return true;
             }
 
@@ -247,7 +241,7 @@ public class EventOverviewFragment extends Fragment {
 
         EventFilter filter = new EventFilter(name, description, eventTypeName, maxParticipants, cityName, from, to);
 
-        observeFilteringEvents(filter);
+        viewModel.filter(filter);
     }
 
     private Integer parseInteger(TextInputEditText textInput) {
@@ -308,16 +302,6 @@ public class EventOverviewFragment extends Fragment {
             adapter.notifyDataSetChanged();
             spinner.setAdapter(adapter);
             spinner.setTag(eventTypes);
-        });
-    }
-
-    private void observeFilteringEvents(EventFilter filter) {
-        viewModel.filterEvents(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadEventImage(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
         });
     }
 

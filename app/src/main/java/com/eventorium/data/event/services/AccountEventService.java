@@ -33,8 +33,12 @@ public interface AccountEventService {
     @GET("account/events")
     Call<PagedResponse<EventSummary>> getManageableEvents(@Query("page") int page, @Query("size") int size);
 
-    @GET("account/events/search/all")
-    Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
+    @GET("account/events/search")
+    Call<PagedResponse<EventSummary>> searchEvents(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @POST("account/events/{id}/attendance")
     Call<ResponseBody> addToCalendar(@Path("id") Long id);

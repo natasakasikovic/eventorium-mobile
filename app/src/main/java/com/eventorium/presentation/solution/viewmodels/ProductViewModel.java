@@ -38,7 +38,6 @@ public class ProductViewModel extends PagedViewModel<ProductSummary, ProductFilt
             AccountProductRepository accountProductRepository,
             ProductRepository productRepository
     ) {
-        super(2);
         this.repository = productRepository;
         this.accountProductRepository = accountProductRepository;
     }
