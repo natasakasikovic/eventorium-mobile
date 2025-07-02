@@ -21,7 +21,7 @@ public interface AccountServiceService {
     @GET("account/services")
     Call<PagedResponse<ServiceSummary>> getManageableServices(@Query("page") int page, @Query("size") int size);
 
-    @GET("account/services/filter/all")
+    @GET("account/services/filter")
     Call<PagedResponse<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
 
     @GET("account/services/search")
