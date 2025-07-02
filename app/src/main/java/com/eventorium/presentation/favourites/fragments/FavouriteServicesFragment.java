@@ -20,6 +20,7 @@ import com.eventorium.R;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteServicesBinding;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
 import java.util.List;
@@ -72,12 +73,15 @@ public class FavouriteServicesFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        adapter = new ServicesAdapter(services, service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_fav_to_service_details, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new ServicesAdapter(services, loader,
+                service -> () -> viewModel.getServiceImage(service.getId()),
+                service -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, service.getId());
+                    navController.navigate(R.id.action_fav_to_service_details, args);
+                });
         binding.servicesRecycleView.setAdapter(adapter);
     }
 

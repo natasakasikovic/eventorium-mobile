@@ -12,7 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
+import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
@@ -20,10 +23,19 @@ import java.util.List;
 public class ManageableProductAdapter extends BaseProductAdapter<ManageableProductAdapter.ManageableProductViewHolder> {
 
     private final OnManageListener<ProductSummary> manageListener;
+    private final ImageLoader imageLoader;
+    private final ImageSourceProvider<ProductSummary> imageSourceProvider;
 
-    public ManageableProductAdapter(List<ProductSummary> productSummaries, OnManageListener<ProductSummary> listener) {
+    public ManageableProductAdapter(
+            List<ProductSummary> productSummaries,
+            ImageLoader imageLoader,
+            ImageSourceProvider<ProductSummary> imageSourceProvider,
+            OnManageListener<ProductSummary> listener
+    ) {
         super(productSummaries);
         this.manageListener = listener;
+        this.imageLoader = imageLoader;
+        this.imageSourceProvider = imageSourceProvider;
     }
 
     @NonNull
@@ -60,7 +72,13 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
         public void bind(ProductSummary productSummary) {
             nameTextView.setText(productSummary.getName());
             priceTextView.setText(productSummary.getPrice().toString());
-            imageView.setImageBitmap(productSummary.getImage());
+
+            imageLoader.loadImage(
+                    ImageHolder.PRODUCT,
+                    productSummary.getId(),
+                    imageSourceProvider.getImageSource(productSummary),
+                    imageView
+            );
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(productSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(productSummary));

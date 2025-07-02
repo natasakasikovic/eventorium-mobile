@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import com.eventorium.R;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
@@ -21,12 +23,19 @@ import java.util.stream.IntStream;
 public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
 
     private final OnManageListener<ServiceSummary> manageListener;
+    private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
+    private final ImageLoader imageLoader;
+
     public ManageableServiceAdapter(
             List<ServiceSummary> serviceSummaries,
+            ImageLoader imageLoader,
+            ImageSourceProvider<ServiceSummary> imageSourceProvider,
             OnManageListener<ServiceSummary> listener
     ) {
         super(serviceSummaries);
         this.manageListener = listener;
+        this.imageLoader = imageLoader;
+        this.imageSourceProvider = imageSourceProvider;
     }
 
     public void removeService(Long serviceId) {
@@ -79,7 +88,8 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             nameTextView.setText(serviceSummary.getName());
             double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
-            imageView.setImageBitmap(serviceSummary.getImage());
+
+
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(serviceSummary));

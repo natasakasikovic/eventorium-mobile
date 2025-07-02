@@ -30,6 +30,7 @@ import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
@@ -113,26 +114,31 @@ public class ManageServiceFragment extends Fragment {
     }
 
     private void configureAdapter() {
-        adapter = new ManageableServiceAdapter(new ArrayList<>(), new OnManageListener<>() {
-            @Override
-            public void onDeleteClick(ServiceSummary item) {
-                showDeleteDialog(item);
-            }
+        ImageLoader imageLoader = new ImageLoader(requireContext());
+        adapter = new ManageableServiceAdapter(
+                new ArrayList<>(),
+                imageLoader,
+                service -> () -> serviceViewModel.getServiceImage(service.getId()),
+                new OnManageListener<>() {
+                    @Override
+                    public void onDeleteClick(ServiceSummary item) {
+                        showDeleteDialog(item);
+                    }
 
-            @Override
-            public void onSeeMoreClick(ServiceSummary serviceSummary) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.action_manageServices_to_serviceDetails,
-                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
-            }
+                    @Override
+                    public void onSeeMoreClick(ServiceSummary serviceSummary) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.navigate(R.id.action_manageServices_to_serviceDetails,
+                                ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
+                    }
 
-            @Override
-            public void onEditClick(ServiceSummary serviceSummary) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.action_manageService_to_editService,
-                        EditServiceFragment.newInstance(serviceSummary).getArguments());
-            }
-        });
+                    @Override
+                    public void onEditClick(ServiceSummary serviceSummary) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.navigate(R.id.action_manageService_to_editService,
+                                EditServiceFragment.newInstance(serviceSummary).getArguments());
+                    }
+                });
         recyclerView.setAdapter(adapter);
     }
 

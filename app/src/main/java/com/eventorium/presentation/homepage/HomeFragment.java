@@ -24,6 +24,7 @@ import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
@@ -69,7 +70,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureProductAdapter() {
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), product -> {
+        ImageLoader loader = new ImageLoader(requireContext());
+        productsAdapter = new ProductsAdapter(
+                new ArrayList<>(),
+                loader,
+                product -> () -> viewModel.getProductImage(product.getId()),
+                product -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ProductDetailsFragment.ARG_ID, product.getId());
@@ -78,12 +84,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        serviceAdapter = new ServicesAdapter(new ArrayList<>(), service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_home_to_service_details, args);
-        });
+        ImageLoader imageLoader = new ImageLoader(requireContext());
+        serviceAdapter = new ServicesAdapter(
+                new ArrayList<>(),
+                imageLoader,
+                service -> () -> viewModel.getServiceImage(service.getId()),
+                service -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, service.getId());
+                    navController.navigate(R.id.action_home_to_service_details, args);
+                });
     }
 
     private void configureEventAdapter() {
@@ -118,22 +129,8 @@ public class HomeFragment extends Fragment {
     private void observeTopProducts() {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> { productsAdapter.setData(data);
-                          loadProductImages(data); }
+                data -> { productsAdapter.setData(data); }
         ));
-    }
-
-    private void loadProductImages(List<ProductSummary> products) {
-        products.forEach( product -> viewModel.getProductImage(product.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1) {
-                            productsAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     private void observeTopServices() {

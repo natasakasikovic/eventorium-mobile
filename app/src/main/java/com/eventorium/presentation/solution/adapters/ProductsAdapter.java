@@ -12,18 +12,32 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
+import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
+import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 
 import java.util.List;
 
 public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductViewHolder> {
 
     private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
+    private final ImageLoader imageLoader;
+    private final ImageSourceProvider<ProductSummary> imageSourceProvider;
 
-    public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
+
+    public ProductsAdapter(
+            List<ProductSummary> productSummaries,
+            ImageLoader loader,
+            ImageSourceProvider<ProductSummary> imageSourceProvider,
+            OnSeeMoreClick<ProductSummary> onSeeMoreClick
+    ) {
         super(productSummaries);
         this.onSeeMoreClick = onSeeMoreClick;
+        this.imageSourceProvider = imageSourceProvider;
+        this.imageLoader = loader;
     }
 
     @NonNull
@@ -62,7 +76,14 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
             nameTextView.setText(product.getName());
             double price = product.getPrice() * (1 - product.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
-            imageView.setImageBitmap(product.getImage());
+
+            imageLoader.loadImage(
+                    ImageHolder.PRODUCT,
+                    product.getId(),
+                    imageSourceProvider.getImageSource(product),
+                    imageView
+            );
+
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
             if (product.getAvailable() != null) {

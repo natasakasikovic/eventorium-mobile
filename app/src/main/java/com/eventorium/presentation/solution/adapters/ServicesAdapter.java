@@ -12,18 +12,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
+import com.eventorium.data.shared.models.ImageHolder;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
 import java.util.List;
 
 public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceViewHolder> {
 
     private final OnSeeMoreClick<ServiceSummary> listener;
+    private final ImageLoader imageLoader;
+    private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
 
-    public ServicesAdapter(List<ServiceSummary> serviceSummaries, OnSeeMoreClick<ServiceSummary> listener) {
+    public ServicesAdapter(
+            List<ServiceSummary> serviceSummaries,
+            ImageLoader imageLoader,
+            ImageSourceProvider<ServiceSummary> imageSourceProvider,
+            OnSeeMoreClick<ServiceSummary> listener
+    ) {
         super(serviceSummaries);
         this.listener = listener;
+        this.imageLoader = imageLoader;
+        this.imageSourceProvider = imageSourceProvider;
     }
 
     @NonNull
@@ -69,7 +81,14 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
             nameTextView.setText(service.getName());
             double price = service.getPrice() * (1 - service.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
-            photoImageview.setImageBitmap(service.getImage());
+
+            imageLoader.loadImage(
+                    ImageHolder.SERVICE,
+                    service.getId(),
+                    imageSourceProvider.getImageSource(service),
+                    photoImageview
+            );
+
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
 
         }

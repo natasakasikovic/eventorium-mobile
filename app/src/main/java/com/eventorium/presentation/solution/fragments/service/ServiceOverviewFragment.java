@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -58,12 +58,17 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        adapter = new ServicesAdapter(new ArrayList<>(), service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_serviceOverview_to_service_details, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new ServicesAdapter(
+                new ArrayList<>(),
+                loader,
+                service -> () -> viewModel.getServiceImage(service.getId()),
+                service -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, service.getId());
+                    navController.navigate(R.id.action_serviceOverview_to_service_details, args);
+                });
     }
 
     @Override

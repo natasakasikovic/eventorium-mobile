@@ -20,6 +20,7 @@ import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentFavouriteProductsBinding;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 
 import java.util.List;
@@ -72,12 +73,15 @@ public class FavouriteProductsFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        adapter = new ProductsAdapter(products, product -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_fav_to_product_details, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new ProductsAdapter(products, loader,
+                product -> () -> viewModel.getProductImage(product.getId()),
+                product -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, product.getId());
+                    navController.navigate(R.id.action_fav_to_product_details, args);
+                });
         binding.productsRecycleView.setAdapter(adapter);
     }
 

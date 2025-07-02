@@ -30,6 +30,7 @@ import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableProductAdapter;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.eventorium.presentation.solution.viewmodels.ManageableProductViewModel;
@@ -95,7 +96,18 @@ public class ManageProductFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.productsRecycleView;
-        adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<>() {
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new ManageableProductAdapter(
+                new ArrayList<>(),
+                loader,
+                product -> () -> productViewModel.getProductImage(product.getId()),
+                configureListener()
+        );
+        recyclerView.setAdapter(adapter);
+    }
+
+    private OnManageListener<ProductSummary> configureListener() {
+        return new OnManageListener<>() {
             @Override
             public void onDeleteClick(ProductSummary item) {
                 showDeleteDialog(item);
@@ -112,8 +124,7 @@ public class ManageProductFragment extends Fragment {
                 navController.navigate(R.id.action_manage_products_to_edit_product,
                         EditProductFragment.newInstance(item).getArguments());
             }
-        });
-        recyclerView.setAdapter(adapter);
+        };
     }
 
     private void setupScrollListener(RecyclerView recyclerView) {
@@ -140,22 +151,7 @@ public class ManageProductFragment extends Fragment {
     private void observeProducts() {
         viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
             adapter.setData(products);
-            loadImages(products);
         });
-    }
-
-    private void loadImages(List<ProductSummary> products) {
-        for (int i = 0; i < products.size(); i++) {
-            int index = i;
-            ProductSummary product = products.get(i);
-            productViewModel.getProductImage(product.getId())
-                    .observe(getViewLifecycleOwner(), img -> {
-                        if (img != null) {
-                            product.setImage(img);
-                            adapter.notifyItemChanged(index);
-                        }
-                    });
-        }
     }
 
     private void navigateToProductDetails(ProductSummary product) {

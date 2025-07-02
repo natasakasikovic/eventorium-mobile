@@ -33,6 +33,7 @@ import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -109,18 +110,22 @@ public class ProductOverviewFragment extends Fragment {
     }
 
     private void configureAdapter(){
-        adapter = new ProductsAdapter(new ArrayList<>(), product  -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_productOverview_to_productDetails, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new ProductsAdapter(
+                new ArrayList<>(),
+                loader,
+                product -> () -> viewModel.getProductImage(product.getId()),
+                product -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, product.getId());
+                    navController.navigate(R.id.action_productOverview_to_productDetails, args);
+                });
     }
 
     private void observeProducts() {
         viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
             adapter.setData(products);
-            loadImages(products);
         });
     }
 
@@ -239,19 +244,6 @@ public class ProductOverviewFragment extends Fragment {
             spinner.setAdapter(adapter);
             spinner.setTag(categories);
         });
-    }
-
-    private void loadImages(List<ProductSummary> products) {
-        products.forEach( product -> viewModel.getProductImage(product.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1)
-                            adapter.notifyItemChanged(position);
-                    }
-                })
-        );
     }
 
     @Override
