@@ -22,10 +22,14 @@ public interface AccountServiceService {
     Call<PagedResponse<ServiceSummary>> getManageableServices(@Query("page") int page, @Query("size") int size);
 
     @GET("account/services/filter/all")
-    Call<List<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
+    Call<PagedResponse<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
 
-    @GET("account/services/search/all")
-    Call<List<ServiceSummary>> searchManageableServices(@Query("keyword") String keyword);
+    @GET("account/services/search")
+    Call<PagedResponse<ServiceSummary>> searchManageableServices(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("account/services/favourites")
     Call<List<ServiceSummary>> getFavouriteServices();

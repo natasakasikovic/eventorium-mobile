@@ -81,14 +81,6 @@ public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilt
         return accountServiceRepository.addFavouriteService(id);
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
-        return serviceRepository.searchServices(keyword);
-    }
-
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        return serviceRepository.filterServices(filter);
-    }
-
     public LiveData<Result<Void>> deleteService(Long id) {
         return serviceRepository.deleteService(id);
     }
@@ -99,6 +91,10 @@ public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilt
 
     @Override
     protected LiveData<Result<PagedResponse<ServiceSummary>>> loadPage(PagingMode mode, int page, int size) {
-        return serviceRepository.getServices(page, size);
+        return switch (mode) {
+            case DEFAULT -> serviceRepository.getServices(page, size);
+            case SEARCH -> serviceRepository.searchServices(searchQuery, page, size);
+            case FILTER -> serviceRepository.filterServices(filterParams, page, size);
+        };
     }
 }

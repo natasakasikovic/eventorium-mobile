@@ -33,15 +33,15 @@ public class AccountServiceRepository {
         return result;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String query) {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.searchManageableServices(query).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> searchServices(String query, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.searchManageableServices(query, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.filterManageableServices(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> filterServices(ServiceFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.filterManageableServices(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
@@ -69,7 +69,7 @@ public class AccountServiceRepository {
         return result;
     }
 
-    private Map<String, String> getFilterParams(ServiceFilter filter) {
+    private Map<String, String> getFilterParams(ServiceFilter filter, Integer page, Integer size) {
         Map<String, String> params = new HashMap<>();
 
         if (filter.getCategory() != null) {
@@ -87,6 +87,8 @@ public class AccountServiceRepository {
         if (filter.getAvailability() != null) {
             params.put("availability", String.valueOf(filter.getAvailability()));
         }
+        params.put("page", page.toString());
+        params.put("size", size.toString());
 
         return params;
     }

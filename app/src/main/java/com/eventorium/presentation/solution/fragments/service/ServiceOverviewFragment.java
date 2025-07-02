@@ -104,14 +104,7 @@ public class ServiceOverviewFragment extends Fragment {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String keyword) { // search listener
-                viewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadServiceImages(result.getData());
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                viewModel.search(keyword);
                 return true;
             }
 
@@ -163,17 +156,7 @@ public class ServiceOverviewFragment extends Fragment {
                 .type(eventType != null ? eventType.getName() : null)
                 .build();
 
-        observeFilteringServices(filter);
-    }
-
-    private void observeFilteringServices(ServiceFilter filter) {
-        viewModel.filterServices(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadServiceImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {

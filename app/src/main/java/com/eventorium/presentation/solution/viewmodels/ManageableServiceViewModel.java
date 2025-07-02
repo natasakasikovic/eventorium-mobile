@@ -31,16 +31,12 @@ public class ManageableServiceViewModel extends PagedViewModel<ServiceSummary, S
         this.repository = repository;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
-        return repository.searchServices(keyword);
-    }
-
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        return repository.filterServices(filter);
-    }
-
     @Override
     protected LiveData<Result<PagedResponse<ServiceSummary>>> loadPage(PagingMode mode, int page, int size) {
-        return repository.getManageableServices(page, size);
+        return switch (mode) {
+            case DEFAULT -> repository.getManageableServices(page, size);
+            case SEARCH -> repository.searchServices(searchQuery, page, size);
+            case FILTER -> repository.filterServices(filterParams, page, size);
+        };
     }
 }

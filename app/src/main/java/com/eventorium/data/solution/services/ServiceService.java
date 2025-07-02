@@ -60,12 +60,16 @@ public interface ServiceService {
     @DELETE("services/{id}")
     Call<ResponseBody> deleteService(@Path("id") Long id);
 
-    @GET("services/search/all")
-    Call<List<ServiceSummary>> searchServices(@Query("keyword") String keyword);
+    @GET("services/search")
+    Call<PagedResponse<ServiceSummary>> searchServices(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("provider-reservations")
     Call<List<CalendarReservation>> getReservations();
 
-    @GET("services/filter/all")
-    Call<List<ServiceSummary>> filterServices(@QueryMap Map<String, String> params);
+    @GET("services/filter")
+    Call<PagedResponse<ServiceSummary>> filterServices(@QueryMap Map<String, String> params);
 }

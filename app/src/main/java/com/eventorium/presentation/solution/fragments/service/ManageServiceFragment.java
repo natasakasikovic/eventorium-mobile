@@ -9,19 +9,16 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.eventorium.R;
@@ -50,12 +47,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ManageServiceFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
-    private ManageableServiceViewModel manageableServiceViewModel;
+    private ManageableServiceViewModel viewModel;
     private ServiceViewModel serviceViewModel;
     private CategoryViewModel categoryViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private ManageableServiceAdapter adapter;
-    private List<ServiceSummary> services;
     private RecyclerView recyclerView;
 
     public ManageServiceFragment() {
@@ -69,7 +65,7 @@ public class ManageServiceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
-        manageableServiceViewModel = provider.get(ManageableServiceViewModel.class);
+        viewModel = provider.get(ManageableServiceViewModel.class);
         serviceViewModel = provider.get(ServiceViewModel.class);
         categoryViewModel = provider.get(CategoryViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
@@ -89,10 +85,10 @@ public class ManageServiceFragment extends Fragment {
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         observeServices();
-        serviceViewModel.refresh();
-        setupScrollListener(binding.servicesRecycleView);
+        viewModel.refresh();
         configureAdapter();
         configureSearch();
+        setupScrollListener(recyclerView);
     }
 
     private void setupScrollListener(RecyclerView recyclerView) {
@@ -101,17 +97,17 @@ public class ManageServiceFragment extends Fragment {
         recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
             @Override
             protected void loadMoreItems() {
-                serviceViewModel.loadNextPage();
+                viewModel.loadNextPage();
             }
 
             @Override
             public boolean isLoading() {
-                return serviceViewModel.isLoading;
+                return viewModel.isLoading;
             }
 
             @Override
             public boolean isLastPage() {
-                return serviceViewModel.isLastPage;
+                return viewModel.isLastPage;
             }
         });
     }
@@ -144,15 +140,7 @@ public class ManageServiceFragment extends Fragment {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-                manageableServiceViewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        services = result.getData();
-                        adapter.setData(services);
-                        loadImages(services);
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                viewModel.search(keyword);
                 return true;
             }
             @Override
@@ -219,18 +207,7 @@ public class ManageServiceFragment extends Fragment {
                 .build();
 
         if (availability) filter.setAvailability(true);
-        observeFilteringServices(filter);
-    }
-
-    private void observeFilteringServices(ServiceFilter filter) {
-        manageableServiceViewModel.filterServices(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                services = result.getData();
-                adapter.setData(services);
-                loadImages(services);
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {
@@ -308,7 +285,7 @@ public class ManageServiceFragment extends Fragment {
     }
 
     private void observeServices() {
-        serviceViewModel.getItems().observe(getViewLifecycleOwner(), services -> {
+        viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
             adapter.setData(services);
             loadImages(services);
             if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {

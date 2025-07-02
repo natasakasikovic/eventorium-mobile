@@ -115,10 +115,10 @@ public class ServiceRepository {
         return result;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
-        MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-        service.searchServices(keyword).enqueue(handleGeneralResponse(liveData));
-        return liveData;
+    public LiveData<Result<PagedResponse<ServiceSummary>>> searchServices(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.searchServices(keyword, page, size).enqueue(handleGeneralResponse(result));
+        return result;
     }
 
     public LiveData<Result<List<CalendarReservation>>> getReservations() {
@@ -128,16 +128,18 @@ public class ServiceRepository {
     }
 
 
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.filterServices(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> filterServices(ServiceFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.filterServices(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    private Map<String, String> getFilterParams(ServiceFilter filter) {
+    private Map<String, String> getFilterParams(ServiceFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
         addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "category", filter.getCategory());
         addParamIfNotNull(params, "type", filter.getType());
