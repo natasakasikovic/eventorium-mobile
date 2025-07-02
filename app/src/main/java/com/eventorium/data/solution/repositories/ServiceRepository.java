@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceFilter;
@@ -108,10 +109,10 @@ public class ServiceRepository {
     }
 
 
-    public LiveData<Result<List<ServiceSummary>>> getServices() {
-        MutableLiveData<Result<List<ServiceSummary>>> liveData = new MutableLiveData<>();
-        service.getServices().enqueue(handleGeneralResponse(liveData));
-        return liveData;
+    public LiveData<Result<PagedResponse<ServiceSummary>>> getServices(int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getServices(page, size).enqueue(handleGeneralResponse(result));
+        return result;
     }
 
     public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {

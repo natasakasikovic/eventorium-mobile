@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.ServiceSummary;
@@ -28,8 +29,8 @@ import retrofit2.http.QueryMap;
 
 public interface ServiceService {
 
-    @GET("services/all")
-    Call<List<ServiceSummary>> getServices();
+    @GET("services")
+    Call<PagedResponse<ServiceSummary>> getServices(@Query("page") int page, @Query("size") int size);
 
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);

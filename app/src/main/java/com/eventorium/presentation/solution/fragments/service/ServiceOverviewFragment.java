@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
@@ -27,6 +29,7 @@ import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -85,7 +88,9 @@ public class ServiceOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         observeServices();
+        viewModel.refresh();
         setUpListeners();
+        setupScrollListener(binding.servicesRecycleView);
     }
 
     private void setUpListeners() {
@@ -229,15 +234,34 @@ public class ServiceOverviewFragment extends Fragment {
         });
     }
 
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
+            @Override
+            protected void loadMoreItems() {
+                viewModel.loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return viewModel.isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return viewModel.isLastPage;
+            }
+        });
+    }
+
     private void observeServices() {
-        viewModel.getServices().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                binding.servicesRecycleView.setVisibility(View.VISIBLE);
+        viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
+            adapter.setData(services);
+            loadServiceImages(services);
+            if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
                 binding.loadingIndicator.setVisibility(View.GONE);
-                adapter.setData(result.getData());
-                loadServiceImages(result.getData());
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                binding.servicesRecycleView.setVisibility(View.VISIBLE);
             }
         });
     }
