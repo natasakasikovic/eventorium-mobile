@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -69,27 +70,25 @@ public class AccountServiceRepository {
         return result;
     }
 
-    private Map<String, String> getFilterParams(ServiceFilter filter, Integer page, Integer size) {
+    private Map<String, String> getFilterParams(ServiceFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
-        if (filter.getCategory() != null) {
-            params.put("category", filter.getCategory());
-        }
-        if (filter.getType() != null) {
-            params.put("eventType", filter.getType());
-        }
-        if (filter.getMinPrice() != null) {
-            params.put("minPrice", String.valueOf(filter.getMinPrice()));
-        }
-        if (filter.getMaxPrice() != null) {
-            params.put("maxPrice", String.valueOf(filter.getMaxPrice()));
-        }
-        if (filter.getAvailability() != null) {
-            params.put("availability", String.valueOf(filter.getAvailability()));
-        }
-        params.put("page", page.toString());
-        params.put("size", size.toString());
+
+        addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "eventType", filter.getType());
+        addParamIfNotNull(params, "minPrice", filter.getMinPrice());
+        addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
+        addParamIfNotNull(params, "availability", filter.getAvailability());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
 }
