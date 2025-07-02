@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -78,9 +81,31 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setupScrollListener(binding.productsRecycleView);
         observeProducts();
+        viewModel.refresh();
         setUpListeners();
+    }
+
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
+            @Override
+            protected void loadMoreItems() {
+                viewModel.loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return viewModel.isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return viewModel.isLastPage;
+            }
+        });
     }
 
     private void configureAdapter(){
@@ -92,13 +117,10 @@ public class ProductOverviewFragment extends Fragment {
         });
     }
 
-    private void observeProducts(){
-        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadProductImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+    private void observeProducts() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
+            adapter.setData(products);
+            loadImages(products);
         });
     }
 
@@ -109,7 +131,7 @@ public class ProductOverviewFragment extends Fragment {
                 viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
                     if (result.getError() == null) {
                         adapter.setData(result.getData());
-                        loadProductImages(result.getData());
+                        loadImages(result.getData());
                     }
                     else
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
@@ -172,7 +194,7 @@ public class ProductOverviewFragment extends Fragment {
         viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
             if (result.getError() == null) {
                 adapter.setData(result.getData());
-                loadProductImages(result.getData());
+                loadImages(result.getData());
             } else
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
         });
@@ -236,7 +258,7 @@ public class ProductOverviewFragment extends Fragment {
         });
     }
 
-    private void loadProductImages(List<ProductSummary> products) {
+    private void loadImages(List<ProductSummary> products) {
         products.forEach( product -> viewModel.getProductImage(product.getId()).
                 observe (getViewLifecycleOwner(), image -> {
                     if (image != null){

@@ -28,10 +28,6 @@ public class ManageableProductViewModel extends PagedViewModel<ProductSummary, P
         this.repository = repository;
     }
 
-    public LiveData<List<ProductSummary>> getProducts() {
-        return items;
-    }
-
     @Override
     protected LiveData<Result<PagedResponse<ProductSummary>>> loadPage(PagingMode mode, int page, int size) {
         return repository.getProducts(page, size);

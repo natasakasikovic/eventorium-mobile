@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
@@ -27,8 +28,8 @@ import retrofit2.http.QueryMap;
 
 public interface ProductService {
 
-    @GET("products/all")
-    Call<List<ProductSummary>> getAllProducts();
+    @GET("products")
+    Call<PagedResponse<ProductSummary>> getProducts(@Query("page") int page, @Query("size") int size);
 
     @GET("products/{id}")
     Call<Product> getProduct(@Path("id") Long id);

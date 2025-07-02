@@ -138,7 +138,7 @@ public class ManageProductFragment extends Fragment {
     }
 
     private void observeProducts() {
-        viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
+        viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
             adapter.setData(products);
             loadImages(products);
         });

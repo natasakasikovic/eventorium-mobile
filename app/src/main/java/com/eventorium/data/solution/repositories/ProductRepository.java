@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductFilter;
@@ -106,9 +107,9 @@ public class ProductRepository {
         return liveData;
     }
 
-    public LiveData<Result<List<ProductSummary>>> getProducts(){
-        MutableLiveData<Result<List<ProductSummary>>> liveData = new MutableLiveData<>();
-        service.getAllProducts().enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<ProductSummary>>> getProducts(int page, int size){
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> liveData = new MutableLiveData<>();
+        service.getProducts(page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 

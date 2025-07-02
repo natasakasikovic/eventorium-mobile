@@ -1,7 +1,5 @@
 package com.eventorium.presentation.solution.adapters;
 
-import static java.util.stream.Collectors.toList;
-
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class ManageableProductAdapter extends BaseProductAdapter<ManageableProductAdapter.ManageableProductViewHolder> {
 
