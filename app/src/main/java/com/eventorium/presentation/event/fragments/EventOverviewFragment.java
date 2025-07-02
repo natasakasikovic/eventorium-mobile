@@ -14,6 +14,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventFilter;
-import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.models.City;
 
@@ -60,6 +62,9 @@ public class EventOverviewFragment extends Fragment {
     private EventsAdapter adapter;
     private View dialogView;
     private BottomSheetDialog bottomSheetDialog;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     public EventOverviewFragment() { }
 
@@ -161,10 +166,13 @@ public class EventOverviewFragment extends Fragment {
 
     private void setUpListeners(){
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.search(keyword);
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 

@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +45,8 @@ public class ManageableEventsFragment extends Fragment {
     private ManageableEventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
     private RecyclerView recyclerView;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
     NavController navController;
 
     public ManageableEventsFragment() {}
@@ -119,7 +123,11 @@ public class ManageableEventsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.search(keyword);
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 

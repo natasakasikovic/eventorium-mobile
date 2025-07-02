@@ -3,6 +3,8 @@ package com.eventorium.presentation.solution.fragments.service;
 import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,9 @@ public class ServiceOverviewFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ServicesAdapter adapter;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
+
 
     public ServiceOverviewFragment() {}
 
@@ -109,7 +114,11 @@ public class ServiceOverviewFragment extends Fragment {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String keyword) { // search listener
-                viewModel.search(keyword);
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 
