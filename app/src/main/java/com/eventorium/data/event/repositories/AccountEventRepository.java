@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public class AccountEventRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<EventSummary>>> getManageableEvents() {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.getManageableEvents().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> getManageableEvents(int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.getManageableEvents(page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 

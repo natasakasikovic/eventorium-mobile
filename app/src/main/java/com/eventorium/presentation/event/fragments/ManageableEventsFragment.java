@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragmen
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.ArrayList;
@@ -69,8 +71,10 @@ public class ManageableEventsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadEvents();
+        observeEvents();
+        viewModel.refresh();
         setUpSearchListener();
+        setupScrollListener(binding.eventsRecycleView);
     }
 
     private void setUpAdapter() {
@@ -127,14 +131,30 @@ public class ManageableEventsFragment extends Fragment {
         });
     }
 
-    private void loadEvents() {
-        viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
-            if (result.getData() != null) {
-                events = result.getData();
-                adapter.setEvents(events);
-                loadEventImage(events);
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+    private void observeEvents() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
+            adapter.setData(events);
+            loadEventImage(events);
+        });
+    }
+
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
+            @Override
+            protected void loadMoreItems() {
+                viewModel.loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return viewModel.isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return viewModel.isLastPage;
             }
         });
     }
