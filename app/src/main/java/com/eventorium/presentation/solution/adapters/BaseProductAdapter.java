@@ -4,9 +4,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +25,35 @@ public abstract class BaseProductAdapter<T extends BaseProductAdapter.BaseProduc
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-    public void setData(List<ProductSummary> newProducts) {
-        this.productSummaries.clear();
-        this.productSummaries.addAll(newProducts);
-        notifyDataSetChanged();
+    public void setData(List<ProductSummary> newData) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return productSummaries.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return productSummaries.get(oldItemPosition).getId()
+                        .equals(newData.get(newItemPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return productSummaries.get(oldItemPosition)
+                        .equals(newData.get(newItemPosition));
+            }
+        });
+
+        productSummaries.clear();
+        productSummaries.addAll(newData);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
 

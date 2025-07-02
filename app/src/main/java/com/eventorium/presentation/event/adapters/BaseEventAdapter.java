@@ -4,9 +4,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 
 import java.util.List;
 
@@ -22,9 +25,35 @@ public abstract class BaseEventAdapter<T extends BaseEventAdapter.BaseEventViewH
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-    public void setData(List<EventSummary> data) {
-        eventSummaries = data;
-        notifyDataSetChanged();
+    public void setData(List<EventSummary> newData) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return eventSummaries.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return eventSummaries.get(oldItemPosition).getId()
+                        .equals(newData.get(newItemPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return eventSummaries.get(oldItemPosition)
+                        .equals(newData.get(newItemPosition));
+            }
+        });
+
+        eventSummaries.clear();
+        eventSummaries.addAll(newData);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.data.solution.models.service.ServiceSummary;
@@ -23,9 +24,35 @@ public abstract class BaseServiceAdapter<T extends BaseServiceAdapter.BaseServic
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-    public void setData(List<ServiceSummary> data) {
-        serviceSummaries = data;
-        notifyDataSetChanged();
+    public void setData(List<ServiceSummary> newData) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return serviceSummaries.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newData.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return serviceSummaries.get(oldItemPosition).getId()
+                        .equals(newData.get(newItemPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return serviceSummaries.get(oldItemPosition)
+                        .equals(newData.get(newItemPosition));
+            }
+        });
+
+        serviceSummaries.clear();
+        serviceSummaries.addAll(newData);
+
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override

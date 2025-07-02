@@ -21,7 +21,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     protected final MutableLiveData<Integer> page = new MutableLiveData<>(0);
 
     private final Set<Integer> requestedPages = new HashSet<>();
-    protected final int pageSize = 3;
+    protected final int pageSize = 2;
 
     public boolean isLoading = false;
     public boolean isLastPage = false;
