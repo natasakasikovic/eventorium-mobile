@@ -10,6 +10,8 @@ import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.repositories.AccountProductRepository;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.PagingMode;
+import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 
@@ -18,35 +20,21 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class ManageableProductViewModel extends ViewModel {
+public class ManageableProductViewModel extends PagedViewModel<ProductSummary, ProductFilter> {
     private final AccountProductRepository repository;
-    private final MutableLiveData<Integer> page = new MutableLiveData<>(0);
-    private final int pageSize = 2;
-
-    private final MediatorLiveData<List<ProductSummary>> products = new MediatorLiveData<>();
-
     @Inject
     public ManageableProductViewModel(AccountProductRepository repository) {
+        super(2);
         this.repository = repository;
-        loadNextPage();
     }
 
     public LiveData<List<ProductSummary>> getProducts() {
-        return products;
+        return items;
     }
 
-    public void loadNextPage() {
-        int nextPage = page.getValue() != null ? page.getValue() : 0;
-        LiveData<Result<PagedResponse<ProductSummary>>> newPage = repository.getProducts(nextPage, pageSize);
-
-        products.addSource(newPage, result -> {
-            if(result.getError() == null) {
-                products.setValue(result.getData().getContent());
-                products.removeSource(newPage);
-                if(!result.getData().getContent().isEmpty())
-                    page.setValue(nextPage + 1);
-            }
-        });
+    @Override
+    protected LiveData<Result<PagedResponse<ProductSummary>>> loadPage(PagingMode mode, int page, int size) {
+        return repository.getProducts(page, size);
     }
 
     public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {

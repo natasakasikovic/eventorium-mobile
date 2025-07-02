@@ -38,24 +38,6 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
         return new ManageableProductViewHolder(view);
     }
 
-    public void setProducts(List<ProductSummary> newProducts) {
-        productSummaries = newProducts;
-        notifyDataSetChanged();
-    }
-
-    public void removeProduct(Long productId) {
-        if (productId == null) return;
-
-        for (int i = 0; i < productSummaries.size(); i++) {
-            ProductSummary product = productSummaries.get(i);
-            if (productId.equals(product.getId())) {
-                productSummaries.remove(i);
-                notifyItemRemoved(i);
-                return;
-            }
-        }
-    }
-
     public class ManageableProductViewHolder extends BaseProductViewHolder {
 
         TextView nameTextView;

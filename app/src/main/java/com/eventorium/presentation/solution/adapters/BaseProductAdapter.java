@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.data.solution.models.product.ProductSummary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseProductAdapter<T extends BaseProductAdapter.BaseProductViewHolder>
@@ -22,9 +23,24 @@ public abstract class BaseProductAdapter<T extends BaseProductAdapter.BaseProduc
     @Override
     public abstract T onCreateViewHolder(@NonNull ViewGroup parent, int viewType);
 
-    public void setData(List<ProductSummary> data) {
-        productSummaries = data;
+    public void setData(List<ProductSummary> newProducts) {
+        this.productSummaries.clear();
+        this.productSummaries.addAll(newProducts);
         notifyDataSetChanged();
+    }
+
+
+    public void removeData(Long productId) {
+        if (productId == null) return;
+
+        for (int i = 0; i < productSummaries.size(); i++) {
+            ProductSummary product = productSummaries.get(i);
+            if (productId.equals(product.getId())) {
+                productSummaries.remove(i);
+                notifyItemRemoved(i);
+                return;
+            }
+        }
     }
 
     @Override

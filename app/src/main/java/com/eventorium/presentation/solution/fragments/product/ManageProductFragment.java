@@ -26,10 +26,10 @@ import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.solution.adapters.ManageableProductAdapter;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.eventorium.presentation.solution.viewmodels.ManageableProductViewModel;
@@ -41,6 +41,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -53,7 +54,6 @@ public class ManageProductFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ManageableProductAdapter adapter;
-    private List<ProductSummary> products;
     private RecyclerView recyclerView;
 
     public ManageProductFragment() { }
@@ -73,13 +73,15 @@ public class ManageProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
         setUpAdapter();
+        setupScrollListener(binding.productsRecycleView);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadProducts();
+        observeProducts();
+        viewModel.refresh();
         setUpListeners();
     }
 
@@ -112,42 +114,48 @@ public class ManageProductFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+    }
+
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            protected void loadMoreItems() {
+                viewModel.loadNextPage();
+            }
 
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && dy > 0) {
-                    int visibleItemCount = layoutManager.getChildCount();
-                    int totalItemCount = layoutManager.getItemCount();
-                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+            @Override
+            public boolean isLoading() {
+                return viewModel.isLoading;
+            }
 
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5) {
-                        viewModel.loadNextPage();
-                        loadImages();
-                    }
-                }
+            @Override
+            public boolean isLastPage() {
+                return viewModel.isLastPage;
             }
         });
     }
 
-    private void loadProducts() {
+    private void observeProducts() {
         viewModel.getProducts().observe(getViewLifecycleOwner(), products -> {
-            adapter.addProducts(products);
+            adapter.setData(products);
+            loadImages(products);
         });
     }
 
-    private void loadImages() {
-        products.forEach(product -> productViewModel
-            .getProductImage(product.getId()).observe(getViewLifecycleOwner(), img -> {
-            if (img != null) {
-                product.setImage(img);
-                int position = products.indexOf(product);
-                adapter.notifyItemChanged(position);
-            }
-        }));
+    private void loadImages(List<ProductSummary> products) {
+        for (int i = 0; i < products.size(); i++) {
+            int index = i;
+            ProductSummary product = products.get(i);
+            productViewModel.getProductImage(product.getId())
+                    .observe(getViewLifecycleOwner(), img -> {
+                        if (img != null) {
+                            product.setImage(img);
+                            adapter.notifyItemChanged(index);
+                        }
+                    });
+        }
     }
 
     private void navigateToProductDetails(ProductSummary product) {
@@ -160,15 +168,15 @@ public class ManageProductFragment extends Fragment {
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        products = result.getData();
-                        adapter.setData(products);
-                        loadImages();
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+//                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
+//                    if (result.getError() == null) {
+//                        products = result.getData();
+//                        adapter.setData(products);
+//                        loadImages();
+//                    }
+//                    else
+//                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+//                });
                 return true;
             }
             @Override
@@ -177,6 +185,7 @@ public class ManageProductFragment extends Fragment {
             }
         });
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
+        setupScrollListener(binding.productsRecycleView);
     }
 
     private void createBottomSheetDialog() {
@@ -224,12 +233,12 @@ public class ManageProductFragment extends Fragment {
 
     private void observeFilteringProducts(ProductFilter filter) {
         viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                products = result.getData();
-                adapter.setData(products);
-                loadImages();
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+//            if (result.getError() == null) {
+//                products = result.getData();
+//                adapter.setData(products);
+//                loadImages();
+//            } else
+//                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
         });
     }
 
@@ -305,7 +314,7 @@ public class ManageProductFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() == null) {
                         Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                        adapter.removeProduct(productId);
+                        adapter.removeData(productId);
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }
