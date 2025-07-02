@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
-import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
@@ -39,11 +38,9 @@ import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewMode
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 

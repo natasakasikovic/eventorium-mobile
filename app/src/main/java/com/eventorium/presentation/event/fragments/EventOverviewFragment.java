@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -92,18 +95,39 @@ public class EventOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpObserver();
+        viewModel.refresh();
         setUpListeners();
+        setupScrollListener(binding.eventsRecycleView);
     }
 
     private void setUpObserver(){
-        viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null){
-                adapter.setData(result.getData());
-                loadEventImage(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
+            adapter.setData(events);
+            loadEventImage(events);
         });
     }
+
+    private void setupScrollListener(RecyclerView recyclerView) {
+        LinearLayoutManager layout = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layout);
+        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
+            @Override
+            protected void loadMoreItems() {
+                viewModel.loadNextPage();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return viewModel.isLoading;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return viewModel.isLastPage;
+            }
+        });
+    }
+
 
     private void createDatePickers() {
         TextInputEditText fromDate = dialogView.findViewById(R.id.fromDateEditText);

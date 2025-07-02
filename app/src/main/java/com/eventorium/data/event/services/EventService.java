@@ -10,6 +10,7 @@ import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventDetails;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
+import com.eventorium.data.shared.models.PagedResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,8 @@ public interface EventService {
     @GET("events/{id}/details")
     Call<EventDetails> getEventDetails(@Path("id") Long id);
 
-    @GET("events/all")
-    Call<List<EventSummary>> getAll();
+    @GET("events")
+    Call<PagedResponse<EventSummary>> getEvents(@Query("page") int page, @Query("size") int size);
 
     @GET("events/top-five-events")
     Call<List<EventSummary>> getTopEvents();

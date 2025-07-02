@@ -20,6 +20,7 @@ import com.eventorium.data.event.models.event.EventFilter;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.event.services.EventService;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.HashMap;
@@ -41,9 +42,9 @@ public class EventRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<EventSummary>>> getEvents() {
-        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getAll().enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<EventSummary>>> getEvents(int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> liveData = new MutableLiveData<>();
+        service.getEvents(page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 

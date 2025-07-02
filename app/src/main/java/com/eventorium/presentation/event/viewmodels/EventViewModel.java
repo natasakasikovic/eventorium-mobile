@@ -18,7 +18,10 @@ import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.PagingMode;
+import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 
@@ -28,19 +31,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 
 @HiltViewModel
-public class EventViewModel extends ViewModel {
+public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
 
     private final EventRepository repository;
     private final AccountEventRepository accountEventRepository;
 
     @Inject
     public EventViewModel(EventRepository eventRepository, AccountEventRepository accountEventRepository) {
+        super(2);
         this.repository = eventRepository;
         this.accountEventRepository = accountEventRepository;
-    }
-
-    public LiveData<Result<List<EventSummary>>> getEvents(){
-        return repository.getEvents();
     }
 
     public LiveData<Result<Event>> createEvent(CreateEvent event) {
@@ -117,5 +117,10 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
         return repository.getStatistics(id);
+    }
+
+    @Override
+    protected LiveData<Result<PagedResponse<EventSummary>>> loadPage(PagingMode mode, int page, int size) {
+        return repository.getEvents(page, size);
     }
 }
