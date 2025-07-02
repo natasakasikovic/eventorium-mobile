@@ -11,17 +11,29 @@ import androidx.annotation.NonNull;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.shared.models.ImageHolder;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
 import java.util.List;
 
 public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolder> {
 
     private final OnSeeMoreClick<EventSummary> listener;
+    private ImageLoader imageLoader;
+    private ImageSourceProvider<EventSummary> imageSourceProvider;
 
-    public EventsAdapter(List<EventSummary> events, OnSeeMoreClick<EventSummary> listener) {
+    public EventsAdapter(
+            List<EventSummary> events,
+            ImageLoader imageLoader,
+            ImageSourceProvider<EventSummary> imageSourceProvider,
+            OnSeeMoreClick<EventSummary> listener
+    ) {
         super(events);
         this.listener = listener;
+        this.imageLoader = imageLoader;
+        this.imageSourceProvider = imageSourceProvider;
     }
 
     @NonNull
@@ -57,7 +69,12 @@ public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolde
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
-            photoImageView.setImageBitmap(event.getImage());
+            imageLoader.loadImage(
+                    ImageHolder.EVENT,
+                    event.getId(),
+                    imageSourceProvider.getImageSource(event),
+                    photoImageView
+            );
         }
     }
 }

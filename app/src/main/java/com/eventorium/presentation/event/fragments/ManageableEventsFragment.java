@@ -27,6 +27,7 @@ import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.ArrayList;
@@ -38,7 +39,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ManageableEventsFragment extends Fragment {
 
     private FragmentManageableEventsBinding binding;
-    private List<EventSummary> events;
     private ManageableEventAdapter adapter;
     private ManageableEventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
@@ -79,32 +79,37 @@ public class ManageableEventsFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.eventsRecycleView;
-        adapter = new ManageableEventAdapter(new ArrayList<>(), new OnManageEventListener() {
+        ImageLoader imageLoader = new ImageLoader(requireContext());
+        adapter = new ManageableEventAdapter(
+                new ArrayList<>(),
+                imageLoader,
+                event -> () -> eventTypeViewModel.getImage(event.getImageId()),
+                new OnManageEventListener() {
 
-            @Override
-            public void onSeeMoreClick(EventSummary item) {
-                navController.navigate(R.id.action_manage_events_to_event_details,
-                        EventDetailsFragment.newInstance(item.getId()).getArguments());
-            }
+                    @Override
+                    public void onSeeMoreClick(EventSummary item) {
+                        navController.navigate(R.id.action_manage_events_to_event_details,
+                                EventDetailsFragment.newInstance(item.getId()).getArguments());
+                    }
 
-            @Override
-            public void onEditClick(EventSummary item) {
-                navController.navigate(R.id.action_manage_events_to_edit_event,
-                        EditEventFragment.newInstance(item.getId()).getArguments());
-            }
+                    @Override
+                    public void onEditClick(EventSummary item) {
+                        navController.navigate(R.id.action_manage_events_to_edit_event,
+                                EditEventFragment.newInstance(item.getId()).getArguments());
+                    }
 
-            @Override
-            public void navigateToBudget(EventSummary item) {
-                Event event = Event.builder().id(item.getId()).build();
-                navController.navigate(R.id.action_manage_events_to_budget,
-                        BudgetItemsListFragment.newInstance(event, false).getArguments());
-            }
+                    @Override
+                    public void navigateToBudget(EventSummary item) {
+                        Event event = Event.builder().id(item.getId()).build();
+                        navController.navigate(R.id.action_manage_events_to_budget,
+                                BudgetItemsListFragment.newInstance(event, false).getArguments());
+                    }
 
-            @Override
-            public void onDeleteClick(EventSummary item) {
-                throw new UnsupportedOperationException("Not supported in this context.");
-            }
-        });
+                    @Override
+                    public void onDeleteClick(EventSummary item) {
+                        throw new UnsupportedOperationException("Not supported in this context.");
+                    }
+                });
         recyclerView.setAdapter(adapter);
 
     }
@@ -128,7 +133,6 @@ public class ManageableEventsFragment extends Fragment {
     private void observeEvents() {
         viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
             adapter.setData(events);
-            loadEventImage(events);
         });
     }
 
@@ -151,19 +155,6 @@ public class ManageableEventsFragment extends Fragment {
                 return viewModel.isLastPage;
             }
         });
-    }
-
-    private void loadEventImage(List<EventSummary> events) {
-        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     @Override

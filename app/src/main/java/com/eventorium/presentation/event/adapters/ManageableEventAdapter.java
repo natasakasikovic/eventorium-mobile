@@ -11,7 +11,11 @@ import androidx.annotation.NonNull;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.shared.models.ImageHolder;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
@@ -19,10 +23,20 @@ import java.util.List;
 public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdapter.ManageableEventViewHolder> {
 
     private final OnManageEventListener manageListener;
+    private final ImageSourceProvider<EventSummary> imageSourceProvider;
+    private final ImageLoader imageLoader;
 
-    public ManageableEventAdapter(List<EventSummary> eventSummaries, OnManageEventListener listener) {
+
+    public ManageableEventAdapter(
+            List<EventSummary> eventSummaries,
+            ImageLoader imageLoader,
+            ImageSourceProvider<EventSummary> imageSourceProvider,
+            OnManageEventListener listener
+    ) {
         super(eventSummaries);
         manageListener = listener;
+        this.imageSourceProvider = imageSourceProvider;
+        this.imageLoader = imageLoader;
     }
 
     @NonNull
@@ -64,7 +78,12 @@ public class ManageableEventAdapter extends BaseEventAdapter<ManageableEventAdap
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(event));
             editButton.setOnClickListener(v -> manageListener.onEditClick(event));
             budgetButton.setOnClickListener(v -> manageListener.navigateToBudget(event));
-            photoImageView.setImageBitmap(event.getImage());
+            imageLoader.loadImage(
+                    ImageHolder.EVENT,
+                    event.getId(),
+                    imageSourceProvider.getImageSource(event),
+                    photoImageView
+            );
         }
     }
 }

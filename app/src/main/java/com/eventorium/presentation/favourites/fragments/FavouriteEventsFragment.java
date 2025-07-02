@@ -21,6 +21,7 @@ import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
 import java.util.List;
 
@@ -71,12 +72,17 @@ public class FavouriteEventsFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        adapter = new EventsAdapter(events, event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_fav_to_event_details, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        adapter = new EventsAdapter(
+                events,
+                loader,
+                event -> () -> viewModel.getEventImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_fav_to_event_details, args);
+                });
 
         binding.eventsRecycleView.setAdapter(adapter);
     }

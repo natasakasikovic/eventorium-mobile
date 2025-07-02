@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.budget.BudgetItem;
+import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
@@ -89,7 +90,12 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
 
-
+            imageLoader.loadImage(
+                    ImageHolder.SERVICE,
+                    serviceSummary.getId(),
+                    imageSourceProvider.getImageSource(serviceSummary),
+                    imageView
+            );
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(serviceSummary));

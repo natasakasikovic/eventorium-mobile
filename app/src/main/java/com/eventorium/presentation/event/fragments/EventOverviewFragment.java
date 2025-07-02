@@ -32,6 +32,7 @@ import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -79,13 +80,17 @@ public class EventOverviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
-
-        adapter = new EventsAdapter(new ArrayList<>(), event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_overview_to_event_details, args);
-        });
+        ImageLoader imageLoader = new ImageLoader(requireContext());
+        adapter = new EventsAdapter(
+                new ArrayList<>(),
+                imageLoader,
+                event -> () -> eventTypeViewModel.getImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_overview_to_event_details, args);
+                });
         binding.eventsRecycleView.setAdapter(adapter);
 
         return binding.getRoot();
@@ -103,7 +108,6 @@ public class EventOverviewFragment extends Fragment {
     private void setUpObserver(){
         viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
             adapter.setData(events);
-            loadEventImage(events);
         });
     }
 
@@ -153,20 +157,6 @@ public class EventOverviewFragment extends Fragment {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
         return selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
-    }
-
-
-    private void loadEventImage(List<EventSummary> events) {
-        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     private void setUpListeners(){

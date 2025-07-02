@@ -98,12 +98,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureEventAdapter() {
-        eventsAdapter = new EventsAdapter(new ArrayList<>(), event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_home_to_event_details, args);
-        });
+        ImageLoader loader = new ImageLoader(requireContext());
+        eventsAdapter = new EventsAdapter(
+                new ArrayList<>(),
+                loader,
+                event -> () -> viewModel.getEventImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_home_to_event_details, args);
+                });
     }
 
     @Override
@@ -121,51 +126,22 @@ public class HomeFragment extends Fragment {
     private void observeTopEvents() {
         viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> { eventsAdapter.setData(data);
-                          loadEventImages(data); }
+                data -> eventsAdapter.setData(data)
         ));
     }
 
     private void observeTopProducts() {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> { productsAdapter.setData(data); }
+                data -> productsAdapter.setData(data)
         ));
     }
 
     private void observeTopServices() {
         viewModel.getTopServices().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> {serviceAdapter.setData(data);
-                         loadServiceImages(data);
-                }
+                data -> serviceAdapter.setData(data)
         ));
-    }
-
-    private void loadServiceImages(List<ServiceSummary> services){
-        services.forEach(service -> viewModel.getServiceImage(service.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        service.setImage(image);
-                        int position = services.indexOf(service);
-                        if (position != -1) {
-                            serviceAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
-    }
-
-    private void loadEventImages(List<EventSummary> events){
-        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            eventsAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     private <T> void handleResult(Result<T> result, Consumer<T> onSuccess) {
