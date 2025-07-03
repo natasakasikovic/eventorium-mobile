@@ -26,7 +26,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
 
     protected String searchQuery = null;
     protected F filterParams = null;
-    protected final int pageSize = 10;
+    protected final int pageSize = 2;
 
     public PagedViewModel() {
         items = Transformations.switchMap(pagingModeLiveData, mode -> {

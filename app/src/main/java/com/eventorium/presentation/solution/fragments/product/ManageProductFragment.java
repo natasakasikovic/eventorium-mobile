@@ -31,7 +31,6 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
-import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableProductAdapter;
 import com.eventorium.presentation.solution.listeners.OnManageListener;

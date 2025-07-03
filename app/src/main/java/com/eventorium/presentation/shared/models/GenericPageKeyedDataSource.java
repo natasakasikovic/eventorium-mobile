@@ -52,14 +52,16 @@ public class GenericPageKeyedDataSource<T> extends PageKeyedDataSource<Integer, 
     @Override
     public void loadAfter(@NonNull LoadParams<Integer> params,
                           @NonNull LoadCallback<Integer, T> callback) {
-        pageLoader.loadPage(mode, params.key, params.requestedLoadSize)
-                .observeForever(result -> {
-                    if (result.getError() == null) {
-                        List<T> data = result.getData().getContent();
-                        Integer nextKey = data.size() < pageSize ? null : params.key + 1;
-                        callback.onResult(data, nextKey);
-                    }
-                });
+        new Handler(Looper.getMainLooper()).post(() -> {
+            pageLoader.loadPage(mode, params.key, params.requestedLoadSize)
+                    .observeForever(result -> {
+                        if (result.getError() == null) {
+                            List<T> data = result.getData().getContent();
+                            Integer nextKey = data.size() < pageSize ? null : params.key + 1;
+                            callback.onResult(data, nextKey);
+                        }
+                    });
+        });
     }
 }
 
