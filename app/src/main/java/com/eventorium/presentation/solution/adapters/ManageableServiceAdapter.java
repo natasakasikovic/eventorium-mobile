@@ -97,7 +97,7 @@ public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, M
     }
 
     private static final DiffUtil.ItemCallback<ServiceSummary> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<ServiceSummary>() {
+            new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull ServiceSummary oldItem, @NonNull ServiceSummary newItem) {
                     return oldItem.getId().equals(newItem.getId());

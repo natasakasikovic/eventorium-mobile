@@ -101,7 +101,7 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
     }
 
     private static final DiffUtil.ItemCallback<ProductSummary> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<ProductSummary>() {
+            new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
                     return Objects.equals(oldItem.getId(), newItem.getId());

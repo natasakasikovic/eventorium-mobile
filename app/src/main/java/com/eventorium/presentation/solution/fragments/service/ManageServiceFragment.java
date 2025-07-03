@@ -164,7 +164,7 @@ public class ManageServiceFragment extends Fragment {
                                 R.string.service_deleted_successfully,
                                 Toast.LENGTH_SHORT
                         ).show();
-                        serviceViewModel.refresh();
+                        viewModel.refresh();
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }

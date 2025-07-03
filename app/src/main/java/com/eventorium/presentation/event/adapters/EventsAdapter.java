@@ -62,7 +62,7 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
 
                 @Override
                 public boolean areContentsTheSame(@NonNull EventSummary oldItem, @NonNull EventSummary newItem) {
-                    return oldItem.getId().equals(newItem.getId());
+                    return oldItem.equals(newItem);
                 }
             };
 
@@ -84,6 +84,7 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
+
             imageLoader.loadImage(
                     ImageHolder.EVENT,
                     event.getId(),

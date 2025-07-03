@@ -79,7 +79,6 @@ public class ManageableEventsFragment extends Fragment {
         recyclerView = binding.eventsRecycleView;
         ImageLoader imageLoader = new ImageLoader(requireContext());
         adapter = new ManageableEventAdapter(
-                new ArrayList<>(),
                 imageLoader,
                 event -> () -> eventTypeViewModel.getImage(event.getImageId()),
                 new OnManageEventListener() {
@@ -134,7 +133,7 @@ public class ManageableEventsFragment extends Fragment {
 
     private void observeEvents() {
         viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
-            adapter.setData(events);
+            adapter.submitList(events);
         });
     }
 
