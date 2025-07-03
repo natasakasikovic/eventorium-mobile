@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,12 @@ import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 
 import java.util.List;
 
@@ -60,14 +63,17 @@ public class FavouriteEventsFragment extends Fragment {
         loadFavouriteEvents();
     }
 
-    public void loadFavouriteEvents() {
+    private void loadFavouriteEvents() {
         viewModel.getFavouriteEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 events = result.getData();
                 setupAdapter();
-                loadEventImages(events);
-            } else
+
+                PagedList<EventSummary> pagedList = PagedListUtils.fromList(events);
+                adapter.submitList(pagedList);
+            } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -84,18 +90,5 @@ public class FavouriteEventsFragment extends Fragment {
                 });
 
         binding.eventsRecycleView.setAdapter(adapter);
-    }
-
-    private void loadEventImages(List<EventSummary> events){
-        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentFavouriteProductsBinding;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 
 import java.util.List;
@@ -65,7 +67,9 @@ public class FavouriteProductsFragment extends Fragment {
             if (result.getData() != null) {
                 products = result.getData();
                 setupAdapter();
-                loadProductImages();
+
+                PagedList<ProductSummary> pagedList = PagedListUtils.fromList(products);
+                adapter.submitList(pagedList);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
@@ -84,20 +88,6 @@ public class FavouriteProductsFragment extends Fragment {
                     navController.navigate(R.id.action_fav_to_product_details, args);
                 });
         binding.productsRecycleView.setAdapter(adapter);
-    }
-
-    private void loadProductImages() {
-        products.forEach(product -> viewModel.getProductImage(product.getId())
-                .observe(getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                })
-        );
     }
 
     @Override

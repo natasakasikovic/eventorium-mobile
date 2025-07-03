@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.paging.PagedList;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.eventorium.R;
+import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentFavouriteServicesBinding;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 
 import java.util.List;
@@ -65,7 +68,9 @@ public class FavouriteServicesFragment extends Fragment {
             if (result.getData() != null) {
                 services = result.getData();
                 setupAdapter();
-                loadServiceImages();
+
+                PagedList<ServiceSummary> pagedList = PagedListUtils.fromList(services);
+                adapter.submitList(pagedList);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
@@ -84,20 +89,6 @@ public class FavouriteServicesFragment extends Fragment {
                     navController.navigate(R.id.action_fav_to_service_details, args);
                 });
         binding.servicesRecycleView.setAdapter(adapter);
-    }
-
-    private void loadServiceImages() {
-        services.forEach(service -> viewModel.getServiceImage(service.getId())
-                .observe(getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        service.setImage(image);
-                        int position = services.indexOf(service);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                })
-        );
     }
 
     @Override
