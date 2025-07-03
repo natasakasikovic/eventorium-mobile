@@ -22,7 +22,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
 
     @Getter
     private final LiveData<PagedList<T>> items;
-    private final MutableLiveData<PagingMode> pagingModeLiveData = new MutableLiveData<>(PagingMode.DEFAULT);
+    private final MutableLiveData<PagingMode> pagingMode = new MutableLiveData<>(PagingMode.DEFAULT);
 
     protected String searchQuery = null;
     protected F filterParams = null;
@@ -31,7 +31,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     private GenericPageKeyedDataSource<T> currentDataSource;
 
     public PagedViewModel() {
-        items = Transformations.switchMap(pagingModeLiveData, mode -> {
+        items = Transformations.switchMap(pagingMode, mode -> {
             DataSource.Factory<Integer, T> factory = new DataSource.Factory<>() {
                 @NonNull
                 @Override
@@ -59,7 +59,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
         if (!Objects.equals(this.searchQuery, query)) {
             this.searchQuery = query;
             invalidateDataSource();
-            pagingModeLiveData.setValue(PagingMode.SEARCH);
+            pagingMode.setValue(PagingMode.SEARCH);
         }
     }
 
@@ -67,22 +67,22 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
         if (!Objects.equals(this.filterParams, filter)) {
             this.filterParams = filter;
             invalidateDataSource();
-            pagingModeLiveData.setValue(PagingMode.FILTER);
+            pagingMode.setValue(PagingMode.FILTER);
         }
     }
 
     public void showAll() {
-        if (pagingModeLiveData.getValue() != PagingMode.DEFAULT) {
+        if (pagingMode.getValue() != PagingMode.DEFAULT) {
             invalidateDataSource();
-            pagingModeLiveData.setValue(PagingMode.DEFAULT);
+            pagingMode.setValue(PagingMode.DEFAULT);
         }
     }
 
     public void refresh() {
         invalidateDataSource();
-        PagingMode currentMode = pagingModeLiveData.getValue();
+        PagingMode currentMode = pagingMode.getValue();
         if (currentMode != null) {
-            pagingModeLiveData.setValue(currentMode);
+            pagingMode.setValue(currentMode);
         }
     }
 
