@@ -100,7 +100,6 @@ public class ManageProductFragment extends Fragment {
         recyclerView = binding.productsRecycleView;
         ImageLoader loader = new ImageLoader(requireContext());
         adapter = new ManageableProductAdapter(
-                new ArrayList<>(),
                 loader,
                 product -> () -> productViewModel.getProductImage(product.getId()),
                 configureListener()
@@ -136,7 +135,7 @@ public class ManageProductFragment extends Fragment {
 
     private void observeProducts() {
         viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
-            adapter.setData(products);
+            adapter.submitList(products);
         });
     }
 
@@ -281,7 +280,7 @@ public class ManageProductFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() == null) {
                         Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                        adapter.removeData(productId);
+                        viewModel.refresh();
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }

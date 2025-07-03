@@ -18,7 +18,7 @@ public class PagedListUtils {
         return new PagedList.Builder<>(
                 new ListDataSource<>(list),
                 new PagedList.Config.Builder()
-                        .setPageSize(list.size() > 0 ? list.size() : 1)
+                        .setPageSize(!list.isEmpty() ? list.size() : 1)
                         .setEnablePlaceholders(false)
                         .build()
         )

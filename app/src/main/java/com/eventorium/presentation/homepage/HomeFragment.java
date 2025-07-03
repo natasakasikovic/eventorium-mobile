@@ -69,7 +69,6 @@ public class HomeFragment extends Fragment {
     private void configureProductAdapter() {
         ImageLoader loader = new ImageLoader(requireContext());
         productsAdapter = new ProductsAdapter(
-                new ArrayList<>(),
                 loader,
                 product -> () -> viewModel.getProductImage(product.getId()),
                 product -> {
@@ -128,7 +127,7 @@ public class HomeFragment extends Fragment {
     private void observeTopProducts() {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> productsAdapter.setData(data)
+                data -> productsAdapter.submitList(PagedListUtils.fromList(data))
         ));
     }
 

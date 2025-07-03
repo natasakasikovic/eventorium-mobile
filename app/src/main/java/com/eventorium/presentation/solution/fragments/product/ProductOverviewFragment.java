@@ -97,7 +97,6 @@ public class ProductOverviewFragment extends Fragment {
     private void configureAdapter(){
         ImageLoader loader = new ImageLoader(requireContext());
         adapter = new ProductsAdapter(
-                new ArrayList<>(),
                 loader,
                 product -> () -> viewModel.getProductImage(product.getId()),
                 product -> {
@@ -110,7 +109,7 @@ public class ProductOverviewFragment extends Fragment {
 
     private void observeProducts() {
         viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
-            adapter.setData(products);
+            adapter.submitList(products);
         });
     }
 

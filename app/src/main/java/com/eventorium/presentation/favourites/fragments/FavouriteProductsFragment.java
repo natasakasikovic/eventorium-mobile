@@ -74,7 +74,8 @@ public class FavouriteProductsFragment extends Fragment {
 
     private void setupAdapter() {
         ImageLoader loader = new ImageLoader(requireContext());
-        adapter = new ProductsAdapter(products, loader,
+        adapter = new ProductsAdapter(
+                loader,
                 product -> () -> viewModel.getProductImage(product.getId()),
                 product -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);

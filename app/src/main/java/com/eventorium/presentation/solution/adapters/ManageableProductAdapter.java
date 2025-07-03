@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.eventorium.R;
 import com.eventorium.data.shared.models.ImageHolder;
@@ -18,21 +20,20 @@ import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
-import java.util.List;
+import java.util.Objects;
 
-public class ManageableProductAdapter extends BaseProductAdapter<ManageableProductAdapter.ManageableProductViewHolder> {
+public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, ManageableProductAdapter.ManageableProductViewHolder> {
 
     private final OnManageListener<ProductSummary> manageListener;
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<ProductSummary> imageSourceProvider;
 
     public ManageableProductAdapter(
-            List<ProductSummary> productSummaries,
             ImageLoader imageLoader,
             ImageSourceProvider<ProductSummary> imageSourceProvider,
             OnManageListener<ProductSummary> listener
     ) {
-        super(productSummaries);
+        super(DIFF_CALLBACK);
         this.manageListener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -45,7 +46,15 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
         return new ManageableProductViewHolder(view);
     }
 
-    public class ManageableProductViewHolder extends BaseProductViewHolder {
+    @Override
+    public void onBindViewHolder(@NonNull ManageableProductViewHolder holder, int position) {
+        ProductSummary product = getItem(position);
+        if (product != null) {
+            holder.bind(product);
+        }
+    }
+
+    public class ManageableProductViewHolder extends BaseProductAdapter.BaseProductViewHolder {
 
         TextView nameTextView;
         TextView priceTextView;
@@ -90,4 +99,18 @@ public class ManageableProductAdapter extends BaseProductAdapter<ManageableProdu
             }
         }
     }
+
+    private static final DiffUtil.ItemCallback<ProductSummary> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<ProductSummary>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
+                    return Objects.equals(oldItem.getId(), newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
 }
+
