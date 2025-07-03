@@ -87,9 +87,8 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     }
 
     private void invalidateDataSource() {
-        if (currentDataSource != null) {
+        if (currentDataSource != null)
             currentDataSource.invalidate();
-        }
     }
 
     protected abstract LiveData<Result<PagedResponse<T>>> loadPage(
