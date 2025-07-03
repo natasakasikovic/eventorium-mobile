@@ -83,7 +83,6 @@ public class HomeFragment extends Fragment {
     private void configureServiceAdapter() {
         ImageLoader imageLoader = new ImageLoader(requireContext());
         serviceAdapter = new ServicesAdapter(
-                new ArrayList<>(),
                 imageLoader,
                 service -> () -> viewModel.getServiceImage(service.getId()),
                 service -> {
@@ -136,7 +135,7 @@ public class HomeFragment extends Fragment {
     private void observeTopServices() {
         viewModel.getTopServices().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> serviceAdapter.setData(data)
+                data -> serviceAdapter.submitList(PagedListUtils.fromList(data))
         ));
     }
 

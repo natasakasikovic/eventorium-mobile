@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.budget.BudgetItem;
@@ -21,50 +24,41 @@ import com.eventorium.presentation.solution.listeners.OnManageListener;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServiceAdapter.ManageableServiceViewHolder> {
+public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, ManageableServiceAdapter.ManageableServiceViewHolder> {
 
     private final OnManageListener<ServiceSummary> manageListener;
     private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
     private final ImageLoader imageLoader;
 
     public ManageableServiceAdapter(
-            List<ServiceSummary> serviceSummaries,
             ImageLoader imageLoader,
             ImageSourceProvider<ServiceSummary> imageSourceProvider,
             OnManageListener<ServiceSummary> listener
     ) {
-        super(serviceSummaries);
+        super(DIFF_CALLBACK);
         this.manageListener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
     }
 
-    public void removeService(Long serviceId) {
-        if (serviceId == null) return;
-
-        for (int i = 0; i < serviceSummaries.size(); i++) {
-            ServiceSummary service = serviceSummaries.get(i);
-            if (serviceId.equals(service.getId())) {
-                serviceSummaries.remove(i);
-                notifyItemRemoved(i);
-                return;
-            }
-        }
-    }
-
     @NonNull
     @Override
     public ManageableServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.manageable_service_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.manageable_service_card, parent, false);
         return new ManageableServiceViewHolder(view);
     }
 
-    public void setServices(List<ServiceSummary> newServices) {
-        serviceSummaries = newServices;
-        notifyDataSetChanged();
+    @Override
+    public void onBindViewHolder(@NonNull ManageableServiceViewHolder holder, int position) {
+        ServiceSummary service = getItem(position);
+        if (service != null) {
+            holder.bind(service);
+        }
     }
 
-    public class ManageableServiceViewHolder extends BaseServiceViewHolder {
+    public class ManageableServiceViewHolder extends RecyclerView.ViewHolder {
+
         TextView nameTextView;
         TextView priceTextView;
         ImageView imageView;
@@ -84,10 +78,9 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
         }
 
         @SuppressLint({"SetTextI18n", "DefaultLocale"})
-        @Override
         public void bind(ServiceSummary serviceSummary) {
             nameTextView.setText(serviceSummary.getName());
-            double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100);
+            double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100.0);
             priceTextView.setText(String.format("%.2f", price));
 
             imageLoader.loadImage(
@@ -102,4 +95,18 @@ public class ManageableServiceAdapter extends BaseServiceAdapter<ManageableServi
             deleteButton.setOnClickListener(v -> manageListener.onDeleteClick(serviceSummary));
         }
     }
+
+    private static final DiffUtil.ItemCallback<ServiceSummary> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<ServiceSummary>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ServiceSummary oldItem, @NonNull ServiceSummary newItem) {
+                    return oldItem.getId().equals(newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ServiceSummary oldItem, @NonNull ServiceSummary newItem) {
+                    return oldItem.getId().equals(newItem.getId());
+                }
+            };
 }
+

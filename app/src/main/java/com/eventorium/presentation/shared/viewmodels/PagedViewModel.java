@@ -26,7 +26,9 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
 
     protected String searchQuery = null;
     protected F filterParams = null;
-    protected final int pageSize = 2;
+    protected final int pageSize = 10;
+
+    private GenericPageKeyedDataSource<T> currentDataSource;
 
     public PagedViewModel() {
         items = Transformations.switchMap(pagingModeLiveData, mode -> {
@@ -34,17 +36,19 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
                 @NonNull
                 @Override
                 public DataSource<Integer, T> create() {
-                    return new GenericPageKeyedDataSource<>(
+                    currentDataSource = new GenericPageKeyedDataSource<>(
                             mode,
                             pageSize,
                             PagedViewModel.this::loadPage
                     );
+                    return currentDataSource;
                 }
             };
             return new LivePagedListBuilder<>(
                     factory,
                     new PagedList.Config.Builder()
                             .setPageSize(pageSize)
+                            .setInitialLoadSizeHint(pageSize)
                             .setEnablePlaceholders(false)
                             .build()
             ).build();
@@ -54,18 +58,37 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     public void search(String query) {
         if (!Objects.equals(this.searchQuery, query)) {
             this.searchQuery = query;
-            this.pagingModeLiveData.setValue(PagingMode.SEARCH);
+            invalidateDataSource();
+            pagingModeLiveData.setValue(PagingMode.SEARCH);
         }
     }
 
     public void filter(F filter) {
-        this.filterParams = filter;
-        this.pagingModeLiveData.setValue(PagingMode.FILTER);
+        if (!Objects.equals(this.filterParams, filter)) {
+            this.filterParams = filter;
+            invalidateDataSource();
+            pagingModeLiveData.setValue(PagingMode.FILTER);
+        }
     }
 
     public void showAll() {
-        if (this.pagingModeLiveData.getValue() != PagingMode.DEFAULT) {
-            this.pagingModeLiveData.setValue(PagingMode.DEFAULT);
+        if (pagingModeLiveData.getValue() != PagingMode.DEFAULT) {
+            invalidateDataSource();
+            pagingModeLiveData.setValue(PagingMode.DEFAULT);
+        }
+    }
+
+    public void refresh() {
+        invalidateDataSource();
+        PagingMode currentMode = pagingModeLiveData.getValue();
+        if (currentMode != null) {
+            pagingModeLiveData.setValue(currentMode);
+        }
+    }
+
+    private void invalidateDataSource() {
+        if (currentDataSource != null) {
+            currentDataSource.invalidate();
         }
     }
 
@@ -75,4 +98,5 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
             int size
     );
 }
+
 

@@ -103,7 +103,6 @@ public class ManageServiceFragment extends Fragment {
     private void configureAdapter() {
         ImageLoader imageLoader = new ImageLoader(requireContext());
         adapter = new ManageableServiceAdapter(
-                new ArrayList<>(),
                 imageLoader,
                 service -> () -> serviceViewModel.getServiceImage(service.getId()),
                 new OnManageListener<>() {
@@ -165,7 +164,7 @@ public class ManageServiceFragment extends Fragment {
                                 R.string.service_deleted_successfully,
                                 Toast.LENGTH_SHORT
                         ).show();
-                        adapter.removeService(serviceId);
+                        serviceViewModel.refresh();
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }
@@ -283,7 +282,7 @@ public class ManageServiceFragment extends Fragment {
 
     private void observeServices() {
         viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
-            adapter.setData(services);
+            adapter.submitList(services);
             loadImages(services);
             if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
                 binding.loadingIndicator.setVisibility(View.GONE);

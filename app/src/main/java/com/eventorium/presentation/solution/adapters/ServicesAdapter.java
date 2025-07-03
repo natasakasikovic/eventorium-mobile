@@ -10,6 +10,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.shared.models.ImageHolder;
@@ -20,19 +23,18 @@ import com.eventorium.presentation.shared.utils.ImageLoader;
 
 import java.util.List;
 
-public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceViewHolder> {
+public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAdapter.ServiceViewHolder> {
 
     private final OnSeeMoreClick<ServiceSummary> listener;
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
 
     public ServicesAdapter(
-            List<ServiceSummary> serviceSummaries,
             ImageLoader imageLoader,
             ImageSourceProvider<ServiceSummary> imageSourceProvider,
             OnSeeMoreClick<ServiceSummary> listener
     ) {
-        super(serviceSummaries);
+        super(DIFF_CALLBACK);
         this.listener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -41,17 +43,21 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
     @NonNull
     @Override
     public ServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.service_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.service_card, parent, false);
         return new ServiceViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
-        ServiceSummary service = serviceSummaries.get(position);
-        holder.bind(service);
+        ServiceSummary service = getItem(position);
+        if (service != null) {
+            holder.bind(service);
+        }
     }
 
-    public class ServiceViewHolder extends BaseServiceViewHolder {
+    public class ServiceViewHolder extends RecyclerView.ViewHolder {
+
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;
@@ -70,16 +76,14 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
         }
 
         @SuppressLint({"SetTextI18n", "DefaultLocale"})
-        @Override
         public void bind(ServiceSummary service) {
-
             float alpha = service.getAvailable() ? 1f : 0.5f;
             layout.setAlpha(alpha);
 
             setDiscount(service);
 
             nameTextView.setText(service.getName());
-            double price = service.getPrice() * (1 - service.getDiscount() / 100);
+            double price = service.getPrice() * (1 - service.getDiscount() / 100.0);
             priceTextView.setText(String.format("%.2f", price));
 
             imageLoader.loadImage(
@@ -90,22 +94,30 @@ public class ServicesAdapter extends BaseServiceAdapter<ServicesAdapter.ServiceV
             );
 
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
-
         }
 
         @SuppressLint("SetTextI18n")
-        private void setDiscount(ServiceSummary service){
-            if (hasDiscount(service)) {
+        private void setDiscount(ServiceSummary service) {
+            if (service.getDiscount() != null && service.getDiscount() > 0) {
                 discountTextView.setVisibility(View.VISIBLE);
-                discountTextView.setText(service.getDiscount().toString() + "% OFF");
+                discountTextView.setText(service.getDiscount() + "% OFF");
             } else {
                 discountTextView.setVisibility(View.GONE);
             }
         }
-
-        private boolean hasDiscount(ServiceSummary service) {
-            return service.getDiscount() != null && service.getDiscount() > 0;
-        }
-
     }
+
+    private static final DiffUtil.ItemCallback<ServiceSummary> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ServiceSummary oldItem, @NonNull ServiceSummary newItem) {
+                    return oldItem.getId().equals(newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ServiceSummary oldItem, @NonNull ServiceSummary newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
 }
+

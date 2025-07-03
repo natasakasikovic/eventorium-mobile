@@ -64,7 +64,6 @@ public class ServiceOverviewFragment extends Fragment {
     private void configureServiceAdapter() {
         ImageLoader loader = new ImageLoader(requireContext());
         adapter = new ServicesAdapter(
-                new ArrayList<>(),
                 loader,
                 service -> () -> viewModel.getServiceImage(service.getId()),
                 service -> {
@@ -236,8 +235,7 @@ public class ServiceOverviewFragment extends Fragment {
 
     private void observeServices() {
         viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
-            adapter.setData(services);
-            loadServiceImages(services);
+            adapter.submitList(services);
             if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
                 binding.loadingIndicator.setVisibility(View.GONE);
                 binding.servicesRecycleView.setVisibility(View.VISIBLE);

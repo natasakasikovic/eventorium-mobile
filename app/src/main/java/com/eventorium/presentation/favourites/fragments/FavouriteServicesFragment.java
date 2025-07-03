@@ -74,7 +74,8 @@ public class FavouriteServicesFragment extends Fragment {
 
     private void setupAdapter() {
         ImageLoader loader = new ImageLoader(requireContext());
-        adapter = new ServicesAdapter(services, loader,
+        adapter = new ServicesAdapter(
+                loader,
                 service -> () -> viewModel.getServiceImage(service.getId()),
                 service -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
