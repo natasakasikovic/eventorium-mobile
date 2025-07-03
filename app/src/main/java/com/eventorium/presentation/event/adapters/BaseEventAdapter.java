@@ -7,9 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 
 import java.util.List;
 

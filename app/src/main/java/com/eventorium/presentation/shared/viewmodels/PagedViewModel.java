@@ -1,100 +1,78 @@
 package com.eventorium.presentation.shared.viewmodels;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.GenericPageKeyedDataSource;
 import com.eventorium.presentation.shared.models.PagingMode;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+
+import lombok.Getter;
 
 public abstract class PagedViewModel<T, F> extends ViewModel {
 
-    protected final MediatorLiveData<List<T>> items = new MediatorLiveData<>();
-    protected final MutableLiveData<Integer> page = new MutableLiveData<>(0);
+    @Getter
+    private final LiveData<PagedList<T>> items;
+    private final MutableLiveData<PagingMode> pagingModeLiveData = new MutableLiveData<>(PagingMode.DEFAULT);
 
-    private final Set<Integer> requestedPages = new HashSet<>();
-    protected final int pageSize = 2;
-
-    public boolean isLoading = false;
-    public boolean isLastPage = false;
-
-    protected PagingMode mode = PagingMode.DEFAULT;
     protected String searchQuery = null;
     protected F filterParams = null;
+    protected final int pageSize = 10;
 
-    public LiveData<List<T>> getItems() {
-        return items;
-    }
-    public void loadNextPage() {
-        int currentPage = page.getValue() != null ? page.getValue() : 0;
-
-        if (isLoading || isLastPage || requestedPages.contains(currentPage)) return;
-
-        isLoading = true;
-
-        LiveData<Result<PagedResponse<T>>> source = loadPage(mode, currentPage, pageSize);
-
-        items.addSource(source, result -> {
-            items.removeSource(source);
-            isLoading = false;
-
-            if (result.getError() == null && result.getData() != null) {
-                requestedPages.add(currentPage);
-
-                List<T> currentList = items.getValue();
-                if (currentList == null) currentList = new ArrayList<>();
-
-                PagedResponse<T> data = result.getData();
-                List<T> newItems = data.getContent();
-
-                isLastPage = newItems.size() < pageSize;
-
-                currentList.addAll(newItems);
-                items.postValue(currentList);
-
-                page.postValue(currentPage + 1);
-            }
+    public PagedViewModel() {
+        items = Transformations.switchMap(pagingModeLiveData, mode -> {
+            DataSource.Factory<Integer, T> factory = new DataSource.Factory<>() {
+                @NonNull
+                @Override
+                public DataSource<Integer, T> create() {
+                    return new GenericPageKeyedDataSource<>(
+                            mode,
+                            pageSize,
+                            PagedViewModel.this::loadPage
+                    );
+                }
+            };
+            return new LivePagedListBuilder<>(
+                    factory,
+                    new PagedList.Config.Builder()
+                            .setPageSize(pageSize)
+                            .setEnablePlaceholders(false)
+                            .build()
+            ).build();
         });
     }
 
-
-    public void refresh() {
-        requestedPages.clear();
-        page.setValue(0);
-        isLastPage = false;
-        items.setValue(new ArrayList<>());
-        loadNextPage();
-    }
-
     public void search(String query) {
-        if (Objects.equals(this.searchQuery, query)) return;
-        this.searchQuery = query;
-        this.mode = PagingMode.SEARCH;
-        refresh();
+        if (!Objects.equals(this.searchQuery, query)) {
+            this.searchQuery = query;
+            this.pagingModeLiveData.setValue(PagingMode.SEARCH);
+        }
     }
 
     public void filter(F filter) {
         this.filterParams = filter;
-        this.mode = PagingMode.FILTER;
-        refresh();
+        this.pagingModeLiveData.setValue(PagingMode.FILTER);
     }
 
     public void showAll() {
-        if (this.mode != PagingMode.DEFAULT) {
-            this.mode = PagingMode.DEFAULT;
-            refresh();
+        if (this.pagingModeLiveData.getValue() != PagingMode.DEFAULT) {
+            this.pagingModeLiveData.setValue(PagingMode.DEFAULT);
         }
     }
 
     protected abstract LiveData<Result<PagedResponse<T>>> loadPage(
-            PagingMode mode, int page, int size
+            PagingMode mode,
+            int page,
+            int size
     );
 }
+

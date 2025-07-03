@@ -1,6 +1,11 @@
 package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,13 +17,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventSummary;
@@ -28,12 +26,9 @@ import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragmen
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
-import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.shared.utils.ImageLoader;
-import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -65,7 +60,7 @@ public class ManageableEventsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentManageableEventsBinding.inflate(inflater, container, false);
         setUpAdapter();
@@ -76,7 +71,6 @@ public class ManageableEventsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         observeEvents();
-        viewModel.refresh();
         setUpSearchListener();
         setupScrollListener(binding.eventsRecycleView);
     }
@@ -147,22 +141,6 @@ public class ManageableEventsFragment extends Fragment {
     private void setupScrollListener(RecyclerView recyclerView) {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layout);
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
-            @Override
-            protected void loadMoreItems() {
-                viewModel.loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return viewModel.isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return viewModel.isLastPage;
-            }
-        });
     }
 
     @Override

@@ -98,7 +98,6 @@ public class ServiceOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         observeServices();
-        viewModel.refresh();
         setUpListeners();
         setupScrollListener(binding.servicesRecycleView);
     }
@@ -234,22 +233,6 @@ public class ServiceOverviewFragment extends Fragment {
     private void setupScrollListener(RecyclerView recyclerView) {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layout);
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
-            @Override
-            protected void loadMoreItems() {
-                viewModel.loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return viewModel.isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return viewModel.isLastPage;
-            }
-        });
     }
 
     private void observeServices() {

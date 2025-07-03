@@ -1,12 +1,12 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
-import com.eventorium.data.solution.models.service.Service;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;

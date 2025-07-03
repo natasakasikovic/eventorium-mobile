@@ -1,6 +1,6 @@
 package com.eventorium.data.auth.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,15 +11,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.auth0.android.jwt.JWT;
-import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.UpgradeAccountRequest;
 import com.eventorium.data.auth.models.User;
 import com.eventorium.data.auth.services.AuthService;
-import com.eventorium.data.shared.models.ErrorResponse;
-import com.eventorium.data.shared.utils.FileUtil;
-import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.constants.ErrorMessages;
+import com.eventorium.data.shared.models.ErrorResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.utils.JwtDecoder;
 import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 

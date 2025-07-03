@@ -3,6 +3,13 @@ package com.eventorium.presentation.event.fragments;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,26 +21,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventFilter;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.models.City;
-
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
-import com.eventorium.presentation.shared.listeners.PaginationScrollListener;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -87,7 +82,6 @@ public class EventOverviewFragment extends Fragment {
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
         ImageLoader imageLoader = new ImageLoader(requireContext());
         adapter = new EventsAdapter(
-                new ArrayList<>(),
                 imageLoader,
                 event -> () -> eventTypeViewModel.getImage(event.getImageId()),
                 event -> {
@@ -105,36 +99,19 @@ public class EventOverviewFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpObserver();
-        viewModel.refresh();
         setUpListeners();
         setupScrollListener(binding.eventsRecycleView);
     }
 
     private void setUpObserver(){
         viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
-            adapter.setData(events);
+            adapter.submitList(events);
         });
     }
 
     private void setupScrollListener(RecyclerView recyclerView) {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layout);
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
-            @Override
-            protected void loadMoreItems() {
-                viewModel.loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return viewModel.isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return viewModel.isLastPage;
-            }
-        });
     }
 
 

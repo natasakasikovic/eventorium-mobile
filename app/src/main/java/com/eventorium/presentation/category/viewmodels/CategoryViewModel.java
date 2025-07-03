@@ -2,7 +2,6 @@ package com.eventorium.presentation.category.viewmodels;
 
 import static java.util.stream.Collectors.toList;
 
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

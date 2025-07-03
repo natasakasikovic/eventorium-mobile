@@ -12,11 +12,9 @@ import androidx.annotation.NonNull;
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.shared.models.ImageHolder;
-import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
-import com.eventorium.presentation.solution.listeners.OnManageListener;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.eventorium.data.category.services;
 
+import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.UpdateCategoryStatus;
-import com.eventorium.data.category.models.Category;
 
 import java.util.List;
 

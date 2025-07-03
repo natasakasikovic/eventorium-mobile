@@ -1,7 +1,6 @@
 package com.eventorium.data.solution.services;
 
 import com.eventorium.data.shared.models.PagedResponse;
-import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.solution.models.product.ProductSummary;
 
 import java.util.List;

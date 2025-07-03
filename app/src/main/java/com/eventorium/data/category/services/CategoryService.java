@@ -1,7 +1,7 @@
 package com.eventorium.data.category.services;
 
-import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.Category;
+import com.eventorium.data.category.models.CategoryRequest;
 
 import java.util.List;
 

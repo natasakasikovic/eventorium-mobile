@@ -1,10 +1,10 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.data.solution.models.product.UpdateProduct;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 

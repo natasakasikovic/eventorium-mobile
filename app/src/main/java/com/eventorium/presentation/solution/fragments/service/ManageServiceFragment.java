@@ -91,7 +91,6 @@ public class ManageServiceFragment extends Fragment {
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         observeServices();
-        viewModel.refresh();
         configureAdapter();
         configureSearch();
         setupScrollListener(recyclerView);
@@ -100,22 +99,6 @@ public class ManageServiceFragment extends Fragment {
     private void setupScrollListener(RecyclerView recyclerView) {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layout);
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
-            @Override
-            protected void loadMoreItems() {
-                viewModel.loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return viewModel.isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return viewModel.isLastPage;
-            }
-        });
     }
 
     private void configureAdapter() {

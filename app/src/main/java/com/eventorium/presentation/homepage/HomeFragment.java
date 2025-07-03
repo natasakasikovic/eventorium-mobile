@@ -1,8 +1,13 @@
 package com.eventorium.presentation.homepage;
 
-import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
+import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,25 +17,17 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
-import com.eventorium.data.event.models.event.EventSummary;
-import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -100,7 +97,6 @@ public class HomeFragment extends Fragment {
     private void configureEventAdapter() {
         ImageLoader loader = new ImageLoader(requireContext());
         eventsAdapter = new EventsAdapter(
-                new ArrayList<>(),
                 loader,
                 event -> () -> viewModel.getEventImage(event.getImageId()),
                 event -> {
@@ -126,7 +122,7 @@ public class HomeFragment extends Fragment {
     private void observeTopEvents() {
         viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> eventsAdapter.setData(data)
+                data -> eventsAdapter.submitList(PagedListUtils.fromList(data))
         ));
     }
 

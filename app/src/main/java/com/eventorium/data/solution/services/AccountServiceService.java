@@ -2,7 +2,6 @@ package com.eventorium.data.solution.services;
 
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.ServiceSummary;
-import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,9 @@
 package com.eventorium.data.event.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handlePdfExport;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleValidationResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.Context;
 import android.net.Uri;

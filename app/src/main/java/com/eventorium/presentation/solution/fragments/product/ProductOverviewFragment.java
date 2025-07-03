@@ -88,29 +88,12 @@ public class ProductOverviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupScrollListener(binding.productsRecycleView);
         observeProducts();
-        viewModel.refresh();
         setUpListeners();
     }
 
     private void setupScrollListener(RecyclerView recyclerView) {
         LinearLayoutManager layout = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layout);
-        recyclerView.addOnScrollListener(new PaginationScrollListener(layout) {
-            @Override
-            protected void loadMoreItems() {
-                viewModel.loadNextPage();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return viewModel.isLoading;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return viewModel.isLastPage;
-            }
-        });
     }
 
     private void configureAdapter(){

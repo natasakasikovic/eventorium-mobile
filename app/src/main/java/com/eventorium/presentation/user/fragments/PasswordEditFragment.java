@@ -3,12 +3,6 @@ package com.eventorium.presentation.user.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.eventorium.R;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.databinding.FragmentPasswordEditBinding;
 import com.eventorium.presentation.MainActivity;
-import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.PastEvent;

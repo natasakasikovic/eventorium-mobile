@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.eventorium.data.category.models.Category;
 
 import com.eventorium.R;
+import com.eventorium.data.category.models.Category;
 import com.eventorium.presentation.category.listeners.OnReviewProposalListener;
 
 import java.util.List;

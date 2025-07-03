@@ -1,31 +1,23 @@
 package com.eventorium.data.solution.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handlePdfExport;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleValidationResponse;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
-import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
-import com.eventorium.data.solution.models.pricelist.PriceListItem;
-import com.eventorium.data.solution.services.PriceListService;
-import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.solution.models.pricelist.PriceListItem;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
+import com.eventorium.data.solution.services.PriceListService;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PriceListRepository {
 

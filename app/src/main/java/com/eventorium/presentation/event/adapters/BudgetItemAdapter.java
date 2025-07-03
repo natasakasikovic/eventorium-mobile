@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eventorium.R;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.event.models.budget.BudgetItemStatus;
-import com.eventorium.data.solution.models.pricelist.PriceListItem;
 import com.eventorium.presentation.event.listeners.OnBudgetItemActionListener;
 import com.google.android.material.button.MaterialButton;
 

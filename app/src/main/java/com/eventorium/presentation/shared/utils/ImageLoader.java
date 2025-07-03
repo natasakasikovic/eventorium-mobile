@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-
 import com.bumptech.glide.Glide;
 import com.eventorium.R;
 import com.eventorium.data.shared.models.ImageHolder;

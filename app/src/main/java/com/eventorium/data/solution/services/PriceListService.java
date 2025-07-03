@@ -1,7 +1,7 @@
 package com.eventorium.data.solution.services;
 
-import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
 import com.eventorium.data.solution.models.pricelist.PriceListItem;
+import com.eventorium.data.solution.models.pricelist.UpdatePriceList;
 
 import java.util.List;
 

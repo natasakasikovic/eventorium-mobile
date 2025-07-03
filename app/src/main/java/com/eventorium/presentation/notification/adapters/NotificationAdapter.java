@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eventorium.data.notification.models.NotificationResponse;
 import com.eventorium.R;
+import com.eventorium.data.notification.models.NotificationResponse;
 import com.eventorium.data.shared.utils.DateTimeUtils;
 
 import java.util.List;

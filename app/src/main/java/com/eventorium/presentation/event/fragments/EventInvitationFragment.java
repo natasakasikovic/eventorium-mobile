@@ -1,6 +1,9 @@
 package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -9,10 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.eventorium.R;
 import com.eventorium.databinding.FragmentEventInvitationBinding;
 import com.eventorium.presentation.event.adapters.EventInvitationAdapter;
 import com.eventorium.presentation.event.viewmodels.InvitationViewModel;
@@ -20,8 +20,6 @@ import com.eventorium.presentation.event.viewmodels.InvitationViewModel;
 import java.util.regex.Pattern;
 
 import dagger.hilt.android.AndroidEntryPoint;
-
-import com.eventorium.R;
 
 @AndroidEntryPoint
 public class EventInvitationFragment extends Fragment {

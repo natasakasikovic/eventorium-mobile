@@ -1,6 +1,12 @@
 package com.eventorium.data.solution.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGetImage;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGetImages;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessAsBoolean;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessfulResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleValidationResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,20 +17,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.shared.models.PagedResponse;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
-import com.eventorium.data.solution.models.service.ServiceFilter;
-import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.models.service.Service;
+import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
+import com.eventorium.data.solution.models.service.UpdateService;
 import com.eventorium.data.solution.services.ServiceService;
-import com.eventorium.data.shared.utils.FileUtil;
-import com.eventorium.data.shared.models.Result;
 import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -3,8 +3,8 @@ package com.eventorium.presentation.auth.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.repositories.AuthRepository;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.shared.services.WebSocketService;
