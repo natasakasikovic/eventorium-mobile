@@ -100,7 +100,6 @@ public class EventOverviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setUpObserver();
         setUpListeners();
-        setupScrollListener(binding.eventsRecycleView);
     }
 
     private void setUpObserver(){
@@ -108,12 +107,6 @@ public class EventOverviewFragment extends Fragment {
             adapter.submitList(events);
         });
     }
-
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
-    }
-
 
     private void createDatePickers() {
         TextInputEditText fromDate = dialogView.findViewById(R.id.fromDateEditText);

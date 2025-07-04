@@ -97,7 +97,6 @@ public class ServiceOverviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         observeServices();
         setUpListeners();
-        setupScrollListener(binding.servicesRecycleView);
     }
 
     private void setUpListeners() {
@@ -228,11 +227,6 @@ public class ServiceOverviewFragment extends Fragment {
         });
     }
 
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
-    }
-
     private void observeServices() {
         viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
             adapter.submitList(services);
@@ -241,19 +235,6 @@ public class ServiceOverviewFragment extends Fragment {
                 binding.servicesRecycleView.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    private void loadServiceImages(List<ServiceSummary> services) {
-        services.forEach( service -> viewModel.getServiceImage(service.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        service.setImage(image);
-                        int position = services.indexOf(service);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     @Override

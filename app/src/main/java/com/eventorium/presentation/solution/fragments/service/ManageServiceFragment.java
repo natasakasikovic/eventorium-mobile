@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
@@ -86,18 +85,13 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel.refresh();
 
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
         observeServices();
         configureAdapter();
         configureSearch();
-        setupScrollListener(recyclerView);
-    }
-
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
     }
 
     private void configureAdapter() {
@@ -252,18 +246,6 @@ public class ManageServiceFragment extends Fragment {
         return null;
     }
 
-    private void loadImages(List<ServiceSummary> services) {
-        services.forEach(service ->
-            serviceViewModel.getServiceImage(service.getId())
-                    .observe(getViewLifecycleOwner(), image -> {
-                        if(image != null) {
-                            service.setImage(image);
-                            int position = services.indexOf(service);
-                            adapter.notifyItemChanged(position);
-                        }
-                    }));
-    }
-
     private void loadCategories(Spinner spinner) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
@@ -283,7 +265,6 @@ public class ManageServiceFragment extends Fragment {
     private void observeServices() {
         viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
             adapter.submitList(services);
-            loadImages(services);
             if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
                 binding.loadingIndicator.setVisibility(View.GONE);
                 binding.servicesRecycleView.setVisibility(View.VISIBLE);

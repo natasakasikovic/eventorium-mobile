@@ -148,20 +148,6 @@ public class EditProductFragment extends Fragment {
             for(EventType eventType : service.getEventTypes()) {
                 adapter.selectItem(eventType.getName());
             }
-            loadImages();
-        });
-    }
-
-    private void loadImages() {
-        viewModel.getProductImages(productSummary.getId()).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                List<ImageItem> images = result.getData();
-                if (images.isEmpty()) this.binding.images.setVisibility(View.GONE);
-                else existingImagesAdapter.insert(images);
-                binding.loader.setVisibility(View.GONE);
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
         });
     }
 

@@ -84,14 +84,8 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupScrollListener(binding.productsRecycleView);
         observeProducts();
         setUpListeners();
-    }
-
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
     }
 
     private void configureAdapter(){

@@ -43,7 +43,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -77,13 +76,13 @@ public class ManageProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
         setUpAdapter();
-        setupScrollListener(binding.productsRecycleView);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel.refresh();
         observeProducts();
         setUpListeners();
     }
@@ -128,11 +127,6 @@ public class ManageProductFragment extends Fragment {
         };
     }
 
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
-    }
-
     private void observeProducts() {
         viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
             adapter.submitList(products);
@@ -162,7 +156,6 @@ public class ManageProductFragment extends Fragment {
             }
         });
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
-        setupScrollListener(binding.productsRecycleView);
     }
 
     private void createBottomSheetDialog() {

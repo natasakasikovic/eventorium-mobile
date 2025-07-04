@@ -39,7 +39,6 @@ public class ManageableEventsFragment extends Fragment {
     private ManageableEventAdapter adapter;
     private ManageableEventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
-    private RecyclerView recyclerView;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
     NavController navController;
@@ -63,6 +62,7 @@ public class ManageableEventsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentManageableEventsBinding.inflate(inflater, container, false);
+        viewModel.refresh();
         setUpAdapter();
         return binding.getRoot();
     }
@@ -72,11 +72,10 @@ public class ManageableEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         observeEvents();
         setUpSearchListener();
-        setupScrollListener(binding.eventsRecycleView);
     }
 
     private void setUpAdapter() {
-        recyclerView = binding.eventsRecycleView;
+        RecyclerView recyclerView = binding.eventsRecycleView;
         ImageLoader imageLoader = new ImageLoader(requireContext());
         adapter = new ManageableEventAdapter(
                 imageLoader,
@@ -135,11 +134,6 @@ public class ManageableEventsFragment extends Fragment {
         viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
             adapter.submitList(events);
         });
-    }
-
-    private void setupScrollListener(RecyclerView recyclerView) {
-        LinearLayoutManager layout = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layout);
     }
 
     @Override
