@@ -87,7 +87,7 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
 
             imageLoader.loadImage(
                     ImageHolder.EVENT,
-                    event.getId(),
+                    event.getImageId(),
                     imageSourceProvider.getImageSource(event),
                     photoImageView
             );

@@ -98,7 +98,7 @@ public class ManageableEventAdapter extends PagedListAdapter<EventSummary, Manag
 
             imageLoader.loadImage(
                     ImageHolder.EVENT,
-                    event.getId(),
+                    event.getImageId(),
                     imageSourceProvider.getImageSource(event),
                     photoImageView
             );
