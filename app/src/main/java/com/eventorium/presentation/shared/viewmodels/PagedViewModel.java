@@ -26,7 +26,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
 
     protected String searchQuery = null;
     protected F filterParams = null;
-    protected final int pageSize = 10;
+    protected static final int PAGE_SIZE = 10;
 
     private GenericPageKeyedDataSource<T> currentDataSource;
 
@@ -38,7 +38,7 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
                 public DataSource<Integer, T> create() {
                     currentDataSource = new GenericPageKeyedDataSource<>(
                             mode,
-                            pageSize,
+                            PAGE_SIZE,
                             PagedViewModel.this::loadPage
                     );
                     return currentDataSource;
@@ -47,8 +47,9 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
             return new LivePagedListBuilder<>(
                     factory,
                     new PagedList.Config.Builder()
-                            .setPageSize(pageSize)
-                            .setInitialLoadSizeHint(pageSize)
+                            .setPageSize(PAGE_SIZE)
+                            .setPrefetchDistance(PAGE_SIZE / 2)
+                            .setInitialLoadSizeHint(PAGE_SIZE)
                             .setEnablePlaceholders(false)
                             .build()
             ).build();
