@@ -72,13 +72,6 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
         }
     }
 
-    public void showAll() {
-        if (pagingMode.getValue() != PagingMode.DEFAULT) {
-            invalidateDataSource();
-            pagingMode.setValue(PagingMode.DEFAULT);
-        }
-    }
-
     public void refresh() {
         invalidateDataSource();
         PagingMode currentMode = pagingMode.getValue();
