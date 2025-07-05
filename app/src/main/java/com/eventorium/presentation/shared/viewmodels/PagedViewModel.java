@@ -59,7 +59,6 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     public void search(String query) {
         if (!Objects.equals(this.searchQuery, query)) {
             this.searchQuery = query;
-            invalidateDataSource();
             pagingMode.setValue(PagingMode.SEARCH);
         }
     }
@@ -67,22 +66,15 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
     public void filter(F filter) {
         if (!Objects.equals(this.filterParams, filter)) {
             this.filterParams = filter;
-            invalidateDataSource();
             pagingMode.setValue(PagingMode.FILTER);
         }
     }
 
     public void refresh() {
-        invalidateDataSource();
         PagingMode currentMode = pagingMode.getValue();
         if (currentMode != null) {
             pagingMode.setValue(currentMode);
         }
-    }
-
-    private void invalidateDataSource() {
-        if (currentDataSource != null)
-            currentDataSource.invalidate();
     }
 
     protected abstract LiveData<Result<PagedResponse<T>>> loadPage(
