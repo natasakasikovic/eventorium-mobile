@@ -76,14 +76,14 @@ public class AccountProductRepository {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
-        addParamIfNotNull(params, "page", page);
-        addParamIfNotNull(params, "size", size);
         addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "category", filter.getCategory());
         addParamIfNotNull(params, "type", filter.getType());
         addParamIfNotNull(params, "minPrice", filter.getMinPrice());
         addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
         addParamIfNotNull(params, "availability", filter.getAvailability());;
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
     }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.shared.models.ImageHolder;
@@ -56,7 +57,7 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
         }
     }
 
-    public class ProductViewHolder extends BaseProductAdapter.BaseProductViewHolder {
+    public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;

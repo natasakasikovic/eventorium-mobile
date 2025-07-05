@@ -133,14 +133,14 @@ public class EventRepository {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
-        addParamIfNotNull(params, "page", page);
-        addParamIfNotNull(params, "size", size);
         addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "type", filter.getType());
         addParamIfNotNull(params, "maxParticipants", filter.getMaxParticipants());
         addParamIfNotNull(params, "city", filter.getCity());
         addParamIfNotNull(params, "from", filter.getFrom());
         addParamIfNotNull(params, "to", filter.getTo());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
     }

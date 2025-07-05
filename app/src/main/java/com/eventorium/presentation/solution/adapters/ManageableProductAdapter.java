@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.shared.models.ImageHolder;
@@ -54,7 +55,7 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
         }
     }
 
-    public class ManageableProductViewHolder extends BaseProductAdapter.BaseProductViewHolder {
+    public class ManageableProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
         TextView priceTextView;
@@ -77,7 +78,6 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
         }
 
         @SuppressLint("SetTextI18n")
-        @Override
         public void bind(ProductSummary productSummary) {
             nameTextView.setText(productSummary.getName());
             priceTextView.setText(productSummary.getPrice().toString());
