@@ -93,15 +93,20 @@ public class BudgetPlanningFragment extends Fragment {
     }
 
     private void showExitConfirmationDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exit_event_creation)
-                .setMessage(R.string.exit_event_creation_confirmation)
-                .setPositiveButton(R.string.exit, (dialog, which) -> {
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                    navController.popBackStack(R.id.homepageFragment, false);
-                })
-                .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
-                .show();
+        if(canAdvance) {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.exit_event_creation)
+                    .setMessage(R.string.exit_event_creation_confirmation)
+                    .setPositiveButton(R.string.exit, (dialog, which) -> {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.popBackStack(R.id.homepageFragment, false);
+                    })
+                    .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
+                    .show();
+        } else {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            navController.popBackStack(R.id.homepageFragment, false);
+        }
     }
 
     @Override
