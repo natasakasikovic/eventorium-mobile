@@ -15,13 +15,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 
-import java.util.List;
 
 public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAdapter.ServiceViewHolder> {
 
@@ -87,8 +85,6 @@ public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAd
             priceTextView.setText(String.format("%.2f", price));
 
             imageLoader.loadImage(
-                    ImageHolder.SERVICE,
-                    service.getId(),
                     imageSourceProvider.getImageSource(service),
                     photoImageview
             );

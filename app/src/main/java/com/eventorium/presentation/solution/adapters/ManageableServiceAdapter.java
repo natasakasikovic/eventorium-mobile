@@ -14,15 +14,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.event.models.budget.BudgetItem;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, ManageableServiceAdapter.ManageableServiceViewHolder> {
 
@@ -84,8 +80,6 @@ public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, M
             priceTextView.setText(String.format("%.2f", price));
 
             imageLoader.loadImage(
-                    ImageHolder.SERVICE,
-                    serviceSummary.getId(),
                     imageSourceProvider.getImageSource(serviceSummary),
                     imageView
             );

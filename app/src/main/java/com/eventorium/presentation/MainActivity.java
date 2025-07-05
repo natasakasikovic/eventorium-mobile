@@ -1,5 +1,6 @@
 package com.eventorium.presentation;
 
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -379,5 +380,4 @@ public class MainActivity extends AppCompatActivity {
         args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);
         navController.navigate(R.id.action_homepage_to_chat, args);
     }
-
 }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
@@ -83,8 +82,6 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
             priceTextView.setText(productSummary.getPrice().toString());
 
             imageLoader.loadImage(
-                    ImageHolder.PRODUCT,
-                    productSummary.getId(),
                     imageSourceProvider.getImageSource(productSummary),
                     imageView
             );

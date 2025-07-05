@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.presentation.shared.utils.ImageLoader;
@@ -86,8 +85,6 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
 
             imageLoader.loadImage(
-                    ImageHolder.EVENT,
-                    event.getImageId(),
                     imageSourceProvider.getImageSource(event),
                     photoImageView
             );

@@ -15,14 +15,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
 import com.eventorium.presentation.shared.utils.ImageLoader;
-import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAdapter.ProductViewHolder> {
@@ -82,8 +79,6 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
             priceTextView.setText(String.format("%.2f", price));
 
             imageLoader.loadImage(
-                    ImageHolder.PRODUCT,
-                    product.getId(),
                     imageSourceProvider.getImageSource(product),
                     imageView
             );

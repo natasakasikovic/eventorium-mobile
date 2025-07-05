@@ -14,12 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
-import com.eventorium.data.shared.models.ImageHolder;
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ManageableEventAdapter extends PagedListAdapter<EventSummary, ManageableEventAdapter.ManageableEventViewHolder> {
@@ -97,8 +95,6 @@ public class ManageableEventAdapter extends PagedListAdapter<EventSummary, Manag
             budgetButton.setOnClickListener(v -> manageListener.navigateToBudget(event));
 
             imageLoader.loadImage(
-                    ImageHolder.EVENT,
-                    event.getImageId(),
                     imageSourceProvider.getImageSource(event),
                     photoImageView
             );
