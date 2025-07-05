@@ -125,6 +125,13 @@ public class ProductRepository {
         service.filterProducts(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
+
+    public LiveData<Result<PagedResponse<ProductSummary>>> getSortedProducts(String sortCriteria, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.getSortedProducts(sortCriteria, page, size).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
     private Map<String, String> getFilterParams(ProductFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 

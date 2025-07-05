@@ -27,6 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.NotImplementedError;
 import okhttp3.ResponseBody;
 
 @HiltViewModel
@@ -115,6 +116,7 @@ public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
             case DEFAULT -> repository.getEvents(page, size);
             case SEARCH -> repository.searchEvents(searchQuery, page, size);
             case FILTER -> repository.filterEvents(filterParams, page, size);
+            case SORT -> throw new NotImplementedError("Events sort");
         };
     }
 }

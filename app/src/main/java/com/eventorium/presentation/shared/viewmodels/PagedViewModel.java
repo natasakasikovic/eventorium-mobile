@@ -26,6 +26,8 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
 
     protected String searchQuery = null;
     protected F filterParams = null;
+    protected String sortCriteria = null;
+
     protected static final int PAGE_SIZE = 10;
 
     private GenericPageKeyedDataSource<T> currentDataSource;
@@ -67,6 +69,13 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
         if (!Objects.equals(this.filterParams, filter)) {
             this.filterParams = filter;
             pagingMode.setValue(PagingMode.FILTER);
+        }
+    }
+
+    public void sort(String sortCriteria) {
+        if (!Objects.equals(this.sortCriteria, sortCriteria)) {
+            this.sortCriteria = sortCriteria;
+            pagingMode.setValue(PagingMode.SORT);
         }
     }
 

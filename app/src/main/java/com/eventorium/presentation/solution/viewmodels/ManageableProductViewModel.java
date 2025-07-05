@@ -1,9 +1,6 @@
 package com.eventorium.presentation.solution.viewmodels;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.ProductFilter;
@@ -13,11 +10,11 @@ import com.eventorium.data.shared.models.Result;
 import com.eventorium.presentation.shared.models.PagingMode;
 import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.NotImplementedError;
 
 @HiltViewModel
 public class ManageableProductViewModel extends PagedViewModel<ProductSummary, ProductFilter> {
@@ -33,6 +30,7 @@ public class ManageableProductViewModel extends PagedViewModel<ProductSummary, P
             case DEFAULT -> repository.getProducts(page, size);
             case SEARCH -> repository.searchProducts(searchQuery, page, size);
             case FILTER -> repository.filterProducts(filterParams, page, size);
+            case SORT -> throw new NotImplementedError("Manage products sort");
         };
     }
 }
