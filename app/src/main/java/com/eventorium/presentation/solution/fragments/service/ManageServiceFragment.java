@@ -95,7 +95,7 @@ public class ManageServiceFragment extends Fragment {
     }
 
     private void configureAdapter() {
-        ImageLoader imageLoader = new ImageLoader(requireContext());
+        ImageLoader imageLoader = new ImageLoader();
         adapter = new ManageableServiceAdapter(
                 imageLoader,
                 service -> () -> serviceViewModel.getServiceImage(service.getId()),

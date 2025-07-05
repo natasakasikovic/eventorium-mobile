@@ -97,7 +97,7 @@ public class ManageProductFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.productsRecycleView;
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         adapter = new ManageableProductAdapter(
                 loader,
                 product -> () -> productViewModel.getProductImage(product.getId()),

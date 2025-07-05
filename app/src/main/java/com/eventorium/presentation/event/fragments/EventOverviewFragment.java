@@ -80,7 +80,7 @@ public class EventOverviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
-        ImageLoader imageLoader = new ImageLoader(requireContext());
+        ImageLoader imageLoader = new ImageLoader();
         adapter = new EventsAdapter(
                 imageLoader,
                 event -> () -> eventTypeViewModel.getImage(event.getImageId()),

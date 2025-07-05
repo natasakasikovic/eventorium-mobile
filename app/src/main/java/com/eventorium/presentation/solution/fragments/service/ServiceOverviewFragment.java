@@ -62,7 +62,7 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         adapter = new ServicesAdapter(
                 loader,
                 service -> () -> viewModel.getServiceImage(service.getId()),

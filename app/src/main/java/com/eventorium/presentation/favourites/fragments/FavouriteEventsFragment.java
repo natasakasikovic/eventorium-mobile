@@ -78,7 +78,7 @@ public class FavouriteEventsFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         adapter = new EventsAdapter(
                 loader,
                 event -> () -> viewModel.getEventImage(event.getImageId()),

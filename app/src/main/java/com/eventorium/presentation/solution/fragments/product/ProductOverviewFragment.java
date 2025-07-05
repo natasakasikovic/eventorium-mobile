@@ -89,7 +89,7 @@ public class ProductOverviewFragment extends Fragment {
     }
 
     private void configureAdapter(){
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         adapter = new ProductsAdapter(
                 loader,
                 product -> () -> viewModel.getProductImage(product.getId()),

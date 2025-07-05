@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureProductAdapter() {
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         productsAdapter = new ProductsAdapter(
                 loader,
                 product -> () -> viewModel.getProductImage(product.getId()),
@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        ImageLoader imageLoader = new ImageLoader(requireContext());
+        ImageLoader imageLoader = new ImageLoader();
         serviceAdapter = new ServicesAdapter(
                 imageLoader,
                 service -> () -> viewModel.getServiceImage(service.getId()),
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureEventAdapter() {
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         eventsAdapter = new EventsAdapter(
                 loader,
                 event -> () -> viewModel.getEventImage(event.getImageId()),

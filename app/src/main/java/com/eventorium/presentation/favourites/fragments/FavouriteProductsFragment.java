@@ -77,7 +77,7 @@ public class FavouriteProductsFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        ImageLoader loader = new ImageLoader(requireContext());
+        ImageLoader loader = new ImageLoader();
         adapter = new ProductsAdapter(
                 loader,
                 product -> () -> viewModel.getProductImage(product.getId()),

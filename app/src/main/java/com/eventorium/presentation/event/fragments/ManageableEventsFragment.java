@@ -76,7 +76,7 @@ public class ManageableEventsFragment extends Fragment {
 
     private void setUpAdapter() {
         RecyclerView recyclerView = binding.eventsRecycleView;
-        ImageLoader imageLoader = new ImageLoader(requireContext());
+        ImageLoader imageLoader = new ImageLoader();
         adapter = new ManageableEventAdapter(
                 imageLoader,
                 event -> () -> eventTypeViewModel.getImage(event.getImageId()),
