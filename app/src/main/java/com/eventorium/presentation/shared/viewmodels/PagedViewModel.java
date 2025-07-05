@@ -48,9 +48,9 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
                     factory,
                     new PagedList.Config.Builder()
                             .setPageSize(PAGE_SIZE)
-                            .setPrefetchDistance(PAGE_SIZE / 2)
                             .setInitialLoadSizeHint(PAGE_SIZE)
-                            .setEnablePlaceholders(false)
+                            .setPrefetchDistance(PAGE_SIZE / 2)
+                            .setEnablePlaceholders(true)
                             .build()
             ).build();
         });
