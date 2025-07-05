@@ -335,7 +335,7 @@ public class ProductDetailsFragment extends Fragment {
                 favouriteButton.setIconResource(R.drawable.ic_favourite);
                 Toast.makeText(
                         requireContext(),
-                        getString(R.string.added_service)
+                        getString(R.string.added_product)
                                 + getString(R.string.to_favourites),
                         Toast.LENGTH_SHORT
                 ).show();
@@ -350,7 +350,7 @@ public class ProductDetailsFragment extends Fragment {
                 favouriteButton.setIconResource(R.drawable.ic_not_favourite);
                 Toast.makeText(
                         requireContext(),
-                        R.string.removed_service_from_favourites,
+                        R.string.removed_product_from_favourites,
                         Toast.LENGTH_SHORT
                 ).show();
             }
