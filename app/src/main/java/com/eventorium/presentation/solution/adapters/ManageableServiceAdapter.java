@@ -79,10 +79,7 @@ public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, M
             double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100.0);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(serviceSummary),
-                    imageView
-            );
+            imageLoader.loadImage(imageSourceProvider.getImageSource(serviceSummary), imageView);
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(serviceSummary));

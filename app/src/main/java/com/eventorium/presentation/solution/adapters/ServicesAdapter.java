@@ -84,11 +84,7 @@ public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAd
             double price = service.getPrice() * (1 - service.getDiscount() / 100.0);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(service),
-                    photoImageview
-            );
-
+            imageLoader.loadImage(imageSourceProvider.getImageSource(service), photoImageview);
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
         }
 

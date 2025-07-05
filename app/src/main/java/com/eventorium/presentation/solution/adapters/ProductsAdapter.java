@@ -78,11 +78,7 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
             double price = product.getPrice() * (1 - product.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(product),
-                    imageView
-            );
-
+            imageLoader.loadImage(imageSourceProvider.getImageSource(product), imageView);
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
             if (product.getAvailable() != null) {
@@ -109,7 +105,7 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
     }
 
     private static final DiffUtil.ItemCallback<ProductSummary> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<ProductSummary>() {
+            new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
                     return Objects.equals(oldItem.getId(), newItem.getId());

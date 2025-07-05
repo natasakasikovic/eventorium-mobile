@@ -15,24 +15,13 @@ import java.util.function.Supplier;
 
 
 public class ImageLoader {
-
-    private final Context context;
-
-    public ImageLoader(Context context) {
-        this.context = context.getApplicationContext();
-    }
-
     public void loadImage(Supplier<LiveData<Bitmap>> imageSource, ImageView imageView) {
         imageSource.get().observeForever(new Observer<>() {
             @Override
             public void onChanged(Bitmap bitmap) {
                 imageSource.get().removeObserver(this);
                 if (bitmap != null) {
-                    Glide.with(context)
-                            .load(bitmap)
-                            .error(R.drawable.ic_block)
-                            .centerCrop()
-                            .into(imageView);
+                    imageView.setImageBitmap(bitmap);
                 }
             }
         });

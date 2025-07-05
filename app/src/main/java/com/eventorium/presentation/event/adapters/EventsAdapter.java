@@ -83,11 +83,7 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
-
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(event),
-                    photoImageView
-            );
+            imageLoader.loadImage(imageSourceProvider.getImageSource(event), photoImageView);
         }
     }
 }
