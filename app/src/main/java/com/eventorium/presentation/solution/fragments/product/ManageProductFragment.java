@@ -1,18 +1,6 @@
 package com.eventorium.presentation.solution.fragments.product;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -22,6 +10,16 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
@@ -99,8 +97,9 @@ public class ManageProductFragment extends Fragment {
         recyclerView = binding.productsRecycleView;
         ImageLoader loader = new ImageLoader();
         adapter = new ManageableProductAdapter(
+                getViewLifecycleOwner(),
                 loader,
-                product -> () -> productViewModel.getProductImage(product.getId()),
+                product -> productViewModel.getProductImage(product.getId()),
                 configureListener()
         );
         recyclerView.setAdapter(adapter);

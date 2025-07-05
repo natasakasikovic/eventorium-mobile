@@ -91,5 +91,3 @@ public abstract class PagedViewModel<T, F> extends ViewModel {
             int size
     );
 }
-
-

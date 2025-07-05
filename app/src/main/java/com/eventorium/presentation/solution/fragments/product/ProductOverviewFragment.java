@@ -1,9 +1,17 @@
 package com.eventorium.presentation.solution.fragments.product;
 
-import static com.eventorium.R.*;
+import static com.eventorium.R.id;
 import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,19 +20,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
@@ -91,8 +86,9 @@ public class ProductOverviewFragment extends Fragment {
     private void configureAdapter(){
         ImageLoader loader = new ImageLoader();
         adapter = new ProductsAdapter(
+                getViewLifecycleOwner(),
                 loader,
-                product -> () -> viewModel.getProductImage(product.getId()),
+                product -> viewModel.getProductImage(product.getId()),
                 product -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     Bundle args = new Bundle();

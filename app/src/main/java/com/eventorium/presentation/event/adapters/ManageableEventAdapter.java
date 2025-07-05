@@ -1,5 +1,6 @@
 package com.eventorium.presentation.event.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +29,16 @@ public class ManageableEventAdapter extends PagedListAdapter<EventSummary, Manag
     private final ImageSourceProvider<EventSummary> imageSourceProvider;
     private final ImageLoader imageLoader;
 
+    private final LifecycleOwner owner;
+
     public ManageableEventAdapter(
+            LifecycleOwner owner,
             ImageLoader imageLoader,
             ImageSourceProvider<EventSummary> imageSourceProvider,
             OnManageEventListener listener
     ) {
         super(DIFF_CALLBACK);
+        this.owner = owner;
         this.manageListener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -90,14 +97,13 @@ public class ManageableEventAdapter extends PagedListAdapter<EventSummary, Manag
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
 
+            photoImageView.setTag(event.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(event);
+            imageLoader.loadImage(event.getId(), imageLiveData, photoImageView, owner);
+
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(event));
             editButton.setOnClickListener(v -> manageListener.onEditClick(event));
             budgetButton.setOnClickListener(v -> manageListener.navigateToBudget(event));
-
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(event),
-                    photoImageView
-            );
         }
     }
 }

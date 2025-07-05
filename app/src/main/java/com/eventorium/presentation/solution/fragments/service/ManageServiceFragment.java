@@ -1,6 +1,15 @@
 package com.eventorium.presentation.solution.fragments.service;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,16 +21,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
@@ -32,9 +31,9 @@ import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -97,8 +96,9 @@ public class ManageServiceFragment extends Fragment {
     private void configureAdapter() {
         ImageLoader imageLoader = new ImageLoader();
         adapter = new ManageableServiceAdapter(
+                getViewLifecycleOwner(),
                 imageLoader,
-                service -> () -> serviceViewModel.getServiceImage(service.getId()),
+                service -> serviceViewModel.getServiceImage(service.getId()),
                 new OnManageListener<>() {
                     @Override
                     public void onDeleteClick(ServiceSummary item) {

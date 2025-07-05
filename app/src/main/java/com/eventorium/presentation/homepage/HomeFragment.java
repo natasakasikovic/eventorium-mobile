@@ -27,7 +27,6 @@ import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -69,8 +68,9 @@ public class HomeFragment extends Fragment {
     private void configureProductAdapter() {
         ImageLoader loader = new ImageLoader();
         productsAdapter = new ProductsAdapter(
+                getViewLifecycleOwner(),
                 loader,
-                product -> () -> viewModel.getProductImage(product.getId()),
+                product -> viewModel.getProductImage(product.getId()),
                 product -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
@@ -82,8 +82,9 @@ public class HomeFragment extends Fragment {
     private void configureServiceAdapter() {
         ImageLoader imageLoader = new ImageLoader();
         serviceAdapter = new ServicesAdapter(
+                getViewLifecycleOwner(),
                 imageLoader,
-                service -> () -> viewModel.getServiceImage(service.getId()),
+                service -> viewModel.getServiceImage(service.getId()),
                 service -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     Bundle args = new Bundle();
@@ -95,8 +96,9 @@ public class HomeFragment extends Fragment {
     private void configureEventAdapter() {
         ImageLoader loader = new ImageLoader();
         eventsAdapter = new EventsAdapter(
+                getViewLifecycleOwner(),
                 loader,
-                event -> () -> viewModel.getEventImage(event.getImageId()),
+                event -> viewModel.getEventImage(event.getImageId()),
                 event -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     Bundle args = new Bundle();

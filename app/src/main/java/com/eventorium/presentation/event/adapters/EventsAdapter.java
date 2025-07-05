@@ -1,5 +1,6 @@
 package com.eventorium.presentation.event.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +29,16 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<EventSummary> imageSourceProvider;
 
+    private final LifecycleOwner owner;
+
     public EventsAdapter(
+            LifecycleOwner owner,
             ImageLoader imageLoader,
             ImageSourceProvider<EventSummary> imageSourceProvider,
             OnSeeMoreClick<EventSummary> listener
     ) {
         super(DIFF_CALLBACK);
+        this.owner = owner;
         this.listener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -82,8 +89,12 @@ public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.
         public void bind(EventSummary event) {
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
+
+            photoImageView.setTag(event.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(event);
+            imageLoader.loadImage(event.getId(), imageLiveData, photoImageView, owner);
+
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
-            imageLoader.loadImage(imageSourceProvider.getImageSource(event), photoImageView);
         }
     }
 }

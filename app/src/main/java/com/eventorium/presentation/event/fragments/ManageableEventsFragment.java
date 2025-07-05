@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
@@ -27,8 +26,6 @@ import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
-
-import java.util.ArrayList;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -78,8 +75,9 @@ public class ManageableEventsFragment extends Fragment {
         RecyclerView recyclerView = binding.eventsRecycleView;
         ImageLoader imageLoader = new ImageLoader();
         adapter = new ManageableEventAdapter(
+                getViewLifecycleOwner(),
                 imageLoader,
-                event -> () -> eventTypeViewModel.getImage(event.getImageId()),
+                event -> eventTypeViewModel.getImage(event.getImageId()),
                 new OnManageEventListener() {
 
                     @Override

@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,13 +28,16 @@ public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, M
     private final OnManageListener<ServiceSummary> manageListener;
     private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
     private final ImageLoader imageLoader;
+    private final LifecycleOwner owner;
 
     public ManageableServiceAdapter(
+            LifecycleOwner owner,
             ImageLoader imageLoader,
             ImageSourceProvider<ServiceSummary> imageSourceProvider,
             OnManageListener<ServiceSummary> listener
     ) {
         super(DIFF_CALLBACK);
+        this.owner = owner;
         this.manageListener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -76,10 +82,12 @@ public class ManageableServiceAdapter extends PagedListAdapter<ServiceSummary, M
         @SuppressLint({"SetTextI18n", "DefaultLocale"})
         public void bind(ServiceSummary serviceSummary) {
             nameTextView.setText(serviceSummary.getName());
-            double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100.0);
+            double price = serviceSummary.getPrice() * (1 - serviceSummary.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(imageSourceProvider.getImageSource(serviceSummary), imageView);
+            imageView.setTag(serviceSummary.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(serviceSummary);
+            imageLoader.loadImage(serviceSummary.getId(), imageLiveData, imageView, owner);
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(serviceSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(serviceSummary));

@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,13 +30,16 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
     private final OnManageListener<ProductSummary> manageListener;
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<ProductSummary> imageSourceProvider;
+    private final LifecycleOwner owner;
 
     public ManageableProductAdapter(
+            LifecycleOwner owner,
             ImageLoader imageLoader,
             ImageSourceProvider<ProductSummary> imageSourceProvider,
             OnManageListener<ProductSummary> listener
     ) {
         super(DIFF_CALLBACK);
+        this.owner = owner;
         this.manageListener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -76,15 +82,15 @@ public class ManageableProductAdapter extends PagedListAdapter<ProductSummary, M
             layout = itemView.findViewById(R.id.product_layout);
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("DefaultLocale")
         public void bind(ProductSummary productSummary) {
             nameTextView.setText(productSummary.getName());
-            priceTextView.setText(productSummary.getPrice().toString());
+            double price = productSummary.getPrice() * (1 - productSummary.getDiscount() / 100);
+            priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(
-                    imageSourceProvider.getImageSource(productSummary),
-                    imageView
-            );
+            imageView.setTag(productSummary.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(productSummary);
+            imageLoader.loadImage(productSummary.getId(), imageLiveData, imageView, owner);
 
             seeMoreButton.setOnClickListener(v -> manageListener.onSeeMoreClick(productSummary));
             editButton.setOnClickListener(v -> manageListener.onEditClick(productSummary));

@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventFilter;
@@ -82,8 +80,9 @@ public class EventOverviewFragment extends Fragment {
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
         ImageLoader imageLoader = new ImageLoader();
         adapter = new EventsAdapter(
+                getViewLifecycleOwner(),
                 imageLoader,
-                event -> () -> eventTypeViewModel.getImage(event.getImageId()),
+                event -> eventTypeViewModel.getImage(event.getImageId()),
                 event -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     Bundle args = new Bundle();

@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
+import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 
 
@@ -27,12 +30,16 @@ public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAd
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<ServiceSummary> imageSourceProvider;
 
+    private final LifecycleOwner owner;
+
     public ServicesAdapter(
+            LifecycleOwner owner,
             ImageLoader imageLoader,
             ImageSourceProvider<ServiceSummary> imageSourceProvider,
             OnSeeMoreClick<ServiceSummary> listener
     ) {
         super(DIFF_CALLBACK);
+        this.owner = owner;
         this.listener = listener;
         this.imageLoader = imageLoader;
         this.imageSourceProvider = imageSourceProvider;
@@ -81,13 +88,15 @@ public class ServicesAdapter extends PagedListAdapter<ServiceSummary, ServicesAd
             setDiscount(service);
 
             nameTextView.setText(service.getName());
-            double price = service.getPrice() * (1 - service.getDiscount() / 100.0);
+            double price = service.getPrice() * (1 - service.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(imageSourceProvider.getImageSource(service), photoImageview);
+            photoImageview.setTag(service.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(service);
+            imageLoader.loadImage(service.getId(), imageLiveData, photoImageview, owner);
+
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(service));
         }
-
         @SuppressLint("SetTextI18n")
         private void setDiscount(ServiceSummary service) {
             if (service.getDiscount() != null && service.getDiscount() > 0) {

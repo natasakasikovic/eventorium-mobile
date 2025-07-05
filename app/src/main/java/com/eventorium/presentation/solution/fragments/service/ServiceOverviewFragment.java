@@ -19,14 +19,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.service.ServiceFilter;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
@@ -64,8 +61,9 @@ public class ServiceOverviewFragment extends Fragment {
     private void configureServiceAdapter() {
         ImageLoader loader = new ImageLoader();
         adapter = new ServicesAdapter(
+                getViewLifecycleOwner(),
                 loader,
-                service -> () -> viewModel.getServiceImage(service.getId()),
+                service -> viewModel.getServiceImage(service.getId()),
                 service -> {
                     NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                     Bundle args = new Bundle();

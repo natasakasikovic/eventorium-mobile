@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +30,10 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
     private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
     private final ImageLoader imageLoader;
     private final ImageSourceProvider<ProductSummary> imageSourceProvider;
+    private final LifecycleOwner owner;
 
     public ProductsAdapter(
+            LifecycleOwner owner,
             ImageLoader loader,
             ImageSourceProvider<ProductSummary> imageSourceProvider,
             OnSeeMoreClick<ProductSummary> onSeeMoreClick
@@ -36,6 +41,7 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
         super(DIFF_CALLBACK);
         this.onSeeMoreClick = onSeeMoreClick;
         this.imageSourceProvider = imageSourceProvider;
+        this.owner = owner;
         this.imageLoader = loader;
     }
 
@@ -78,7 +84,9 @@ public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAd
             double price = product.getPrice() * (1 - product.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
 
-            imageLoader.loadImage(imageSourceProvider.getImageSource(product), imageView);
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(product);
+            imageView.setTag(product.getId());
+            imageLoader.loadImage(product.getId(), imageLiveData, imageView, owner);
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
             if (product.getAvailable() != null) {
