@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -83,6 +84,9 @@ public class EventInvitationFragment extends Fragment {
 
         binding.sendInvitationsButton.setOnClickListener( v -> {
             viewModel.sendInvitations(this.eventId, adapter.getInvitations());
+            Toast.makeText(requireContext(), "Event created successfully", Toast.LENGTH_SHORT).show();
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            navController.popBackStack(R.id.homepageFragment, false);
         });
     }
 
@@ -117,5 +121,4 @@ public class EventInvitationFragment extends Fragment {
                 .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
 }

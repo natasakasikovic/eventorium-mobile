@@ -29,18 +29,8 @@ public class InvitationRepository {
     }
 
     public void sendInvitations(Long id, List<Invitation> invitations) {
-        service.sendInvitations(id, invitations).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    System.out.println("Invitations sent successfully!"); // TODO: remove this and notify user that everything is sent successfully
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                // TODO: handle error
-            }
-        });
+        MutableLiveData<Result<Void>> result = new MutableLiveData<>();
+        service.sendInvitations(id, invitations).enqueue(RetrofitCallbackHelper.handleVoidResponse(result));
     }
 
     public LiveData<Result<List<InvitationDetails>>> getInvitations() {
