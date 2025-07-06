@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
+import com.eventorium.presentation.solution.helpers.SortBottomSheetDialogHelper;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,6 +51,7 @@ public class ServiceOverviewFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ServicesAdapter adapter;
+    private SortBottomSheetDialogHelper helper;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
 
@@ -78,8 +82,9 @@ public class ServiceOverviewFragment extends Fragment {
         binding = FragmentServiceOverviewBinding.inflate(inflater, container, false);
 
         initializeViewModels();
-
         configureServiceAdapter();
+        helper = new SortBottomSheetDialogHelper();
+
         binding.servicesRecycleView.setAdapter(adapter);
         return binding.getRoot();
     }
@@ -122,10 +127,11 @@ public class ServiceOverviewFragment extends Fragment {
             }
         });
 
-        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
+        binding.filterButton.setOnClickListener(v -> createFilterBottomSheetDialog());
+        binding.sortButton.setOnClickListener(v -> createSortBottomSheetDialog());
     }
 
-    private void createBottomSheetDialog() {
+    private void createFilterBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
         View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
 
@@ -133,12 +139,28 @@ public class ServiceOverviewFragment extends Fragment {
         loadEventTypes(dialogView.findViewById(R.id.spinnerEventType));
 
         bottomSheetDialog.setContentView(dialogView);
-        bottomSheetDialog.setOnDismissListener(dialog -> onBottomSheetDismiss((BottomSheetDialog) dialog));
+        bottomSheetDialog.setOnDismissListener(dialog -> onFilterBottomSheetDismiss((BottomSheetDialog) dialog));
 
         bottomSheetDialog.show();
     }
 
-    private void onBottomSheetDismiss(BottomSheetDialog dialogView) {
+    private void createSortBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.solutions_sort, null);
+
+        bottomSheetDialog.setContentView(dialogView);
+        bottomSheetDialog.setOnDismissListener(dialog -> onSortBottomSheetDismiss((BottomSheetDialog) dialog));
+
+        bottomSheetDialog.show();
+    }
+
+    private void onSortBottomSheetDismiss(BottomSheetDialog dialogView) {
+        String sortCriteria = helper.extractSortCriteria(dialogView);
+        if (sortCriteria != null)
+            viewModel.sort(sortCriteria);
+    }
+
+    private void onFilterBottomSheetDismiss(BottomSheetDialog dialogView) {
 
         TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
         String name = nameEditText.getText().toString().trim();
@@ -240,5 +262,4 @@ public class ServiceOverviewFragment extends Fragment {
         super.onDestroy();
         binding = null;
     }
-
 }

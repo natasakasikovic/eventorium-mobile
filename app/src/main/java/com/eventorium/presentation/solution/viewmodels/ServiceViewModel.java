@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CreateService;
@@ -95,7 +94,7 @@ public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilt
             case DEFAULT -> serviceRepository.getServices(page, size);
             case SEARCH -> serviceRepository.searchServices(searchQuery, page, size);
             case FILTER -> serviceRepository.filterServices(filterParams, page, size);
-            case SORT -> throw new NotImplementedError("Services sort");
+            case SORT -> serviceRepository.getSortedServices(sortCriteria, page, size);
         };
     }
 }
