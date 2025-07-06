@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.solution.fragments.pricelist.PriceListFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@color/md_theme_tertiaryContainer"
+            app:tabTextColor="@color/md_theme_secondaryContainer"
+            app:tabSelectedTextColor="@color/md_theme_primary" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/downloadPdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:text="@string/download"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_download"
+        android:drawablePadding="8dp"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/ic_download"
+        app:iconGravity="textStart"
+        app:iconTint="@android:color/white"
+        app:strokeWidth="1dp"
+        android:backgroundTint="@color/md_theme_primary"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

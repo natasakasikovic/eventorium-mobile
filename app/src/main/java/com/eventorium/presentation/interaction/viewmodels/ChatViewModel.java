@@ -1,0 +1,56 @@
+package com.eventorium.presentation.interaction.viewmodels;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.eventorium.data.auth.repositories.AuthRepository;
+import com.eventorium.data.interaction.models.chat.ChatMessage;
+import com.eventorium.data.interaction.models.chat.ChatMessageRequest;
+import com.eventorium.data.interaction.repositories.ChatRepository;
+import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.services.WebSocketService;
+import com.eventorium.presentation.shared.listeners.OnMessageReceive;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
+public class ChatViewModel extends ViewModel {
+    private final AuthRepository authRepository;
+    private final ChatRepository chatRepository;
+    private WebSocketService webSocketService = null;
+
+    @Inject
+    public ChatViewModel(AuthRepository authRepository, ChatRepository chatRepository, WebSocketService webSocketService) {
+        this.authRepository = authRepository;
+        this.chatRepository = chatRepository;
+        this.webSocketService = webSocketService;
+    }
+
+    public Long getUserId() {
+        return authRepository.getUserId();
+    }
+
+    public LiveData<Result<List<ChatMessage>>> getMessages(Long senderId, Long recipientId) {
+        return chatRepository.getMessages(senderId, recipientId);
+    }
+
+    public void setupMessageListener(OnMessageReceive onMessageReceive) {
+        webSocketService.setChatMessageListener(onMessageReceive);
+    }
+
+    public void destroyMessageListener() {
+        webSocketService.setChatMessageListener(null);
+    }
+
+    public void sendMessage(ChatMessage message) {
+        webSocketService.sendMessage(ChatMessageRequest.builder()
+                .message(message.getMessage())
+                .senderId(message.getSenderId())
+                .recipientId(message.getRecipientId())
+                .build());
+    }
+}

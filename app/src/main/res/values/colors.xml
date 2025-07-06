@@ -3,8 +3,17 @@
     <color name="md_theme_primaryContainer">#ECEAE6</color>
     <color name="md_theme_secondaryContainer">#E1DACF</color>
     <color name="md_theme_tertiaryContainer">#D9D9D9</color>
+
+    <color name="status_denied">#d32f2f</color>
+    <color name="status_planned">#7b1fa2</color>
+    <color name="status_pending">#fbc02d</color>
+    <color name="status_processed">#1976d2</color>
+
     <color name="card_background">#F1EDE9</color>
     <color name="md_theme_primary">#35422F</color>
     <color name="selected_menu_item">#FFFFFF</color>
     <color name="gold">#FFD700</color>
+    <color name="decline">#B53939</color>
+    <color name="approve">#8B8BDA</color>
+    <color name="user_message">#e0f7fa</color>
 </resources>

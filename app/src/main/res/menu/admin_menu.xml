@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_create_event_type"
+        android:title="@string/new_event_type"
+        android:icon="@drawable/ic_add" />
+
+    <item
+        android:id="@+id/nav_create_category"
+        android:title="@string/create_category"
+        android:icon="@drawable/ic_add" />
+
+    <item
+        android:id="@+id/nav_categories"
+        android:title="@string/categories"
+        android:icon="@drawable/ic_category" />
+
+    <item
+        android:id="@+id/nav_category_proposals"
+        android:title="@string/category_proposals"
+        android:icon="@drawable/ic_proposal" />
+
+    <item
+        android:id="@+id/nav_event_types"
+        android:title="@string/event_types"
+        android:icon="@drawable/ic_overview" />
+
+    <item
+        android:id="@+id/nav_user_reports"
+        android:title="@string/user_reports"
+        android:icon="@drawable/ic_overview"/>
+
+    <item
+        android:id="@+id/nav_manage_comments"
+        android:title="@string/comment_management"
+        android:icon="@drawable/ic_review"/>
+
+    <item
+        android:id="@+id/nav_event_statistics"
+        android:title="@string/event_statistics"
+        android:icon="@drawable/ic_chart" />
+
+</menu>

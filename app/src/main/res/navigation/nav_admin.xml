@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_admin"
+    app:startDestination="@id/nav_user">
+
+    <include app:graph="@navigation/nav_user" />
+
+    <fragment
+        android:id="@+id/categoryOverviewFragment"
+        android:name="com.eventorium.presentation.category.fragments.CategoryOverviewFragment"
+        android:label="fragment_category_overview"
+        tools:layout="@layout/fragment_category_overview" />
+
+    <fragment
+        android:id="@+id/categoryProposalsFragment"
+        android:name="com.eventorium.presentation.category.fragments.CategoryProposalsFragment"
+        android:label="fragment_category_proposals"
+        tools:layout="@layout/fragment_category_proposals">
+        <action
+            android:id="@+id/action_categoryProposalsFragment_self"
+            app:destination="@id/categoryProposalsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createCategoryFragment"
+        android:name="com.eventorium.presentation.category.fragments.CreateCategoryFragment"
+        android:label="fragment_create_category"
+        tools:layout="@layout/fragment_create_category">
+        <action
+            android:id="@+id/action_create_to_categoryOverview"
+            app:destination="@+id/categoryOverviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.CreateEventTypeFragment"
+        android:label="create_event_type"
+        tools:layout="@layout/fragment_create_event_type">
+        <action
+            android:id="@+id/action_create_to_event_types_overview"
+            app:destination="@+id/eventTypesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userReportsOverviewFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportsOverviewFragment"
+        android:layout="@layout/fragment_user_reports_overview">
+        <action
+            android:id="@+id/action_reports_overview_to_details"
+            app:destination="@+id/reportDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/reportDetailsFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportDetailsFragment"
+        android:label="fragment_user_report_details"
+        tools:layout="@layout/fragment_user_report_details" />
+
+    <fragment
+        android:id="@+id/eventTypesFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.EventTypeOverviewFragment"
+        tools:layout="@layout/fragment_event_type_overview">
+        <action
+            android:id="@+id/action_event_types_overview_to_edit"
+            app:destination="@+id/editEventTypeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editEventTypeFragment"
+        android:name="com.eventorium.presentation.event.fragments.eventtype.EditEventTypeFragment"
+        tools:layout="@layout/fragment_edit_event_type" />
+
+    <fragment
+        android:id="@+id/manageCommentsFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.ManageCommentFragment"
+        tools:layout="@layout/fragment_manage_comment">
+        <action
+            android:id="@+id/action_manageComments_to_userProfile"
+            app:destination="@id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_manageComments_to_serviceDetails"
+            app:destination="@+id/serviceDetailsFragment" />
+        <action
+            android:id="@+id/action_manageComments_to_productDetails"
+            app:destination="@id/productDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment"
+        android:label="fragment_product_details"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_productDetails_to_provider"
+            app:destination="@id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_company"
+            app:destination="@id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_productDetails_to_comments"
+            app:destination="@+id/commentsOverviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
+        <action
+            android:id="@+id/action_profile_to_report"
+            app:destination="@id/reportUserFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/companyDetailsFragment"
+        android:name="com.eventorium.presentation.company.fragments.CompanyDetailsFragment"
+        tools:layout="@layout/fragment_company_details" />
+
+    <fragment
+        android:id="@+id/reportUserFragment"
+        android:name="com.eventorium.presentation.user.fragments.UserReportFragment"
+        android:label="fragment_report_user"
+        tools:layout="@layout/fragment_user_report" />
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.eventorium.presentation.event.fragments.EventDetailsFragment"
+        tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment"
+        android:label="fragment_service_details"
+        tools:layout="@layout/fragment_service_details">
+        <action
+            android:id="@+id/action_serviceDetails_to_provider"
+            app:destination="@+id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_company"
+            app:destination="@+id/companyDetailsFragment" />
+        <action
+            android:id="@+id/action_serviceDetails_to_comments"
+            app:destination="@+id/commentsOverviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/pastEventsOverview"
+        android:name="com.eventorium.presentation.event.fragments.PastEventsOverviewFragment"
+        tools:layout="@layout/fragment_past_events_overview">
+        <action
+            android:id="@+id/action_past_events_to_stats"
+            app:destination="@id/event_statistics" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/event_statistics"
+        android:name="com.eventorium.presentation.event.fragments.EventRatingStatisticsFragment"
+        tools:layout="@layout/fragment_event_rating_statistics" />
+
+    <fragment
+        android:id="@+id/commentsOverviewFragment"
+        android:name="com.eventorium.presentation.interaction.fragments.comment.CommentsOverviewFragment"
+        android:label="fragment_comments_overview"
+        tools:layout="@layout/fragment_comments_overview" />
+
+</navigation>

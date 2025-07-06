@@ -1,0 +1,383 @@
+package com.eventorium.presentation;
+
+import android.content.ComponentCallbacks2;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.splashscreen.SplashScreen;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+
+import com.eventorium.R;
+import com.eventorium.data.auth.models.UserDetails;
+import com.eventorium.databinding.ActivityMainBinding;
+import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
+import com.eventorium.presentation.interaction.fragments.chat.ChatFragment;
+import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
+import com.eventorium.presentation.shared.viewmodels.SplashScreenViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.Objects;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
+public class MainActivity extends AppCompatActivity {
+
+    private SplashScreenViewModel viewModel;
+    private LoginViewModel loginViewModel;
+    private ActivityMainBinding binding;
+    private DrawerLayout drawer;
+    private Toolbar toolbar;
+    private NotificationViewModel notificationViewModel;
+
+    private SharedPreferences sharedPreferences;
+    private BottomNavigationView bottomNavigationView;
+    private NavigationView navigationView;
+    private NavController navController;
+
+    private String userRole = "GUEST";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        ViewModelProvider provider = new ViewModelProvider(this);
+        viewModel = provider.get(SplashScreenViewModel.class);
+
+        SplashScreen
+                .installSplashScreen(this)
+                .setKeepOnScreenCondition(() -> Boolean.TRUE.equals(viewModel.getIsLoading().getValue()));
+
+        super.onCreate(savedInstanceState);
+
+        notificationViewModel = provider.get(NotificationViewModel.class);
+        loginViewModel = provider.get(LoginViewModel.class);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setupStatusBarAndToolbar();
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
+            actionBar.setHomeButtonEnabled(true);
+        }
+        setupDrawer();
+
+        setContentView(binding.getRoot());
+
+        sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
+        binding.baseLayout.notificationButton.setOnClickListener(v ->
+                handleNotificationSilenceChange(!sharedPreferences.getBoolean("silenceNotifications", false))
+        );
+        String role = sharedPreferences.getString("role", null);
+
+        if (role == null) refresh("GUEST");
+        else {
+            refresh(role);
+            Long id = loginViewModel.getUserId();
+            if(!WebSocketForegroundService.isRunning)
+                startWebSocketService(id, role);
+        }
+
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+        }
+    }
+
+    public void refresh(String role) {
+        userRole = role;
+        setNavigation();
+
+        if (role.equals("GUEST")) {
+            binding.baseLayout.notificationButton.setVisibility(View.GONE);
+            hideBottomNavigation();
+        } else {
+            handleNotificationSilenced();
+        }
+    }
+
+    private void handleNotificationSilenceChange(boolean silenced) {
+        notificationViewModel.silenceNotifications(silenced).observe(this, result -> {
+            if(result.getError() == null) {
+                notificationViewModel.saveSilencedStatus(silenced);
+                setupNotificationButton(silenced);
+            }
+        });
+    }
+
+    private void handleNotificationSilenced() {
+        notificationViewModel.getNotificationSilenceStatus().observe(this, result -> {
+            if(result.getError() == null && result.getData() != null) {
+                notificationViewModel.saveSilencedStatus(result.getData());
+                setupNotificationButton(sharedPreferences.getBoolean("silenceNotifications", false));
+            }
+        });
+    }
+
+    private void startWebSocketService(Long userId, String role) {
+        Intent serviceIntent = new Intent(getApplicationContext(), WebSocketForegroundService.class);
+        serviceIntent.putExtra("userId", userId);
+        serviceIntent.putExtra("role", role);
+        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
+    }
+
+    private void stopWebSocketService() {
+        getApplicationContext().stopService(new Intent(getApplicationContext(), WebSocketForegroundService.class));
+    }
+
+    private void setupNotificationButton(boolean silenced) {
+        int iconRes = silenced ? R.drawable.ic_notifications_off : R.drawable.ic_notifications;
+        binding.baseLayout.notificationButton.setVisibility(View.VISIBLE);
+        binding.baseLayout.notificationButton.setIconResource(iconRes);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+    private void setupDrawer() {
+        drawer = binding.baseLayout.drawerLayout;
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+    }
+
+    private void setupNavController() {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        NavGraph navGraph;
+        clearMenu();
+        setUpMenu(R.menu.user_menu);
+
+        switch (userRole) {
+            case "USER" -> navGraph = navController.getNavInflater().inflate(R.navigation.nav_user);
+
+            case "ADMIN" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_admin);
+                setUpMenu(R.menu.admin_menu);
+            }
+
+            case "PROVIDER" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_provider);
+                setUpMenu(R.menu.provider_menu);
+            }
+
+            case "EVENT_ORGANIZER" -> {
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_organizer);
+                setUpMenu(R.menu.organizer_menu);
+            }
+
+            default -> {
+                hideBottomNavigation();
+                clearMenu();
+                navGraph = navController.getNavInflater().inflate(R.navigation.nav_guest);
+                setUpMenu(R.menu.guest_menu);
+            }
+        }
+
+        navController.setGraph(navGraph);
+
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void setNavigation() {
+        bottomNavigationView = binding.baseLayout.bottomNavigation;
+        navigationView = binding.baseLayout.navigationView;
+
+        setupNavController();
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            navController.popBackStack(R.id.homepageFragment, false);
+            if (id == R.id.nav_account) {
+                navController.navigate(R.id.accountDetailsFragment);
+            } else if (id == R.id.nav_home) {
+                navController.navigate(R.id.homepageFragment);
+            } else if (id == R.id.nav_favourite) {
+                navController.navigate(R.id.favourites);
+            } else if (id == R.id.nav_calendar) {
+                navController.navigate(R.id.calendarFragment);
+            }
+            return true;
+        });
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            navController.popBackStack(R.id.homepageFragment, false);
+            switch (userRole) {
+                case "USER" -> handleUserMenuItemSelection(id);
+                case "ADMIN" -> handleAdminMenuItemSelection(id);
+                case "EVENT_ORGANIZER" -> handleOrganizerMenuItemSelection(id);
+                case "PROVIDER" -> handleProviderMenuItemSelection(id);
+                default -> handleGuestMenuItemSelection(id);
+            }
+
+            drawer.closeDrawers();
+            return true;
+        });
+    }
+
+    private void handleProviderMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+        if (id == R.id.nav_services) {
+            navController.navigate(R.id.manageServicesFragment);
+        } else if (id == R.id.nav_company) {
+            navController.navigate(R.id.providerCompanyFragment);
+        } else if (id == R.id.nav_new_service) {
+            navController.navigate(R.id.createServiceFragment);
+        } else if (id == R.id.nav_price_list) {
+            navController.navigate(R.id.priceList);
+        } else if (id == R.id.nav_new_product) {
+            navController.navigate(R.id.createProductFragment);
+        } else if (id == R.id.nav_manage_reservations) {
+            navController.navigate(R.id.manageReservationFragment);
+        } else if (id == R.id.nav_products) {
+            navController.navigate(R.id.manageProductFragment);
+        }
+    }
+
+    private void handleOrganizerMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+        if (id == R.id.nav_new_event) {
+            navController.navigate(R.id.createEventFragment);
+        } else if (id == R.id.nav_reviews) {
+            navController.navigate(R.id.reviewFragment);
+        } else if (id == R.id.nav_manageable_events) {
+            navController.navigate(R.id.manageableEventsFragment);
+        } else if (id == R.id.nav_event_statistics) {
+            navController.navigate(R.id.pastEventsOverview);
+        }
+    }
+
+    private void handleAdminMenuItemSelection(int id) {
+        handleUserMenuItemSelection(id);
+        if (id == R.id.nav_create_event_type) {
+            navController.navigate(R.id.createEventTypeFragment);
+        } else if (id == R.id.nav_create_category) {
+            navController.navigate(R.id.createCategoryFragment);
+        } else if (id == R.id.nav_categories) {
+            navController.navigate(R.id.categoryOverviewFragment);
+        } else if (id == R.id.nav_category_proposals) {
+            navController.navigate(R.id.categoryProposalsFragment);
+        } else if (id == R.id.nav_event_types) {
+            navController.navigate(R.id.eventTypesFragment);
+        } else if (id == R.id.nav_user_reports) {
+            navController.navigate(R.id.userReportsOverviewFragment);
+        } else if (id == R.id.nav_manage_comments) {
+            navController.navigate(R.id.manageCommentsFragment);
+        } else if (id == R.id.nav_event_statistics) {
+            navController.navigate(R.id.pastEventsOverview);
+        }
+    }
+
+    private void handleUserMenuItemSelection(int id) {
+        if (id == R.id.nav_logout) {
+            logOutUser();
+        } else if (id == R.id.nav_notification) {
+            navController.navigate(R.id.notificationsFragment);
+        } else if (id == R.id.nav_messages) {
+            navController.navigate(R.id.messagesFragment);
+        } else if (id == R.id.nav_invitations) {
+            navController.navigate(R.id.userInvitationsFragment);
+        }
+    }
+
+    private void handleGuestMenuItemSelection(int id) {
+        if (id == R.id.nav_login) {
+            navController.navigate(R.id.loginFragment);
+        } else if (id == R.id.nav_signup) {
+            navController.navigate(R.id.registerFragment);
+        }
+    }
+
+    public void logOutUser() {
+        SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        refresh("GUEST");
+        stopWebSocketService();
+    }
+
+    private void hideBottomNavigation() {
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    private void clearMenu() {
+        navigationView.getMenu().clear();
+    }
+
+    private void setupStatusBarAndToolbar() {
+        toolbar = binding.baseLayout.toolbar;
+        setSupportActionBar(toolbar);
+
+        Window window = getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.md_theme_secondaryContainer));
+
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+    }
+
+    private void setUpMenu(int menuId) {
+        navigationView.inflateMenu(menuId);
+    }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String fragmentToOpen = intent.getStringExtra("openFragment");
+        if ("ChatFragment".equals(fragmentToOpen)) {
+            UserDetails recipient = intent.getParcelableExtra(ChatFragment.ARG_RECIPIENT);
+            if (recipient != null) {
+                openChatFragment(recipient);
+            }
+        }
+    }
+
+    private void openChatFragment(UserDetails recipient) {
+        navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        Bundle args = new Bundle();
+        args.putParcelable(ChatFragment.ARG_RECIPIENT, recipient);
+        navController.navigate(R.id.action_homepage_to_chat, args);
+    }
+}

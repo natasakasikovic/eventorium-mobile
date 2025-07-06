@@ -15,21 +15,32 @@
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/md_theme_secondaryContainer"
                 app:layout_scrollFlags="scroll|enterAlways">
+
                 <ImageView
                     android:id="@+id/logo_image"
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/logo_transparent"
                     android:layout_gravity="center" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/notificationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?attr/materialIconButtonStyle"
+                    android:visibility="gone"
+                    android:layout_gravity="end|center_vertical"
+                    app:iconTint="@android:color/black"
+                    app:icon="@drawable/ic_notifications"/>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
-
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
@@ -59,7 +70,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/md_theme_secondaryContainer"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/side_menu"/>
+        app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
