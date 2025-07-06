@@ -27,7 +27,7 @@ public class EventTypeViewModel extends ViewModel {
         this.eventTypeRepository = eventTypeRepository;
     }
 
-    public LiveData<EventType> createEventType(CreateEventType eventType) {
+    public LiveData<Result<EventType>> createEventType(CreateEventType eventType) {
         return eventTypeRepository.createEventType(eventType);
     }
 

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,8 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class CreateEventTypeFragment extends Fragment {
 
     private FragmentCreateEventTypeBinding binding;
-    private EditText nameTextEdit;
-    private EditText descriptionTextEdit;
     private Uri selectedImageUri;
     private ActivityResultLauncher<Intent> pickImageLauncher;
 
@@ -82,9 +79,6 @@ public class CreateEventTypeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateEventTypeBinding.inflate(inflater, container, false);
-
-        nameTextEdit = binding.etEventTypeName;
-        descriptionTextEdit = binding.etEventTypeDescription;
 
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             allCategories = categories;
@@ -171,23 +165,19 @@ public class CreateEventTypeFragment extends Fragment {
         }
 
         CreateEventType eventType = new CreateEventType(name, description, selectedCategories);
-        eventTypeViewModel.createEventType(eventType).observe(getViewLifecycleOwner(), response -> {
-            if (response != null) {
-                Toast.makeText(
-                        requireContext(),
-                        "Event type created successfully",
-                        Toast.LENGTH_SHORT
-                ).show();
-                uploadImage(response);
+        sendRequest(eventType);
+    }
+
+    private void sendRequest(CreateEventType eventType) {
+        eventTypeViewModel.createEventType(eventType).observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null) {
+                Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
+                uploadImage(result.getData());
                 NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
                 navController.navigate(R.id.eventTypesFragment);
-            } else {
-                Toast.makeText(
-                        requireContext(),
-                        R.string.failed_to_create_category,
-                        Toast.LENGTH_SHORT
-                ).show();
             }
+            else Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+
         });
     }
 
