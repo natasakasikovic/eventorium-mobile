@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -122,10 +124,11 @@ public class ServiceOverviewFragment extends Fragment {
             }
         });
 
-        binding.filterButton.setOnClickListener(v -> createBottomSheetDialog()); // filter listener
+        binding.filterButton.setOnClickListener(v -> createFilterBottomSheetDialog());
+        binding.sortButton.setOnClickListener(v -> createSortBottomSheetDialog());
     }
 
-    private void createBottomSheetDialog() {
+    private void createFilterBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
         View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
 
@@ -133,12 +136,68 @@ public class ServiceOverviewFragment extends Fragment {
         loadEventTypes(dialogView.findViewById(R.id.spinnerEventType));
 
         bottomSheetDialog.setContentView(dialogView);
-        bottomSheetDialog.setOnDismissListener(dialog -> onBottomSheetDismiss((BottomSheetDialog) dialog));
+        bottomSheetDialog.setOnDismissListener(dialog -> onFilterBottomSheetDismiss((BottomSheetDialog) dialog));
 
         bottomSheetDialog.show();
     }
 
-    private void onBottomSheetDismiss(BottomSheetDialog dialogView) {
+    private void createSortBottomSheetDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
+        View dialogView = getLayoutInflater().inflate(R.layout.solutions_sort, null);
+
+        bottomSheetDialog.setContentView(dialogView);
+        bottomSheetDialog.setOnDismissListener(dialog -> onSortBottomSheetDismiss((BottomSheetDialog) dialog));
+
+        bottomSheetDialog.show();
+    }
+
+    private void onSortBottomSheetDismiss(BottomSheetDialog dialogView) {
+        String sortCriteria = extractSortCriteria(dialogView);
+        if (sortCriteria != null)
+            viewModel.sort(sortCriteria);
+    }
+
+    private String extractSortCriteria(BottomSheetDialog dialogView) {
+        RadioGroup radioGroupSortField = dialogView.findViewById(R.id.radioGroupSortField);
+        RadioGroup radioGroupOrder = dialogView.findViewById(R.id.radioGroupOrder);
+
+        int selectedSortFieldId = radioGroupSortField.getCheckedRadioButtonId();
+        int selectedOrderId = radioGroupOrder.getCheckedRadioButtonId();
+
+        if (selectedSortFieldId == -1 || selectedOrderId == -1)
+            return null;
+
+        RadioButton selectedSortField = dialogView.findViewById(selectedSortFieldId);
+        RadioButton selectedOrder = dialogView.findViewById(selectedOrderId);
+
+        String sortField = getSortField(selectedSortField.getId());
+        String sortDirection = getSortDirection(selectedOrder.getText().toString());
+
+        return String.format("%s,%s", sortField, sortDirection);
+    }
+
+    private String getSortField(int radioButtonId) {
+        if (radioButtonId == R.id.radioName)
+            return "name";
+        else if (radioButtonId == R.id.radioDescription)
+            return "description";
+        else if (radioButtonId == R.id.radioDiscount)
+            return "discount";
+        else
+            return "name"; // default fallback
+    }
+
+    private String getSortDirection(String text) {
+        text = text.toLowerCase();
+        if (text.contains("asc"))
+            return "asc";
+        else if (text.contains("desc"))
+            return "desc";
+        else
+            return "asc"; // default fallback
+    }
+
+    private void onFilterBottomSheetDismiss(BottomSheetDialog dialogView) {
 
         TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
         String name = nameEditText.getText().toString().trim();

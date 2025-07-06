@@ -64,10 +64,21 @@
                 android:id="@+id/filterButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="5dp"
                 android:layout_gravity="center_vertical"
                 android:backgroundTint="@android:color/darker_gray"
                 app:icon="@drawable/ic_tune"
+                app:iconTint="@android:color/black"
+                style="?attr/materialIconButtonStyle" />
+
+            <Button
+                android:id="@+id/sortButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center_vertical"
+                android:backgroundTint="@android:color/darker_gray"
+                app:icon="@drawable/ic_sort"
                 app:iconTint="@android:color/black"
                 style="?attr/materialIconButtonStyle" />
         </LinearLayout>

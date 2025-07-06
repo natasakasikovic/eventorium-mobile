@@ -32,6 +32,9 @@ public interface ServiceService {
     @GET("services")
     Call<PagedResponse<ServiceSummary>> getServices(@Query("page") int page, @Query("size") int size);
 
+    @GET("services")
+    Call<PagedResponse<ServiceSummary>> getSortedServices(@Query("sort") String sort, @Query("page") int page, @Query("size") int size);
+
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
 

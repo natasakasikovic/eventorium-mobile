@@ -132,10 +132,15 @@ public class ServiceRepository {
         return result;
     }
 
-
     public LiveData<Result<PagedResponse<ServiceSummary>>> filterServices(ServiceFilter filter, int page, int size) {
         MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
         service.filterServices(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
+        return result;
+    }
+
+    public LiveData<Result<PagedResponse<ServiceSummary>>> getSortedServices(String sortCriteria, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getSortedServices(sortCriteria, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 

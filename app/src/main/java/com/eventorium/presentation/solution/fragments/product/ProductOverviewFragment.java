@@ -142,7 +142,7 @@ public class ProductOverviewFragment extends Fragment {
 
     private void createSortBottomSheetDialog() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity());
-        View dialogView = getLayoutInflater().inflate(R.layout.products_sort, null);
+        View dialogView = getLayoutInflater().inflate(R.layout.solutions_sort, null);
 
         bottomSheetDialog.setContentView(dialogView);
         bottomSheetDialog.setOnDismissListener(dialog -> onSortBottomSheetDismiss((BottomSheetDialog) dialog));
