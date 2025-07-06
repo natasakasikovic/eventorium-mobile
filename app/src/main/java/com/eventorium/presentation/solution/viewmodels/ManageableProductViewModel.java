@@ -14,7 +14,6 @@ import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
 
 @HiltViewModel
 public class ManageableProductViewModel extends PagedViewModel<ProductSummary, ProductFilter> {
@@ -30,7 +29,7 @@ public class ManageableProductViewModel extends PagedViewModel<ProductSummary, P
             case DEFAULT -> repository.getProducts(page, size);
             case SEARCH -> repository.searchProducts(searchQuery, page, size);
             case FILTER -> repository.filterProducts(filterParams, page, size);
-            case SORT -> throw new NotImplementedError("Manage products sort");
+            case SORT -> throw new UnsupportedOperationException("Manageable products sort not supported");
         };
     }
 }

@@ -51,6 +51,12 @@ public class EventRepository {
         return liveData;
     }
 
+    public LiveData<Result<PagedResponse<EventSummary>>> getSortedEvents(String sortCriteria, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> liveData = new MutableLiveData<>();
+        service.getSortedEvents(sortCriteria, page, size).enqueue(handleGeneralResponse(liveData));
+        return liveData;
+    }
+
     public LiveData<Result<List<EventSummary>>> getTopEvents(){
         MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
         service.getTopEvents().enqueue(handleGeneralResponse(liveData));
