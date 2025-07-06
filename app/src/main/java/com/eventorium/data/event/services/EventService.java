@@ -33,6 +33,9 @@ public interface EventService {
     @GET("events")
     Call<PagedResponse<EventSummary>> getEvents(@Query("page") int page, @Query("size") int size);
 
+    @GET("events")
+    Call<PagedResponse<EventSummary>> getSortedEvents(@Query("sort") String sort, @Query("page") int page, @Query("size") int size);
+
     @GET("events/top-five-events")
     Call<List<EventSummary>> getTopEvents();
 
