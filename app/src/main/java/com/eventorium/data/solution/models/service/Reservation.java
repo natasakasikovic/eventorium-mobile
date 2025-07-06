@@ -1,7 +1,6 @@
 package com.eventorium.data.solution.models.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

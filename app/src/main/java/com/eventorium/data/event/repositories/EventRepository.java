@@ -1,6 +1,9 @@
 package com.eventorium.data.event.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handlePdfExport;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleValidationResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.Context;
 import android.net.Uri;
@@ -20,6 +23,7 @@ import com.eventorium.data.event.models.event.EventFilter;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.event.services.EventService;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.HashMap;
@@ -41,9 +45,9 @@ public class EventRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<EventSummary>>> getEvents() {
-        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.getAll().enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<EventSummary>>> getEvents(int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> liveData = new MutableLiveData<>();
+        service.getEvents(page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
@@ -71,9 +75,9 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        MutableLiveData<Result<List<EventSummary>>> liveData = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(handleGeneralResponse(liveData));
+    public LiveData<Result<PagedResponse<EventSummary>>> searchEvents(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> liveData = new MutableLiveData<>();
+        service.searchEvents(keyword, page, size).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 
@@ -119,13 +123,13 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.filterEvents(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> filterEvents(EventFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.filterEvents(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    private Map<String, String> getFilterParams(EventFilter filter) {
+    private Map<String, String> getFilterParams(EventFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
@@ -135,6 +139,8 @@ public class EventRepository {
         addParamIfNotNull(params, "city", filter.getCity());
         addParamIfNotNull(params, "from", filter.getFrom());
         addParamIfNotNull(params, "to", filter.getTo());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
     }

@@ -1,6 +1,10 @@
 package com.eventorium.presentation.company.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,17 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.databinding.FragmentProviderCompanyBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
-import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.util.List;
 

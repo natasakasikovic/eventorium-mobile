@@ -1,8 +1,8 @@
 package com.eventorium.data.auth.services;
 
 
-import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.UpgradeAccountRequest;
 import com.eventorium.data.auth.models.User;
 

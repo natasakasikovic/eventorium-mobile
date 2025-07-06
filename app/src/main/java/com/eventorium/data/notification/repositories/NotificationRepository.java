@@ -1,29 +1,20 @@
 package com.eventorium.data.notification.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.notification.models.NotificationResponse;
 import com.eventorium.data.notification.services.NotificationService;
-import com.eventorium.data.shared.models.ErrorResponse;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.constants.ErrorMessages;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class NotificationRepository {
 

@@ -1,6 +1,7 @@
 package com.eventorium.presentation.solution.adapters;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,36 +11,56 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
-import java.util.List;
+import java.util.Objects;
 
-public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductViewHolder> {
+public class ProductsAdapter extends PagedListAdapter<ProductSummary, ProductsAdapter.ProductViewHolder> {
 
     private final OnSeeMoreClick<ProductSummary> onSeeMoreClick;
+    private final ImageLoader imageLoader;
+    private final ImageSourceProvider<ProductSummary> imageSourceProvider;
+    private final LifecycleOwner owner;
 
-    public ProductsAdapter(List<ProductSummary> productSummaries, OnSeeMoreClick<ProductSummary> onSeeMoreClick) {
-        super(productSummaries);
+    public ProductsAdapter(
+            LifecycleOwner owner,
+            ImageLoader loader,
+            ImageSourceProvider<ProductSummary> imageSourceProvider,
+            OnSeeMoreClick<ProductSummary> onSeeMoreClick
+    ) {
+        super(DIFF_CALLBACK);
         this.onSeeMoreClick = onSeeMoreClick;
+        this.imageSourceProvider = imageSourceProvider;
+        this.owner = owner;
+        this.imageLoader = loader;
     }
 
     @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_card, parent, false);
         return new ProductViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        ProductSummary product = productSummaries.get(position);
-        holder.bind(product);
+        ProductSummary product = getItem(position);
+        if (product != null) {
+            holder.bind(product);
+        }
     }
 
-    public class ProductViewHolder extends BaseProductViewHolder {
+    public class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView priceTextView;
         TextView discountTextView;
@@ -62,7 +83,10 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
             nameTextView.setText(product.getName());
             double price = product.getPrice() * (1 - product.getDiscount() / 100);
             priceTextView.setText(String.format("%.2f", price));
-            imageView.setImageBitmap(product.getImage());
+
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(product);
+            imageView.setTag(product.getId());
+            imageLoader.loadImage(product.getId(), imageLiveData, imageView, owner);
             seeMoreButton.setOnClickListener(v -> onSeeMoreClick.navigateToDetails(product));
 
             if (product.getAvailable() != null) {
@@ -77,7 +101,7 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
         private void setDiscountLabel(ProductSummary product) {
             if (hasDiscount(product)) {
                 discountTextView.setVisibility(View.VISIBLE);
-                discountTextView.setText(product.getDiscount().toString() + "% OFF");
+                discountTextView.setText(product.getDiscount() + "% OFF");
             } else {
                 discountTextView.setVisibility(View.GONE);
             }
@@ -87,4 +111,18 @@ public class ProductsAdapter extends BaseProductAdapter<ProductsAdapter.ProductV
             return product.getDiscount() != null && product.getDiscount() > 0;
         }
     }
+
+    private static final DiffUtil.ItemCallback<ProductSummary> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
+                    return Objects.equals(oldItem.getId(), newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ProductSummary oldItem, @NonNull ProductSummary newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
 }
+

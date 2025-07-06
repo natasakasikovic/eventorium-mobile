@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
-import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.listeners.OnImageDeleteListener;
+import com.eventorium.presentation.shared.models.ImageItem;
 
 import java.util.List;
 

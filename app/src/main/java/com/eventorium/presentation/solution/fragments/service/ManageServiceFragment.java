@@ -1,6 +1,15 @@
 package com.eventorium.presentation.solution.fragments.service;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,39 +18,26 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
-import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableServiceAdapter;
+import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.eventorium.presentation.solution.viewmodels.ManageableServiceViewModel;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
-import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,13 +47,15 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ManageServiceFragment extends Fragment {
 
     private FragmentServiceOverviewBinding binding;
-    private ManageableServiceViewModel manageableServiceViewModel;
+    private ManageableServiceViewModel viewModel;
     private ServiceViewModel serviceViewModel;
     private CategoryViewModel categoryViewModel;
     private EventTypeViewModel eventTypeViewModel;
     private ManageableServiceAdapter adapter;
-    private List<ServiceSummary> services;
     private RecyclerView recyclerView;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     public ManageServiceFragment() {
     }
@@ -70,7 +68,7 @@ public class ManageServiceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ViewModelProvider provider = new ViewModelProvider(this);
-        manageableServiceViewModel = provider.get(ManageableServiceViewModel.class);
+        viewModel = provider.get(ManageableServiceViewModel.class);
         serviceViewModel = provider.get(ServiceViewModel.class);
         categoryViewModel = provider.get(CategoryViewModel.class);
         eventTypeViewModel = provider.get(EventTypeViewModel.class);
@@ -86,35 +84,41 @@ public class ManageServiceFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel.refresh();
 
         binding.filterButton.setOnClickListener(v -> createBottomSheetDialog());
         recyclerView = binding.servicesRecycleView;
+        observeServices();
         configureAdapter();
         configureSearch();
-        loadServices();
     }
 
     private void configureAdapter() {
-        adapter = new ManageableServiceAdapter(new ArrayList<>(), new OnManageListener<>() {
-            @Override
-            public void onDeleteClick(ServiceSummary item) {
-                showDeleteDialog(item);
-            }
+        ImageLoader imageLoader = new ImageLoader();
+        adapter = new ManageableServiceAdapter(
+                getViewLifecycleOwner(),
+                imageLoader,
+                service -> serviceViewModel.getServiceImage(service.getId()),
+                new OnManageListener<>() {
+                    @Override
+                    public void onDeleteClick(ServiceSummary item) {
+                        showDeleteDialog(item);
+                    }
 
-            @Override
-            public void onSeeMoreClick(ServiceSummary serviceSummary) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.action_manageServices_to_serviceDetails,
-                        ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
-            }
+                    @Override
+                    public void onSeeMoreClick(ServiceSummary serviceSummary) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.navigate(R.id.action_manageServices_to_serviceDetails,
+                                ServiceDetailsFragment.newInstance(serviceSummary.getId()).getArguments());
+                    }
 
-            @Override
-            public void onEditClick(ServiceSummary serviceSummary) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                navController.navigate(R.id.action_manageService_to_editService,
-                        EditServiceFragment.newInstance(serviceSummary).getArguments());
-            }
-        });
+                    @Override
+                    public void onEditClick(ServiceSummary serviceSummary) {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.navigate(R.id.action_manageService_to_editService,
+                                EditServiceFragment.newInstance(serviceSummary).getArguments());
+                    }
+                });
         recyclerView.setAdapter(adapter);
     }
 
@@ -122,15 +126,11 @@ public class ManageServiceFragment extends Fragment {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-                manageableServiceViewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        services = result.getData();
-                        adapter.setData(services);
-                        loadImages(services);
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
             @Override
@@ -158,7 +158,7 @@ public class ManageServiceFragment extends Fragment {
                                 R.string.service_deleted_successfully,
                                 Toast.LENGTH_SHORT
                         ).show();
-                        adapter.removeService(serviceId);
+                        viewModel.refresh();
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }
@@ -184,12 +184,19 @@ public class ManageServiceFragment extends Fragment {
                 .isChecked();;
         TextInputEditText minTextField = dialogView.findViewById(R.id.minPriceEditText);
         TextInputEditText maxTextField = dialogView.findViewById(R.id.maxPriceEditText);
+        TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
+        TextInputEditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
+
+        String name = nameEditText.getText().toString().trim();
+        String description = descriptionEditText.getText().toString().trim();
         Double minPrice = parsePrice(minTextField);
         Double maxPrice = parsePrice(maxTextField);
         Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerCategory)));
         EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerEventType)));
 
         ServiceFilter filter = ServiceFilter.builder()
+                .name(name)
+                .description(description)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .category(category == null ? null : category.getName())
@@ -197,18 +204,7 @@ public class ManageServiceFragment extends Fragment {
                 .build();
 
         if (availability) filter.setAvailability(true);
-        observeFilteringServices(filter);
-    }
-
-    private void observeFilteringServices(ServiceFilter filter) {
-        manageableServiceViewModel.filterServices(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                services = result.getData();
-                adapter.setData(services);
-                loadImages(services);
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {
@@ -257,18 +253,6 @@ public class ManageServiceFragment extends Fragment {
         return null;
     }
 
-    private void loadImages(List<ServiceSummary> services) {
-        services.forEach(service ->
-            serviceViewModel.getServiceImage(service.getId())
-                    .observe(getViewLifecycleOwner(), image -> {
-                        if(image != null) {
-                            service.setImage(image);
-                            int position = services.indexOf(service);
-                            adapter.notifyItemChanged(position);
-                        }
-                    }));
-    }
-
     private void loadCategories(Spinner spinner) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 requireContext(),
@@ -285,18 +269,14 @@ public class ManageServiceFragment extends Fragment {
         });
     }
 
-    private void loadServices() {
-        manageableServiceViewModel.getServices()
-                .observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        binding.servicesRecycleView.setVisibility(View.VISIBLE);
-                        binding.loadingIndicator.setVisibility(View.GONE);
-                        adapter.setData(result.getData());
-                        loadImages(result.getData());
-                    } else {
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                    }
-                });
+    private void observeServices() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
+            adapter.submitList(services);
+            if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
+                binding.loadingIndicator.setVisibility(View.GONE);
+                binding.servicesRecycleView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

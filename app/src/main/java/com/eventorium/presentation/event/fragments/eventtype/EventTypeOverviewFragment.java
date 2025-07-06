@@ -1,6 +1,11 @@
 package com.eventorium.presentation.event.fragments.eventtype;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,19 +14,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.databinding.FragmentEventTypeOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventTypesAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.listeners.OnEditClickListener;
-
 
 import java.util.ArrayList;
 import java.util.List;

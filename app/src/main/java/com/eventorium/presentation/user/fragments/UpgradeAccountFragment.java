@@ -4,17 +4,16 @@ import static com.eventorium.presentation.company.fragments.CompanyRegisterFragm
 import static com.eventorium.presentation.company.fragments.CompanyRegisterFragment.ARG_PROVIDER_ID;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.eventorium.R;
 import com.eventorium.data.auth.models.Role;
@@ -23,7 +22,6 @@ import com.eventorium.databinding.FragmentUpgradeAccountBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.auth.viewmodels.AuthViewModel;
 import com.eventorium.presentation.auth.viewmodels.RoleViewModel;
-import com.eventorium.presentation.user.viewmodels.UserViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

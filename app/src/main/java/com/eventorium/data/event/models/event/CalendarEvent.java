@@ -1,13 +1,14 @@
 package com.eventorium.data.event.models.event;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
-import lombok.*;
-
 import java.time.LocalDate;
-
-import android.os.Parcel;
 import java.time.format.DateTimeFormatter;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter

@@ -1,6 +1,7 @@
 package com.eventorium.data.auth.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +11,6 @@ import com.eventorium.data.auth.models.UserReportRequest;
 import com.eventorium.data.auth.models.UserReportResponse;
 import com.eventorium.data.auth.services.UserReportService;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.data.shared.utils.RetrofitCallbackHelper;
 
 import java.util.List;
 

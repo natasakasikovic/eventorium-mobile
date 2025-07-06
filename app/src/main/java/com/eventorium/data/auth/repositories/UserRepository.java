@@ -1,6 +1,8 @@
 package com.eventorium.data.auth.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGetImage;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,8 +15,8 @@ import com.eventorium.data.auth.models.AccountDetails;
 import com.eventorium.data.auth.models.ChangePasswordRequest;
 import com.eventorium.data.auth.models.Person;
 import com.eventorium.data.auth.services.UserService;
-import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.data.shared.utils.FileUtil;
 
 import java.io.IOException;
 

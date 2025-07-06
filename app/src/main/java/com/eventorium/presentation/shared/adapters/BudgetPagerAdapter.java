@@ -1,13 +1,10 @@
 package com.eventorium.presentation.shared.adapters;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.eventorium.data.event.models.event.Event;
-import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.presentation.event.fragments.budget.BudgetItemsFragment;
 import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragment;
 

@@ -1,9 +1,9 @@
 package com.eventorium.data.event.services;
 
-import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.data.event.models.budget.Budget;
 import com.eventorium.data.event.models.budget.BudgetItem;
 import com.eventorium.data.event.models.budget.BudgetItemRequest;
+import com.eventorium.data.event.models.budget.BudgetSuggestion;
 import com.eventorium.data.event.models.budget.UpdateBudgetItem;
 import com.eventorium.data.interaction.models.review.SolutionReview;
 import com.eventorium.data.solution.models.product.Product;

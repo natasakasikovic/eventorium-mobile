@@ -1,11 +1,12 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CalendarReservation;
 import com.eventorium.data.solution.models.service.CreateService;
+import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.models.service.UpdateService;
-import com.eventorium.data.solution.models.service.Service;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.util.List;
@@ -28,8 +29,8 @@ import retrofit2.http.QueryMap;
 
 public interface ServiceService {
 
-    @GET("services/all")
-    Call<List<ServiceSummary>> getServices();
+    @GET("services")
+    Call<PagedResponse<ServiceSummary>> getServices(@Query("page") int page, @Query("size") int size);
 
     @GET("services/{id}")
     Call<Service> getService(@Path("id") Long id);
@@ -59,12 +60,16 @@ public interface ServiceService {
     @DELETE("services/{id}")
     Call<ResponseBody> deleteService(@Path("id") Long id);
 
-    @GET("services/search/all")
-    Call<List<ServiceSummary>> searchServices(@Query("keyword") String keyword);
+    @GET("services/search")
+    Call<PagedResponse<ServiceSummary>> searchServices(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("provider-reservations")
     Call<List<CalendarReservation>> getReservations();
 
-    @GET("services/filter/all")
-    Call<List<ServiceSummary>> filterServices(@QueryMap Map<String, String> params);
+    @GET("services/filter")
+    Call<PagedResponse<ServiceSummary>> filterServices(@QueryMap Map<String, String> params);
 }

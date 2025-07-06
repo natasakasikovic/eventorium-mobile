@@ -1,19 +1,23 @@
 package com.eventorium.data.solution.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessAsBoolean;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessfulResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.solution.models.service.ServiceFilter;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.solution.services.AccountServiceService;
-import com.eventorium.data.shared.models.Result;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -26,21 +30,21 @@ public class AccountServiceRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> getManageableServices() {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.getManageableServices().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> getManageableServices(int size, int page) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.getManageableServices(size, page).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String query) {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.searchManageableServices(query).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> searchServices(String query, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.searchManageableServices(query, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        MutableLiveData<Result<List<ServiceSummary>>> result = new MutableLiveData<>();
-        service.filterManageableServices(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ServiceSummary>>> filterServices(ServiceFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ServiceSummary>>> result = new MutableLiveData<>();
+        service.filterManageableServices(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
@@ -68,25 +72,26 @@ public class AccountServiceRepository {
         return result;
     }
 
-    private Map<String, String> getFilterParams(ServiceFilter filter) {
+    private Map<String, String> getFilterParams(ServiceFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
-        if (filter.getCategory() != null) {
-            params.put("category", filter.getCategory());
-        }
-        if (filter.getType() != null) {
-            params.put("eventType", filter.getType());
-        }
-        if (filter.getMinPrice() != null) {
-            params.put("minPrice", String.valueOf(filter.getMinPrice()));
-        }
-        if (filter.getMaxPrice() != null) {
-            params.put("maxPrice", String.valueOf(filter.getMaxPrice()));
-        }
-        if (filter.getAvailability() != null) {
-            params.put("availability", String.valueOf(filter.getAvailability()));
-        }
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
+        addParamIfNotNull(params, "category", filter.getCategory());
+        addParamIfNotNull(params, "type", filter.getType());
+        addParamIfNotNull(params, "minPrice", filter.getMinPrice());
+        addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
+        addParamIfNotNull(params, "availability", filter.getAvailability());
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
+    }
+
+    private void addParamIfNotNull(Map<String, String> params, String key, Object value) {
+        Optional.ofNullable(value)
+                .filter(v -> !(v instanceof Boolean && Boolean.FALSE.equals(v)))
+                .filter(v -> !(v instanceof String && v.toString().isEmpty()))
+                .ifPresent(v -> params.put(key, v.toString()));
     }
 }

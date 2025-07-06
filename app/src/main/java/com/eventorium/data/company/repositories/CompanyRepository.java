@@ -1,6 +1,10 @@
 package com.eventorium.data.company.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGetImages;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessAsBoolean;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleValidationResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,10 +16,10 @@ import com.eventorium.data.company.models.Company;
 import com.eventorium.data.company.models.CompanyDetails;
 import com.eventorium.data.company.models.CreateCompany;
 import com.eventorium.data.company.services.CompanyService;
-import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.data.shared.models.Result;
-import com.eventorium.presentation.shared.models.RemoveImageRequest;
+import com.eventorium.data.shared.utils.FileUtil;
 import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
 import java.io.IOException;
 import java.util.List;

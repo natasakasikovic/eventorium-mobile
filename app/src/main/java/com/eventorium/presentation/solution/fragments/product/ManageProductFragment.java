@@ -1,6 +1,15 @@
 package com.eventorium.presentation.solution.fragments.product;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,23 +21,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ManageableProductAdapter;
 import com.eventorium.presentation.solution.listeners.OnManageListener;
 import com.eventorium.presentation.solution.viewmodels.ManageableProductViewModel;
@@ -52,8 +53,9 @@ public class ManageProductFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ManageableProductAdapter adapter;
-    private List<ProductSummary> products;
     private RecyclerView recyclerView;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     public ManageProductFragment() { }
 
@@ -78,7 +80,8 @@ public class ManageProductFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadProducts();
+        viewModel.refresh();
+        observeProducts();
         setUpListeners();
     }
 
@@ -92,7 +95,18 @@ public class ManageProductFragment extends Fragment {
 
     private void setUpAdapter() {
         recyclerView = binding.productsRecycleView;
-        adapter = new ManageableProductAdapter(new ArrayList<>(), new OnManageListener<>() {
+        ImageLoader loader = new ImageLoader();
+        adapter = new ManageableProductAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                product -> productViewModel.getProductImage(product.getId()),
+                configureListener()
+        );
+        recyclerView.setAdapter(adapter);
+    }
+
+    private OnManageListener<ProductSummary> configureListener() {
+        return new OnManageListener<>() {
             @Override
             public void onDeleteClick(ProductSummary item) {
                 showDeleteDialog(item);
@@ -109,31 +123,13 @@ public class ManageProductFragment extends Fragment {
                 navController.navigate(R.id.action_manage_products_to_edit_product,
                         EditProductFragment.newInstance(item).getArguments());
             }
-        });
-        recyclerView.setAdapter(adapter);
+        };
     }
 
-    private void loadProducts() {
-        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
-            if (result.getData() != null) {
-                products = result.getData();
-                adapter.setProducts(products);
-                loadImages();
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
+    private void observeProducts() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
+            adapter.submitList(products);
         });
-    }
-
-    private void loadImages() {
-        products.forEach(product -> productViewModel
-            .getProductImage(product.getId()).observe(getViewLifecycleOwner(), img -> {
-            if (img != null) {
-                product.setImage(img);
-                int position = products.indexOf(product);
-                adapter.notifyItemChanged(position);
-            }
-        }));
     }
 
     private void navigateToProductDetails(ProductSummary product) {
@@ -146,15 +142,11 @@ public class ManageProductFragment extends Fragment {
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        products = result.getData();
-                        adapter.setData(products);
-                        loadImages();
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
             @Override
@@ -205,18 +197,7 @@ public class ManageProductFragment extends Fragment {
                 .build();
 
 
-        observeFilteringProducts(filter);
-    }
-
-    private void observeFilteringProducts(ProductFilter filter) {
-        viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                products = result.getData();
-                adapter.setData(products);
-                loadImages();
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {
@@ -291,7 +272,7 @@ public class ManageProductFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), result -> {
                     if(result.getError() == null) {
                         Toast.makeText(requireContext(), R.string.success, Toast.LENGTH_SHORT).show();
-                        adapter.removeProduct(productId);
+                        viewModel.refresh();
                     } else {
                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
                     }

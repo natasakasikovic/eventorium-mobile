@@ -4,6 +4,8 @@ package com.eventorium.data.event.models.event;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.event.models.eventtype.EventType;
 
@@ -14,8 +16,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import androidx.annotation.NonNull;
 
 @Getter
 @Setter

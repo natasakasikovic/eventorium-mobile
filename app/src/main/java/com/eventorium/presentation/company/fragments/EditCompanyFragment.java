@@ -4,9 +4,13 @@ import static java.util.stream.Collectors.toList;
 
 import android.app.TimePickerDialog;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,23 +19,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.company.models.Company;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.data.shared.utils.FileUtil;
+import com.eventorium.data.shared.utils.ImageUpload;
 import com.eventorium.databinding.FragmentEditCompanyBinding;
 import com.eventorium.presentation.company.viewmodels.CompanyViewModel;
+import com.eventorium.presentation.shared.adapters.ImageAdapter;
+import com.eventorium.presentation.shared.models.ImageItem;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
-import com.eventorium.presentation.shared.models.ImageItem;
-import com.eventorium.data.shared.utils.ImageUpload;
-import com.eventorium.presentation.shared.adapters.ImageAdapter;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;

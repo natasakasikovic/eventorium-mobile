@@ -3,13 +3,14 @@ package com.eventorium.presentation.solution.fragments.service;
 import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,10 +24,10 @@ import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.service.ServiceFilter;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.databinding.FragmentServiceOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.viewmodels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -47,6 +48,9 @@ public class ServiceOverviewFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ServicesAdapter adapter;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
+
 
     public ServiceOverviewFragment() {}
 
@@ -55,12 +59,17 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        adapter = new ServicesAdapter(new ArrayList<>(), service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_serviceOverview_to_service_details, args);
-        });
+        ImageLoader loader = new ImageLoader();
+        adapter = new ServicesAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                service -> viewModel.getServiceImage(service.getId()),
+                service -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, service.getId());
+                    navController.navigate(R.id.action_serviceOverview_to_service_details, args);
+                });
     }
 
     @Override
@@ -99,14 +108,11 @@ public class ServiceOverviewFragment extends Fragment {
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String keyword) { // search listener
-                viewModel.searchServices(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadServiceImages(result.getData());
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 
@@ -158,17 +164,7 @@ public class ServiceOverviewFragment extends Fragment {
                 .type(eventType != null ? eventType.getName() : null)
                 .build();
 
-        observeFilteringServices(filter);
-    }
-
-    private void observeFilteringServices(ServiceFilter filter) {
-        viewModel.filterServices(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadServiceImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {
@@ -230,29 +226,13 @@ public class ServiceOverviewFragment extends Fragment {
     }
 
     private void observeServices() {
-        viewModel.getServices().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                binding.servicesRecycleView.setVisibility(View.VISIBLE);
+        viewModel.getItems().observe(getViewLifecycleOwner(), services -> {
+            adapter.submitList(services);
+            if(binding.loadingIndicator.getVisibility() == View.VISIBLE) {
                 binding.loadingIndicator.setVisibility(View.GONE);
-                adapter.setData(result.getData());
-                loadServiceImages(result.getData());
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+                binding.servicesRecycleView.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    private void loadServiceImages(List<ServiceSummary> services) {
-        services.forEach( service -> viewModel.getServiceImage(service.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        service.setImage(image);
-                        int position = services.indexOf(service);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     @Override

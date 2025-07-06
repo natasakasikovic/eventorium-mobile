@@ -1,5 +1,6 @@
 package com.eventorium.presentation.event.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,39 +9,72 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
+import com.eventorium.presentation.shared.listeners.ImageSourceProvider;
 import com.eventorium.presentation.shared.listeners.OnSeeMoreClick;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
-import java.util.List;
+import java.util.Objects;
 
-public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolder> {
+public class EventsAdapter extends PagedListAdapter<EventSummary, EventsAdapter.EventViewHolder> {
 
     private final OnSeeMoreClick<EventSummary> listener;
+    private final ImageLoader imageLoader;
+    private final ImageSourceProvider<EventSummary> imageSourceProvider;
 
-    public EventsAdapter(List<EventSummary> events, OnSeeMoreClick<EventSummary> listener) {
-        super(events);
+    private final LifecycleOwner owner;
+
+    public EventsAdapter(
+            LifecycleOwner owner,
+            ImageLoader imageLoader,
+            ImageSourceProvider<EventSummary> imageSourceProvider,
+            OnSeeMoreClick<EventSummary> listener
+    ) {
+        super(DIFF_CALLBACK);
+        this.owner = owner;
         this.listener = listener;
+        this.imageLoader = imageLoader;
+        this.imageSourceProvider = imageSourceProvider;
     }
 
     @NonNull
     @Override
-    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_card, parent, false);
         return new EventViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(EventViewHolder holder, int position) {
-        EventSummary event = eventSummaries.get(position);
-        holder.bind(event);
+    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
+        EventSummary event = getItem(position);
+        if (event != null) {
+            holder.bind(event);
+        }
     }
 
-    public class EventViewHolder extends BaseEventViewHolder {
+    public static final DiffUtil.ItemCallback<EventSummary> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull EventSummary oldItem, @NonNull EventSummary newItem) {
+                    return Objects.equals(oldItem.getId(), newItem.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull EventSummary oldItem, @NonNull EventSummary newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
+
+    public class EventViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView cityTextView;
-
         Button seeMoreButton;
         ImageView photoImageView;
 
@@ -52,12 +86,16 @@ public class EventsAdapter extends BaseEventAdapter<EventsAdapter.EventViewHolde
             seeMoreButton = itemView.findViewById(R.id.see_more_button);
         }
 
-        @Override
         public void bind(EventSummary event) {
             nameTextView.setText(event.getName());
             cityTextView.setText(event.getCity());
+
+            photoImageView.setTag(event.getId());
+            LiveData<Bitmap> imageLiveData = imageSourceProvider.getImageSource(event);
+            imageLoader.loadImage(event.getId(), imageLiveData, photoImageView, owner);
+
             seeMoreButton.setOnClickListener(v -> listener.navigateToDetails(event));
-            photoImageView.setImageBitmap(event.getImage());
         }
     }
 }
+

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.PastEvent;
@@ -18,7 +17,10 @@ import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
 import com.eventorium.data.event.repositories.AccountEventRepository;
 import com.eventorium.data.event.repositories.EventRepository;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
+import com.eventorium.presentation.shared.models.PagingMode;
+import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 
@@ -28,7 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import okhttp3.ResponseBody;
 
 @HiltViewModel
-public class EventViewModel extends ViewModel {
+public class EventViewModel extends PagedViewModel<EventSummary, EventFilter> {
 
     private final EventRepository repository;
     private final AccountEventRepository accountEventRepository;
@@ -39,20 +41,12 @@ public class EventViewModel extends ViewModel {
         this.accountEventRepository = accountEventRepository;
     }
 
-    public LiveData<Result<List<EventSummary>>> getEvents(){
-        return repository.getEvents();
-    }
-
     public LiveData<Result<Event>> createEvent(CreateEvent event) {
         return repository.createEvent(event);
     }
 
     public LiveData<Result<List<Event>>> getFutureEvents() {
         return repository.getFutureEvents();
-    }
-
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        return repository.searchEvents(keyword);
     }
 
     public LiveData<Result<EventDetails>> getEventDetails(Long id) {
@@ -99,10 +93,6 @@ public class EventViewModel extends ViewModel {
         return repository.getAgenda(id);
     }
 
-    public LiveData<Result<List<EventSummary>>> filterEvents(EventFilter filter) {
-        return repository.filterEvents(filter);
-    }
-  
     public LiveData<Result<EditableEvent>> getEditableEvent(Long id) {
         return repository.getEditableEvent(id);
     }
@@ -117,5 +107,14 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Result<EventRatingsStatistics>> getStatistics(Long id) {
         return repository.getStatistics(id);
+    }
+
+    @Override
+    protected LiveData<Result<PagedResponse<EventSummary>>> loadPage(PagingMode mode, int page, int size) {
+        return switch (mode) {
+            case DEFAULT -> repository.getEvents(page, size);
+            case SEARCH -> repository.searchEvents(searchQuery, page, size);
+            case FILTER -> repository.filterEvents(filterParams, page, size);
+        };
     }
 }

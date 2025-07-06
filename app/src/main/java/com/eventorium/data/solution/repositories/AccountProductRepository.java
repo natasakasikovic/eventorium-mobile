@@ -1,14 +1,18 @@
 package com.eventorium.data.solution.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessAsBoolean;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessfulResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.shared.models.PagedResponse;
+import com.eventorium.data.shared.models.Result;
 import com.eventorium.data.solution.models.product.ProductFilter;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.data.solution.services.AccountProductService;
-import com.eventorium.data.shared.models.Result;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,25 +54,25 @@ public class AccountProductRepository {
         return result;
     }
 
-    public LiveData<Result<List<ProductSummary>>> getProducts() {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.getProducts().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ProductSummary>>> getProducts(int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.getProducts(page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<ProductSummary>>> searchProducts(String keyword) {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.searchProducts(keyword).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ProductSummary>>> searchProducts(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.searchProducts(keyword, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<ProductSummary>>> filterProducts(ProductFilter filter) {
-        MutableLiveData<Result<List<ProductSummary>>> result = new MutableLiveData<>();
-        service.filterProducts(getFilterParams(filter)).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<ProductSummary>>> filterProducts(ProductFilter filter, int page, int size) {
+        MutableLiveData<Result<PagedResponse<ProductSummary>>> result = new MutableLiveData<>();
+        service.filterProducts(getFilterParams(filter, page, size)).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    private Map<String, String> getFilterParams(ProductFilter filter) {
+    private Map<String, String> getFilterParams(ProductFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
         addParamIfNotNull(params, "name", filter.getName());
@@ -78,6 +82,8 @@ public class AccountProductRepository {
         addParamIfNotNull(params, "minPrice", filter.getMinPrice());
         addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
         addParamIfNotNull(params, "availability", filter.getAvailability());;
+        addParamIfNotNull(params, "page", page);
+        addParamIfNotNull(params, "size", size);
 
         return params;
     }

@@ -1,13 +1,13 @@
 package com.eventorium.data.category.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.models.CategoryRequest;
 import com.eventorium.data.category.models.UpdateCategoryStatus;
-import com.eventorium.data.category.models.Category;
 import com.eventorium.data.category.services.CategoryProposalService;
 import com.eventorium.data.shared.models.Result;
 

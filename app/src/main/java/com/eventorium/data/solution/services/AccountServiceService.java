@@ -1,5 +1,6 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.ServiceSummary;
 
 import java.util.List;
@@ -16,14 +17,18 @@ import retrofit2.http.QueryMap;
 
 public interface AccountServiceService {
 
-    @GET("account/services/all")
-    Call<List<ServiceSummary>> getManageableServices();
+    @GET("account/services")
+    Call<PagedResponse<ServiceSummary>> getManageableServices(@Query("page") int page, @Query("size") int size);
 
-    @GET("account/services/filter/all")
-    Call<List<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
+    @GET("account/services/filter")
+    Call<PagedResponse<ServiceSummary>> filterManageableServices(@QueryMap Map<String, String> params);
 
-    @GET("account/services/search/all")
-    Call<List<ServiceSummary>> searchManageableServices(@Query("keyword") String keyword);
+    @GET("account/services/search")
+    Call<PagedResponse<ServiceSummary>> searchManageableServices(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("account/services/favourites")
     Call<List<ServiceSummary>> getFavouriteServices();

@@ -1,8 +1,13 @@
 package com.eventorium.presentation.homepage;
 
-import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
+import static com.eventorium.presentation.solution.fragments.service.ServiceDetailsFragment.ARG_ID;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,24 +17,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
-import com.eventorium.data.event.models.event.EventSummary;
-import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.solution.models.service.ServiceSummary;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.databinding.FragmentHomeBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
+import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.adapters.ServicesAdapter;
 import com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -69,7 +66,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureProductAdapter() {
-        productsAdapter = new ProductsAdapter(new ArrayList<>(), product -> {
+        ImageLoader loader = new ImageLoader();
+        productsAdapter = new ProductsAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                product -> viewModel.getProductImage(product.getId()),
+                product -> {
             NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
             Bundle args = new Bundle();
             args.putLong(ProductDetailsFragment.ARG_ID, product.getId());
@@ -78,21 +80,31 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureServiceAdapter() {
-        serviceAdapter = new ServicesAdapter(new ArrayList<>(), service -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, service.getId());
-            navController.navigate(R.id.action_home_to_service_details, args);
-        });
+        ImageLoader imageLoader = new ImageLoader();
+        serviceAdapter = new ServicesAdapter(
+                getViewLifecycleOwner(),
+                imageLoader,
+                service -> viewModel.getServiceImage(service.getId()),
+                service -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, service.getId());
+                    navController.navigate(R.id.action_home_to_service_details, args);
+                });
     }
 
     private void configureEventAdapter() {
-        eventsAdapter = new EventsAdapter(new ArrayList<>(), event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_home_to_event_details, args);
-        });
+        ImageLoader loader = new ImageLoader();
+        eventsAdapter = new EventsAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                event -> viewModel.getEventImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_home_to_event_details, args);
+                });
     }
 
     @Override
@@ -110,65 +122,22 @@ public class HomeFragment extends Fragment {
     private void observeTopEvents() {
         viewModel.getTopEvents().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> { eventsAdapter.setData(data);
-                          loadEventImages(data); }
+                data -> eventsAdapter.submitList(PagedListUtils.fromList(data))
         ));
     }
 
     private void observeTopProducts() {
         viewModel.getTopProducts().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> { productsAdapter.setData(data);
-                          loadProductImages(data); }
+                data -> productsAdapter.submitList(PagedListUtils.fromList(data))
         ));
-    }
-
-    private void loadProductImages(List<ProductSummary> products) {
-        products.forEach( product -> viewModel.getProductImage(product.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1) {
-                            productsAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     private void observeTopServices() {
         viewModel.getTopServices().observe(getViewLifecycleOwner(), result -> handleResult(
                 result,
-                data -> {serviceAdapter.setData(data);
-                         loadServiceImages(data);
-                }
+                data -> serviceAdapter.submitList(PagedListUtils.fromList(data))
         ));
-    }
-
-    private void loadServiceImages(List<ServiceSummary> services){
-        services.forEach(service -> viewModel.getServiceImage(service.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        service.setImage(image);
-                        int position = services.indexOf(service);
-                        if (position != -1) {
-                            serviceAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
-    }
-
-    private void loadEventImages(List<EventSummary> events){
-        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            eventsAdapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     private <T> void handleResult(Result<T> result, Consumer<T> onSuccess) {

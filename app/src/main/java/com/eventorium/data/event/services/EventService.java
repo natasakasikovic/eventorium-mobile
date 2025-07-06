@@ -10,6 +10,7 @@ import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventDetails;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.event.UpdateEvent;
+import com.eventorium.data.shared.models.PagedResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +30,8 @@ public interface EventService {
     @GET("events/{id}/details")
     Call<EventDetails> getEventDetails(@Path("id") Long id);
 
-    @GET("events/all")
-    Call<List<EventSummary>> getAll();
+    @GET("events")
+    Call<PagedResponse<EventSummary>> getEvents(@Query("page") int page, @Query("size") int size);
 
     @GET("events/top-five-events")
     Call<List<EventSummary>> getTopEvents();
@@ -44,8 +45,12 @@ public interface EventService {
     @PUT("events/{id}/agenda")
     Call<ResponseBody> createAgenda(@Path("id") Long id, @Body List<Activity> agenda);
 
-    @GET("events/search/all")
-    Call<List<EventSummary>> searchEvents(@Query("keyword") String keyword);
+    @GET("events/search")
+    Call<PagedResponse<EventSummary>> searchEvents(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @GET("account/events/my-attending-events")
     Call<List<CalendarEvent>> getAttendingEvents();
@@ -62,8 +67,8 @@ public interface EventService {
     @GET("events/{id}/agenda")
     Call<List<Activity>> getAgenda(@Path("id") Long id);
 
-    @GET("events/filter/all")
-    Call<List<EventSummary>> filterEvents(@QueryMap Map<String, String> params);
+    @GET("events/filter")
+    Call<PagedResponse<EventSummary>> filterEvents(@QueryMap Map<String, String> params);
   
     @GET("events/{id}")
     Call<EditableEvent> getEditableEvent(@Path("id") Long id);

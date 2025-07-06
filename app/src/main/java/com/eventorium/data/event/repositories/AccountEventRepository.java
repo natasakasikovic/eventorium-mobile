@@ -1,12 +1,15 @@
 package com.eventorium.data.event.repositories;
 
-import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.*;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessfulResponse;
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleVoidResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.services.AccountEventService;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.shared.models.Result;
 
 import java.util.List;
@@ -19,15 +22,15 @@ public class AccountEventRepository {
         this.service = service;
     }
 
-    public LiveData<Result<List<EventSummary>>> getManageableEvents() {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.getManageableEvents().enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> getManageableEvents(int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.getManageableEvents(page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 
-    public LiveData<Result<List<EventSummary>>> searchEvents(String keyword) {
-        MutableLiveData<Result<List<EventSummary>>> result = new MutableLiveData<>();
-        service.searchEvents(keyword).enqueue(handleGeneralResponse(result));
+    public LiveData<Result<PagedResponse<EventSummary>>> searchEvents(String keyword, int page, int size) {
+        MutableLiveData<Result<PagedResponse<EventSummary>>> result = new MutableLiveData<>();
+        service.searchEvents(keyword, page, size).enqueue(handleGeneralResponse(result));
         return result;
     }
 

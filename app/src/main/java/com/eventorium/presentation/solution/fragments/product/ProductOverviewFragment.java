@@ -1,9 +1,17 @@
 package com.eventorium.presentation.solution.fragments.product;
 
-import static com.eventorium.R.*;
+import static com.eventorium.R.id;
 import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,23 +21,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.category.models.Category;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.solution.models.product.ProductFilter;
-import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentProductOverviewBinding;
 import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -50,6 +49,8 @@ public class ProductOverviewFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ProductsAdapter adapter;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
     public ProductOverviewFragment() { }
 
@@ -78,27 +79,27 @@ public class ProductOverviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         observeProducts();
         setUpListeners();
     }
 
     private void configureAdapter(){
-        adapter = new ProductsAdapter(new ArrayList<>(), product  -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_productOverview_to_productDetails, args);
-        });
+        ImageLoader loader = new ImageLoader();
+        adapter = new ProductsAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                product -> viewModel.getProductImage(product.getId()),
+                product -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, product.getId());
+                    navController.navigate(R.id.action_productOverview_to_productDetails, args);
+                });
     }
 
-    private void observeProducts(){
-        viewModel.getProducts().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadProductImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+    private void observeProducts() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), products -> {
+            adapter.submitList(products);
         });
     }
 
@@ -106,15 +107,13 @@ public class ProductOverviewFragment extends Fragment {
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() { // search listener
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchProducts(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadProductImages(result.getData());
-                    }
-                    else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
+
             }
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -165,17 +164,7 @@ public class ProductOverviewFragment extends Fragment {
                 .build();
 
 
-        observeFilteringProducts(filter);
-    }
-
-    private void observeFilteringProducts(ProductFilter filter) {
-        viewModel.filterProducts(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadProductImages(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-        });
+        viewModel.filter(filter);
     }
 
     private Double parsePrice(TextInputEditText textInput) {
@@ -234,19 +223,6 @@ public class ProductOverviewFragment extends Fragment {
             spinner.setAdapter(adapter);
             spinner.setTag(categories);
         });
-    }
-
-    private void loadProductImages(List<ProductSummary> products) {
-        products.forEach( product -> viewModel.getProductImage(product.getId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1)
-                            adapter.notifyItemChanged(position);
-                    }
-                })
-        );
     }
 
     @Override

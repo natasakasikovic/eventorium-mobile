@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,19 +22,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
-import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.data.auth.models.AuthResponse;
+import com.eventorium.data.auth.models.LoginRequest;
 import com.eventorium.databinding.FragmentLoginBinding;
 import com.eventorium.presentation.MainActivity;
 import com.eventorium.presentation.WebSocketForegroundService;
 import com.eventorium.presentation.auth.viewmodels.LoginViewModel;
-import com.eventorium.presentation.notification.viewmodels.NotificationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;

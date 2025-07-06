@@ -69,8 +69,8 @@ dependencies {
     implementation libs.hilt.android.v2405
     annotationProcessor libs.hilt.android.compiler
     implementation libs.androidx.hilt.lifecycle.viewmodel
+    implementation "androidx.paging:paging-runtime:2.1.2"
     annotationProcessor 'androidx.hilt:hilt-compiler:1.0.0'
-    implementation libs.kotlinx.serialization.json
 
     implementation libs.jjwt.api
     runtimeOnly libs.jjwt.impl

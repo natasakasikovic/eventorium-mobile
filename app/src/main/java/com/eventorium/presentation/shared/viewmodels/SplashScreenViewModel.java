@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.concurrent.Executors;
 
+import lombok.Getter;
+
+@Getter
 public class SplashScreenViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(true);
@@ -20,7 +23,4 @@ public class SplashScreenViewModel extends ViewModel {
         });
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
-    }
 }

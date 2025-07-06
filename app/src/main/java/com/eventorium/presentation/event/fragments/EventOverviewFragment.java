@@ -3,6 +3,13 @@ package com.eventorium.presentation.event.fragments;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,23 +19,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventFilter;
-import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.data.event.models.eventtype.EventType;
 import com.eventorium.data.shared.models.City;
-
 import com.eventorium.databinding.FragmentEventOverviewBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.EventViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -57,6 +56,9 @@ public class EventOverviewFragment extends Fragment {
     private View dialogView;
     private BottomSheetDialog bottomSheetDialog;
 
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
+
     public EventOverviewFragment() { }
 
     public static EventOverviewFragment newInstance() {
@@ -76,13 +78,17 @@ public class EventOverviewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentEventOverviewBinding.inflate(inflater, container, false);
-
-        adapter = new EventsAdapter(new ArrayList<>(), event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_overview_to_event_details, args);
-        });
+        ImageLoader imageLoader = new ImageLoader();
+        adapter = new EventsAdapter(
+                getViewLifecycleOwner(),
+                imageLoader,
+                event -> eventTypeViewModel.getImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_overview_to_event_details, args);
+                });
         binding.eventsRecycleView.setAdapter(adapter);
 
         return binding.getRoot();
@@ -96,12 +102,8 @@ public class EventOverviewFragment extends Fragment {
     }
 
     private void setUpObserver(){
-        viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null){
-                adapter.setData(result.getData());
-                loadEventImage(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
+        viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
+            adapter.submitList(events);
         });
     }
 
@@ -131,32 +133,15 @@ public class EventOverviewFragment extends Fragment {
         return selectedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy."));
     }
 
-
-    private void loadEventImage(List<EventSummary> events) {
-        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
-    }
-
     private void setUpListeners(){
         binding.searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadEventImage(result.getData());
-                    } else
-                         Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 
@@ -223,7 +208,7 @@ public class EventOverviewFragment extends Fragment {
 
         EventFilter filter = new EventFilter(name, description, eventTypeName, maxParticipants, cityName, from, to);
 
-        observeFilteringEvents(filter);
+        viewModel.filter(filter);
     }
 
     private Integer parseInteger(TextInputEditText textInput) {
@@ -284,16 +269,6 @@ public class EventOverviewFragment extends Fragment {
             adapter.notifyDataSetChanged();
             spinner.setAdapter(adapter);
             spinner.setTag(eventTypes);
-        });
-    }
-
-    private void observeFilteringEvents(EventFilter filter) {
-        viewModel.filterEvents(filter).observe(getViewLifecycleOwner(), result -> {
-            if (result.getError() == null) {
-                adapter.setData(result.getData());
-                loadEventImage(result.getData());
-            } else
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
         });
     }
 

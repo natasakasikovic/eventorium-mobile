@@ -1,6 +1,11 @@
 package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,11 +16,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.Event;
 import com.eventorium.data.event.models.event.EventSummary;
@@ -25,10 +25,7 @@ import com.eventorium.presentation.event.fragments.budget.BudgetItemsListFragmen
 import com.eventorium.presentation.event.listeners.OnManageEventListener;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.event.viewmodels.ManageableEventViewModel;
-import com.eventorium.presentation.solution.listeners.OnManageListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.eventorium.presentation.shared.utils.ImageLoader;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -36,11 +33,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ManageableEventsFragment extends Fragment {
 
     private FragmentManageableEventsBinding binding;
-    private List<EventSummary> events;
     private ManageableEventAdapter adapter;
     private ManageableEventViewModel viewModel;
     private EventTypeViewModel eventTypeViewModel;
-    private RecyclerView recyclerView;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
     NavController navController;
 
     public ManageableEventsFragment() {}
@@ -59,9 +56,10 @@ public class ManageableEventsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentManageableEventsBinding.inflate(inflater, container, false);
+        viewModel.refresh();
         setUpAdapter();
         return binding.getRoot();
     }
@@ -69,38 +67,43 @@ public class ManageableEventsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadEvents();
+        observeEvents();
         setUpSearchListener();
     }
 
     private void setUpAdapter() {
-        recyclerView = binding.eventsRecycleView;
-        adapter = new ManageableEventAdapter(new ArrayList<>(), new OnManageEventListener() {
+        RecyclerView recyclerView = binding.eventsRecycleView;
+        ImageLoader imageLoader = new ImageLoader();
+        adapter = new ManageableEventAdapter(
+                getViewLifecycleOwner(),
+                imageLoader,
+                event -> eventTypeViewModel.getImage(event.getImageId()),
+                new OnManageEventListener() {
 
-            @Override
-            public void onSeeMoreClick(EventSummary item) {
-                navController.navigate(R.id.action_manage_events_to_event_details,
-                        EventDetailsFragment.newInstance(item.getId()).getArguments());
-            }
+                    @Override
+                    public void onSeeMoreClick(EventSummary item) {
+                        navController.navigate(R.id.action_manage_events_to_event_details,
+                                EventDetailsFragment.newInstance(item.getId()).getArguments());
+                    }
 
-            @Override
-            public void onEditClick(EventSummary item) {
-                navController.navigate(R.id.action_manage_events_to_edit_event,
-                        EditEventFragment.newInstance(item.getId()).getArguments());
-            }
+                    @Override
+                    public void onEditClick(EventSummary item) {
+                        navController.navigate(R.id.action_manage_events_to_edit_event,
+                                EditEventFragment.newInstance(item.getId()).getArguments());
+                    }
 
-            @Override
-            public void navigateToBudget(EventSummary item) {
-                Event event = Event.builder().id(item.getId()).build();
-                navController.navigate(R.id.action_manage_events_to_budget,
-                        BudgetItemsListFragment.newInstance(event, false).getArguments());
-            }
+                    @Override
+                    public void navigateToBudget(EventSummary item) {
+                        Event event = Event.builder().id(item.getId()).build();
+                        navController.navigate(R.id.action_manage_events_to_budget,
+                                BudgetItemsListFragment.newInstance(event, false).getArguments());
+                    }
 
-            @Override
-            public void onDeleteClick(EventSummary item) {
-                throw new UnsupportedOperationException("Not supported in this context.");
-            }
-        });
+                    @Override
+                    public void onDeleteClick(EventSummary item) {
+                        throw new UnsupportedOperationException("Not supported in this context.");
+                    }
+                });
         recyclerView.setAdapter(adapter);
 
     }
@@ -110,13 +113,11 @@ public class ManageableEventsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String keyword) {
-                viewModel.searchEvents(keyword).observe(getViewLifecycleOwner(), result -> {
-                    if (result.getError() == null) {
-                        adapter.setData(result.getData());
-                        loadEventImage(result.getData());
-                    } else
-                        Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_LONG).show();
-                });
+                if (searchRunnable != null)
+                    handler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> viewModel.search(keyword);
+                handler.postDelayed(searchRunnable, 300);
                 return true;
             }
 
@@ -127,29 +128,10 @@ public class ManageableEventsFragment extends Fragment {
         });
     }
 
-    private void loadEvents() {
-        viewModel.getEvents().observe(getViewLifecycleOwner(), result -> {
-            if (result.getData() != null) {
-                events = result.getData();
-                adapter.setEvents(events);
-                loadEventImage(events);
-            } else {
-                Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
-            }
+    private void observeEvents() {
+        viewModel.getItems().observe(getViewLifecycleOwner(), events -> {
+            adapter.submitList(events);
         });
-    }
-
-    private void loadEventImage(List<EventSummary> events) {
-        events.forEach( event -> eventTypeViewModel.getImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 
     @Override

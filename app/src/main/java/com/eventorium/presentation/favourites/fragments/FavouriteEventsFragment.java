@@ -3,6 +3,10 @@ package com.eventorium.presentation.favourites.fragments;
 import static com.eventorium.presentation.event.fragments.EventDetailsFragment.ARG_EVENT_ID;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,17 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import androidx.paging.PagedList;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.EventSummary;
 import com.eventorium.databinding.FragmentFavouriteEventsBinding;
 import com.eventorium.presentation.event.adapters.EventsAdapter;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 
 import java.util.List;
 
@@ -59,38 +61,33 @@ public class FavouriteEventsFragment extends Fragment {
         loadFavouriteEvents();
     }
 
-    public void loadFavouriteEvents() {
+    private void loadFavouriteEvents() {
         viewModel.getFavouriteEvents().observe(getViewLifecycleOwner(), result -> {
             if (result.getData() != null) {
                 events = result.getData();
                 setupAdapter();
-                loadEventImages(events);
-            } else
+
+                PagedList<EventSummary> pagedList = PagedListUtils.fromList(events);
+                adapter.submitList(pagedList);
+            } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
     private void setupAdapter() {
-        adapter = new EventsAdapter(events, event -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_EVENT_ID, event.getId());
-            navController.navigate(R.id.action_fav_to_event_details, args);
-        });
+        ImageLoader loader = new ImageLoader();
+        adapter = new EventsAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                event -> viewModel.getEventImage(event.getImageId()),
+                event -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_EVENT_ID, event.getId());
+                    navController.navigate(R.id.action_fav_to_event_details, args);
+                });
 
         binding.eventsRecycleView.setAdapter(adapter);
-    }
-
-    private void loadEventImages(List<EventSummary> events){
-        events.forEach( event -> viewModel.getEventImage(event.getImageId()).
-                observe (getViewLifecycleOwner(), image -> {
-                    if (image != null){
-                        event.setImage(image);
-                        int position = events.indexOf(event);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                }));
     }
 }

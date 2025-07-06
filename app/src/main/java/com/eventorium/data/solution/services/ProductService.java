@@ -1,9 +1,10 @@
 package com.eventorium.data.solution.services;
 
+import com.eventorium.data.shared.models.ImageResponse;
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.product.CreateProduct;
 import com.eventorium.data.solution.models.product.Product;
 import com.eventorium.data.solution.models.product.ProductSummary;
-import com.eventorium.data.shared.models.ImageResponse;
 import com.eventorium.data.solution.models.product.UpdateProduct;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
 
@@ -27,8 +28,8 @@ import retrofit2.http.QueryMap;
 
 public interface ProductService {
 
-    @GET("products/all")
-    Call<List<ProductSummary>> getAllProducts();
+    @GET("products")
+    Call<PagedResponse<ProductSummary>> getProducts(@Query("page") int page, @Query("size") int size);
 
     @GET("products/{id}")
     Call<Product> getProduct(@Path("id") Long id);
@@ -45,8 +46,12 @@ public interface ProductService {
     @GET("products/top-five-products")
     Call<List<ProductSummary>> getTopProducts();
 
-    @GET("products/search/all")
-    Call<List<ProductSummary>> searchProducts(@Query("keyword") String keyword);
+    @GET("products/search")
+    Call<PagedResponse<ProductSummary>> searchProducts(
+            @Query("keyword") String keyword,
+            @Query("page") int page,
+            @Query("size") int size
+    );
 
     @POST("products")
     Call<Product> createProduct(@Body CreateProduct product);
@@ -58,8 +63,8 @@ public interface ProductService {
     @HTTP(method = "DELETE", path = "products/{id}/images", hasBody = true)
     Call<ResponseBody> deleteImages(@Path("id") Long id, @Body List<RemoveImageRequest> images);
 
-    @GET("products/filter/all")
-    Call<List<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
+    @GET("products/filter")
+    Call<PagedResponse<ProductSummary>> filterProducts(@QueryMap Map<String, String> params);
 
     @DELETE("products/{id}")
     Call<ResponseBody> deleteProduct(@Path("id") Long id);

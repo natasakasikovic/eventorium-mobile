@@ -2,7 +2,6 @@ package com.eventorium.data.company.models;
 
 import com.eventorium.data.shared.models.City;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

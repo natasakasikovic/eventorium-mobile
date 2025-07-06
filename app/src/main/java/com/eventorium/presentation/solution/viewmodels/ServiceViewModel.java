@@ -9,6 +9,7 @@ import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.eventorium.data.shared.models.PagedResponse;
 import com.eventorium.data.solution.models.service.CreateService;
 import com.eventorium.data.solution.models.service.Service;
 import com.eventorium.data.solution.models.service.ServiceFilter;
@@ -18,7 +19,9 @@ import com.eventorium.data.solution.repositories.AccountServiceRepository;
 import com.eventorium.data.solution.repositories.ServiceRepository;
 import com.eventorium.data.shared.models.Result;
 import com.eventorium.presentation.shared.models.ImageItem;
+import com.eventorium.presentation.shared.models.PagingMode;
 import com.eventorium.presentation.shared.models.RemoveImageRequest;
+import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 
 import java.util.List;
 
@@ -27,7 +30,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class ServiceViewModel extends ViewModel {
+public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilter> {
 
     private final ServiceRepository serviceRepository;
     private final AccountServiceRepository accountServiceRepository;
@@ -51,10 +54,6 @@ public class ServiceViewModel extends ViewModel {
 
     public LiveData<Result<List<ImageItem>>> getServiceImages(Long id) {
         return serviceRepository.getServiceImages(id);
-    }
-
-    public LiveData<Result<List<ServiceSummary>>> getServices(){
-        return serviceRepository.getServices();
     }
 
     public LiveData<Result<Service>> updateService(Long serviceId, UpdateService dto) {
@@ -81,19 +80,20 @@ public class ServiceViewModel extends ViewModel {
         return accountServiceRepository.addFavouriteService(id);
     }
 
-    public LiveData<Result<List<ServiceSummary>>> searchServices(String keyword) {
-        return serviceRepository.searchServices(keyword);
-    }
-
-    public LiveData<Result<List<ServiceSummary>>> filterServices(ServiceFilter filter) {
-        return serviceRepository.filterServices(filter);
-    }
-
     public LiveData<Result<Void>> deleteService(Long id) {
         return serviceRepository.deleteService(id);
     }
 
     public LiveData<Result<Void>> removeImages(Long id, List<RemoveImageRequest> removedImages) {
         return serviceRepository.deleteImages(id, removedImages);
+    }
+
+    @Override
+    protected LiveData<Result<PagedResponse<ServiceSummary>>> loadPage(PagingMode mode, int page, int size) {
+        return switch (mode) {
+            case DEFAULT -> serviceRepository.getServices(page, size);
+            case SEARCH -> serviceRepository.searchServices(searchQuery, page, size);
+            case FILTER -> serviceRepository.filterServices(filterParams, page, size);
+        };
     }
 }

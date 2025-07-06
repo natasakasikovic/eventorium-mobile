@@ -1,12 +1,6 @@
 package com.eventorium.presentation.event.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.eventorium.R;
+import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.event.models.event.CreateEvent;
 import com.eventorium.data.event.models.eventtype.EventType;
-import com.eventorium.data.event.models.Privacy;
 import com.eventorium.data.shared.models.City;
 import com.eventorium.databinding.FragmentCreateEventBinding;
 import com.eventorium.presentation.event.fragments.budget.BudgetPlanningFragment;
@@ -26,7 +25,6 @@ import com.eventorium.presentation.event.viewmodels.EventViewModel;
 import com.eventorium.presentation.shared.viewmodels.CityViewModel;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
-
 
 import java.time.Instant;
 import java.time.LocalDate;

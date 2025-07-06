@@ -3,6 +3,10 @@ package com.eventorium.presentation.favourites.fragments;
 import static com.eventorium.presentation.solution.fragments.product.ProductDetailsFragment.ARG_ID;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,16 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+import androidx.paging.PagedList;
 
 import com.eventorium.R;
 import com.eventorium.data.solution.models.product.ProductSummary;
 import com.eventorium.databinding.FragmentFavouriteProductsBinding;
 import com.eventorium.presentation.favourites.viewmodels.FavouritesViewModel;
+import com.eventorium.presentation.shared.utils.ImageLoader;
+import com.eventorium.presentation.shared.utils.PagedListUtils;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
 
 import java.util.List;
@@ -64,7 +66,9 @@ public class FavouriteProductsFragment extends Fragment {
             if (result.getData() != null) {
                 products = result.getData();
                 setupAdapter();
-                loadProductImages();
+
+                PagedList<ProductSummary> pagedList = PagedListUtils.fromList(products);
+                adapter.submitList(pagedList);
             } else {
                 Toast.makeText(requireContext(), result.getError(), Toast.LENGTH_SHORT).show();
             }
@@ -72,27 +76,18 @@ public class FavouriteProductsFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        adapter = new ProductsAdapter(products, product -> {
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-            Bundle args = new Bundle();
-            args.putLong(ARG_ID, product.getId());
-            navController.navigate(R.id.action_fav_to_product_details, args);
-        });
+        ImageLoader loader = new ImageLoader();
+        adapter = new ProductsAdapter(
+                getViewLifecycleOwner(),
+                loader,
+                product -> viewModel.getProductImage(product.getId()),
+                product -> {
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                    Bundle args = new Bundle();
+                    args.putLong(ARG_ID, product.getId());
+                    navController.navigate(R.id.action_fav_to_product_details, args);
+                });
         binding.productsRecycleView.setAdapter(adapter);
-    }
-
-    private void loadProductImages() {
-        products.forEach(product -> viewModel.getProductImage(product.getId())
-                .observe(getViewLifecycleOwner(), image -> {
-                    if (image != null) {
-                        product.setImage(image);
-                        int position = products.indexOf(product);
-                        if (position != -1) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                })
-        );
     }
 
     @Override

@@ -1,16 +1,15 @@
 package com.eventorium.presentation.event.fragments.budget;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.eventorium.R;
 import com.eventorium.data.event.models.event.Event;
@@ -94,15 +93,20 @@ public class BudgetPlanningFragment extends Fragment {
     }
 
     private void showExitConfirmationDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle(R.string.exit_event_creation)
-                .setMessage(R.string.exit_event_creation_confirmation)
-                .setPositiveButton(R.string.exit, (dialog, which) -> {
-                    NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
-                    navController.popBackStack(R.id.homepageFragment, false);
-                })
-                .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
-                .show();
+        if(canAdvance) {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.exit_event_creation)
+                    .setMessage(R.string.exit_event_creation_confirmation)
+                    .setPositiveButton(R.string.exit, (dialog, which) -> {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+                        navController.popBackStack(R.id.homepageFragment, false);
+                    })
+                    .setNegativeButton(R.string.stay, (dialog, which) -> dialog.dismiss())
+                    .show();
+        } else {
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.fragment_nav_content_main);
+            navController.popBackStack(R.id.homepageFragment, false);
+        }
     }
 
     @Override

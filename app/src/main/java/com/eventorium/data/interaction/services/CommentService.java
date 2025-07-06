@@ -1,7 +1,7 @@
 package com.eventorium.data.interaction.services;
 
-import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.Comment;
+import com.eventorium.data.interaction.models.comment.CreateComment;
 import com.eventorium.data.interaction.models.comment.UpdateComment;
 import com.eventorium.data.interaction.models.review.ReviewType;
 
