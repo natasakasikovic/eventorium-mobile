@@ -31,6 +31,7 @@ public class ManageableEventViewModel extends PagedViewModel<EventSummary, Event
             case DEFAULT -> repository.getManageableEvents(page, size);
             case SEARCH -> repository.searchEvents(searchQuery, page, size);
             case FILTER -> throw new NotImplementedError("Manage events filter");
+            case SORT -> throw new NotImplementedError("Manage events sort");
         };
     }
 }

@@ -31,6 +31,9 @@ public interface ProductService {
     @GET("products")
     Call<PagedResponse<ProductSummary>> getProducts(@Query("page") int page, @Query("size") int size);
 
+    @GET("products")
+    Call<PagedResponse<ProductSummary>> getSortedProducts(@Query("sort") String sort, @Query("page") int page, @Query("size") int size);
+
     @GET("products/{id}")
     Call<Product> getProduct(@Path("id") Long id);
 

@@ -92,6 +92,7 @@ public class ProductViewModel extends PagedViewModel<ProductSummary, ProductFilt
             case DEFAULT -> repository.getProducts(page, size);
             case SEARCH -> repository.searchProducts(searchQuery, page, size);
             case FILTER -> repository.filterProducts(filterParams, page, size);
+            case SORT -> repository.getSortedProducts(sortCriteria, page, size);
         };
     }
 }

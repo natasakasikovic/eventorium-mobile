@@ -28,6 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import kotlin.NotImplementedError;
 
 @HiltViewModel
 public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilter> {
@@ -94,6 +95,7 @@ public class ServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilt
             case DEFAULT -> serviceRepository.getServices(page, size);
             case SEARCH -> serviceRepository.searchServices(searchQuery, page, size);
             case FILTER -> serviceRepository.filterServices(filterParams, page, size);
+            case SORT -> throw new NotImplementedError("Services sort");
         };
     }
 }

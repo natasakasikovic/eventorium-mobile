@@ -256,4 +256,8 @@
     <string name="exit_event_creation_confirmation">If you leave now, you won’t be able to continue this process later. Do you want to exit?</string>
     <string name="exit">Exit</string>
     <string name="stay">Stay</string>
+    <string name="sort_by">Sort by</string>
+    <string name="order">Order</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 </resources>
