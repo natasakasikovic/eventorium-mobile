@@ -260,4 +260,5 @@
     <string name="order">Order</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
+    <string name="suggest_categories">Suggest categories</string>
 </resources>
