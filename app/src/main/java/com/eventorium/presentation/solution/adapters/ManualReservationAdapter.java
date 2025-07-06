@@ -50,6 +50,19 @@ public class ManualReservationAdapter extends RecyclerView.Adapter<ManualReserva
         notifyDataSetChanged();
     }
 
+    public void removeReservation(Long id) {
+        int position = -1;
+        for (int i = 0; i < reservations.size(); i++) {
+            if (reservations.get(i).getId().equals(id)) {
+                position = i;
+                reservations.remove(i);
+                break;
+            }
+        }
+        if (position != -1)
+            notifyItemRemoved(position);
+    }
+
     public class ManualReservationViewHolder extends RecyclerView.ViewHolder {
 
         Button acceptButton, declineButton, serviceButton, eventButton;

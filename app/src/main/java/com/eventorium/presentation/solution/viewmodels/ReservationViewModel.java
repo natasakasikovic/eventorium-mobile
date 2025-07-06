@@ -26,25 +26,14 @@ import lombok.Getter;
 public class ReservationViewModel extends ViewModel {
 
     private final ReservationRepository repository;
-    private final MutableLiveData<List<Reservation>> reservations = new MutableLiveData<>();
 
     @Inject
     public ReservationViewModel(ReservationRepository repository) {
         this.repository = repository;
     }
 
-    public void observePendingReservations() {
-        repository.getPendingReservations().observeForever(this.reservations::postValue);
-    }
-
     public LiveData<List<Reservation>> getPendingReservations() {
-        return reservations;
-    }
-
-    public void removeReservation(Long id) {
-        reservations.setValue(Objects.requireNonNull(reservations.getValue()).stream()
-                .filter(reservation -> !reservation.getId().equals(id))
-                .collect(toList()));
+        return repository.getPendingReservations();
     }
 
     public LiveData<Result<Reservation>> updateReservation(Long id, Status status) {
@@ -54,11 +43,5 @@ public class ReservationViewModel extends ViewModel {
     public LiveData<Result<Void>> reserveService(String startingTime, String endingTime, Double plannedAmount, Long eventId, Long serviceId) {
         ReservationRequest request = new ReservationRequest(startingTime, endingTime, plannedAmount);
         return repository.reserveService(request, eventId, serviceId);
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        repository.getPendingReservations().removeObserver(reservations::postValue);
     }
 }

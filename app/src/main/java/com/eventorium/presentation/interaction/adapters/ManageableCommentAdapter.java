@@ -35,9 +35,8 @@ public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCom
                 break;
             }
         }
-        if (position != -1) {
+        if (position != -1)
             notifyItemRemoved(position);
-        }
     }
 
 
