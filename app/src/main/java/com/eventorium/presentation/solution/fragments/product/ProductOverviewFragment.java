@@ -32,6 +32,7 @@ import com.eventorium.presentation.category.viewmodels.CategoryViewModel;
 import com.eventorium.presentation.event.viewmodels.EventTypeViewModel;
 import com.eventorium.presentation.shared.utils.ImageLoader;
 import com.eventorium.presentation.solution.adapters.ProductsAdapter;
+import com.eventorium.presentation.solution.helpers.SortBottomSheetDialogHelper;
 import com.eventorium.presentation.solution.viewmodels.ProductViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
@@ -51,6 +52,7 @@ public class ProductOverviewFragment extends Fragment {
     private EventTypeViewModel eventTypeViewModel;
     private CategoryViewModel categoryViewModel;
     private ProductsAdapter adapter;
+    private SortBottomSheetDialogHelper helper;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
 
@@ -65,8 +67,9 @@ public class ProductOverviewFragment extends Fragment {
         binding = FragmentProductOverviewBinding.inflate(inflater, container, false);
 
         initializeViewModels();
-
         configureAdapter();
+        helper = new SortBottomSheetDialogHelper();
+
         binding.productsRecycleView.setAdapter(adapter);
 
         return binding.getRoot();
@@ -181,49 +184,9 @@ public class ProductOverviewFragment extends Fragment {
     }
 
     private void onSortBottomSheetDismiss(BottomSheetDialog dialogView) {
-        String sortCriteria = extractSortCriteria(dialogView);
+        String sortCriteria = helper.extractSortCriteria(dialogView);
         if (sortCriteria != null)
             viewModel.sort(sortCriteria);
-    }
-
-    private String extractSortCriteria(BottomSheetDialog dialogView) {
-        RadioGroup radioGroupSortField = dialogView.findViewById(R.id.radioGroupSortField);
-        RadioGroup radioGroupOrder = dialogView.findViewById(R.id.radioGroupOrder);
-
-        int selectedSortFieldId = radioGroupSortField.getCheckedRadioButtonId();
-        int selectedOrderId = radioGroupOrder.getCheckedRadioButtonId();
-
-        if (selectedSortFieldId == -1 || selectedOrderId == -1)
-            return null;
-
-        RadioButton selectedSortField = dialogView.findViewById(selectedSortFieldId);
-        RadioButton selectedOrder = dialogView.findViewById(selectedOrderId);
-
-        String sortField = getSortField(selectedSortField.getId());
-        String sortDirection = getSortDirection(selectedOrder.getText().toString());
-
-        return String.format("%s,%s", sortField, sortDirection);
-    }
-
-    private String getSortField(int radioButtonId) {
-        if (radioButtonId == R.id.radioName)
-            return "name";
-        else if (radioButtonId == R.id.radioDescription)
-            return "description";
-        else if (radioButtonId == R.id.radioDiscount)
-            return "discount";
-        else
-            return "name"; // default fallback
-    }
-
-    private String getSortDirection(String text) {
-        text = text.toLowerCase();
-        if (text.contains("asc"))
-            return "asc";
-        else if (text.contains("desc"))
-            return "desc";
-        else
-            return "asc"; // default fallback
     }
 
     private Double parsePrice(TextInputEditText textInput) {
