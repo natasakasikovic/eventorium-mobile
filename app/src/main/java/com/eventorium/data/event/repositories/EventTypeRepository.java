@@ -1,5 +1,6 @@
 package com.eventorium.data.event.repositories;
 
+import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGeneralResponse;
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleGetImage;
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessAsBoolean;
 import static com.eventorium.data.shared.utils.RetrofitCallbackHelper.handleSuccessfulResponse;
@@ -34,9 +35,9 @@ public class EventTypeRepository {
         this.eventTypeService = eventTypeService;
     }
 
-    public LiveData<EventType> createEventType(CreateEventType eventType) {
-        MutableLiveData<EventType> liveData = new MutableLiveData<>();
-        eventTypeService.createEventType(eventType).enqueue(handleSuccessfulResponse(liveData));
+    public LiveData<Result<EventType>> createEventType(CreateEventType eventType) {
+        MutableLiveData<Result<EventType>> liveData = new MutableLiveData<>();
+        eventTypeService.createEventType(eventType).enqueue(handleGeneralResponse(liveData));
         return liveData;
     }
 

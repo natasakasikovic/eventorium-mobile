@@ -37,10 +37,6 @@ public class CategoryViewModel extends ViewModel {
         return categories;
     }
 
-    public LiveData<Category> getSelectedCategory() {
-        return selectedCategory;
-    }
-
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
