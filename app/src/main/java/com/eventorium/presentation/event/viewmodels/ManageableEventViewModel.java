@@ -13,7 +13,6 @@ import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
 
 @HiltViewModel
 public class ManageableEventViewModel extends PagedViewModel<EventSummary, EventFilter> {
@@ -30,8 +29,8 @@ public class ManageableEventViewModel extends PagedViewModel<EventSummary, Event
         return switch (mode) {
             case DEFAULT -> repository.getManageableEvents(page, size);
             case SEARCH -> repository.searchEvents(searchQuery, page, size);
-            case FILTER -> throw new NotImplementedError("Manage events filter");
-            case SORT -> throw new NotImplementedError("Manage events sort");
+            case FILTER -> throw new UnsupportedOperationException("Manageable events filter not supported");
+            case SORT -> throw new UnsupportedOperationException("Manageable events sort not supported");
         };
     }
 }

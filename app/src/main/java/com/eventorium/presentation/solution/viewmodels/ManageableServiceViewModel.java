@@ -14,7 +14,7 @@ import com.eventorium.presentation.shared.viewmodels.PagedViewModel;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
+
 
 @HiltViewModel
 public class ManageableServiceViewModel extends PagedViewModel<ServiceSummary, ServiceFilter> {
@@ -32,7 +32,7 @@ public class ManageableServiceViewModel extends PagedViewModel<ServiceSummary, S
             case DEFAULT -> repository.getManageableServices(page, size);
             case SEARCH -> repository.searchServices(searchQuery, page, size);
             case FILTER -> repository.filterServices(filterParams, page, size);
-            case SORT -> throw new NotImplementedError("Manage services sort");
+            case SORT -> throw new UnsupportedOperationException("Manageable services sort not supported");
         };
     }
 }

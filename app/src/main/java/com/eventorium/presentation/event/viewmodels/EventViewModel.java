@@ -27,7 +27,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import kotlin.NotImplementedError;
 import okhttp3.ResponseBody;
 
 @HiltViewModel
