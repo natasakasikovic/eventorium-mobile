@@ -75,9 +75,10 @@ public class AccountServiceRepository {
     private Map<String, String> getFilterParams(ServiceFilter filter, int page, int size) {
         Map<String, String> params = new HashMap<>();
 
-
+        addParamIfNotNull(params, "name", filter.getName());
+        addParamIfNotNull(params, "description", filter.getDescription());
         addParamIfNotNull(params, "category", filter.getCategory());
-        addParamIfNotNull(params, "eventType", filter.getType());
+        addParamIfNotNull(params, "type", filter.getType());
         addParamIfNotNull(params, "minPrice", filter.getMinPrice());
         addParamIfNotNull(params, "maxPrice", filter.getMaxPrice());
         addParamIfNotNull(params, "availability", filter.getAvailability());

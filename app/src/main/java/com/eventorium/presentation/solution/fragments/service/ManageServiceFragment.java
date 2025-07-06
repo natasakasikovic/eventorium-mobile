@@ -184,12 +184,19 @@ public class ManageServiceFragment extends Fragment {
                 .isChecked();;
         TextInputEditText minTextField = dialogView.findViewById(R.id.minPriceEditText);
         TextInputEditText maxTextField = dialogView.findViewById(R.id.maxPriceEditText);
+        TextInputEditText nameEditText = dialogView.findViewById(R.id.nameEditText);
+        TextInputEditText descriptionEditText = dialogView.findViewById(R.id.descriptionEditText);
+
+        String name = nameEditText.getText().toString().trim();
+        String description = descriptionEditText.getText().toString().trim();
         Double minPrice = parsePrice(minTextField);
         Double maxPrice = parsePrice(maxTextField);
         Category category = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerCategory)));
         EventType eventType = getFromSpinner(Objects.requireNonNull(dialogView.findViewById(R.id.spinnerEventType)));
 
         ServiceFilter filter = ServiceFilter.builder()
+                .name(name)
+                .description(description)
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .category(category == null ? null : category.getName())
