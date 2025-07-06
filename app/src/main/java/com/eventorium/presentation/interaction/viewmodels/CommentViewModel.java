@@ -27,21 +27,14 @@ import lombok.Getter;
 public class CommentViewModel extends ViewModel {
 
     private final CommentRepository commentRepository;
-    private final MutableLiveData<List<Comment>> comments = new MutableLiveData<>();
 
     @Inject
     public CommentViewModel(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
 
-    public void getPendingComments() {
-        commentRepository.getPendingComments().observeForever(value -> this.comments.postValue(value.getData()));
-    }
-
-    public void removeComment(Long id) {
-        comments.setValue(Objects.requireNonNull(comments.getValue()).stream()
-                .filter(review -> !review.getId().equals(id))
-                .collect(toList()));
+    public LiveData<Result<List<Comment>>> getPendingComments() {
+        return commentRepository.getPendingComments();
     }
 
     public LiveData<Result<Comment>> createComment(Long id, ReviewType type, String comment) {
@@ -56,9 +49,4 @@ public class CommentViewModel extends ViewModel {
         return commentRepository.getAcceptedCommentsForTarget(type, objectId);
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        commentRepository.getPendingComments().removeObserver(value -> comments.postValue(value.getData()));
-    }
 }

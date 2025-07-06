@@ -58,7 +58,6 @@ public class ManageReservationFragment extends Fragment {
     }
 
     private void loadReservations() {
-        reservationViewModel.observePendingReservations();
         reservationViewModel.getPendingReservations().observe(getViewLifecycleOwner(), reservations -> {
             adapter.setData(reservations);
         });
@@ -98,19 +97,14 @@ public class ManageReservationFragment extends Fragment {
 
     private void handleUpdateResult(Long id, Result<Reservation> result) {
         if(result.getError() == null) {
-            Toast.makeText(
-                    requireContext(),
-                    getString(R.string.successfully_updated_reservation),
-                    Toast.LENGTH_SHORT
-            ).show();
-            reservationViewModel.removeReservation(id);
-        } else {
-            Toast.makeText(
-                    requireContext(),
-                    result.getError(),
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+            showMessage(getString(R.string.successfully_updated_reservation));
+            adapter.removeReservation(id);
+        } else
+            showMessage(result.getError());
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
