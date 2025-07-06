@@ -105,6 +105,7 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
         MaterialButton deleteButton;
         MaterialButton saveButton;
 
+        private TextWatcher textWatcher;
         private final Handler handler = new Handler(Looper.getMainLooper());
         private Runnable debounceRunnable;
         private static final long DEBOUNCE_DELAY = 300;
@@ -150,24 +151,61 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
 
         private void setupButtons(BudgetItem item) {
             BudgetItemStatus status = item.getStatus();
+            resetButtonsAndFields();
 
             switch (status) {
-                case PROCESSED, DENIED -> disablePlannedAmount();
+                case PROCESSED, DENIED -> {
+                    hideButtons(purchaseButton, saveButton, reserveButton, deleteButton);
+                    disablePlannedAmount();
+                }
                 case PENDING -> {
+                    enablePlannedAmount();
                     enableButton(saveButton, item, listener::onSave);
+                    hideButtons(reserveButton, deleteButton, purchaseButton);
                     createPlannedAmountChangeHandler(item);
                 }
                 case PLANNED -> {
+                    enablePlannedAmount();
                     enableButton(deleteButton, item, listener::onDelete);
                     switch (item.getType()) {
-                        case PRODUCT -> enableButton(purchaseButton, item, listener::onPurchase);
-                        case SERVICE -> enableButton(reserveButton, item, listener::onReserve);
+                        case PRODUCT -> {
+                            enableButton(purchaseButton, item, listener::onPurchase);
+                            hideButtons(reserveButton);
+                        }
+                        case SERVICE -> {
+                            enableButton(reserveButton, item, listener::onReserve);
+                            hideButtons(purchaseButton);
+                        }
                     }
                     createPlannedAmountChangeHandler(item);
                 }
             }
         }
 
+        private void hideButtons(MaterialButton ...buttons) {
+            for(MaterialButton button : buttons)
+                button.setVisibility(View.GONE);
+        }
+
+        private void resetButtonsAndFields() {
+            reserveButton.setVisibility(View.VISIBLE);
+            purchaseButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
+
+            reserveButton.setOnClickListener(null);
+            purchaseButton.setOnClickListener(null);
+            deleteButton.setOnClickListener(null);
+            saveButton.setOnClickListener(null);
+        }
+
+        private void enablePlannedAmount() {
+            plannedAmount.setEnabled(true);
+            plannedAmount.setFocusable(true);
+            plannedAmount.setFocusableInTouchMode(true);
+            plannedAmount.setCursorVisible(true);
+            plannedAmount.setBackgroundResource(android.R.drawable.edit_text);
+        }
         private void disablePlannedAmount() {
             plannedAmount.setEnabled(false);
             plannedAmount.setFocusable(false);
@@ -178,26 +216,30 @@ public class BudgetItemAdapter extends RecyclerView.Adapter<BudgetItemAdapter.Bu
         }
 
         private void createPlannedAmountChangeHandler(BudgetItem item) {
-            plannedAmount.addTextChangedListener(new TextWatcher() {
+            if (textWatcher != null) {
+                plannedAmount.removeTextChangedListener(textWatcher);
+            }
+
+            textWatcher = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                    if (debounceRunnable != null) {
+                    if (debounceRunnable != null)
                         handler.removeCallbacks(debounceRunnable);
-                    }
                 }
 
-                @SuppressLint("DefaultLocale")
                 @Override
                 public void afterTextChanged(Editable editable) {
                     if (!editable.toString().isEmpty()) {
-                        debounceRunnable = () ->  onPlannedAmountChanged(editable, item);
+                        debounceRunnable = () -> onPlannedAmountChanged(editable, item);
                         handler.postDelayed(debounceRunnable, DEBOUNCE_DELAY);
                     }
                 }
-            });
+            };
+
+            plannedAmount.addTextChangedListener(textWatcher);
         }
 
         public void onPlannedAmountChanged(Editable editable, BudgetItem item) {
