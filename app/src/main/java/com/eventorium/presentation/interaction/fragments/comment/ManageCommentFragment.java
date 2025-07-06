@@ -107,28 +107,23 @@ public class ManageCommentFragment extends Fragment {
 
             private void handleUpdateResult(Long id, Result<Comment> result) {
                 if(result.getError() == null) {
-                    Toast.makeText(
-                            requireContext(),
-                            getString(R.string.successfully_updated_comment),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    commentViewModel.removeComment(id);
-                } else {
-                    Toast.makeText(
-                            requireContext(),
-                            result.getError(),
-                            Toast.LENGTH_SHORT
-                    ).show();
-                }
+                    showMessage(getString(R.string.successfully_updated_comment));
+                    adapter.removeComment(id);
+                } else
+                    showMessage(result.getError());
             }
         };
     }
 
     private void loadComments() {
-        commentViewModel.getPendingComments();
-        commentViewModel.getComments().observe(getViewLifecycleOwner(), comments -> {
-            adapter.setData(comments);
+        commentViewModel.getPendingComments().observe(getViewLifecycleOwner(), result -> {
+            if (result.getError() == null)
+                adapter.setData(result.getData());
         });
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

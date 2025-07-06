@@ -26,6 +26,21 @@ public class ManageableCommentAdapter extends RecyclerView.Adapter<ManageableCom
         this.listener = listener;
     }
 
+    public void removeComment(Long id) {
+        int position = -1;
+        for (int i = 0; i < comments.size(); i++) {
+            if (comments.get(i).getId().equals(id)) {
+                position = i;
+                comments.remove(i);
+                break;
+            }
+        }
+        if (position != -1) {
+            notifyItemRemoved(position);
+        }
+    }
+
+
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
