@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.event.Activity;
+import com.eventorium.data.event.models.event.Agenda;
 import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.event.models.event.CreateEvent;
 import com.eventorium.data.event.models.event.EditableEvent;
@@ -75,9 +76,9 @@ public class EventRepository {
         return result;
     }
 
-    public LiveData<Result<Void>> createAgenda(Long id, List<Activity> agenda) {
+    public LiveData<Result<Void>> createAgenda(Long id, List<Activity> activities) {
         MutableLiveData<Result<Void>> result = new MutableLiveData<>();
-        service.createAgenda(id, agenda).enqueue(handleVoidResponse(result));
+        service.createAgenda(id, new Agenda(activities)).enqueue(handleVoidResponse(result));
         return result;
     }
 
