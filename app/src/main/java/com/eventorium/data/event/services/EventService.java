@@ -3,6 +3,7 @@ package com.eventorium.data.event.services;
 import com.eventorium.data.event.models.EventRatingsStatistics;
 import com.eventorium.data.event.models.PastEvent;
 import com.eventorium.data.event.models.event.Activity;
+import com.eventorium.data.event.models.event.Agenda;
 import com.eventorium.data.event.models.event.CalendarEvent;
 import com.eventorium.data.event.models.event.CreateEvent;
 import com.eventorium.data.event.models.event.EditableEvent;
@@ -46,7 +47,7 @@ public interface EventService {
     Call<Event> createEvent(@Body CreateEvent event);
 
     @PUT("events/{id}/agenda")
-    Call<ResponseBody> createAgenda(@Path("id") Long id, @Body List<Activity> agenda);
+    Call<ResponseBody> createAgenda(@Path("id") Long id, @Body Agenda agenda);
 
     @GET("events/search")
     Call<PagedResponse<EventSummary>> searchEvents(
