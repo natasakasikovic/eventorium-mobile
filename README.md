@@ -9,7 +9,7 @@
   <h1 align="center">EVENTORIUM</h1>
   <p align="center">
     <br />
-    <a href="https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/issues/new?labels=bug">Report Bug</a>
+    <a href="https://github.com/natasakasikovic/eventorium-mobile/issues/new?labels=bug">Report Bug</a>
     <a href="https://www.youtube.com/watch?v=QiGeygigk-w">Demo</a>
   </p>
 </div>
@@ -83,14 +83,14 @@ Optional:
 1. 🔁 Clone the repository
 
 ```sh
-git clone https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13.git
+git clone https://github.com/natasakasikovic/eventorium-mobile.git
 ```
 
 2. 🧰 Open the project in Android Studio
 
 - Launch Android Studio
 - Click "Open"
-- Select the `ma-project-event-planner-siit-2024-team-13` directory
+- Select the `eventorium-mobile` directory
 
 3. ⏳ Wait for Gradle to sync and build
 4. 🔐 Update `local_properties` with the (backend) `ip_addr` and `secret`.
@@ -156,10 +156,10 @@ You can view additional screenshots in the [screenshots](./screenshots) folder.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-[contributors-shield]: https://img.shields.io/github/contributors/kzi-nastava/ma-project-event-planner-siit-2024-team-13.svg?style=for-the-badge
-[contributors-url]: https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/graphs/contributors
-[license-shield]: https://img.shields.io/github/license/kzi-nastava/ma-project-event-planner-siit-2024-team-13.svg?style=for-the-badge
-[license-url]: https://github.com/kzi-nastava/ma-project-event-planner-siit-2024-team-13/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/natasakasikovic/eventorium-mobile.svg?style=for-the-badge
+[contributors-url]: https://github.com/natasakasikovic/eventorium-mobile/graphs/contributors
+[license-shield]: https://img.shields.io/github/license/natasakasikovic/eventorium-mobile.svg?style=for-the-badge
+[license-url]: https://github.com/natasakasikovic/eventorium-mobile/blob/master/LICENSE.txt
 [android-shield]: https://img.shields.io/badge/Android-API%2034-3DDC84?logo=android&logoColor=white
 [java-shield]: https://img.shields.io/badge/Java-18-red?logo=java&logoColor=white
 [studio-shield]: https://img.shields.io/badge/Android%20Studio-Hedgehog-FD6F00?logo=ladybug&logoColor=white  
